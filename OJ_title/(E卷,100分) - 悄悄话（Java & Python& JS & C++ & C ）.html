@@ -1,0 +1,390 @@
+<html lang="zh-CN"><head><meta charset="UTF-8"><style>.nodata  main {width:1000px;margin: auto;}</style></head><body class="nodata " style=""><div class="main_father clearfix d-flex justify-content-center " style="height:100%;"> <div class="container clearfix " id="mainBox"><main><div class="blog-content-box"><div id="article_content" class="article_content clearfix">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/kdoc_html_views-1a98987dfd.css">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-704d5b9767.css">
+             
+                <div id="content_views" class="markdown_views prism-atom-one-light">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                        <path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path>
+                    </svg>
+                    <h2><a name="t0"></a><a id="OD_0"></a>最新华为OD机试</h2> 
+
+<h2><a name="t1"></a><a id="_4"></a>题目描述</h2> 
+<p>给定一个二叉树，每个节点上站一个人，节点<a href="https://so.csdn.net/so/search?q=%E6%95%B0%E5%AD%97%E8%A1%A8%E7%A4%BA&amp;spm=1001.2101.3001.7020" target="_blank" class="hl hl-1" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.7020&quot;,&quot;dest&quot;:&quot;https://so.csdn.net/so/search?q=%E6%95%B0%E5%AD%97%E8%A1%A8%E7%A4%BA&amp;spm=1001.2101.3001.7020&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;数字表示\&quot;}&quot;}" data-tit="数字表示" data-pretit="数字表示">数字表示</a>父节点到该节点传递悄悄话需要花费的时间。</p> 
+<p>初始时，根节点所在位置的人有一个悄悄话想要传递给其他人，求二叉树所有节点上的人都接收到悄悄话花费的时间。</p> 
+<h2><a name="t2"></a><a id="_10"></a>输入描述</h2> 
+<p>给定二叉树</p> 
+<blockquote> 
+ <p>0 9 20 -1 -1 15 7 -1 -1 -1 -1 3 2</p> 
+</blockquote> 
+<p>注：-1表示空节点</p> 
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/01956f4dab6b773aa9452d41b8b3e658.png" alt="image-20231216102450829"></p> 
+<h2><a name="t3"></a><a id="_20"></a>输出描述</h2> 
+<p>返回所有节点都接收到悄悄话花费的时间</p> 
+<blockquote> 
+ <p>38</p> 
+</blockquote> 
+<h2><a name="t4"></a><a id="_26"></a>用例</h2> 
+<div class="table-box"><table><thead><tr><th>输入</th><th>0 9 20 -1 -1 15 7 -1 -1 -1 -1 3 2</th></tr></thead><tbody><tr><td>输出</td><td>38</td></tr><tr><td>说明</td><td>无</td></tr></tbody></table></div> 
+<h2><a name="t5"></a><a id="_35"></a>解题思路</h2> 
+<ol start="2"><li><strong>读取输入</strong>： 
+  <ul><li>读取一行输入，这行输入包含了一系列的整数，每个整数代表从父节点到子节点的悄悄话传递时间。</li></ul> </li><li><strong>处理根节点</strong>： 
+  <ul><li>将根节点（索引为0）加入队列，并设置其悄悄话接收时间为0。</li></ul> </li><li><strong>层次遍历</strong>： 
+  <ul><li>当队列不为空时，循环执行以下步骤： 
+    <ul><li>从队列中取出一个节点（包括节点索引和该节点的悄悄话接收时间）。</li><li>计算左右子节点的索引。</li><li>检查左右子节点是否存在（索引有效且不为-1）。</li></ul> </li></ul> </li><li><strong>更新子节点时间</strong>： 
+  <ul><li>如果子节点存在，将当前节点的悄悄话接收时间加上从当前节点到子节点的悄悄话传递时间，得到子节点的悄悄话接收时间。</li><li>将子节点及其悄悄话接收时间加入队列。</li></ul> </li><li><strong>更新最大时间</strong>： 
+  <ul><li>每次子节点的悄悄话接收时间被计算后，更新最大时间为当前子节点时间和已记录的最大时间中的较大值。</li></ul> </li></ol> 
+<h2><a name="t6"></a><a id="_54"></a>模拟计算</h2> 
+<p>给定的输入数组<code>0 9 20 -1 -1 15 7 -1 -1 -1 -1 3 2</code>代表一棵二叉树，其中每个值代表从父节点到子节点的悄悄话传递时间。数组中的<code>-1</code>表示没有子节点。数组索引代表节点的顺序，按照<a href="https://so.csdn.net/so/search?q=%E5%AE%8C%E5%85%A8%E4%BA%8C%E5%8F%89%E6%A0%91&amp;spm=1001.2101.3001.7020" target="_blank" class="hl hl-1" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.7020&quot;,&quot;dest&quot;:&quot;https://so.csdn.net/so/search?q=%E5%AE%8C%E5%85%A8%E4%BA%8C%E5%8F%89%E6%A0%91&amp;spm=1001.2101.3001.7020&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;完全二叉树\&quot;}&quot;}" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.7020&quot;,&quot;dest&quot;:&quot;https://so.csdn.net/so/search?q=%E5%AE%8C%E5%85%A8%E4%BA%8C%E5%8F%89%E6%A0%91&amp;spm=1001.2101.3001.7020&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;完全二叉树\&quot;}&quot;}" data-tit="完全二叉树" data-pretit="完全二叉树">完全二叉树</a>的顺序排列。</p> 
+<p>模拟计算过程如下：</p> 
+<ol><li> <p><strong>初始化队列</strong>：</p> 
+  <ul><li>将根节点索引<code>0</code>加入队列，此时队列为<code>[0]</code>。</li></ul> </li><li> <p><strong>开始层次遍历</strong>：</p> 
+  <ul><li>队列非空，继续遍历。</li></ul> </li><li> <p><strong>处理根节点</strong>：</p> 
+  <ul><li>取出队列头部元素（根节点索引<code>0</code>），队列变为<code>[]</code>。</li><li>计算左子节点索引<code>1</code>（<code>2*0+1</code>），右子节点索引<code>2</code>（<code>2*0+2</code>）。</li><li>左子节点值为<code>9</code>，更新为<code>0+9=9</code>，加入队列，队列变为<code>[1]</code>。</li><li>右子节点值为<code>20</code>，更新为<code>0+20=20</code>，加入队列，队列变为<code>[1, 2]</code>。</li><li>更新<code>maxTime</code>为<code>20</code>。</li></ul> </li><li> <p><strong>处理索引为1的节点</strong>：</p> 
+  <ul><li>取出队列头部元素<code>1</code>，队列变为<code>[2]</code>。</li><li>计算左子节点索引<code>3</code>（<code>2*1+1</code>），右子节点索引<code>4</code>（<code>2*1+2</code>）。</li><li>左右子节点值均为<code>-1</code>，没有子节点，不做操作。</li></ul> </li><li> <p><strong>处理索引为2的节点</strong>：</p> 
+  <ul><li>取出队列头部元素<code>2</code>，队列变为<code>[]</code>。</li><li>计算左子节点索引<code>5</code>（<code>2*2+1</code>），右子节点索引<code>6</code>（<code>2*2+2</code>）。</li><li>左子节点值为<code>15</code>，更新为<code>20+15=35</code>，加入队列，队列变为<code>[5]</code>。</li><li>右子节点值为<code>7</code>，更新为<code>20+7=27</code>，加入队列，队列变为<code>[5, 6]</code>。</li><li>更新<code>maxTime</code>为<code>35</code>。</li></ul> </li><li> <p><strong>处理索引为5的节点</strong>：</p> 
+  <ul><li>取出队列头部元素<code>5</code>，队列变为<code>[6]</code>。</li><li>计算左子节点索引<code>11</code>（<code>2*5+1</code>），右子节点索引<code>12</code>（<code>2*5+2</code>）。</li><li>左子节点值为<code>3</code>，更新为<code>35+3=38</code>，加入队列，队列变为<code>[6, 11]</code>。</li><li>右子节点值为<code>2</code>，更新为<code>35+2=37</code>，加入队列，队列变为<code>[6, 11, 12]</code>。</li><li>更新<code>maxTime</code>为<code>38</code>。</li></ul> </li><li> <p><strong>处理索引为6的节点</strong>：</p> 
+  <ul><li>取出队列头部元素<code>6</code>，队列变为<code>[11, 12]</code>。</li><li>计算左子节点索引<code>13</code>（<code>2*6+1</code>），右子节点索引<code>14</code>（<code>2*6+2</code>）。</li><li>由于索引超出数组长度，没有子节点，不做操作。</li></ul> </li><li> <p><strong>处理索引为11和12的节点</strong>：</p> 
+  <ul><li>取出队列头部元素<code>11</code>和<code>12</code>，队列变为<code>[]</code>。</li><li>由于索引超出数组长度，没有子节点，不做操作。</li></ul> </li><li> <p><strong>结束遍历</strong>：</p> 
+  <ul><li>队列为空，遍历结束。</li></ul> </li><li> <p><strong>输出结果</strong>：</p> 
+  <ul><li>最大时间<code>maxTime</code>为<code>38</code>，这是最后一个节点接收悄悄话的时间。</li></ul> </li></ol> 
+<p>因此，所有节点接收悄悄话的总时间为<code>38</code>。</p> 
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/61dd0248512a25afd35faf39ea77be9d.png" alt="image-20231216103920429"></p> 
+<h2><a name="t7"></a><a id="C_111"></a>C++</h2> 
+<pre data-index="0" class="set-code-hide prettyprint"><code class="prism language-c has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream&gt;</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;string&gt;</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;sstream&gt;</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;vector&gt;</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;queue&gt;</span></span>
+
+using namespace std<span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+    <span class="token comment">// 读取一行输入并将其转换为整数数组</span>
+    <span class="token comment">// 数组中的每个元素代表从父节点到当前节点的时间</span>
+    string line<span class="token punctuation">;</span>
+    <span class="token function">getline</span><span class="token punctuation">(</span>cin<span class="token punctuation">,</span> line<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    istringstream <span class="token function">iss</span><span class="token punctuation">(</span>line<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    vector<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> whisperTimes<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> time<span class="token punctuation">;</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>iss <span class="token operator">&gt;&gt;</span> time<span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+        whisperTimes<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span>time<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// 记录最后一个节点接收悄悄话的时间</span>
+    <span class="token keyword">int</span> maxTime <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 使用队列来进行二叉树的层次遍历</span>
+    queue<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> nodeQueue<span class="token punctuation">;</span>
+    <span class="token comment">// 将根节点索引0加入队列</span>
+    nodeQueue<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 当队列不为空时，继续遍历</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>nodeQueue<span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+        <span class="token comment">// 从队列中取出一个节点索引</span>
+        <span class="token keyword">int</span> parentNodeIndex <span class="token operator">=</span> nodeQueue<span class="token punctuation">.</span><span class="token function">front</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        nodeQueue<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// 计算左子节点索引</span>
+        <span class="token keyword">int</span> leftChildIndex <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> parentNodeIndex <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token comment">// 计算右子节点索引</span>
+        <span class="token keyword">int</span> rightChildIndex <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> parentNodeIndex <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// 如果左子节点存在，处理左子节点</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>leftChildIndex <span class="token operator">&lt;</span> whisperTimes<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> whisperTimes<span class="token punctuation">[</span>leftChildIndex<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+            <span class="token comment">// 更新左子节点的时间（父节点时间 + 当前节点时间）</span>
+            whisperTimes<span class="token punctuation">[</span>leftChildIndex<span class="token punctuation">]</span> <span class="token operator">+=</span> whisperTimes<span class="token punctuation">[</span>parentNodeIndex<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token comment">// 将左子节点加入队列</span>
+            nodeQueue<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>leftChildIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// 更新最大时间</span>
+            maxTime <span class="token operator">=</span> <span class="token function">max</span><span class="token punctuation">(</span>maxTime<span class="token punctuation">,</span> whisperTimes<span class="token punctuation">[</span>leftChildIndex<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment">// 如果右子节点存在，处理右子节点</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>rightChildIndex <span class="token operator">&lt;</span> whisperTimes<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> whisperTimes<span class="token punctuation">[</span>rightChildIndex<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+            <span class="token comment">// 更新右子节点的时间（父节点时间 + 当前节点时间）</span>
+            whisperTimes<span class="token punctuation">[</span>rightChildIndex<span class="token punctuation">]</span> <span class="token operator">+=</span> whisperTimes<span class="token punctuation">[</span>parentNodeIndex<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token comment">// 将右子节点加入队列</span>
+            nodeQueue<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>rightChildIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// 更新最大时间</span>
+            maxTime <span class="token operator">=</span> <span class="token function">max</span><span class="token punctuation">(</span>maxTime<span class="token punctuation">,</span> whisperTimes<span class="token punctuation">[</span>rightChildIndex<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// 所有节点都接收到悄悄话后，打印最大时间</span>
+    cout <span class="token operator">&lt;&lt;</span> maxTime <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<div class="hljs-button {2}" data-title="复制"></div></code><div class="hide-preCode-box"><span class="hide-preCode-bt" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.7365&quot;}"><img class="look-more-preCode contentImg-no-view" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCodeMoreWhite.png" alt="" title=""></span></div><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li><li style="color: rgb(153, 153, 153);">20</li><li style="color: rgb(153, 153, 153);">21</li><li style="color: rgb(153, 153, 153);">22</li><li style="color: rgb(153, 153, 153);">23</li><li style="color: rgb(153, 153, 153);">24</li><li style="color: rgb(153, 153, 153);">25</li><li style="color: rgb(153, 153, 153);">26</li><li style="color: rgb(153, 153, 153);">27</li><li style="color: rgb(153, 153, 153);">28</li><li style="color: rgb(153, 153, 153);">29</li><li style="color: rgb(153, 153, 153);">30</li><li style="color: rgb(153, 153, 153);">31</li><li style="color: rgb(153, 153, 153);">32</li><li style="color: rgb(153, 153, 153);">33</li><li style="color: rgb(153, 153, 153);">34</li><li style="color: rgb(153, 153, 153);">35</li><li style="color: rgb(153, 153, 153);">36</li><li style="color: rgb(153, 153, 153);">37</li><li style="color: rgb(153, 153, 153);">38</li><li style="color: rgb(153, 153, 153);">39</li><li style="color: rgb(153, 153, 153);">40</li><li style="color: rgb(153, 153, 153);">41</li><li style="color: rgb(153, 153, 153);">42</li><li style="color: rgb(153, 153, 153);">43</li><li style="color: rgb(153, 153, 153);">44</li><li style="color: rgb(153, 153, 153);">45</li><li style="color: rgb(153, 153, 153);">46</li><li style="color: rgb(153, 153, 153);">47</li><li style="color: rgb(153, 153, 153);">48</li><li style="color: rgb(153, 153, 153);">49</li><li style="color: rgb(153, 153, 153);">50</li><li style="color: rgb(153, 153, 153);">51</li><li style="color: rgb(153, 153, 153);">52</li><li style="color: rgb(153, 153, 153);">53</li><li style="color: rgb(153, 153, 153);">54</li><li style="color: rgb(153, 153, 153);">55</li><li style="color: rgb(153, 153, 153);">56</li><li style="color: rgb(153, 153, 153);">57</li><li style="color: rgb(153, 153, 153);">58</li><li style="color: rgb(153, 153, 153);">59</li><li style="color: rgb(153, 153, 153);">60</li><li style="color: rgb(153, 153, 153);">61</li><li style="color: rgb(153, 153, 153);">62</li><li style="color: rgb(153, 153, 153);">63</li></ul></pre> 
+<h2><a name="t8"></a><a id="Java_179"></a>Java</h2> 
+<pre data-index="1" class="set-code-hide prettyprint"><code class="prism language-java has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Arrays</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">LinkedList</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Queue</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Scanner</span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{<!-- --></span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+        <span class="token comment">// 创建扫描器读取输入</span>
+        <span class="token class-name">Scanner</span> scanner <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Scanner</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>in<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 读取一行输入并将其转换为整数数组，数组中的每个元素代表从父节点到当前节点的时间</span>
+        <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> whisperTimes <span class="token operator">=</span> <span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span>scanner<span class="token punctuation">.</span><span class="token function">nextLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">mapToInt</span><span class="token punctuation">(</span><span class="token class-name">Integer</span><span class="token operator">::</span><span class="token function">parseInt</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 关闭扫描器</span>
+        scanner<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// 记录最后一个节点接收悄悄话的时间</span>
+        <span class="token keyword">int</span> maxTime <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// 使用队列来进行二叉树的层次遍历</span>
+        <span class="token class-name">Queue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> nodeQueue <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LinkedList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 将根节点索引0加入队列</span>
+        nodeQueue<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// 当队列不为空时，继续遍历</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>nodeQueue<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+            <span class="token comment">// 从队列中取出一个节点索引</span>
+            <span class="token keyword">int</span> parentNodeIndex <span class="token operator">=</span> nodeQueue<span class="token punctuation">.</span><span class="token function">poll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token comment">// 计算左子节点索引</span>
+            <span class="token keyword">int</span> leftChildIndex <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> parentNodeIndex <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token comment">// 计算右子节点索引</span>
+            <span class="token keyword">int</span> rightChildIndex <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> parentNodeIndex <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">;</span>
+
+            <span class="token comment">// 如果左子节点存在，处理左子节点</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>leftChildIndex <span class="token operator">&lt;</span> whisperTimes<span class="token punctuation">.</span>length <span class="token operator">&amp;&amp;</span> whisperTimes<span class="token punctuation">[</span>leftChildIndex<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+                <span class="token comment">// 更新左子节点的时间（父节点时间 + 当前节点时间）</span>
+                whisperTimes<span class="token punctuation">[</span>leftChildIndex<span class="token punctuation">]</span> <span class="token operator">+=</span> whisperTimes<span class="token punctuation">[</span>parentNodeIndex<span class="token punctuation">]</span><span class="token punctuation">;</span>
+                <span class="token comment">// 将左子节点加入队列</span>
+                nodeQueue<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>leftChildIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token comment">// 更新最大时间</span>
+                maxTime <span class="token operator">=</span> <span class="token class-name">Math</span><span class="token punctuation">.</span><span class="token function">max</span><span class="token punctuation">(</span>maxTime<span class="token punctuation">,</span> whisperTimes<span class="token punctuation">[</span>leftChildIndex<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+            <span class="token comment">// 如果右子节点存在，处理右子节点</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>rightChildIndex <span class="token operator">&lt;</span> whisperTimes<span class="token punctuation">.</span>length <span class="token operator">&amp;&amp;</span> whisperTimes<span class="token punctuation">[</span>rightChildIndex<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+                <span class="token comment">// 更新右子节点的时间（父节点时间 + 当前节点时间）</span>
+                whisperTimes<span class="token punctuation">[</span>rightChildIndex<span class="token punctuation">]</span> <span class="token operator">+=</span> whisperTimes<span class="token punctuation">[</span>parentNodeIndex<span class="token punctuation">]</span><span class="token punctuation">;</span>
+                <span class="token comment">// 将右子节点加入队列</span>
+                nodeQueue<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>rightChildIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token comment">// 更新最大时间</span>
+                maxTime <span class="token operator">=</span> <span class="token class-name">Math</span><span class="token punctuation">.</span><span class="token function">max</span><span class="token punctuation">(</span>maxTime<span class="token punctuation">,</span> whisperTimes<span class="token punctuation">[</span>rightChildIndex<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment">// 所有节点都接收到悄悄话后，打印最大时间</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>maxTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<div class="hljs-button {2}" data-title="复制"></div></code><div class="hide-preCode-box"><span class="hide-preCode-bt" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.7365&quot;}"><img class="look-more-preCode contentImg-no-view" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCodeMoreWhite.png" alt="" title=""></span></div><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li><li style="color: rgb(153, 153, 153);">20</li><li style="color: rgb(153, 153, 153);">21</li><li style="color: rgb(153, 153, 153);">22</li><li style="color: rgb(153, 153, 153);">23</li><li style="color: rgb(153, 153, 153);">24</li><li style="color: rgb(153, 153, 153);">25</li><li style="color: rgb(153, 153, 153);">26</li><li style="color: rgb(153, 153, 153);">27</li><li style="color: rgb(153, 153, 153);">28</li><li style="color: rgb(153, 153, 153);">29</li><li style="color: rgb(153, 153, 153);">30</li><li style="color: rgb(153, 153, 153);">31</li><li style="color: rgb(153, 153, 153);">32</li><li style="color: rgb(153, 153, 153);">33</li><li style="color: rgb(153, 153, 153);">34</li><li style="color: rgb(153, 153, 153);">35</li><li style="color: rgb(153, 153, 153);">36</li><li style="color: rgb(153, 153, 153);">37</li><li style="color: rgb(153, 153, 153);">38</li><li style="color: rgb(153, 153, 153);">39</li><li style="color: rgb(153, 153, 153);">40</li><li style="color: rgb(153, 153, 153);">41</li><li style="color: rgb(153, 153, 153);">42</li><li style="color: rgb(153, 153, 153);">43</li><li style="color: rgb(153, 153, 153);">44</li><li style="color: rgb(153, 153, 153);">45</li><li style="color: rgb(153, 153, 153);">46</li><li style="color: rgb(153, 153, 153);">47</li><li style="color: rgb(153, 153, 153);">48</li><li style="color: rgb(153, 153, 153);">49</li><li style="color: rgb(153, 153, 153);">50</li><li style="color: rgb(153, 153, 153);">51</li><li style="color: rgb(153, 153, 153);">52</li><li style="color: rgb(153, 153, 153);">53</li><li style="color: rgb(153, 153, 153);">54</li><li style="color: rgb(153, 153, 153);">55</li><li style="color: rgb(153, 153, 153);">56</li><li style="color: rgb(153, 153, 153);">57</li></ul></pre> 
+<h2><a name="t9"></a><a id="javaScript_241"></a>javaScript</h2> 
+<pre data-index="2" class="set-code-hide prettyprint"><code class="prism language-js has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;"><span class="token keyword">const</span> readline <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'readline'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 创建readline接口实例</span>
+<span class="token keyword">const</span> rl <span class="token operator">=</span> readline<span class="token punctuation">.</span><span class="token function">createInterface</span><span class="token punctuation">(</span><span class="token punctuation">{<!-- --></span>
+  input<span class="token operator">:</span> process<span class="token punctuation">.</span>stdin<span class="token punctuation">,</span>
+  output<span class="token operator">:</span> process<span class="token punctuation">.</span>stdout
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 提示用户输入数据</span>
+rl<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'line'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">input</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{<!-- --></span>
+  <span class="token comment">// 将输入的字符串按空格分隔，转换为整数数组</span>
+  <span class="token keyword">const</span> whisperTimes <span class="token operator">=</span> input<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>Number<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 记录最后一个节点接收悄悄话的时间</span>
+  <span class="token keyword">let</span> maxTime <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 使用队列来进行二叉树的层次遍历</span>
+  <span class="token keyword">const</span> nodeQueue <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// 初始化队列</span>
+  nodeQueue<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 将根节点索引0加入队列</span>
+
+  <span class="token comment">// 当队列不为空时，继续遍历</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>nodeQueue<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+    <span class="token comment">// 从队列中取出一个节点索引</span>
+    <span class="token keyword">const</span> parentNodeIndex <span class="token operator">=</span> nodeQueue<span class="token punctuation">.</span><span class="token function">shift</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 计算左子节点索引</span>
+    <span class="token keyword">const</span> leftChildIndex <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> parentNodeIndex <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token comment">// 计算右子节点索引</span>
+    <span class="token keyword">const</span> rightChildIndex <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> parentNodeIndex <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 如果左子节点存在，处理左子节点</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>leftChildIndex <span class="token operator">&lt;</span> whisperTimes<span class="token punctuation">.</span>length <span class="token operator">&amp;&amp;</span> whisperTimes<span class="token punctuation">[</span>leftChildIndex<span class="token punctuation">]</span> <span class="token operator">!==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+      <span class="token comment">// 更新左子节点的时间（父节点时间 + 当前节点时间）</span>
+      whisperTimes<span class="token punctuation">[</span>leftChildIndex<span class="token punctuation">]</span> <span class="token operator">+=</span> whisperTimes<span class="token punctuation">[</span>parentNodeIndex<span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token comment">// 将左子节点加入队列</span>
+      nodeQueue<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>leftChildIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 更新最大时间</span>
+      maxTime <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">max</span><span class="token punctuation">(</span>maxTime<span class="token punctuation">,</span> whisperTimes<span class="token punctuation">[</span>leftChildIndex<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// 如果右子节点存在，处理右子节点</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>rightChildIndex <span class="token operator">&lt;</span> whisperTimes<span class="token punctuation">.</span>length <span class="token operator">&amp;&amp;</span> whisperTimes<span class="token punctuation">[</span>rightChildIndex<span class="token punctuation">]</span> <span class="token operator">!==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+      <span class="token comment">// 更新右子节点的时间（父节点时间 + 当前节点时间）</span>
+      whisperTimes<span class="token punctuation">[</span>rightChildIndex<span class="token punctuation">]</span> <span class="token operator">+=</span> whisperTimes<span class="token punctuation">[</span>parentNodeIndex<span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token comment">// 将右子节点加入队列</span>
+      nodeQueue<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>rightChildIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 更新最大时间</span>
+      maxTime <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">max</span><span class="token punctuation">(</span>maxTime<span class="token punctuation">,</span> whisperTimes<span class="token punctuation">[</span>rightChildIndex<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// 所有节点都接收到悄悄话后，打印最大时间</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span> maxTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 关闭readline接口实例</span>
+  rl<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<div class="hljs-button {2}" data-title="复制"></div></code><div class="hide-preCode-box"><span class="hide-preCode-bt" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.7365&quot;}"><img class="look-more-preCode contentImg-no-view" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCodeMoreWhite.png" alt="" title=""></span></div><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li><li style="color: rgb(153, 153, 153);">20</li><li style="color: rgb(153, 153, 153);">21</li><li style="color: rgb(153, 153, 153);">22</li><li style="color: rgb(153, 153, 153);">23</li><li style="color: rgb(153, 153, 153);">24</li><li style="color: rgb(153, 153, 153);">25</li><li style="color: rgb(153, 153, 153);">26</li><li style="color: rgb(153, 153, 153);">27</li><li style="color: rgb(153, 153, 153);">28</li><li style="color: rgb(153, 153, 153);">29</li><li style="color: rgb(153, 153, 153);">30</li><li style="color: rgb(153, 153, 153);">31</li><li style="color: rgb(153, 153, 153);">32</li><li style="color: rgb(153, 153, 153);">33</li><li style="color: rgb(153, 153, 153);">34</li><li style="color: rgb(153, 153, 153);">35</li><li style="color: rgb(153, 153, 153);">36</li><li style="color: rgb(153, 153, 153);">37</li><li style="color: rgb(153, 153, 153);">38</li><li style="color: rgb(153, 153, 153);">39</li><li style="color: rgb(153, 153, 153);">40</li><li style="color: rgb(153, 153, 153);">41</li><li style="color: rgb(153, 153, 153);">42</li><li style="color: rgb(153, 153, 153);">43</li><li style="color: rgb(153, 153, 153);">44</li><li style="color: rgb(153, 153, 153);">45</li><li style="color: rgb(153, 153, 153);">46</li><li style="color: rgb(153, 153, 153);">47</li><li style="color: rgb(153, 153, 153);">48</li><li style="color: rgb(153, 153, 153);">49</li><li style="color: rgb(153, 153, 153);">50</li><li style="color: rgb(153, 153, 153);">51</li><li style="color: rgb(153, 153, 153);">52</li><li style="color: rgb(153, 153, 153);">53</li><li style="color: rgb(153, 153, 153);">54</li><li style="color: rgb(153, 153, 153);">55</li><li style="color: rgb(153, 153, 153);">56</li><li style="color: rgb(153, 153, 153);">57</li></ul></pre> 
+<h2><a name="t10"></a><a id="Python_305"></a>Python</h2> 
+<pre data-index="3" class="set-code-hide prettyprint"><code class="prism language-python has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;"><span class="token keyword">from</span> collections <span class="token keyword">import</span> deque
+
+<span class="token comment"># 读取一行输入并将其转换为整数列表</span>
+<span class="token comment"># 列表中的每个元素代表从父节点到当前节点的时间</span>
+whisper_times <span class="token operator">=</span> <span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 记录最后一个节点接收悄悄话的时间</span>
+max_time <span class="token operator">=</span> <span class="token number">0</span>
+
+<span class="token comment"># 使用队列来进行二叉树的层次遍历</span>
+node_queue <span class="token operator">=</span> deque<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment"># 将根节点索引0加入队列</span>
+
+<span class="token comment"># 当队列不为空时，继续遍历</span>
+<span class="token keyword">while</span> node_queue<span class="token punctuation">:</span>
+    <span class="token comment"># 从队列中取出一个节点索引</span>
+    parent_node_index <span class="token operator">=</span> node_queue<span class="token punctuation">.</span>popleft<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># 计算左子节点索引</span>
+    left_child_index <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> parent_node_index <span class="token operator">+</span> <span class="token number">1</span>
+    <span class="token comment"># 计算右子节点索引</span>
+    right_child_index <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> parent_node_index <span class="token operator">+</span> <span class="token number">2</span>
+
+    <span class="token comment"># 如果左子节点存在，处理左子节点</span>
+    <span class="token keyword">if</span> left_child_index <span class="token operator">&lt;</span> <span class="token builtin">len</span><span class="token punctuation">(</span>whisper_times<span class="token punctuation">)</span> <span class="token keyword">and</span> whisper_times<span class="token punctuation">[</span>left_child_index<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">:</span>
+        <span class="token comment"># 更新左子节点的时间（父节点时间 + 当前节点时间）</span>
+        whisper_times<span class="token punctuation">[</span>left_child_index<span class="token punctuation">]</span> <span class="token operator">+=</span> whisper_times<span class="token punctuation">[</span>parent_node_index<span class="token punctuation">]</span>
+        <span class="token comment"># 将左子节点加入队列</span>
+        node_queue<span class="token punctuation">.</span>append<span class="token punctuation">(</span>left_child_index<span class="token punctuation">)</span>
+        <span class="token comment"># 更新最大时间</span>
+        max_time <span class="token operator">=</span> <span class="token builtin">max</span><span class="token punctuation">(</span>max_time<span class="token punctuation">,</span> whisper_times<span class="token punctuation">[</span>left_child_index<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># 如果右子节点存在，处理右子节点</span>
+    <span class="token keyword">if</span> right_child_index <span class="token operator">&lt;</span> <span class="token builtin">len</span><span class="token punctuation">(</span>whisper_times<span class="token punctuation">)</span> <span class="token keyword">and</span> whisper_times<span class="token punctuation">[</span>right_child_index<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">:</span>
+        <span class="token comment"># 更新右子节点的时间（父节点时间 + 当前节点时间）</span>
+        whisper_times<span class="token punctuation">[</span>right_child_index<span class="token punctuation">]</span> <span class="token operator">+=</span> whisper_times<span class="token punctuation">[</span>parent_node_index<span class="token punctuation">]</span>
+        <span class="token comment"># 将右子节点加入队列</span>
+        node_queue<span class="token punctuation">.</span>append<span class="token punctuation">(</span>right_child_index<span class="token punctuation">)</span>
+        <span class="token comment"># 更新最大时间</span>
+        max_time <span class="token operator">=</span> <span class="token builtin">max</span><span class="token punctuation">(</span>max_time<span class="token punctuation">,</span> whisper_times<span class="token punctuation">[</span>right_child_index<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 所有节点都接收到悄悄话后，打印最大时间</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>max_time<span class="token punctuation">)</span>
+<div class="hljs-button {2}" data-title="复制"></div></code><div class="hide-preCode-box"><span class="hide-preCode-bt" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.7365&quot;}"><img class="look-more-preCode contentImg-no-view" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCodeMoreWhite.png" alt="" title=""></span></div><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li><li style="color: rgb(153, 153, 153);">20</li><li style="color: rgb(153, 153, 153);">21</li><li style="color: rgb(153, 153, 153);">22</li><li style="color: rgb(153, 153, 153);">23</li><li style="color: rgb(153, 153, 153);">24</li><li style="color: rgb(153, 153, 153);">25</li><li style="color: rgb(153, 153, 153);">26</li><li style="color: rgb(153, 153, 153);">27</li><li style="color: rgb(153, 153, 153);">28</li><li style="color: rgb(153, 153, 153);">29</li><li style="color: rgb(153, 153, 153);">30</li><li style="color: rgb(153, 153, 153);">31</li><li style="color: rgb(153, 153, 153);">32</li><li style="color: rgb(153, 153, 153);">33</li><li style="color: rgb(153, 153, 153);">34</li><li style="color: rgb(153, 153, 153);">35</li><li style="color: rgb(153, 153, 153);">36</li><li style="color: rgb(153, 153, 153);">37</li><li style="color: rgb(153, 153, 153);">38</li><li style="color: rgb(153, 153, 153);">39</li><li style="color: rgb(153, 153, 153);">40</li><li style="color: rgb(153, 153, 153);">41</li><li style="color: rgb(153, 153, 153);">42</li></ul></pre> 
+<h2><a name="t11"></a><a id="C_354"></a>C语言</h2> 
+<pre data-index="4" class="set-code-hide prettyprint"><code class="prism language-c has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;string.h&gt;</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h&gt;</span></span>
+
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">MAX_SIZE</span> <span class="token expression"><span class="token number">10000</span> </span><span class="token comment">// 假设二叉树节点数不超过10000</span></span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+    <span class="token comment">// 读取一行输入并将其转换为整数数组</span>
+    <span class="token keyword">char</span> input<span class="token punctuation">[</span>MAX_SIZE<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token function">fgets</span><span class="token punctuation">(</span>input<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>input<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token constant">stdin</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">int</span> whisperTimes<span class="token punctuation">[</span>MAX_SIZE<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> time<span class="token punctuation">;</span>
+    <span class="token keyword">char</span> <span class="token operator">*</span>token <span class="token operator">=</span> <span class="token function">strtok</span><span class="token punctuation">(</span>input<span class="token punctuation">,</span> <span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>token <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+        <span class="token function">sscanf</span><span class="token punctuation">(</span>token<span class="token punctuation">,</span> <span class="token string">"%d"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>time<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        whisperTimes<span class="token punctuation">[</span>i<span class="token operator">++</span><span class="token punctuation">]</span> <span class="token operator">=</span> time<span class="token punctuation">;</span>
+        token <span class="token operator">=</span> <span class="token function">strtok</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">int</span> length <span class="token operator">=</span> i<span class="token punctuation">;</span> <span class="token comment">// 数组长度</span>
+
+    <span class="token comment">// 记录最后一个节点接收悄悄话的时间</span>
+    <span class="token keyword">int</span> maxTime <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 使用数组模拟队列进行二叉树的层次遍历</span>
+    <span class="token keyword">int</span> queue<span class="token punctuation">[</span>MAX_SIZE<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> front <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> rear <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token comment">// 队列的头和尾索引</span>
+
+    <span class="token comment">// 将根节点索引0加入队列</span>
+    queue<span class="token punctuation">[</span>rear<span class="token operator">++</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 当队列不为空时，继续遍历</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>front <span class="token operator">&lt;</span> rear<span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+        <span class="token comment">// 从队列中取出一个节点索引</span>
+        <span class="token keyword">int</span> parentNodeIndex <span class="token operator">=</span> queue<span class="token punctuation">[</span>front<span class="token operator">++</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        
+        <span class="token comment">// 计算左子节点索引</span>
+        <span class="token keyword">int</span> leftChildIndex <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> parentNodeIndex <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token comment">// 计算右子节点索引</span>
+        <span class="token keyword">int</span> rightChildIndex <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> parentNodeIndex <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// 如果左子节点存在，处理左子节点</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>leftChildIndex <span class="token operator">&lt;</span> length <span class="token operator">&amp;&amp;</span> whisperTimes<span class="token punctuation">[</span>leftChildIndex<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+            <span class="token comment">// 更新左子节点的时间（父节点时间 + 当前节点时间）</span>
+            whisperTimes<span class="token punctuation">[</span>leftChildIndex<span class="token punctuation">]</span> <span class="token operator">+=</span> whisperTimes<span class="token punctuation">[</span>parentNodeIndex<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token comment">// 将左子节点加入队列</span>
+            queue<span class="token punctuation">[</span>rear<span class="token operator">++</span><span class="token punctuation">]</span> <span class="token operator">=</span> leftChildIndex<span class="token punctuation">;</span>
+            <span class="token comment">// 更新最大时间</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>whisperTimes<span class="token punctuation">[</span>leftChildIndex<span class="token punctuation">]</span> <span class="token operator">&gt;</span> maxTime<span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+                maxTime <span class="token operator">=</span> whisperTimes<span class="token punctuation">[</span>leftChildIndex<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment">// 如果右子节点存在，处理右子节点</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>rightChildIndex <span class="token operator">&lt;</span> length <span class="token operator">&amp;&amp;</span> whisperTimes<span class="token punctuation">[</span>rightChildIndex<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+            <span class="token comment">// 更新右子节点的时间（父节点时间 + 当前节点时间）</span>
+            whisperTimes<span class="token punctuation">[</span>rightChildIndex<span class="token punctuation">]</span> <span class="token operator">+=</span> whisperTimes<span class="token punctuation">[</span>parentNodeIndex<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token comment">// 将右子节点加入队列</span>
+            queue<span class="token punctuation">[</span>rear<span class="token operator">++</span><span class="token punctuation">]</span> <span class="token operator">=</span> rightChildIndex<span class="token punctuation">;</span>
+            <span class="token comment">// 更新最大时间</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>whisperTimes<span class="token punctuation">[</span>rightChildIndex<span class="token punctuation">]</span> <span class="token operator">&gt;</span> maxTime<span class="token punctuation">)</span> <span class="token punctuation">{<!-- --></span>
+                maxTime <span class="token operator">=</span> whisperTimes<span class="token punctuation">[</span>rightChildIndex<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// 所有节点都接收到悄悄话后，打印最大时间</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d\n"</span><span class="token punctuation">,</span> maxTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<div class="hljs-button {2}" data-title="复制"></div></code><div class="hide-preCode-box"><span class="hide-preCode-bt" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.7365&quot;}"><img class="look-more-preCode contentImg-no-view" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCodeMoreWhite.png" alt="" title=""></span></div><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li><li style="color: rgb(153, 153, 153);">7</li><li style="color: rgb(153, 153, 153);">8</li><li style="color: rgb(153, 153, 153);">9</li><li style="color: rgb(153, 153, 153);">10</li><li style="color: rgb(153, 153, 153);">11</li><li style="color: rgb(153, 153, 153);">12</li><li style="color: rgb(153, 153, 153);">13</li><li style="color: rgb(153, 153, 153);">14</li><li style="color: rgb(153, 153, 153);">15</li><li style="color: rgb(153, 153, 153);">16</li><li style="color: rgb(153, 153, 153);">17</li><li style="color: rgb(153, 153, 153);">18</li><li style="color: rgb(153, 153, 153);">19</li><li style="color: rgb(153, 153, 153);">20</li><li style="color: rgb(153, 153, 153);">21</li><li style="color: rgb(153, 153, 153);">22</li><li style="color: rgb(153, 153, 153);">23</li><li style="color: rgb(153, 153, 153);">24</li><li style="color: rgb(153, 153, 153);">25</li><li style="color: rgb(153, 153, 153);">26</li><li style="color: rgb(153, 153, 153);">27</li><li style="color: rgb(153, 153, 153);">28</li><li style="color: rgb(153, 153, 153);">29</li><li style="color: rgb(153, 153, 153);">30</li><li style="color: rgb(153, 153, 153);">31</li><li style="color: rgb(153, 153, 153);">32</li><li style="color: rgb(153, 153, 153);">33</li><li style="color: rgb(153, 153, 153);">34</li><li style="color: rgb(153, 153, 153);">35</li><li style="color: rgb(153, 153, 153);">36</li><li style="color: rgb(153, 153, 153);">37</li><li style="color: rgb(153, 153, 153);">38</li><li style="color: rgb(153, 153, 153);">39</li><li style="color: rgb(153, 153, 153);">40</li><li style="color: rgb(153, 153, 153);">41</li><li style="color: rgb(153, 153, 153);">42</li><li style="color: rgb(153, 153, 153);">43</li><li style="color: rgb(153, 153, 153);">44</li><li style="color: rgb(153, 153, 153);">45</li><li style="color: rgb(153, 153, 153);">46</li><li style="color: rgb(153, 153, 153);">47</li><li style="color: rgb(153, 153, 153);">48</li><li style="color: rgb(153, 153, 153);">49</li><li style="color: rgb(153, 153, 153);">50</li><li style="color: rgb(153, 153, 153);">51</li><li style="color: rgb(153, 153, 153);">52</li><li style="color: rgb(153, 153, 153);">53</li><li style="color: rgb(153, 153, 153);">54</li><li style="color: rgb(153, 153, 153);">55</li><li style="color: rgb(153, 153, 153);">56</li><li style="color: rgb(153, 153, 153);">57</li><li style="color: rgb(153, 153, 153);">58</li><li style="color: rgb(153, 153, 153);">59</li><li style="color: rgb(153, 153, 153);">60</li><li style="color: rgb(153, 153, 153);">61</li><li style="color: rgb(153, 153, 153);">62</li><li style="color: rgb(153, 153, 153);">63</li><li style="color: rgb(153, 153, 153);">64</li><li style="color: rgb(153, 153, 153);">65</li><li style="color: rgb(153, 153, 153);">66</li><li style="color: rgb(153, 153, 153);">67</li><li style="color: rgb(153, 153, 153);">68</li><li style="color: rgb(153, 153, 153);">69</li><li style="color: rgb(153, 153, 153);">70</li></ul></pre> 
+<p></p> 
+<div class="toc"> 
+</div> 
+<p></p> 
+ 
+<h2><a name="t13"></a><a id="_439"></a>完整用例</h2> 
+<h3><a name="t14"></a><a id="1_440"></a>用例1</h3> 
+<pre data-index="5" class="set-code-show prettyprint"><code class="prism language-input1 has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;">0 -1 -1
+<div class="hljs-button {2}" data-title="复制"></div></code><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li></ul></pre> 
+<h3><a name="t15"></a><a id="2_446"></a>用例2</h3> 
+<pre data-index="6" class="set-code-show prettyprint"><code class="prism language-input2 has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;">0 1 -1 -1 -1
+<div class="hljs-button {2}" data-title="复制"></div></code><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li></ul></pre> 
+<h3><a name="t16"></a><a id="3_452"></a>用例3</h3> 
+<pre data-index="7" class="set-code-show prettyprint"><code class="prism language-input3 has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;">0 -1 1 -1 -1
+<div class="hljs-button {2}" data-title="复制"></div></code><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li></ul></pre> 
+<h3><a name="t17"></a><a id="4_458"></a>用例4</h3> 
+<pre data-index="8" class="set-code-show prettyprint"><code class="prism language-input4 has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;">0 1 2 -1 -1 -1 -1
+<div class="hljs-button {2}" data-title="复制"></div></code><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li></ul></pre> 
+<h3><a name="t18"></a><a id="5_464"></a>用例5</h3> 
+<pre data-index="9" class="set-code-show prettyprint"><code class="prism language-input5 has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;">0 1 2 3 -1 -1 -1 -1 -1
+<div class="hljs-button {2}" data-title="复制"></div></code><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li></ul></pre> 
+<h3><a name="t19"></a><a id="6_470"></a>用例6</h3> 
+<pre data-index="10" class="set-code-show prettyprint"><code class="prism language-input6 has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;">0 1 2 -1 3 -1 -1 -1 -1
+<div class="hljs-button {2}" data-title="复制"></div></code><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li></ul></pre> 
+<h3><a name="t20"></a><a id="7_476"></a>用例7</h3> 
+<pre data-index="11" class="set-code-show prettyprint"><code class="prism language-input7 has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;">0 1 2 3 4 -1 -1 -1 -1 -1 -1
+<div class="hljs-button {2}" data-title="复制"></div></code><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li></ul></pre> 
+<h3><a name="t21"></a><a id="8_482"></a>用例8</h3> 
+<pre data-index="12" class="set-code-show prettyprint"><code class="prism language-input8 has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;">0 1 2 3 4 5 6 -1 -1 -1 -1 -1 -1 -1 -1
+<div class="hljs-button {2}" data-title="复制"></div></code><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li></ul></pre> 
+<h3><a name="t22"></a><a id="9_488"></a>用例9</h3> 
+<pre data-index="13" class="set-code-show prettyprint"><code class="prism language-input9 has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;">0 3 2 4 -1 -1 5 -1 -1 -1 -1
+<div class="hljs-button {2}" data-title="复制"></div></code><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li></ul></pre> 
+<h3><a name="t23"></a><a id="10_494"></a>用例10</h3> 
+<pre data-index="14" class="set-code-show prettyprint"><code class="prism language-input10 has-numbering" onclick="mdcp.copyCode(event)" style="position: unset;">0 1 1 1 1 1 1 -1 -1 -1 -1 -1 -1 -1 -1
+<div class="hljs-button {2}" data-title="复制"></div></code><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li></ul></pre>
+                </div><div data-report-view="{&quot;mod&quot;:&quot;1585297308_001&quot;,&quot;spm&quot;:&quot;1001.2101.3001.6548&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/banxia_frontend/article/details/142729449&quot;,&quot;extend1&quot;:&quot;pc&quot;,&quot;ab&quot;:&quot;new&quot;}"><div></div></div>
+                <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/markdown_views-f23dff6052.css" rel="stylesheet">
+                <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/style-e504d6a974.css" rel="stylesheet">
+        </div></html>

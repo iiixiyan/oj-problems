@@ -1,0 +1,1034 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=gb2312">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:宋体;
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:等线;
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+@font-face
+	{font-family:微软雅黑;
+	panose-1:2 11 5 3 2 2 4 2 2 4;}
+@font-face
+	{font-family:"\@等线";
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+@font-face
+	{font-family:"\@微软雅黑";}
+@font-face
+	{font-family:"\@宋体";
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:8.0pt;
+	margin-left:0cm;
+	line-height:115%;
+	font-size:11.0pt;
+	font-family:等线;}
+.MsoChpDefault
+	{font-size:11.0pt;
+	font-family:等线;}
+.MsoPapDefault
+	{margin-bottom:8.0pt;
+	line-height:115%;}
+ /* Page Definitions */
+ @page WordSection1
+	{size:595.3pt 841.9pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;
+	layout-grid:15.6pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=ZH-CN style='word-wrap:break-word;text-justify-trim:punctuation'>
+
+<div class=WordSection1 style='layout-grid:15.6pt'>
+
+<p class=MsoNormal><b><span lang=EN-US>100</span>分</b><span lang=EN-US>-</span><b><span
+lang=EN-US style='font-size:22.5pt;line-height:115%;font-family:"微软雅黑",sans-serif;
+color:#222226'> </span><span lang=EN-US>API</span>请求日志去重分析<span lang=EN-US>
+(C/C++/Py/Java/Js/Go)</span></b></p>
+
+<p class=MsoNormal>题目描述</p>
+
+<p class=MsoNormal>某微服务系统的日志监控平台需要分析<span lang=EN-US> API </span>调用记录。日志中包含大量重复的请求记录，为了优化存储和后续分析，需要对相邻的重复请求进行合并统计。</p>
+
+<p class=MsoNormal>具体规则如下：</p>
+
+<ol style='margin-top:0cm' start=1 type=1>
+ <li class=MsoNormal>日志按时间顺序排列，每条记录包含请求路径和响应时间。</li>
+ <li class=MsoNormal>如果连续出现相同的请求路径，需要将这些记录合并为一条。</li>
+ <li class=MsoNormal>合并后的记录需要统计该路径连续出现的次数，并保留所有响应时间的平均值。</li>
+ <li class=MsoNormal>相同路径但被其他路径分隔的，视为不同的记录组，需要分别合并。</li>
+</ol>
+
+<p class=MsoNormal>请实现一个函数，对给定的日志数据进行去重合并处理。</p>
+
+<p class=MsoNormal>输入描述</p>
+
+<p class=MsoNormal>输入请求路径<span lang=EN-US> path </span>数组，按时间顺序排列。<span
+lang=EN-US><br>
+</span>输入对应的响应时间<span lang=EN-US> responseTimes </span>数组，单位为毫秒。</p>
+
+<p class=MsoNormal>补充</p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal><span lang=EN-US>0 &lt; paths.length &lt;= 10^5</span></li>
+ <li class=MsoNormal><span lang=EN-US>0 &lt; responseTimes.length &lt;= 10^5</span></li>
+ <li class=MsoNormal><span lang=EN-US>paths.length == responseTimes.length</span></li>
+ <li class=MsoNormal><span lang=EN-US>1 &lt;= responseTimes[i] &lt;= 10^4</span></li>
+ <li class=MsoNormal>路径长度不超过<span lang=EN-US> 100 </span>个字符</li>
+</ul>
+
+<p class=MsoNormal>输出描述</p>
+
+<p class=MsoNormal>按顺序输出每个记录组信息，每个记录组包含以下三个元素：</p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal>该路径在输入数组中首次出现的索引</li>
+ <li class=MsoNormal>该路径连续出现的次数</li>
+ <li class=MsoNormal>该组路径的平均响应时间，向下取整</li>
+</ul>
+
+<div class=MsoNormal align=center style='text-align:center'><span lang=EN-US>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<p class=MsoNormal>用例<span lang=EN-US>1</span></p>
+
+<p class=MsoNormal>输入</p>
+
+<p class=MsoNormal><span lang=EN-US>path =
+[/api/user,/api/user,/api/order,/api/user,/api/order,/api/order]</span></p>
+
+<p class=MsoNormal><span lang=EN-US>responseTimes = [100,200,150,300,250,350]</span></p>
+
+<p class=MsoNormal>输出</p>
+
+<p class=MsoNormal><span lang=EN-US>0,2,150 2,1,150 3,1,300 4,2,300</span></p>
+
+<p class=MsoNormal>说明</p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal><span lang=EN-US>/api/user </span>在索引<span lang=EN-US> 0~1
+     </span>连续出现，平均响应时间为<span lang=EN-US> (100+200)/2 = 150</span></li>
+ <li class=MsoNormal><span lang=EN-US>/api/order </span>在索引<span lang=EN-US> 2 </span>单独出现，平均响应时间为<span
+     lang=EN-US> 150</span></li>
+ <li class=MsoNormal><span lang=EN-US>/api/user </span>在索引<span lang=EN-US> 3 </span>单独出现，由于被分割，视为新组，平均响应时间为<span
+     lang=EN-US> 300</span></li>
+ <li class=MsoNormal><span lang=EN-US>/api/order </span>在索引<span lang=EN-US>
+     4~5 </span>连续出现<span lang=EN-US> 2 </span>次，平均响应时间为<span lang=EN-US>
+     (250+350)/2 = 300</span></li>
+</ul>
+
+<div class=MsoNormal align=center style='text-align:center'><span lang=EN-US>
+
+<hr size=2 width="100%" align=center>
+
+</span></div>
+
+<p class=MsoNormal>题解</p>
+
+<p class=MsoNormal>思路：双指针</p>
+
+<ol style='margin-top:0cm' start=1 type=1>
+ <li class=MsoNormal>使用双指针统计每个相同请求地址的连续区间，记录起始位置、结束位置，并累计该区间总响应时间。</li>
+ <li class=MsoNormal>对每个连续区间计算：</li>
+ <ul style='margin-top:0cm' type=circle>
+  <li class=MsoNormal>首次索引</li>
+  <li class=MsoNormal>连续次数</li>
+  <li class=MsoNormal>平均响应时间</li>
+ </ul>
+ <li class=MsoNormal>按出现顺序保存结果并返回。</li>
+</ol>
+
+<p class=MsoNormal><b><span lang=EN-US style='background:yellow'>C++</span></b></p>
+
+<p class=MsoNormal><span lang=EN-US>#include&lt;iostream&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>#include&lt;vector&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>#include&lt;string&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>#include &lt;utility&gt; </span></p>
+
+<p class=MsoNormal><span lang=EN-US>#include &lt;sstream&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>#include&lt;algorithm&gt; </span></p>
+
+<p class=MsoNormal><span lang=EN-US>#include&lt;cmath&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>#include&lt;map&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>using namespace std;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>// </span>通用 切割函数 函数 将字符串<span lang=EN-US>str</span>根据<span
+lang=EN-US>delimiter</span>进行切割</p>
+
+<p class=MsoNormal><span lang=EN-US>vector&lt;string&gt; split(const
+string&amp; str, const string&amp; delimiter) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; vector&lt;string&gt;
+result;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; size_t start = 0;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; size_t end =
+str.find(delimiter);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; while (end !=
+string::npos) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+result.push_back(str.substr(start, end - start));</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+start = end + delimiter.length();</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+end = str.find(delimiter, start);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; // </span>添加最后一个部分</p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+result.push_back(str.substr(start));</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; return result;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>}</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>// </span>统计函数</p>
+
+<p class=MsoNormal><span lang=EN-US>vector&lt;vector&lt;int&gt;&gt;
+hanle(vector&lt;string&gt; path, vector&lt;int&gt; responseTime) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+vector&lt;vector&lt;int&gt;&gt; res;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; int n = path.size();</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt;
+n; ) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+int totalTime = responseTime[i];</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+int j = i;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span>获取相同路径起始和终止连续位置</p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+while (j + 1&lt; n &amp;&amp; path[j] == path[j+1]) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+totalTime += responseTime[j+1];</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+j++;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+res.push_back({i, j - i + 1, totalTime / (j - i + 1)});</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; </span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+i = j + 1;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; return res;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>}</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>int main() {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; string pathInput;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; string responseInput;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; getline(cin, pathInput);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; getline(cin,
+responseInput);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; vector&lt;string&gt;
+paths = split(pathInput, &quot;,&quot;);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; vector&lt;int&gt;
+responseTime(paths.size());</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; vector&lt;string&gt; tmp
+= split(responseInput, &quot;,&quot;);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt;
+tmp.size(); i++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+responseTime[i] = stoi(tmp[i]);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+vector&lt;vector&lt;int&gt;&gt; res = hanle(paths, responseTime);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; // </span>输出结果</p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt;
+res.size(); i++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cout &lt;&lt; res[i][0] &lt;&lt; &quot;,&quot; &lt;&lt; res[i][1] &lt;&lt;
+&quot;,&quot; &lt;&lt; res[i][2];</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (i != res.size() -1) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cout &lt;&lt; &quot; &quot;;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; return 0;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>}</span></p>
+
+<p class=MsoNormal><b><span lang=EN-US style='background:yellow'>Java</span></b></p>
+
+<p class=MsoNormal><span lang=EN-US>import java.util.*;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>public class Main {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; // </span>统计函数</p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; static List&lt;int[]&gt;
+hanle(List&lt;String&gt; path, List&lt;Integer&gt; responseTime) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+List&lt;int[]&gt; res = new ArrayList&lt;&gt;();</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+int n = path.size();</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+for (int i = 0; i &lt; n;) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+int totalTime = responseTime.get(i);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+int j = i;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span>获取相同路径起始和终止连续位置</p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+while (j + 1 &lt; n &amp;&amp; path.get(j).equals(path.get(j + 1))) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+totalTime += responseTime.get(j + 1);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+j++;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+res.add(new int[]{i, j - i + 1, totalTime / (j - i + 1)});</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+i = j + 1;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return res;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; public static void
+main(String[] args) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Scanner sc = new Scanner(System.in);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+String pathInput = sc.nextLine();</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+String responseInput = sc.nextLine();</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+String[] pathsArr = pathInput.split(&quot;,&quot;);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+String[] responseArr = responseInput.split(&quot;,&quot;);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+List&lt;String&gt; paths = Arrays.asList(pathsArr);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+List&lt;Integer&gt; responseTime = new ArrayList&lt;&gt;();</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+for (String s : responseArr) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+responseTime.add(Integer.parseInt(s));</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+List&lt;int[]&gt; res = hanle(paths, responseTime);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+for (int i = 0; i &lt; res.size(); i++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+int[] r = res.get(i);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+System.out.print(r[0] + &quot;,&quot; + r[1] + &quot;,&quot; + r[2]);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (i != res.size() - 1) System.out.print(&quot; &quot;);</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
+
+<p class=MsoNormal><span lang=EN-US>}</span></p>
+
+<p class=MsoNormal><b><span lang=EN-US style='background:yellow'>Python</span></b></p>
+
+<p class=MsoNormal><span lang=EN-US>import sys</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US># </span>统计函数</p>
+
+<p class=MsoNormal><span lang=EN-US>def hanle(path, response_time):</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; res = []</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; n = len(path)</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; i = 0</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; while i &lt; n:</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+total_time = response_time[i]</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+j = i</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+# </span>获取相同路径起始和终止连续位置</p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+while j + 1 &lt; n and path[j] == path[j + 1]:</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+total_time += response_time[j + 1]</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+j += 1</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+res.append([i, j - i + 1, total_time // (j - i + 1)])</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+i = j + 1</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; return res</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>if __name__ == &quot;__main__&quot;:</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; path_input =
+sys.stdin.readline().strip()</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; response_input =
+sys.stdin.readline().strip()</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; paths =
+path_input.split(&quot;,&quot;)</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; response_time =
+list(map(int, response_input.split(&quot;,&quot;)))</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; res = hanle(paths,
+response_time)</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>print(&quot;
+&quot;.join(f&quot;{r[0]},{r[1]},{r[2]}&quot; for r in res))</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><b><span lang=EN-US
+style='background:yellow'>JS</span></b></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>const readline =
+require(&quot;readline&quot;);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>const rl =
+readline.createInterface({</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+input: process.stdin,</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+output: process.stdout</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>});</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>let input = [];</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>rl.on(&quot;line&quot;,
+(line) =&gt; {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+input.push(line.trim());</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>});</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>rl.on(&quot;close&quot;,
+() =&gt; {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+let pathInput = input[0];</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+let responseInput = input[1];</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+let paths = pathInput.split(&quot;,&quot;);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+let responseTime = responseInput.split(&quot;,&quot;).map(Number);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+function hanle(path, responseTime) {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+let res = [];</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+let n = path.length;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+for (let i = 0; i &lt; n;) {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+let totalTime = responseTime[i];</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+let j = i;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span>获取相同路径起始和终止连续位置</p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+while (j + 1 &lt; n &amp;&amp; path[j] === path[j + 1]) {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+totalTime += responseTime[j + 1];</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+j++;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+res.push([i, j - i + 1, Math.floor(totalTime / (j - i + 1))]);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+i = j + 1;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return res;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+let res = hanle(paths, responseTime);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+console.log(res.map(r =&gt; `${r[0]},${r[1]},${r[2]}`).join(&quot; &quot;));</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>});</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><b><span lang=EN-US
+style='background:yellow'>GO</span></b></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>package main</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>import (</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+&quot;bufio&quot;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+&quot;fmt&quot;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+&quot;os&quot;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+&quot;strings&quot;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>)</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>// </span>统计函数</p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>func hanle(path
+[]string, responseTime []int) [][]int {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+res := [][]int{}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+n := len(path)</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+for i := 0; i &lt; n; {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+totalTime := responseTime[i]</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+j := i</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span>获取相同路径起始和终止连续位置</p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+for j+1 &lt; n &amp;&amp; path[j] == path[j+1] {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+totalTime += responseTime[j+1]</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+j++</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+res = append(res, []int{i, j - i + 1, totalTime / (j - i + 1)})</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+i = j + 1</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+return res</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>func main() {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+reader := bufio.NewReader(os.Stdin)</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+pathInput, _ := reader.ReadString('\n')</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+responseInput, _ := reader.ReadString('\n')</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+// </span>去掉换行符</p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+pathInput = strings.TrimSpace(pathInput)</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+responseInput = strings.TrimSpace(responseInput)</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp; </span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+paths := strings.Split(pathInput, &quot;,&quot;)</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+tmp := strings.Split(responseInput, &quot;,&quot;)</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+responseTime := make([]int, len(tmp))</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+for i := 0; i &lt; len(tmp); i++ {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+fmt.Sscanf(tmp[i], &quot;%d&quot;, &amp;responseTime[i])</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+res := hanle(paths, responseTime)</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+for i := 0; i &lt; len(res); i++ {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+fmt.Printf(&quot;%d,%d,%d&quot;, res[i][0], res[i][1], res[i][2])</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if i != len(res)-1 {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+fmt.Print(&quot; &quot;)</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><b><span lang=EN-US
+style='background:yellow'>C</span><span style='background:yellow'>语言</span></b></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>#include
+&lt;stdio.h&gt;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>#include
+&lt;string.h&gt;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>#include
+&lt;stdlib.h&gt;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>// </span>统计函数</p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>void hanle(char
+path[][100], int pathSize, int responseTime[],</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+int res[][3], int *resSize) {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+int k = 0;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+for (int i = 0; i &lt; pathSize;) {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+int totalTime = responseTime[i];</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+int j = i;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span>获取相同路径起始和终止连续位置</p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+while (j + 1 &lt; pathSize &amp;&amp; strcmp(path[j], path[j + 1]) == 0) {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+totalTime += responseTime[j + 1];</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+j++;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+res[k][0] = i;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+res[k][1] = j - i + 1;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+res[k][2] = totalTime / (j - i + 1);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+k++;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+i = j + 1;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+*resSize = k;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>int main() {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+char pathInput[10300000], responseInput[10300000];</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+fgets(pathInput, sizeof(pathInput), stdin);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+fgets(responseInput, sizeof(responseInput), stdin);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+// </span>去掉换行</p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+pathInput[strcspn(pathInput, &quot;\n&quot;)] = 0;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+responseInput[strcspn(responseInput, &quot;\n&quot;)] = 0;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+char path[100005][100];</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+int responseTime[100005];</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+int pathSize = 0;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+char *token = strtok(pathInput, &quot;,&quot;);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+while (token) {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+strcpy(path[pathSize++], token);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+token = strtok(NULL, &quot;,&quot;);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+int i = 0;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+token = strtok(responseInput, &quot;,&quot;);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+while (token) {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+responseTime[i++] = atoi(token);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+token = strtok(NULL, &quot;,&quot;);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+int res[100005][3], resSize = 0;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+hanle(path, pathSize, responseTime, res, &amp;resSize);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+for (int i = 0; i &lt; resSize; i++) {</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+printf(&quot;%d,%d,%d&quot;, res[i][0], res[i][1], res[i][2]);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (i != resSize - 1) printf(&quot; &quot;);</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;&nbsp;&nbsp;
+return 0;</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>}</span></p>
+
+<p class=MsoNormal style='text-indent:22.0pt'><span lang=EN-US>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>

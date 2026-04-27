@@ -1,0 +1,1245 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=gb2312">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:等线;
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+@font-face
+	{font-family:微软雅黑;
+	panose-1:2 11 5 3 2 2 4 2 2 4;}
+@font-face
+	{font-family:"\@等线";
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+@font-face
+	{font-family:"\@微软雅黑";}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:8.0pt;
+	margin-left:0cm;
+	line-height:115%;
+	font-size:11.0pt;
+	font-family:等线;}
+.MsoChpDefault
+	{font-size:11.0pt;
+	font-family:等线;}
+.MsoPapDefault
+	{margin-bottom:8.0pt;
+	line-height:115%;}
+ /* Page Definitions */
+ @page WordSection1
+	{size:595.3pt 841.9pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;
+	layout-grid:15.6pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=ZH-CN style='word-wrap:break-word;text-justify-trim:punctuation'>
+
+<div class=WordSection1 style='layout-grid:15.6pt'>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>100</span><span style='font-size:18.0pt;
+line-height:115%;color:#222226;background:white'>分 计算数列位置<span lang=EN-US>N</span>的值</span></p>
+
+<p class=MsoNormal><span style='font-size:18.0pt;line-height:115%;color:#222226;
+background:white'>题目描述：</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>输入<span
+lang=EN-US>&nbsp;M</span>、<span lang=EN-US>N&nbsp;</span>两个数，按照如下规则构建一个数列。</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>数列的前<span
+lang=EN-US>&nbsp;M&nbsp;</span>个元素的值为<span lang=EN-US>&nbsp;1&nbsp;</span>到<span
+lang=EN-US>&nbsp;M</span>。</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>3.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>从第<span
+lang=EN-US>&nbsp;M+1&nbsp;</span>个元素开始，计算的逻辑为：</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>o&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>如果其前面的<span
+lang=EN-US>&nbsp;M&nbsp;</span>个元素中，存在值相同的元素，则该位置上的数值等于前面<span lang=EN-US>&nbsp;M&nbsp;</span>个数中最大的数值与最小的数值之和；</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>o&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>如果其前面的<span
+lang=EN-US>&nbsp;M&nbsp;</span>个元素中，不存在值相同的元素，则该位置上的数值等于前面<span lang=EN-US>&nbsp;M&nbsp;</span>个数中最大的数值与最小的数值之差；</span></p>
+
+<p class=MsoNormal><span style='font-size:18.0pt;line-height:115%;color:#222226;
+background:white'>请计算该数列第<span lang=EN-US>&nbsp;N&nbsp;</span>个位置上的数值。</span></p>
+
+<p class=MsoNormal><span style='font-size:18.0pt;line-height:115%;color:#222226;
+background:white'>补充说明：<span lang=EN-US><br>
+M&nbsp;</span>取值范围：<span lang=EN-US>3 &lt;= M &lt;= 10<br>
+N&nbsp;</span>取值范围：<span lang=EN-US>1 &lt;= N &lt;= 50</span></span></p>
+
+<p class=MsoNormal><span style='font-size:18.0pt;line-height:115%;color:#222226;
+background:white'>输入描述</span></p>
+
+<p class=MsoNormal><span style='font-size:18.0pt;line-height:115%;color:#222226;
+background:white'>输出<span lang=EN-US>N</span>和<span lang=EN-US>M</span>，使用，分割</span></p>
+
+<p class=MsoNormal><span style='font-size:18.0pt;line-height:115%;color:#222226;
+background:white'>输出描述</span></p>
+
+<p class=MsoNormal><span style='font-size:18.0pt;line-height:115%;color:#222226;
+background:white'>输出<span lang=EN-US>N</span>位置上的数值</span></p>
+
+<p class=MsoNormal><span style='font-size:18.0pt;line-height:115%;color:#222226;
+background:white'>用例<span lang=EN-US>1</span></span></p>
+
+<p class=MsoNormal><span style='font-size:18.0pt;line-height:115%;color:#222226;
+background:white'>输入</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>5,1</span></p>
+
+<p class=MsoNormal><span style='font-size:18.0pt;line-height:115%;color:#222226;
+background:white'>输出</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>1</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:18.0pt;line-height:115%;color:#222226;
+background:white'>思路：逻辑分析</span></p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+lang=EN-US style='font-size:18.0pt;line-height:115%;color:#222226'>1.<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>此题数据量比较小，暴力递推所有前<span
+lang=EN-US>&nbsp;n&nbsp;</span>个位置的值。</span></p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+lang=EN-US style='font-size:18.0pt;line-height:115%;color:#222226'>2.<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>对于<span
+lang=EN-US>&nbsp;n &lt;= m&nbsp;</span>的情况可以直接，返回<span lang=EN-US>&nbsp;n</span>。</span></p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+lang=EN-US style='font-size:18.0pt;line-height:115%;color:#222226'>3.<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>对于<span
+lang=EN-US>&nbsp;n &gt; m&nbsp;</span>的情况，对于<span lang=EN-US>&nbsp;m+1&nbsp;</span>及之后的位置可直接通过模拟，判断前<span
+lang=EN-US>&nbsp;n&nbsp;</span>个数是否存在重复值，并记录最大值、最小值。从而确认当前位置值。</span></p>
+
+<p class=MsoNormal><b><span lang=EN-US style='font-size:18.0pt;line-height:
+115%;color:#222226;background:white'>C++</span></b></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>#include&lt;iostream&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>#include&lt;vector&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>#include&lt;string&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>#include &lt;utility&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>#include &lt;sstream&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>#include&lt;algorithm&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>#include&lt;cmath&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>#include&lt;map&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>#include&lt;set&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>#include&lt;climits&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>using namespace std;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>int&nbsp;positionValue(int&nbsp;m ,&nbsp;int n)
+{</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>小于情况就是<span
+lang=EN-US>n</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= m) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return
+n;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt;&nbsp;num(n
++ 1);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>初始化</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;for (int&nbsp;i&nbsp;=
+1;&nbsp;i&nbsp;&lt;= m;&nbsp;i++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+=&nbsp;i;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>数据量小<span
+lang=EN-US>-&gt;</span>递推</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;for (int&nbsp;i&nbsp;=
+m + 1;&nbsp;i&nbsp;&lt;= n;&nbsp;i++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+mx = INT_MIN,&nbsp;mn&nbsp;= INT_MAX;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&lt;int&gt;
+s;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bool&nbsp;dupFlag&nbsp;=
+false;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for
+(int j =&nbsp;i&nbsp;- m; j &lt;&nbsp;i;&nbsp;j++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+(s.count(num[j])) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dupFlag&nbsp;=
+true;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s.insert(num[j]);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mx
+=&nbsp;max(mx, num[j]);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mn&nbsp;=&nbsp;min(mn,
+num[j]);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+(dupFlag) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+= mx +&nbsp;mn;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+else {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+= mx -&nbsp;mn;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;return num[n];</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>int&nbsp;main() {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;int m, n;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;scanf(&quot;%d,%d&quot;,
+&amp;m, &amp;n);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;int res
+=&nbsp;positionValue(m, n);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;cout&nbsp;&lt;&lt; res;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;return 0;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>}</span></p>
+
+<p class=MsoNormal><b><span lang=EN-US style='font-size:18.0pt;line-height:
+115%;color:#222226;background:white'>JAVA</span></b></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>import&nbsp;java.util.*;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>public class Main {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;public static
+int&nbsp;positionValue(int m, int n) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>小于情况就是<span
+lang=EN-US>n</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+(n &lt;= m) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return
+n;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int[]
+num = new&nbsp;int[n + 1];</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>初始化</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for
+(int&nbsp;i&nbsp;= 1;&nbsp;i&nbsp;&lt;= m;&nbsp;i++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+=&nbsp;i;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>数据量小<span
+lang=EN-US>-&gt;</span>递推</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for
+(int&nbsp;i&nbsp;= m + 1;&nbsp;i&nbsp;&lt;= n;&nbsp;i++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+mx =&nbsp;Integer.MIN_VALUE,&nbsp;mn&nbsp;=&nbsp;Integer.MAX_VALUE;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HashSet&lt;Integer&gt;
+set = new HashSet&lt;&gt;();</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;boolean&nbsp;dupFlag&nbsp;=
+false;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for
+(int j =&nbsp;i&nbsp;- m; j &lt;&nbsp;i;&nbsp;j++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+(set.contains(num[j])) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dupFlag&nbsp;=
+true;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set.add(num[j]);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mx
+=&nbsp;Math.max(mx, num[j]);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mn&nbsp;=&nbsp;Math.min(mn,
+num[j]);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+(dupFlag) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+= mx +&nbsp;mn;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+else {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+= mx -&nbsp;mn;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return
+num[n];</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;public static
+void&nbsp;main(String[]&nbsp;args) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Scanner&nbsp;sc&nbsp;=
+new&nbsp;Scanner(System.in);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String
+input =&nbsp;sc.nextLine();</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String[]
+parts =&nbsp;input.split(&quot;,&quot;);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+m =&nbsp;Integer.parseInt(parts[0]);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+n =&nbsp;Integer.parseInt(parts[1]);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(positionValue(m,
+n));</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>}</span></p>
+
+<p class=MsoNormal><b><span lang=EN-US style='font-size:18.0pt;line-height:
+115%;color:#222226;background:white'>Python</span></b></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>import sys</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>def&nbsp;positionValue(m, n):</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>小于情况就是<span
+lang=EN-US>n</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;if n &lt;= m:</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return
+n</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;num = [0] * (n + 1)</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>初始化</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;in&nbsp;range(1,
+m + 1):</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+=&nbsp;i</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>数据量小<span
+lang=EN-US>-&gt;</span>递推</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;in&nbsp;range(m
++ 1, n + 1):</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mx
+= -10**9</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mn&nbsp;=
+10**9</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s
+=&nbsp;set()</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dupFlag&nbsp;=
+False</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for
+j in&nbsp;range(i&nbsp;- m,&nbsp;i):</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+num[j] in s:</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dupFlag&nbsp;=
+True</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s.add(num[j])</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mx
+=&nbsp;max(mx, num[j])</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mn&nbsp;=&nbsp;min(mn,
+num[j])</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;dupFlag:</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+= mx +&nbsp;mn</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+= mx -&nbsp;mn</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;return num[n]</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>if __name__ == &quot;__main__&quot;:</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;m, n
+=&nbsp;map(int,&nbsp;sys.stdin.readline().strip().split(&quot;,&quot;))</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>print(positionValue(m, n))</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>JS</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>const&nbsp;readline&nbsp;= require('readline');</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>function&nbsp;positionValue(m, n) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>小于情况就是<span
+lang=EN-US>n</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= m) return
+n;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;const num =
+new&nbsp;Array(n + 1).fill(0);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>初始化</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;for (let&nbsp;i&nbsp;=
+1;&nbsp;i&nbsp;&lt;= m;&nbsp;i++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+=&nbsp;i;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>数据量小<span
+lang=EN-US>-&gt;</span>递推</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;for (let&nbsp;i&nbsp;=
+m + 1;&nbsp;i&nbsp;&lt;= n;&nbsp;i++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let
+mx = -Infinity,&nbsp;mn&nbsp;= Infinity;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let
+set = new&nbsp;Set();</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;dupFlag&nbsp;=
+false;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for
+(let j =&nbsp;i&nbsp;- m; j &lt;&nbsp;i;&nbsp;j++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+(set.has(num[j])) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dupFlag&nbsp;=
+true;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set.add(num[j]);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mx
+=&nbsp;Math.max(mx, num[j]);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mn&nbsp;=&nbsp;Math.min(mn,
+num[j]);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+(dupFlag) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+= mx +&nbsp;mn;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+else {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+= mx -&nbsp;mn;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;return num[n];</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>const&nbsp;rl&nbsp;=&nbsp;readline.createInterface({</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;input:&nbsp;process.stdin,</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;output:&nbsp;process.stdout</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>});</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>rl.on('line', function (line) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;let [m, n]
+=&nbsp;line.split(',').map(Number);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;console.log(positionValue(m,
+n));</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>});</span></p>
+
+<p class=MsoNormal><b><span lang=EN-US style='font-size:18.0pt;line-height:
+115%;color:#222226;background:white'>GO</span></b></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>package main</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>import (</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;bufio&quot;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;fmt&quot;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;os&quot;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>)</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>func&nbsp;positionValue(m int, n int) int {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>小于情况就是<span
+lang=EN-US>n</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if n
+&lt;= m {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return
+n</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num
+:=&nbsp;make([]int, n+1)</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>初始化</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;:=
+1;&nbsp;i&nbsp;&lt;= m;&nbsp;i++ {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+=&nbsp;i</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>数据量小<span
+lang=EN-US>-&gt;</span>递推</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;:=
+m + 1;&nbsp;i&nbsp;&lt;= n;&nbsp;i++ {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mx
+:= -1 &lt;&lt; 31</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mn&nbsp;:=
+1&lt;&lt;31 - 1</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set
+:= make(map[int]bool)</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dupFlag&nbsp;:=
+false</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j
+:=&nbsp;i&nbsp;- m; j &lt;&nbsp;i;&nbsp;j++&nbsp;{</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+set[num[j]] {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dupFlag&nbsp;=
+true</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set[num[j]]
+= true</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+num[j] &gt; mx {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mx
+= num[j]</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+num[j] &lt;&nbsp;mn&nbsp;{</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mn&nbsp;=
+num[j]</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;dupFlag&nbsp;{</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+= mx +&nbsp;mn</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+else {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+= mx -&nbsp;mn</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return
+num[n]</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>func&nbsp;main() {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reader
+:=&nbsp;bufio.NewReader(os.Stdin)</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var
+m, n int</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fmt.Fscanf(reader,
+&quot;%d,%d&quot;, &amp;m, &amp;n)</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fmt.Println(positionValue(m,
+n))</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>}</span></p>
+
+<p class=MsoNormal><b><span lang=EN-US style='font-size:18.0pt;line-height:
+115%;color:#222226;background:white'>C</span></b><b><span style='font-size:
+18.0pt;line-height:115%;color:#222226;background:white'>语言</span></b></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>#include &lt;stdio.h&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>#include &lt;limits.h&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>int&nbsp;positionValue(int m, int n) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>小于情况就是<span
+lang=EN-US>n</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= m) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return
+n;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;num[55] = {0};
+// n &lt;= 50</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>初始化</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;for (int&nbsp;i&nbsp;=
+1;&nbsp;i&nbsp;&lt;= m;&nbsp;i++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+=&nbsp;i;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>数据量小<span
+lang=EN-US>-&gt;</span>递推</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;for (int&nbsp;i&nbsp;=
+m + 1;&nbsp;i&nbsp;&lt;= n;&nbsp;i++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+mx = INT_MIN,&nbsp;mn&nbsp;= INT_MAX;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;</span><span
+style='font-size:18.0pt;line-height:115%;color:#222226;background:white'>记录出现次数，用于判断去重<span
+lang=EN-US>(</span>值域是可以计算出来的<span lang=EN-US>)</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;freq[200000]
+= {0};</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;dupFlag&nbsp;=
+0;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for
+(int j =&nbsp;i&nbsp;- m; j &lt;&nbsp;i;&nbsp;j++) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+(freq[num[j]] == 1) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dupFlag&nbsp;=
+1;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;freq[num[j]]++;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+(num[j] &gt; mx) mx = num[j];</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+(num[j] &lt;&nbsp;mn)&nbsp;mn&nbsp;= num[j];</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if
+(dupFlag) {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+= mx +&nbsp;mn;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+else {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num[i]
+= mx -&nbsp;mn;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;return num[n];</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>}</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>int&nbsp;main() {</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;int m, n;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;scanf(&quot;%d,%d&quot;,
+&amp;m, &amp;n);</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;%d\n&quot;,&nbsp;positionValue(m,
+n));</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>&nbsp;&nbsp;&nbsp;&nbsp;return 0;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:18.0pt;line-height:115%;
+color:#222226;background:white'>}</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>
