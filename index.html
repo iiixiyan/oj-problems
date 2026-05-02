@@ -528,6 +528,28 @@
             font-size: 14px;
         }
 
+        .question-content {
+            padding: 24px 32px;
+            overflow-y: auto;
+            height: 100%;
+            line-height: 2;
+            font-size: 15px;
+            color: #e2e8f0;
+            white-space: pre-wrap;
+            font-family: 'PingFang SC','Microsoft YaHei',sans-serif;
+        }
+
+        .question-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .question-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .question-content::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
         /* 右侧代码编辑器 */
         .editor-panel {
             width: 450px;
@@ -754,6 +776,9 @@
                 min-height: 300px;
                 max-height: 400px;
             }
+            .question-content {
+                min-height: 250px;
+            }
             .editor-body {
                 min-height: 250px;
             }
@@ -854,7 +879,7 @@
                     <div class="title">请选择一道题目</div>
                     <div class="desc">从左侧列表中选择题目开始练习</div>
                 </div>
-                <iframe id="questionFrame" style="display:none;" sandbox="allow-scripts allow-same-origin"></iframe>
+                <div id="questionContent" class="question-content" style="display:none;padding:24px;overflow-y:auto;height:100%;line-height:1.8;font-size:15px;color:#e2e8f0;white-space:pre-wrap;"></div>
             </div>
         </main>
 
@@ -1003,17 +1028,29 @@ function init() {
 // ==================== 后台拉取完整数据 ====================
 function tryFetchFullData() {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'problems-100.json?' + Date.now(), true);
+    xhr.open('GET', 'conf/questions.json?' + Date.now(), true);
     xhr.onload = function() {
         if (xhr.status === 200) {
             try {
                 var data = JSON.parse(xhr.responseText);
-                if (data.questions) {
+                if (data.questions && data.questions.length > 0) {
                     HUAWEI_OD_CONFIG.questions = data.questions;
-                    console.log('完整数据已加载');
+                    console.log('完整描述数据已加载 (' + data.questions.length + ' 题)');
+                    // 刷新当前题目显示（如果有选中题目）
+                    if (state.currentIndex >= 0) {
+                        var content = document.getElementById('questionContent');
+                        if (content && content.style.display !== 'none') {
+                            loadQ(state.currentIndex);
+                        }
+                    }
                 }
-            } catch(e) {}
+            } catch(e) { console.warn('描述数据解析失败', e); }
+        } else {
+            console.warn('conf/questions.json 加载失败, 使用嵌入数据');
         }
+    };
+    xhr.onerror = function() {
+        console.warn('conf/questions.json 网络错误, 使用嵌入数据');
     };
     xhr.send();
 }
@@ -1209,36 +1246,44 @@ function selectQ(index) {
 function loadQ(index) {
     var q = state.questions[index];
     if (!q) return;
-    var frame = document.getElementById('questionFrame');
+    var content = document.getElementById('questionContent');
     var emptyState = document.getElementById('emptyState');
     var loading = document.getElementById('loadingOverlay');
     state.isLoading = true;
     loading.classList.remove('hidden');
     emptyState.style.display = 'none';
-    frame.style.display = 'none';
-    frame.src = q.file;
-    var timeout = setTimeout(function() {
-        if (state.isLoading) {
-            state.isLoading = false;
-            loading.classList.add('hidden');
-            frame.style.display = 'block';
+    content.style.display = 'none';
+    
+    var title = q.title || '';
+    var score = q.score || 100;
+    var tags = (q.tags || []).join(' | ');
+    
+    // 从完整数据中获取描述
+    var desc = '';
+    if (HUAWEI_OD_CONFIG.questions && HUAWEI_OD_CONFIG.questions.length > 0) {
+        for (var i = 0; i < HUAWEI_OD_CONFIG.questions.length; i++) {
+            if (HUAWEI_OD_CONFIG.questions[i].id === q.id) {
+                if (HUAWEI_OD_CONFIG.questions[i].desc) desc = HUAWEI_OD_CONFIG.questions[i].desc;
+                break;
+            }
         }
-    }, 10000);
-    frame.onload = function() {
-        clearTimeout(timeout);
+    }
+    
+    setTimeout(function() {
         state.isLoading = false;
         loading.classList.add('hidden');
-        frame.style.display = 'block';
-        try {
-            var doc = frame.contentDocument || frame.contentWindow.document;
-            if (doc) {
-                var imgs = doc.querySelectorAll('img');
-                for (var i = 0; i < imgs.length; i++) {
-                    if (!imgs[i].hasAttribute('crossorigin')) imgs[i].setAttribute('crossorigin', 'anonymous');
-                }
-            }
-        } catch(e) {}
-    };
+        var text = '=== ' + title + ' (' + score + '分) ===';
+        if (tags) text += '\n标签: ' + tags;
+        text += '\n\n';
+        if (desc) {
+            text += desc;
+        } else {
+            text += '（题目描述加载中...）';
+        }
+        text += '\n\n---\n在右侧编辑器中编写Python代码，完成后复制到本地运行测试。';
+        content.textContent = text;
+        content.style.display = 'block';
+    }, 200);
 }
 
 function prevQ() {
