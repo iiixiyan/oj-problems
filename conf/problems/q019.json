@@ -1,0 +1,59 @@
+{
+  "id": "q019",
+  "title": "字符串拼接",
+  "score": 200,
+  "tags": [
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定 M（0 < M ≤ 30）个字符（a-z），从中取出任意字符（每个字符只能用一次）拼接成长度为 N（0 < N ≤ 5）的字符串，\n要求相同的字符不能相邻，计算出给定的字符列表能拼接出多少种满足条件的字符串，\n输入非法或者无法拼接出满足条件的字符串则返回0。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "给定的字符列表和结果字符串长度，中间使用空格(\" \")拼接"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "满足条件的字符串个数"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nabc 1\n输出\n3",
+      "cases": [
+        {
+          "input": "abc 1",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "给定的字符为a,b,c，结果字符串长度为1，可以拼接成a,b,c，共3种\n输入\ndde 2\n输出\n2\n\n给定的字符为dde，结果字符串长度为2，可以拼接成de,ed，共2种"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "根据"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2的"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "来看，本题是要求解的是：不重复的指定长度的排列。且本题还增加了一个条件，即排列中相邻元素不能相同。\n而本题只需要在这两题的基础增加：排列中相邻元素不能相同即可。\nJS算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}
