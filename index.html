@@ -741,15 +741,44 @@
             .sidebar {
                 width: 100%;
                 min-width: 100%;
-                max-height: 250px;
+                max-height: 300px;
             }
             .editor-panel {
                 width: 100%;
                 min-width: 100%;
-                max-height: 400px;
+                flex: 1;
+                max-height: none;
             }
             .content-area {
+                flex: none;
+                min-height: 300px;
                 max-height: 400px;
+            }
+            .editor-body {
+                min-height: 250px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar {
+                max-height: 200px;
+            }
+            .content-area {
+                min-height: 250px;
+                max-height: 300px;
+            }
+            .editor-body {
+                min-height: 200px;
+            }
+            .output-panel {
+                height: 120px;
+            }
+            .navbar-right .nav-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            .logo {
+                font-size: 16px;
             }
         }
     </style>
@@ -923,7 +952,7 @@
         }
 
         // ==================== 配置加载（按需） ====================
-        let config = { questions: [] };
+        var config = { questions: [] };
         let allTags = new Set();
 
         async function loadConfig() {
