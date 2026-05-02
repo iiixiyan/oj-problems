@@ -807,6 +807,50 @@
             }
         }
     </style>
+    <style>
+        /* ===== 题目显示区域样式 ===== */
+        .question-header { padding: 20px 24px 12px; border-bottom: 1px solid var(--border); }
+        .question-header h2 { font-size: 20px; font-weight: 700; margin: 0 0 8px; color: #f0f0f0; }
+        .score-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 600; background: linear-gradient(135deg, #667eea, #764ba2); color: white; vertical-align: middle; margin-left: 8px; }
+        .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .tag { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 12px; background: rgba(102,126,234,0.2); color: #a0aec0; border: 1px solid rgba(102,126,234,0.3); }
+        
+        .question-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+        .question-body .q-section { margin-bottom: 20px; padding: 16px; border-radius: 10px; background: var(--bg-secondary); border-left: 3px solid var(--primary); }
+        .question-body .q-section.section-input { border-left-color: #48bb78; }
+        .question-body .q-section.section-output { border-left-color: #ed8936; }
+        .question-body .q-section.section-example { border-left-color: #ecc94b; }
+        .question-body .q-section.section-note { border-left-color: #fc8181; }
+        .question-body .q-section.section-analysis { border-left-color: #9f7aea; }
+        .question-body .q-section.section-other { border-left-color: #a0aec0; }
+        
+        .section-title { font-size: 15px; font-weight: 600; margin: 0 0 10px; color: #e2e8f0; }
+        .section-body { font-size: 14px; line-height: 1.8; color: #cbd5e0; }
+        .section-body p { margin: 6px 0; }
+        .section-body br { display: block; content: ""; margin-top: 4px; }
+        
+        .code-block { background: #1a1a2e; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; font-family: 'JetBrains Mono','Consolas',monospace; font-size: 13px; line-height: 1.5; overflow-x: auto; color: #e2e8f0; margin: 8px 0; white-space: pre-wrap; word-break: break-all; }
+        .plain-desc { background: #1a1a2e; border: 1px solid var(--border); border-radius: 6px; padding: 16px; font-size: 14px; line-height: 1.8; overflow-x: auto; white-space: pre-wrap; word-break: break-word; color: #cbd5e0; }
+        
+        .test-cases { margin: 8px 0; }
+        .test-cases .code-block { margin: 4px 0; }
+        
+        .loading-hint { text-align: center; padding: 40px; color: var(--text-secondary); font-size: 15px; }
+        
+        .question-footer { padding: 12px 24px; border-top: 1px solid var(--border); background: var(--bg-secondary); }
+        .question-footer .hint { font-size: 13px; color: var(--text-secondary); }
+        
+        /* 题解代码区域 */
+        .solutions-section { padding: 20px 24px; border-top: 1px solid var(--border); }
+        .solutions-section h3 { font-size: 16px; font-weight: 600; margin: 0 0 12px; color: #e2e8f0; }
+        .lang-tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+        .lang-tab { padding: 6px 16px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer; font-size: 13px; transition: all 0.2s; }
+        .lang-tab:hover { background: var(--hover); color: var(--text); }
+        .lang-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+        .solution-code { margin: 0; }
+        .solution-code pre { background: #1a1a2e; border: 1px solid var(--border); border-radius: 6px; padding: 16px; overflow-x: auto; font-size: 13px; line-height: 1.5; max-height: 400px; overflow-y: auto; }
+        .solution-code code { font-family: 'JetBrains Mono','Consolas',monospace; white-space: pre; }
+    </style>
 </head>
 <body>
 
@@ -879,7 +923,7 @@
                     <div class="title">请选择一道题目</div>
                     <div class="desc">从左侧列表中选择题目开始练习</div>
                 </div>
-                <div id="questionContent" class="question-content" style="display:none;padding:24px;overflow-y:auto;height:100%;line-height:1.8;font-size:15px;color:#e2e8f0;white-space:pre-wrap;"></div>
+                <div id="questionContent" class="question-content" style="display:none;overflow-y:auto;height:100%;"></div>
             </div>
         </main>
 
@@ -1258,32 +1302,63 @@ function loadQ(index) {
     var score = q.score || 100;
     var tags = (q.tags || []).join(' | ');
     
-    // 从完整数据中获取描述
+    // 从完整数据中获取描述（按索引匹配，两个数组顺序一致）
     var desc = '';
-    if (HUAWEI_OD_CONFIG.questions && HUAWEI_OD_CONFIG.questions.length > 0) {
-        for (var i = 0; i < HUAWEI_OD_CONFIG.questions.length; i++) {
-            if (HUAWEI_OD_CONFIG.questions[i].id === q.id) {
-                if (HUAWEI_OD_CONFIG.questions[i].desc) desc = HUAWEI_OD_CONFIG.questions[i].desc;
-                break;
-            }
-        }
+    if (HUAWEI_OD_CONFIG.questions && HUAWEI_OD_CONFIG.questions.length > index) {
+        if (HUAWEI_OD_CONFIG.questions[index].desc) desc = HUAWEI_OD_CONFIG.questions[index].desc;
     }
     
     setTimeout(function() {
         state.isLoading = false;
         loading.classList.add('hidden');
-        var text = '=== ' + title + ' (' + score + '分) ===';
-        if (tags) text += '\n标签: ' + tags;
-        text += '\n\n';
-        if (desc) {
-            text += desc;
-        } else {
-            text += '（题目描述加载中...）';
+        
+        var html = '<div class="question-header">';
+        html += '<h2>' + escapeHtml(title) + ' <span class="score-badge">' + score + '分</span></h2>';
+        if (tags) {
+            html += '<div class="tag-list">';
+            var tagArr = tags.split(' | ');
+            for (var ti = 0; ti < tagArr.length; ti++) {
+                html += '<span class="tag">' + escapeHtml(tagArr[ti]) + '</span>';
+            }
+            html += '</div>';
         }
-        text += '\n\n---\n在右侧编辑器中编写Python代码，完成后复制到本地运行测试。';
-        content.textContent = text;
+        html += '</div>';
+        
+        // 获取结构化HTML描述
+        var qhtml = '';
+        if (HUAWEI_OD_CONFIG.questions && HUAWEI_OD_CONFIG.questions.length > index) {
+            if (HUAWEI_OD_CONFIG.questions[index].html) qhtml = HUAWEI_OD_CONFIG.questions[index].html;
+        }
+        
+        if (qhtml) {
+            html += '<div class="question-body">' + qhtml + '</div>';
+        } else if (desc) {
+            html += '<div class="question-body"><pre class="plain-desc">' + escapeHtml(desc) + '</pre></div>';
+        } else {
+            html += '<div class="question-body"><div class="loading-hint">（题目描述加载中...）</div></div>';
+        }
+        
+        html += '<div class="question-footer"><span class="hint">在右侧编辑器中编写Python代码，完成后复制到本地运行测试。</span></div>';
+        
+        content.innerHTML = html;
         content.style.display = 'block';
     }, 200);
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function showSolution(btn, lang) {
+    var container = btn.parentElement.parentElement;
+    var tabs = container.querySelectorAll('.lang-tab');
+    var codes = container.querySelectorAll('.solution-code');
+    for (var i = 0; i < tabs.length; i++) tabs[i].className = 'lang-tab';
+    btn.className = 'lang-tab active';
+    for (var i = 0; i < codes.length; i++) {
+        codes[i].style.display = codes[i].getAttribute('data-lang') === lang ? 'block' : 'none';
+    }
 }
 
 function prevQ() {
