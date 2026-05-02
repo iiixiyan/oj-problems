@@ -806,6 +806,60 @@
                 font-size: 16px;
             }
         }
+
+        /* ===== OJ 风格样式 ===== */
+        .oj-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--bg-secondary); position: sticky; top: 0; z-index: 10; }
+        .oj-tab { padding: 10px 20px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; font-size: 14px; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .oj-tab:hover { color: var(--text); background: var(--hover); }
+        .oj-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: transparent; }
+        
+        .oj-tab-content { padding: 16px 20px; overflow-y: auto; flex: 1; }
+        
+        .oj-section { margin-bottom: 16px; padding: 16px; border-radius: 8px; background: var(--bg-secondary); border-left: 3px solid var(--primary); }
+        .oj-section.section-input_spec { border-left-color: #48bb78; }
+        .oj-section.section-output_spec { border-left-color: #ed8936; }
+        .oj-section.section-examples { border-left-color: #ecc94b; }
+        .oj-section.section-note { border-left-color: #fc8181; }
+        .oj-section.section-analysis { border-left-color: #9f7aea; }
+        
+        .oj-section-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #e2e8f0; }
+        .oj-section-body { font-size: 14px; line-height: 1.8; color: #cbd5e0; }
+        .oj-section-body p { margin: 6px 0; }
+        .oj-section-body br { display: block; content: ""; margin-top: 4px; }
+        
+        .oj-code { background: #1a1a2e; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; font-family: 'JetBrains Mono','Consolas',monospace; font-size: 13px; line-height: 1.5; overflow-x: auto; color: #e2e8f0; margin: 8px 0; white-space: pre-wrap; word-break: break-all; }
+        
+        .test-case { background: #1a1a2e; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin-bottom: 8px; }
+        .tc-label { font-size: 12px; color: var(--text-secondary); font-weight: 600; margin-top: 8px; }
+        .tc-label:first-child { margin-top: 0; }
+        .tc-code { font-family: 'JetBrains Mono','Consolas',monospace; font-size: 13px; color: #e2e8f0; margin: 4px 0 0; white-space: pre-wrap; word-break: break-all; }
+        .tc-text { font-size: 14px; color: #a0aec0; margin: 4px 0 0; }
+        
+        .problem-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+        .problem-item:hover { background: var(--hover); }
+        .problem-item.active { background: rgba(102,126,234,0.15); border-left: 3px solid var(--primary); }
+        .problem-item.has-solution::after { content: "✓"; float: right; color: #48bb78; font-weight: bold; }
+        
+        .item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+        .item-title { font-size: 14px; font-weight: 500; color: #e2e8f0; line-height: 1.4; flex: 1; word-break: break-all; }
+        .item-score { font-size: 12px; color: var(--primary); white-space: nowrap; flex-shrink: 0; }
+        .item-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+        .item-tag { font-size: 11px; padding: 1px 8px; border-radius: 8px; background: rgba(102,126,234,0.15); color: #a0aec0; }
+        .item-meta { display: flex; gap: 8px; margin-top: 4px; font-size: 11px; color: var(--text-secondary); }
+        .item-id { font-family: monospace; }
+        .item-sol { color: #48bb78; }
+        
+        /* Solution code */
+        .sol-tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+        .sol-tab { padding: 6px 16px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer; font-size: 13px; transition: all 0.2s; }
+        .sol-tab:hover { background: var(--hover); color: var(--text); }
+        .sol-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+        .sol-code pre { background: #1a1a2e; border: 1px solid var(--border); border-radius: 6px; padding: 16px; overflow-x: auto; font-size: 13px; line-height: 1.5; max-height: 500px; overflow-y: auto; }
+        .sol-code code { font-family: 'JetBrains Mono','Consolas',monospace; white-space: pre; }
+        
+        .empty-hint { text-align: center; padding: 40px; color: var(--text-secondary); }
+        .error-state { text-align: center; padding: 60px 20px; color: var(--danger); }
+        .sidebar.collapsed { width: 0 !important; overflow: hidden; padding: 0; }
     </style>
     <style>
         /* ===== 题目显示区域样式 ===== */
@@ -993,469 +1047,337 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
 
     <script>
-// ==================== 内嵌题目索引（无需网络请求） ====================
-var HUAWEI_OD_QUESTIONS = [{"id": "q014", "title": "(100分- 处理器问题", "score": 100, "file": "OJ_title/(100分- 处理器问题（Java & JS & Python）.html", "tags": []}, {"id": "q625", "title": "100分-8位LED控制器", "score": 100, "file": "OJ_title/100分-8位LED控制器.html", "tags": []}, {"id": "q626", "title": "100分-API请求日志去重分析", "score": 100, "file": "OJ_title/100分-API请求日志去重分析.html", "tags": []}, {"id": "q627", "title": "100分-准备生日礼物(Py.Java.C.C++.Js.Go)", "score": 100, "file": "OJ_title/100分-准备生日礼物(Py.Java.C.C++.Js.Go).html", "tags": []}, {"id": "q628", "title": "100分-分辨率排序", "score": 100, "file": "OJ_title/100分-分辨率排序.html", "tags": ["排序"]}, {"id": "q629", "title": "100分-失灵的键盘", "score": 100, "file": "OJ_title/100分-失灵的键盘.html", "tags": []}, {"id": "q630", "title": "100分-文章特征提取", "score": 100, "file": "OJ_title/100分-文章特征提取.html", "tags": []}, {"id": "q631", "title": "100分-空间占用计算(JavaPyCC++JsGo)", "score": 100, "file": "OJ_title/100分-空间占用计算(JavaPyCC++JsGo).html", "tags": []}, {"id": "q632", "title": "100分-计算数列位置N的值 (JavaPyCC++JsGo)", "score": 100, "file": "OJ_title/100分-计算数列位置N的值 (JavaPyCC++JsGo).html", "tags": []}, {"id": "q633", "title": "100分-配置操作失败数量统计(Py.Java.C.C++.Js.Go)", "score": 100, "file": "OJ_title/100分-配置操作失败数量统计(Py.Java.C.C++.Js.Go).html", "tags": []}, {"id": "q378", "title": "5键键盘", "score": 100, "file": "OJ_title/(C卷,100分)- 5键键盘（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q379", "title": "ABR 车路协同场景", "score": 100, "file": "OJ_title/(C卷,100分)- ABR 车路协同场景（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q154", "title": "AI面板识别", "score": 100, "file": "OJ_title/(B卷,100分)- AI面板识别（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q380", "title": "API集群负载统计", "score": 100, "file": "OJ_title/(C卷,100分)- API集群负载统计（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q381", "title": "CPU算力分配", "score": 100, "file": "OJ_title/(C卷,100分)- CPU算力分配（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q155", "title": "IPv4地址转换成整数", "score": 100, "file": "OJ_title/(B卷,100分)- IPv4地址转换成整数（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q498", "title": "IPv4地址转换成整数", "score": 100, "file": "OJ_title/(E卷,100分) - IPv4地址转换成整数（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q034", "title": "Linux发行版的数量", "score": 100, "file": "OJ_title/(A卷,100分)- Linux发行版的数量（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q035", "title": "MVP争夺战", "score": 100, "file": "OJ_title/(A卷,100分)- MVP争夺战（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q156", "title": "TLV解码", "score": 100, "file": "OJ_title/(B卷,100分)- TLV解码（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q499", "title": "TLV解码", "score": 100, "file": "OJ_title/(E卷,100分) - TLV解码（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q157", "title": "VLAN资源池", "score": 100, "file": "OJ_title/(B卷,100分)- VLAN资源池（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q500", "title": "VLAN资源池", "score": 100, "file": "OJ_title/(E卷,100分) - VLAN资源池（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q382", "title": "We Are A Team", "score": 100, "file": "OJ_title/(C卷,100分)- We Are A Team（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q501", "title": "We Are A Team", "score": 100, "file": "OJ_title/(E卷,100分) - We Are A Team（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q559", "title": "boss的收入", "score": 100, "file": "OJ_title/(E卷,100分)-boss的收入（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q640", "title": "【【华为OD-E卷-37 整理扑克牌100分】", "score": 100, "file": "OJ_title/【【华为OD-E卷-37 整理扑克牌100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q641", "title": "【华为OD-E卷 - 100 最长方连续方波信号 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 100 最长方连续方波信号 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q642", "title": "【华为OD-E卷 - 101 转骰子 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 101 转骰子 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q643", "title": "【华为OD-E卷 - 102 字符串化繁为简 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 102 字符串化繁为简 100分（python、java、c++、js、c）】.html", "tags": ["字符串"]}, {"id": "q644", "title": "【华为OD-E卷 - 103 分积木 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 103 分积木 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q645", "title": "【华为OD-E卷 - 104 最佳植树距离 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 104 最佳植树距离 100分（python、java、c++、js、c）】.html", "tags": ["树"]}, {"id": "q646", "title": "【华为OD-E卷 - 105 数组二叉树 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 105 数组二叉树 100分（python、java、c++、js、c）】.html", "tags": ["数组", "树"]}, {"id": "q647", "title": "【华为OD-E卷 - 106 报数游戏 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 106 报数游戏 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q648", "title": "【华为OD-E卷 - 107 连续出牌数量 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 107 连续出牌数量 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q649", "title": "【华为OD-E卷 - 108 最大矩阵和 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 108 最大矩阵和 100分（python、java、c++、js、c）】.html", "tags": ["矩阵"]}, {"id": "q650", "title": "【华为OD-E卷 - 109 磁盘容量排序 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 109 磁盘容量排序 100分（python、java、c++、js、c）】.html", "tags": ["排序"]}, {"id": "q651", "title": "【华为OD-E卷 - 110 数字涂色 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 110 数字涂色 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q652", "title": "【华为OD-E卷 - 111 事件推送 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 111 事件推送 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q653", "title": "【华为OD-E卷 - 112 任务最优调度 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 112 任务最优调度 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q654", "title": "【华为OD-E卷 - 113 跳格子2 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 113 跳格子2 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q655", "title": "【华为OD-E卷 - 114 找最小数 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 114 找最小数 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q656", "title": "【华为OD-E卷 - 115 数组组成的最小数字 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 115 数组组成的最小数字 100分（python、java、c++、js、c）】.html", "tags": ["数组"]}, {"id": "q657", "title": "【华为OD-E卷 - 119 评论转换输出 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 119 评论转换输出 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q658", "title": "【华为OD-E卷 - 120 分割数组的最大差值 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 120 分割数组的最大差值 100分（python、java、c++、js、c）】.html", "tags": ["数组"]}, {"id": "q659", "title": "【华为OD-E卷 - 78 找出两个整数数组中同时出现的整数 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 78 找出两个整数数组中同时出现的整数 100分（python、java、c++、js、c）】.html", "tags": ["数组"]}, {"id": "q660", "title": "【华为OD-E卷 - 79 最长连续子序列 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 79 最长连续子序列 100分（python、java、c++、js、c）】.html", "tags": ["字符串"]}, {"id": "q661", "title": "【华为OD-E卷 - 80 第k个排列 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 80 第k个排列 100分（python、java、c++、js、c）】.html", "tags": ["数学"]}, {"id": "q662", "title": "【华为OD-E卷 - 81 会议接待 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 81 会议接待 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q663", "title": "【华为OD-E卷 - 82 宜居星球改造计划 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 82 宜居星球改造计划 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q664", "title": "【华为OD-E卷 - 83 观看文艺汇演问题 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 83 观看文艺汇演问题 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q665", "title": "【华为OD-E卷 - 84 热点网站统计 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 84 热点网站统计 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q666", "title": "【华为OD-E卷 - 85 战场索敌 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 85 战场索敌 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q667", "title": "【华为OD-E卷 - 86 太阳能板最大面积 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 86 太阳能板最大面积 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q668", "title": "【华为OD-E卷 - 87 求最多可以派出多少支团队 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 87 求最多可以派出多少支团队 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q669", "title": "【华为OD-E卷 - 88 工号不够用了怎么办 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 88 工号不够用了怎么办 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q670", "title": "【华为OD-E卷 - 89 计算网络信号 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 89 计算网络信号 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q671", "title": "【华为OD-E卷 - 90 垃圾信息拦截 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 90 垃圾信息拦截 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q672", "title": "【华为OD-E卷 - 91 寻找符合要求的最长子串 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 91 寻找符合要求的最长子串 100分（python、java、c++、js、c）】.html", "tags": ["字符串"]}, {"id": "q673", "title": "【华为OD-E卷 - 93 VLAN资源池 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 93 VLAN资源池 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q674", "title": "【华为OD-E卷 - 94 查找充电设备组合 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 94 查找充电设备组合 100分（python、java、c++、js、c）】.html", "tags": ["数学"]}, {"id": "q675", "title": "【华为OD-E卷 - 95 光伏场地建设规划 100分", "score": 100, "file": "OJ_title/【华为OD-E卷 - 95 光伏场地建设规划 100分（python、java、c++、js、c）.html", "tags": []}, {"id": "q676", "title": "【华为OD-E卷 - 96 分奖金 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 96 分奖金 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q677", "title": "【华为OD-E卷 - 98 数字加减游戏 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 98 数字加减游戏 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q678", "title": "【华为OD-E卷 - 99 字符串解密 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 - 99 字符串解密 100分（python、java、c++、js、c）】.html", "tags": ["字符串"]}, {"id": "q679", "title": "【华为OD-E卷 -31 异常的打卡记录100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -31 异常的打卡记录100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q680", "title": "【华为OD-E卷 -32 猜字谜100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -32 猜字谜100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q681", "title": "【华为OD-E卷 -33 货币单位换算 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -33 货币单位换算 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q682", "title": "【华为OD-E卷 -35 统计匹配的二元组个数 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -35 统计匹配的二元组个数 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q683", "title": "【华为OD-E卷 -36 任务总执行时长 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -36 任务总执行时长 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q684", "title": "【华为OD-E卷 -38 优秀学员统计 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -38 优秀学员统计 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q685", "title": "【华为OD-E卷 -39 静态代码扫描服务 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -39 静态代码扫描服务 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q686", "title": "【华为OD-E卷 -40 网上商城优惠活动 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -40 网上商城优惠活动 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q687", "title": "【华为OD-E卷 -41 机房布局 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -41 机房布局 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q688", "title": "【华为OD-E卷 -42 组合出合法最小数 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -42 组合出合法最小数 100分（python、java、c++、js、c）】.html", "tags": ["数学"]}, {"id": "q689", "title": "【华为OD-E卷 -43 德州扑克 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -43 德州扑克 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q690", "title": "【华为OD-E卷 -44 Linux发行版的数量 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -44 Linux发行版的数量 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q691", "title": "【华为OD-E卷 -45 九宫格按键输入 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -45 九宫格按键输入 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q692", "title": "【华为OD-E卷 -46 最优资源分配 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -46 最优资源分配 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q693", "title": "【华为OD-E卷 -47 最佳对手 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -47 最佳对手 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q694", "title": "【华为OD-E卷 -48 观看文艺汇演问题 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -48 观看文艺汇演问题 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q695", "title": "【华为OD-E卷 -49 服务失效判断 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -49 服务失效判断 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q696", "title": "【华为OD-E卷 -50 热点网站统计 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -50 热点网站统计 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q697", "title": "【华为OD-E卷 -51 跳格子游戏 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -51 跳格子游戏 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q698", "title": "【华为OD-E卷 -52 服务失效判断 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -52 服务失效判断 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q699", "title": "【华为OD-E卷 -53 猜数字 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -53 猜数字 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q700", "title": "【华为OD-E卷 -54 篮球比赛 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -54 篮球比赛 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q701", "title": "【华为OD-E卷 -55 求字符串中所有整数的最小和 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -55 求字符串中所有整数的最小和 100分（python、java、c++、js、c）】.html", "tags": ["字符串"]}, {"id": "q702", "title": "【华为OD-E卷 -56 IPv4地址转换成整数 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -56 IPv4地址转换成整数 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q703", "title": "【华为OD-E卷 -57 敏感字段加密 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -57 敏感字段加密 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q704", "title": "【华为OD-E卷 -58 分苹果 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -58 分苹果 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q705", "title": "【华为OD-E卷 -59 恢复数字序列 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -59 恢复数字序列 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q706", "title": "【华为OD-E卷 -60 组装最大可靠性设备 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -60 组装最大可靠性设备 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q707", "title": "【华为OD-E卷 -61 分糖果 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -61 分糖果 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q708", "title": "【华为OD-E卷 -62 模拟消息队列 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -62 模拟消息队列 100分（python、java、c++、js、c）】.html", "tags": ["队列", "模拟"]}, {"id": "q709", "title": "【华为OD-E卷 -63 通过软盘拷贝文件 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -63 通过软盘拷贝文件 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q710", "title": "【华为OD-E卷 -64 关联子串 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -64 关联子串 100分（python、java、c++、js、c）】.html", "tags": ["字符串"]}, {"id": "q711", "title": "【华为OD-E卷 -65 学生方阵 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -65 学生方阵 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q712", "title": "【华为OD-E卷 -66 整数编码 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -66 整数编码 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q713", "title": "【华为OD-E卷 -67 组成最大数 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -67 组成最大数 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q714", "title": "【华为OD-E卷 -68 玩牌高手 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -68 玩牌高手 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q715", "title": "【华为OD-E卷 -69 选修课 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -69 选修课 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q716", "title": "【华为OD-E卷 -70 字符串分割 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -70 字符串分割 100分（python、java、c++、js、c）】.html", "tags": ["字符串"]}, {"id": "q717", "title": "【华为OD-E卷 -71 字符串加密 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -71 字符串加密 100分（python、java、c++、js、c）】.html", "tags": ["字符串"]}, {"id": "q718", "title": "【华为OD-E卷 -72 计算疫情扩散时间 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -72 计算疫情扩散时间 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q719", "title": "【华为OD-E卷 -73 一种字符串压缩表示的解压 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -73 一种字符串压缩表示的解压 100分（python、java、c++、js、c）】.html", "tags": ["字符串"]}, {"id": "q720", "title": "【华为OD-E卷 -74 最大花费金额 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -74 最大花费金额 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q721", "title": "【华为OD-E卷 -75 数组连续和 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -75 数组连续和 100分（python、java、c++、js、c）】.html", "tags": ["数组"]}, {"id": "q722", "title": "【华为OD-E卷 -76 ai面板识别 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -76 ai面板识别 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q723", "title": "【华为OD-E卷 -77 寻找最大价值的矿堆 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -77 寻找最大价值的矿堆 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q724", "title": "【华为OD-E卷 -97 基站维修工程师 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷 -97 基站维修工程师 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q725", "title": "【华为OD-E卷-02 最多提取子串数目100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-02 最多提取子串数目100分（python、java、c++、js、c）】.html", "tags": ["字符串"]}, {"id": "q726", "title": "【华为OD-E卷-03 ai面板识别 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-03 ai面板识别 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q727", "title": "【华为OD-E卷-04 流浪地球 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-04 流浪地球 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q728", "title": "【华为OD-E卷-05 寻找链表的中间结点 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-05 寻找链表的中间结点 100分（python、java、c++、js、c）】.html", "tags": ["链表"]}, {"id": "q729", "title": "【华为OD-E卷-06 字符串重新排序 字符串重新排列 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-06 字符串重新排序 字符串重新排列 100分（python、java、c++、js、c）】.html", "tags": ["字符串", "排序", "数学"]}, {"id": "q730", "title": "【华为OD-E卷-07 日志采集系统 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-07 日志采集系统 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q731", "title": "【华为OD-E卷-08 获得完美走位 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-08 获得完美走位 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q732", "title": "【华为OD-E卷-09 不含101的数 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-09 不含101的数 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q733", "title": "【华为OD-E卷-10 预订酒店 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-10 预订酒店 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q734", "title": "【华为OD-E卷-11 开心消消乐 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-11 开心消消乐 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q735", "title": "【华为OD-E卷-12 工作安排 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-12 工作安排 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q736", "title": "【华为OD-E卷-13 箱子之字形摆放 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-13 箱子之字形摆放 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q737", "title": "【华为OD-E卷-14 简单的自动曝光 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-14 简单的自动曝光 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q738", "title": "【华为OD-E卷-15 通信误码 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-15 通信误码 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q739", "title": "【华为OD-E卷-16 最多提取子串数目 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-16 最多提取子串数目 100分（python、java、c++、js、c）】.html", "tags": ["字符串"]}, {"id": "q740", "title": "【华为OD-E卷-17 寻找关键钥匙 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-17 寻找关键钥匙 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q741", "title": "【华为OD-E卷-18 贪心的商人 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-18 贪心的商人 100分（python、java、c++、js、c）】.html", "tags": ["贪心"]}, {"id": "q742", "title": "【华为OD-E卷-19 最左侧冗余覆盖子串 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-19 最左侧冗余覆盖子串 100分（python、java、c++、js、c）】.html", "tags": ["字符串"]}, {"id": "q743", "title": "【华为OD-E卷-20 MVP争夺战 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-20 MVP争夺战 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q744", "title": "【华为OD-E卷-21 机器人活动区域 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-21 机器人活动区域 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q745", "title": "【华为OD-E卷-22 寻找密码 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-22 寻找密码 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q746", "title": "【华为OD-E卷-23 木板 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-23 木板 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q747", "title": "【华为OD-E卷-24 狼羊过河 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-24 狼羊过河 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q748", "title": "【华为OD-E卷-25 取出尽量少的球 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-25 取出尽量少的球 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q749", "title": "【华为OD-E卷-26 最小调整顺序次数、特异性双端队列 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-26 最小调整顺序次数、特异性双端队列 100分（python、java、c++、js、c）】.html", "tags": ["队列"]}, {"id": "q750", "title": "【华为OD-E卷-27 字母组合 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-27 字母组合 100分（python、java、c++、js、c）】.html", "tags": ["数学"]}, {"id": "q751", "title": "【华为OD-E卷-28 租车骑绿道 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-28 租车骑绿道 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q752", "title": "【华为OD-E卷-29 最多获得的短信条数、云短信平台优惠活动 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-29 最多获得的短信条数、云短信平台优惠活动 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q753", "title": "【华为OD-E卷-30 AI处理器组合100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-30 AI处理器组合100分（python、java、c++、js、c）】.html", "tags": ["数学"]}, {"id": "q754", "title": "【华为OD-E卷-34 找数字、找等值元素 （本题有同名题，注意辨别） 100分】", "score": 100, "file": "OJ_title/【华为OD-E卷-34 找数字、找等值元素 （本题有同名题，注意辨别） 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q383", "title": "一种字符串压缩表示的解压", "score": 100, "file": "OJ_title/(C卷,100分)- 一种字符串压缩表示的解压（Java & JS & Python）.html", "tags": ["C卷", "字符串"]}, {"id": "q502", "title": "不等式是否满足约束并输出最大差", "score": 100, "file": "OJ_title/(E卷,100分) - 不等式是否满足约束并输出最大差（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q384", "title": "两数之和绝对值最小", "score": 100, "file": "OJ_title/(C卷,100分)- 两数之和绝对值最小（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q158", "title": "乘坐保密电梯", "score": 100, "file": "OJ_title/(B卷,100分)- 乘坐保密电梯（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q159", "title": "乱序整数序列两数之和绝对值最小", "score": 100, "file": "OJ_title/(B卷,100分)- 乱序整数序列两数之和绝对值最小（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q160", "title": "事件推送", "score": 100, "file": "OJ_title/(B卷,100分)- 事件推送（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q036", "title": "二元组个数", "score": 100, "file": "OJ_title/(A卷,100分)- 二元组个数（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q161", "title": "五子棋迷", "score": 100, "file": "OJ_title/(B卷,100分)- 五子棋迷（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q037", "title": "人数最多的站点", "score": 100, "file": "OJ_title/(A卷,100分)- 人数最多的站点（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q162", "title": "代码编辑器", "score": 100, "file": "OJ_title/(B卷,100分)- 代码编辑器（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q038", "title": "任务总执行时长", "score": 100, "file": "OJ_title/(A卷,100分)- 任务总执行时长（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q039", "title": "优秀学员统计", "score": 100, "file": "OJ_title/(A卷,100分)- 优秀学员统计（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q503", "title": "优秀学员统计", "score": 100, "file": "OJ_title/(E卷,100分) - 优秀学员统计（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q385", "title": "会议室占用时间", "score": 100, "file": "OJ_title/(C卷,100分)- 会议室占用时间（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q386", "title": "停车场车辆统计", "score": 100, "file": "OJ_title/(C卷,100分)- 停车场车辆统计（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q504", "title": "光伏场地建设规划", "score": 100, "file": "OJ_title/(E卷,100分) - 光伏场地建设规划（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q387", "title": "免单统计", "score": 100, "file": "OJ_title/(C卷,100分)- 免单统计（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q505", "title": "免单统计", "score": 100, "file": "OJ_title/(E卷,100分) - 免单统计（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q388", "title": "全排列", "score": 100, "file": "OJ_title/(C卷,100分)- 全排列（Java & JS & Python）.html", "tags": ["C卷", "数学"]}, {"id": "q163", "title": "全量和已占用字符集", "score": 100, "file": "OJ_title/(B卷,100分)- 全量和已占用字符集（Java & JS & Python）.html", "tags": ["B卷", "字符串"]}, {"id": "q164", "title": "关联子串", "score": 100, "file": "OJ_title/(B卷,100分)- 关联子串（Java & JS & Python & C）.html", "tags": ["B卷", "字符串"]}, {"id": "q506", "title": "关联子串", "score": 100, "file": "OJ_title/(E卷,100分) - 关联子串（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "字符串"]}, {"id": "q389", "title": "内存冷热标记", "score": 100, "file": "OJ_title/(C卷,100分)- 内存冷热标记（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q165", "title": "内存资源分配", "score": 100, "file": "OJ_title/(B卷,100分)- 内存资源分配（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q507", "title": "内存资源分配（C++ Java JavaScript Python C语言）", "score": 100, "file": "OJ_title/(E卷,100分) - 内存资源分配（C++ Java JavaScript Python C语言）.html", "tags": ["E卷"]}, {"id": "q040", "title": "冗余覆盖", "score": 100, "file": "OJ_title/(A卷,100分)- 冗余覆盖（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q390", "title": "冠亚军排名，奖牌榜排名", "score": 100, "file": "OJ_title/(C卷,100分)- 冠亚军排名，奖牌榜排名（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q560", "title": "出租车计费靠谱的车", "score": 100, "file": "OJ_title/(E卷,100分)-出租车计费靠谱的车（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q391", "title": "分割均衡字符串", "score": 100, "file": "OJ_title/(C卷,100分)- 分割均衡字符串（Java & JS & Python & C）.html", "tags": ["C卷", "字符串"]}, {"id": "q166", "title": "分割数组的最大差值", "score": 100, "file": "OJ_title/(B卷,100分)- 分割数组的最大差值（Java & JS & Python & C）.html", "tags": ["B卷", "数组"]}, {"id": "q508", "title": "分割数组的最大差值", "score": 100, "file": "OJ_title/(E卷,100分) - 分割数组的最大差值（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "数组"]}, {"id": "q392", "title": "分披萨", "score": 100, "file": "OJ_title/(C卷,100分)- 分披萨（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q509", "title": "分披萨", "score": 100, "file": "OJ_title/(E卷,100分) - 分披萨（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q167", "title": "分班", "score": 100, "file": "OJ_title/(B卷,100分)- 分班（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q510", "title": "分班问题幼儿园分班", "score": 100, "file": "OJ_title/(E卷,100分) - 分班问题幼儿园分班（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q168", "title": "分糖果", "score": 100, "file": "OJ_title/(B卷,100分)- 分糖果（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q561", "title": "分糖果", "score": 100, "file": "OJ_title/(E卷,100分)-分糖果（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q169", "title": "分苹果", "score": 100, "file": "OJ_title/(B卷,100分)- 分苹果（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q562", "title": "分苹果", "score": 100, "file": "OJ_title/(E卷,100分)-分苹果（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q393", "title": "分配土地", "score": 100, "file": "OJ_title/(C卷,100分)- 分配土地（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q170", "title": "判断一组不等式是否满足约束并输出最大差", "score": 100, "file": "OJ_title/(B卷,100分)- 判断一组不等式是否满足约束并输出最大差（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q394", "title": "判断字符串子序列", "score": 100, "file": "OJ_title/(C卷,100分)- 判断字符串子序列（Java & JS & Python）.html", "tags": ["C卷", "字符串"]}, {"id": "q296", "title": "剩余银饰的重量", "score": 100, "file": "OJ_title/(CD卷,100分)- 剩余银饰的重量（Java & JS & Python & C）.html", "tags": []}, {"id": "q395", "title": "勾股数元组", "score": 100, "file": "OJ_title/(C卷,100分)- 勾股数元组（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q041", "title": "匿名信", "score": 100, "file": "OJ_title/(A卷,100分)- 匿名信（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q755", "title": "华为OD-E卷 - 92 跳格子游戏 100分】", "score": 100, "file": "OJ_title/华为OD-E卷 - 92 跳格子游戏 100分（python、java、c++、js、c）】.html", "tags": []}, {"id": "q756", "title": "华为OD-E卷-01 补种未成活胡杨100分", "score": 100, "file": "OJ_title/华为OD-E卷-01 补种未成活胡杨100分（python、java、c++、js、c）.html", "tags": []}, {"id": "q042", "title": "单向链表中间节点", "score": 100, "file": "OJ_title/(A卷,100分)- 单向链表中间节点（Java & JS & Python）.html", "tags": ["A卷", "链表"]}, {"id": "q511", "title": "单向链表中间节点", "score": 100, "file": "OJ_title/(E卷,100分) - 单向链表中间节点（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "链表"]}, {"id": "q043", "title": "单词倒序", "score": 100, "file": "OJ_title/(A卷,100分)- 单词倒序（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q396", "title": "单词加密", "score": 100, "file": "OJ_title/(C卷,100分)- 单词加密（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q397", "title": "单词接龙", "score": 100, "file": "OJ_title/(C卷,100分)- 单词接龙（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q512", "title": "单词接龙", "score": 100, "file": "OJ_title/(E卷,100分) - 单词接龙（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q398", "title": "单词重量", "score": 100, "file": "OJ_title/(C卷,100分)- 单词重量（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q171", "title": "告警抑制", "score": 100, "file": "OJ_title/(B卷,100分)- 告警抑制（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q172", "title": "响应报文时间", "score": 100, "file": "OJ_title/(B卷,100分)- 响应报文时间（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q173", "title": "喊7的次数重排", "score": 100, "file": "OJ_title/(B卷,100分)- 喊7的次数重排（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q513", "title": "喊7的次数重排", "score": 100, "file": "OJ_title/(E卷,100分) - 喊7的次数重排（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q044", "title": "回文字符串", "score": 100, "file": "OJ_title/(A卷,100分)- 回文字符串（Java & JS & Python）.html", "tags": ["A卷", "字符串"]}, {"id": "q399", "title": "围棋的气", "score": 100, "file": "OJ_title/(C卷,100分)- 围棋的气（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q400", "title": "在字符串中找出连续最长的数字串(含“+-”号)", "score": 100, "file": "OJ_title/(C卷,100分)- 在字符串中找出连续最长的数字串(含“+-”号)（Java & JS & Python）.html", "tags": ["C卷", "字符串"]}, {"id": "q297", "title": "堆内存申请", "score": 100, "file": "OJ_title/(CD卷,100分)- 堆内存申请（Java & JS & Python & C）.html", "tags": []}, {"id": "q401", "title": "堆栈中的剩余数字", "score": 100, "file": "OJ_title/(C卷,100分)- 堆栈中的剩余数字（Java & JS & Python）.html", "tags": ["C卷", "栈"]}, {"id": "q174", "title": "增强的strstr", "score": 100, "file": "OJ_title/(B卷,100分)- 增强的strstr（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q563", "title": "增强的strstr", "score": 100, "file": "OJ_title/(E卷,100分)-增强的strstr（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q045", "title": "处理器问题", "score": 100, "file": "OJ_title/(A卷,100分)- 处理器问题（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q402", "title": "多段线数据压缩", "score": 100, "file": "OJ_title/(C卷,100分)- 多段线数据压缩（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q175", "title": "太阳能板最大面积", "score": 100, "file": "OJ_title/(B卷,100分)- 太阳能板最大面积（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q046", "title": "字母组合", "score": 100, "file": "OJ_title/(A卷,100分)- 字母组合（Java & JS & Python & C）.html", "tags": ["A卷", "数学"]}, {"id": "q176", "title": "字符串分割", "score": 100, "file": "OJ_title/(B卷,100分)- 字符串分割（Java & JS & Python）.html", "tags": ["B卷", "字符串"]}, {"id": "q298", "title": "字符串分割(二)", "score": 100, "file": "OJ_title/(CD卷,100分)- 字符串分割(二)（Java & JS & Python）.html", "tags": ["字符串"]}, {"id": "q514", "title": "字符串分割转换", "score": 100, "file": "OJ_title/(E卷,100分) - 字符串分割转换（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "字符串"]}, {"id": "q177", "title": "字符串加密", "score": 100, "file": "OJ_title/(B卷,100分)- 字符串加密（Java & JS & Python & C）.html", "tags": ["B卷", "字符串"]}, {"id": "q299", "title": "字符串变换最小字符串", "score": 100, "file": "OJ_title/(CD卷,100分)- 字符串变换最小字符串（Java & JS & Python & C）.html", "tags": ["字符串"]}, {"id": "q564", "title": "字符串变换最小字符串", "score": 100, "file": "OJ_title/(E卷,100分)-字符串变换最小字符串（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "字符串"]}, {"id": "q403", "title": "字符串序列判定", "score": 100, "file": "OJ_title/(C卷,100分)- 字符串序列判定（Java & JS & Python & C）.html", "tags": ["C卷", "字符串"]}, {"id": "q300", "title": "字符串排序", "score": 100, "file": "OJ_title/(CD卷,100分)- 字符串排序（Java & JS & Python）.html", "tags": ["字符串", "排序"]}, {"id": "q178", "title": "字符串摘要", "score": 100, "file": "OJ_title/(B卷,100分)- 字符串摘要（Java & JS & Python & C）.html", "tags": ["B卷", "字符串"]}, {"id": "q404", "title": "字符串筛选排序", "score": 100, "file": "OJ_title/(C卷,100分)- 字符串筛选排序（Java & JS & Python & C）.html", "tags": ["C卷", "字符串", "排序"]}, {"id": "q047", "title": "字符串重新排列、字符串重新排序", "score": 100, "file": "OJ_title/(A卷,100分)- 字符串重新排列、字符串重新排序（Java & JS & Python）.html", "tags": ["A卷", "字符串", "排序", "数学"]}, {"id": "q301", "title": "字符统计及重排", "score": 100, "file": "OJ_title/(CD卷,100分)- 字符统计及重排（Java & JS & Python）.html", "tags": ["字符串"]}, {"id": "q515", "title": "字符统计及重排", "score": 100, "file": "OJ_title/(E卷,100分) - 字符统计及重排（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "字符串"]}, {"id": "q001", "title": "完美走位", "score": 100, "file": "OJ_title/(100分)- 完美走位（Java & JS & Python）.html", "tags": []}, {"id": "q048", "title": "完美走位(1)", "score": 100, "file": "OJ_title/(A卷,100分)- 完美走位（Java & JS & Python）(1).html", "tags": ["A卷"]}, {"id": "q049", "title": "密室逃生游戏", "score": 100, "file": "OJ_title/(A卷,100分)- 密室逃生游戏（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q405", "title": "密码解密", "score": 100, "file": "OJ_title/(C卷,100分)- 密码解密（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q406", "title": "密码输入检测", "score": 100, "file": "OJ_title/(C卷,100分)- 密码输入检测（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q407", "title": "密钥格式化", "score": 100, "file": "OJ_title/(C卷,100分)- 密钥格式化（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q050", "title": "对称美学", "score": 100, "file": "OJ_title/(A卷,100分)- 对称美学（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q013", "title": "寻找密码", "score": 100, "file": "OJ_title/(100分)-寻找密码（python、java、c++、js、c）.html", "tags": []}, {"id": "q051", "title": "寻找相似单词", "score": 100, "file": "OJ_title/(A卷,100分)- 寻找相似单词（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q408", "title": "寻找相同子串", "score": 100, "file": "OJ_title/(C卷,100分)- 寻找相同子串（Java & JS & Python & C）.html", "tags": ["C卷", "字符串"]}, {"id": "q409", "title": "寻找身高相近的小朋友", "score": 100, "file": "OJ_title/(C卷,100分)- 寻找身高相近的小朋友（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q410", "title": "小华地图寻宝", "score": 100, "file": "OJ_title/(C卷,100分)- 小华地图寻宝（Java & JS & Python & C）.html", "tags": ["C卷", "图"]}, {"id": "q032", "title": "小明减肥", "score": 100, "file": "OJ_title/(2025B.100分)-小明减肥.html", "tags": ["2025B"]}, {"id": "q411", "title": "小明找位置", "score": 100, "file": "OJ_title/(C卷,100分)- 小明找位置（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q412", "title": "小明的幸运数", "score": 100, "file": "OJ_title/(C卷,100分)- 小明的幸运数（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q413", "title": "小朋友来自多少小区", "score": 100, "file": "OJ_title/(C卷,100分)- 小朋友来自多少小区（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q414", "title": "工号不够用了怎么办？", "score": 100, "file": "OJ_title/(C卷,100分)- 工号不够用了怎么办？（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q052", "title": "幻方修复", "score": 100, "file": "OJ_title/(A卷,100分)- 幻方修复（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q179", "title": "座位调整", "score": 100, "file": "OJ_title/(B卷,100分)- 座位调整（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q053", "title": "开心消消乐", "score": 100, "file": "OJ_title/(A卷,100分)- 开心消消乐（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q516", "title": "开心消消乐", "score": 100, "file": "OJ_title/(E卷,100分) - 开心消消乐（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q415", "title": "开源项目热度榜单", "score": 100, "file": "OJ_title/(C卷,100分)- 开源项目热度榜单（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q054", "title": "异常的打卡记录", "score": 100, "file": "OJ_title/(A卷,100分)- 异常的打卡记录（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q055", "title": "微服务的集成测试(1)", "score": 100, "file": "OJ_title/(A卷,100分)- 微服务的集成测试（Java & JS & Python）(1).html", "tags": ["A卷"]}, {"id": "q416", "title": "德州扑克", "score": 100, "file": "OJ_title/(C卷,100分)- 德州扑克（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q056", "title": "快递业务站", "score": 100, "file": "OJ_title/(A卷,100分)- 快递业务站（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q417", "title": "快递运输", "score": 100, "file": "OJ_title/(C卷,100分)- 快递运输（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q057", "title": "总最快检测效率", "score": 100, "file": "OJ_title/(A卷,100分)- 总最快检测效率（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q180", "title": "恢复数字序列", "score": 100, "file": "OJ_title/(B卷,100分)- 恢复数字序列（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q517", "title": "恢复数字序列", "score": 100, "file": "OJ_title/(E卷,100分) - 恢复数字序列（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q418", "title": "悄悄话", "score": 100, "file": "OJ_title/(C卷,100分)- 悄悄话（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q518", "title": "悄悄话", "score": 100, "file": "OJ_title/(E卷,100分) - 悄悄话（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q419", "title": "手机App防沉迷系统", "score": 100, "file": "OJ_title/(C卷,100分)- 手机App防沉迷系统（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q519", "title": "手机App防沉迷系统", "score": 100, "file": "OJ_title/(E卷,100分) - 手机App防沉迷系统（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q058", "title": "打印机队列", "score": 100, "file": "OJ_title/(A卷,100分)- 打印机队列（Java & JS & Python）.html", "tags": ["A卷", "队列"]}, {"id": "q302", "title": "执行任务赚积分", "score": 100, "file": "OJ_title/(CD卷,100分)- 执行任务赚积分（Java & JS & Python & C）.html", "tags": []}, {"id": "q303", "title": "执行时长", "score": 100, "file": "OJ_title/(CD卷,100分)- 执行时长（Java & JS & Python）.html", "tags": []}, {"id": "q420", "title": "找出符合要求的字符串子串", "score": 100, "file": "OJ_title/(C卷,100分)- 找出符合要求的字符串子串（Java & JS & Python）.html", "tags": ["C卷", "字符串"]}, {"id": "q421", "title": "找出经过特定点的路径长度", "score": 100, "file": "OJ_title/(C卷,100分)- 找出经过特定点的路径长度（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q422", "title": "找座位", "score": 100, "file": "OJ_title/(C卷,100分)- 找座位（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q059", "title": "找数字、找等值元素", "score": 100, "file": "OJ_title/(A卷,100分)- 找数字、找等值元素（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q520", "title": "找数字找等值元素", "score": 100, "file": "OJ_title/(E卷,100分) - 找数字找等值元素（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q181", "title": "找最小数", "score": 100, "file": "OJ_title/(B卷,100分)- 找最小数（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q521", "title": "找最小数", "score": 100, "file": "OJ_title/(E卷,100分) - 找最小数（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q423", "title": "找朋友", "score": 100, "file": "OJ_title/(C卷,100分)- 找朋友（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q182", "title": "找终点", "score": 100, "file": "OJ_title/(B卷,100分)- 找终点（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q522", "title": "找终点", "score": 100, "file": "OJ_title/(E卷,100分) - 找终点（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q183", "title": "找车位", "score": 100, "file": "OJ_title/(B卷,100分)- 找车位（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q060", "title": "投篮大赛(1)", "score": 100, "file": "OJ_title/(A卷,100分)- 投篮大赛（Java & JS & Python）(1).html", "tags": ["A卷"]}, {"id": "q424", "title": "报数游戏", "score": 100, "file": "OJ_title/(C卷,100分)- 报数游戏（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q523", "title": "报数游戏", "score": 100, "file": "OJ_title/(E卷,100分) - 报数游戏（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q425", "title": "报数问题", "score": 100, "file": "OJ_title/(C卷,100分)- 报数问题（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q565", "title": "报文响应时间", "score": 100, "file": "OJ_title/(E卷,100分)-报文响应时间（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q184", "title": "报文回路", "score": 100, "file": "OJ_title/(B卷,100分)- 报文回路（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q185", "title": "报文重排序", "score": 100, "file": "OJ_title/(B卷,100分)- 报文重排序（Java & JS & Python & C）.html", "tags": ["B卷", "排序"]}, {"id": "q186", "title": "拔河比赛", "score": 100, "file": "OJ_title/(B卷,100分)- 拔河比赛（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q426", "title": "括号匹配", "score": 100, "file": "OJ_title/(C卷,100分)- 括号匹配（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q427", "title": "拼接URL", "score": 100, "file": "OJ_title/(C卷,100分)- 拼接URL（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q187", "title": "按单词下标区间翻转文章内容", "score": 100, "file": "OJ_title/(B卷,100分)- 按单词下标区间翻转文章内容（Java & JS & Python & C）.html", "tags": ["B卷", "数组"]}, {"id": "q428", "title": "按身高和体重排队", "score": 100, "file": "OJ_title/(C卷,100分)- 按身高和体重排队（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q061", "title": "挑选字符串", "score": 100, "file": "OJ_title/(A卷,100分)- 挑选字符串（Java & JS & Python）.html", "tags": ["A卷", "字符串"]}, {"id": "q429", "title": "掌握的单词个数", "score": 100, "file": "OJ_title/(C卷,100分)- 掌握的单词个数（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q002", "title": "提取字符串中的最长合法简单数学表达式", "score": 100, "file": "OJ_title/(100分)- 提取字符串中的最长合法简单数学表达式（Java & JS & Python & C）.html", "tags": ["字符串", "数学"]}, {"id": "q430", "title": "提取字符串中的最长合法简单数学表达式", "score": 100, "file": "OJ_title/(C卷,100分)- 提取字符串中的最长合法简单数学表达式（Java & JS & Python & C）.html", "tags": ["C卷", "字符串", "数学"]}, {"id": "q062", "title": "插队", "score": 100, "file": "OJ_title/(A卷,100分)- 插队（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q431", "title": "攀登者1", "score": 100, "file": "OJ_title/(C卷,100分)- 攀登者1（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q188", "title": "支持优先级的队列", "score": 100, "file": "OJ_title/(B卷,100分)- 支持优先级的队列（Java & JS & Python）.html", "tags": ["B卷", "队列"]}, {"id": "q189", "title": "敏感字段加密", "score": 100, "file": "OJ_title/(B卷,100分)- 敏感字段加密（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q566", "title": "敏感字段加密", "score": 100, "file": "OJ_title/(E卷,100分)-敏感字段加密（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q190", "title": "数列描述", "score": 100, "file": "OJ_title/(B卷,100分)- 数列描述（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q191", "title": "数大雁", "score": 100, "file": "OJ_title/(B卷,100分)- 数大雁（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q567", "title": "数大雁", "score": 100, "file": "OJ_title/(E卷,100分)-数大雁（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q192", "title": "数字反转打印", "score": 100, "file": "OJ_title/(B卷,100分)- 数字反转打印（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q432", "title": "数字字符串组合倒序", "score": 100, "file": "OJ_title/(C卷,100分)- 数字字符串组合倒序（Java & JS & Python）.html", "tags": ["C卷", "字符串", "数学"]}, {"id": "q524", "title": "数字排列", "score": 100, "file": "OJ_title/(E卷,100分) - 数字排列（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "数学"]}, {"id": "q433", "title": "数字涂色", "score": 100, "file": "OJ_title/(C卷,100分)- 数字涂色（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q525", "title": "数字涂色", "score": 100, "file": "OJ_title/(E卷,100分) - 数字涂色（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q193", "title": "数据分类", "score": 100, "file": "OJ_title/(B卷,100分)- 数据分类（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q434", "title": "数据单元的变化替换", "score": 100, "file": "OJ_title/(C卷,100分)- 数据单元的变化替换（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q194", "title": "数组去重和排序", "score": 100, "file": "OJ_title/(B卷,100分)- 数组去重和排序（Java & JS & Python）.html", "tags": ["B卷", "数组", "排序"]}, {"id": "q195", "title": "数组拼接", "score": 100, "file": "OJ_title/(B卷,100分)- 数组拼接（Java & JS & Python & C）.html", "tags": ["B卷", "数组"]}, {"id": "q526", "title": "数组拼接", "score": 100, "file": "OJ_title/(E卷,100分) - 数组拼接（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "数组"]}, {"id": "q435", "title": "数组组成的最小数字", "score": 100, "file": "OJ_title/(C卷,100分)- 数组组成的最小数字（Java & JS & Python & C）.html", "tags": ["C卷", "数组"]}, {"id": "q003", "title": "数组连续和", "score": 100, "file": "OJ_title/(100分)- 数组连续和（Java & JS & Python & C）.html", "tags": ["数组"]}, {"id": "q436", "title": "数组连续和", "score": 100, "file": "OJ_title/(C卷,100分)- 数组连续和（Java & JS & Python & C）.html", "tags": ["C卷", "数组"]}, {"id": "q304", "title": "整型数组按个位值排序", "score": 100, "file": "OJ_title/(CD卷,100分)- 整型数组按个位值排序（Java & JS & Python）.html", "tags": ["数组", "排序"]}, {"id": "q437", "title": "整数对最小和", "score": 100, "file": "OJ_title/(C卷,100分)- 整数对最小和（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q527", "title": "整数对最小和", "score": 100, "file": "OJ_title/(E卷,100分) - 整数对最小和（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q196", "title": "整数编码", "score": 100, "file": "OJ_title/(B卷,100分)- 整数编码（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q063", "title": "整理扑克牌", "score": 100, "file": "OJ_title/(A卷,100分)- 整理扑克牌（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q197", "title": "文件目录大小", "score": 100, "file": "OJ_title/(B卷,100分)- 文件目录大小（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q198", "title": "斗地主之顺子", "score": 100, "file": "OJ_title/(B卷,100分)- 斗地主之顺子（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q568", "title": "斗地主之顺子", "score": 100, "file": "OJ_title/(E卷,100分)-斗地主之顺子（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q064", "title": "新员工座位", "score": 100, "file": "OJ_title/(A卷,100分)- 新员工座位（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q065", "title": "新学校选址", "score": 100, "file": "OJ_title/(A卷,100分)- 新学校选址（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q528", "title": "新工号中数字的最短长度", "score": 100, "file": "OJ_title/(E卷,100分) - 新工号中数字的最短长度（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q569", "title": "日志采集系统", "score": 100, "file": "OJ_title/(E卷,100分)-日志采集系统（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q066", "title": "日志限流（20220921）", "score": 100, "file": "OJ_title/(A卷,100分)- 日志限流（20220921）.html", "tags": ["A卷"]}, {"id": "q067", "title": "日志首次上报最多积分", "score": 100, "file": "OJ_title/(A卷,100分)- 日志首次上报最多积分（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q068", "title": "星际篮球争霸赛", "score": 100, "file": "OJ_title/(A卷,100分)- 星际篮球争霸赛（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q305", "title": "智能成绩表", "score": 100, "file": "OJ_title/(CD卷,100分)- 智能成绩表（Java & JS & Python & C）.html", "tags": []}, {"id": "q529", "title": "智能成绩表", "score": 100, "file": "OJ_title/(E卷,100分) - 智能成绩表（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q306", "title": "最多购买宝石数目", "score": 100, "file": "OJ_title/(CD卷,100分)- 最多购买宝石数目（Java & JS & Python & C）.html", "tags": []}, {"id": "q069", "title": "最多颜色的车辆", "score": 100, "file": "OJ_title/(A卷,100分)- 最多颜色的车辆（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q307", "title": "最大N个数与最小N个数的和", "score": 100, "file": "OJ_title/(CD卷,100分)- 最大N个数与最小N个数的和（Java & JS & Python）.html", "tags": []}, {"id": "q530", "title": "最大值", "score": 100, "file": "OJ_title/(E卷,100分) - 最大值（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q070", "title": "最大利润", "score": 100, "file": "OJ_title/(A卷,100分)- 最大利润（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q570", "title": "最大利润贪心的商人", "score": 100, "file": "OJ_title/(E卷,100分)-最大利润贪心的商人（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "贪心"]}, {"id": "q071", "title": "最大报酬", "score": 100, "file": "OJ_title/(A卷,100分)- 最大报酬（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q571", "title": "最大报酬", "score": 100, "file": "OJ_title/(E卷,100分)-最大报酬（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q308", "title": "最大括号深度", "score": 100, "file": "OJ_title/(CD卷,100分)- 最大括号深度（Java & JS & Python）.html", "tags": []}, {"id": "q309", "title": "最大时间", "score": 100, "file": "OJ_title/(CD卷,100分)- 最大时间（Java & JS & Python）.html", "tags": []}, {"id": "q310", "title": "最大矩阵和", "score": 100, "file": "OJ_title/(CD卷,100分)- 最大矩阵和（Java & JS & Python & C）.html", "tags": ["矩阵"]}, {"id": "q311", "title": "最大股票收益", "score": 100, "file": "OJ_title/(CD卷,100分)- 最大股票收益（Java & JS & Python & C）.html", "tags": []}, {"id": "q199", "title": "最大花费金额", "score": 100, "file": "OJ_title/(B卷,100分)- 最大花费金额（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q312", "title": "最富裕的小家庭", "score": 100, "file": "OJ_title/(CD卷,100分)- 最富裕的小家庭（Java & JS & Python & C）.html", "tags": []}, {"id": "q531", "title": "最小的调整次数特异性双端队列", "score": 100, "file": "OJ_title/(E卷,100分) - 最小的调整次数特异性双端队列（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "队列"]}, {"id": "q072", "title": "最小调整顺序次数、特异性双端队列", "score": 100, "file": "OJ_title/(A卷,100分)- 最小调整顺序次数、特异性双端队列（Java & JS & Python）.html", "tags": ["A卷", "队列"]}, {"id": "q200", "title": "最少交换次数", "score": 100, "file": "OJ_title/(B卷,100分)- 最少交换次数（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q532", "title": "最少交换次数", "score": 100, "file": "OJ_title/(E卷,100分) - 最少交换次数（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q572", "title": "最左侧冗余覆盖子串", "score": 100, "file": "OJ_title/(E卷,100分)-最左侧冗余覆盖子串（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "字符串"]}, {"id": "q073", "title": "最快到达医院的方法", "score": 100, "file": "OJ_title/(A卷,100分)- 最快到达医院的方法（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q074", "title": "最短木板长度", "score": 100, "file": "OJ_title/(A卷,100分)- 最短木板长度（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q201", "title": "最远足迹", "score": 100, "file": "OJ_title/(B卷,100分)- 最远足迹（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q202", "title": "最长公共后缀", "score": 100, "file": "OJ_title/(B卷,100分)- 最长公共后缀（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q438", "title": "最长子字符串的长度（一）", "score": 100, "file": "OJ_title/(C卷,100分)- 最长子字符串的长度（一）（Java & JS & Python & C）.html", "tags": ["C卷", "字符串"]}, {"id": "q004", "title": "最长的密码", "score": 100, "file": "OJ_title/(100分)- 最长的密码（Java & JS & Python）.html", "tags": []}, {"id": "q075", "title": "最长的密码", "score": 100, "file": "OJ_title/(A卷,100分)- 最长的密码（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q313", "title": "最长的指定瑕疵度的元音子串", "score": 100, "file": "OJ_title/(CD卷,100分)- 最长的指定瑕疵度的元音子串（Java & JS & Python & C）.html", "tags": ["字符串"]}, {"id": "q005", "title": "最长的顺子", "score": 100, "file": "OJ_title/(100分)- 最长的顺子（Java & JS & Python）.html", "tags": []}, {"id": "q203", "title": "最长连续子序列", "score": 100, "file": "OJ_title/(B卷,100分)- 最长连续子序列（Java & JS & Python & C）.html", "tags": ["B卷", "字符串"]}, {"id": "q573", "title": "最长连续子序列", "score": 100, "file": "OJ_title/(E卷,100分)-最长连续子序列（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "字符串"]}, {"id": "q533", "title": "服务器广播需要广播的服务器数量", "score": 100, "file": "OJ_title/(E卷,100分) - 服务器广播需要广播的服务器数量（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q006", "title": "机器人", "score": 100, "file": "OJ_title/(100分)- 机器人（Java & JS & Python）.html", "tags": []}, {"id": "q076", "title": "机器人", "score": 100, "file": "OJ_title/(A卷,100分)- 机器人（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q439", "title": "机器人搬砖", "score": 100, "file": "OJ_title/(C卷,100分)- 机器人搬砖（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q574", "title": "机器人活动区域", "score": 100, "file": "OJ_title/(E卷,100分)-机器人活动区域（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q440", "title": "机场航班调度程序", "score": 100, "file": "OJ_title/(C卷,100分)- 机场航班调度程序（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q441", "title": "来自异国的客人", "score": 100, "file": "OJ_title/(C卷,100分)- 来自异国的客人（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q204", "title": "构成正方形的数量", "score": 100, "file": "OJ_title/(B卷,100分)- 构成正方形的数量（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q534", "title": "构成正方形的数量", "score": 100, "file": "OJ_title/(E卷,100分) - 构成正方形的数量（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q442", "title": "查找众数及中位数", "score": 100, "file": "OJ_title/(C卷,100分)- 查找众数及中位数（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q077", "title": "查找单入口空闲区域", "score": 100, "file": "OJ_title/(A卷,100分)- 查找单入口空闲区域（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q443", "title": "查找接口成功率最优时间段", "score": 100, "file": "OJ_title/(C卷,100分)- 查找接口成功率最优时间段（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q535", "title": "查找接口成功率最优时间段", "score": 100, "file": "OJ_title/(E卷,100分) - 查找接口成功率最优时间段（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q078", "title": "查找重复代码", "score": 100, "file": "OJ_title/(A卷,100分)- 查找重复代码（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q444", "title": "检查是否存在满足条件的数字组合", "score": 100, "file": "OJ_title/(C卷,100分)- 检查是否存在满足条件的数字组合（Java & JS & Python & C）.html", "tags": ["C卷", "数学"]}, {"id": "q079", "title": "模拟商场优惠打折", "score": 100, "file": "OJ_title/(A卷,100分)- 模拟商场优惠打折（Java & JS & Python）.html", "tags": ["A卷", "模拟"]}, {"id": "q205", "title": "模拟消息队列", "score": 100, "file": "OJ_title/(B卷,100分)- 模拟消息队列（Java & JS & Python）.html", "tags": ["B卷", "队列", "模拟"]}, {"id": "q207", "title": "比赛", "score": 100, "file": "OJ_title/(B卷,100分)- 比赛（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q206", "title": "比赛的冠亚季军", "score": 100, "file": "OJ_title/(B卷,100分)- 比赛的冠亚季军（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q445", "title": "水仙花数", "score": 100, "file": "OJ_title/(C卷,100分)- 水仙花数（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q536", "title": "水仙花数 Ⅰ（C++ Java JavaScript Python C语言）", "score": 100, "file": "OJ_title/(E卷,100分) - 水仙花数 Ⅰ（C++ Java JavaScript Python C语言）.html", "tags": ["E卷"]}, {"id": "q446", "title": "求字符串中所有整数的最小和", "score": 100, "file": "OJ_title/(C卷,100分)- 求字符串中所有整数的最小和（Java & JS & Python & C）.html", "tags": ["C卷", "字符串"]}, {"id": "q447", "title": "求幸存数之和", "score": 100, "file": "OJ_title/(C卷,100分)- 求幸存数之和（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q448", "title": "求最多可以派出多少支团队", "score": 100, "file": "OJ_title/(C卷,100分)- 求最多可以派出多少支团队（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q208", "title": "求最小步数", "score": 100, "file": "OJ_title/(B卷,100分)- 求最小步数（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q449", "title": "求满足条件的最长子串的长度", "score": 100, "file": "OJ_title/(C卷,100分)- 求满足条件的最长子串的长度（Java & JS & Python & C）.html", "tags": ["C卷", "字符串"]}, {"id": "q450", "title": "求符合要求的结对方式", "score": 100, "file": "OJ_title/(C卷,100分)- 求符合要求的结对方式（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q451", "title": "求解连续数列", "score": 100, "file": "OJ_title/(C卷,100分)- 求解连续数列（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q209", "title": "流水线", "score": 100, "file": "OJ_title/(B卷,100分)- 流水线（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q575", "title": "流量地球", "score": 100, "file": "OJ_title/(E卷,100分)-流量地球（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q452", "title": "测试用例执行计划", "score": 100, "file": "OJ_title/(C卷,100分)- 测试用例执行计划（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q453", "title": "消消乐游戏", "score": 100, "file": "OJ_title/(C卷,100分)- 消消乐游戏（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q007", "title": "游戏分组", "score": 100, "file": "OJ_title/(100分)- 游戏分组（Java & JS & Python & C）.html", "tags": []}, {"id": "q454", "title": "游戏分组", "score": 100, "file": "OJ_title/(C卷,100分)- 游戏分组（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q537", "title": "游戏分组王者荣耀", "score": 100, "file": "OJ_title/(E卷,100分) - 游戏分组王者荣耀（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q455", "title": "滑动窗口最大和", "score": 100, "file": "OJ_title/(C卷,100分)- 滑动窗口最大和（Java & JS & Python & C）.html", "tags": ["C卷", "滑动窗口"]}, {"id": "q457", "title": "火星文计算", "score": 100, "file": "OJ_title/(C卷,100分)- 火星文计算（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q456", "title": "火星文计算2", "score": 100, "file": "OJ_title/(C卷,100分)- 火星文计算2（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q458", "title": "灰度图存储", "score": 100, "file": "OJ_title/(C卷,100分)- 灰度图存储（Java & JS & Python & C）.html", "tags": ["C卷", "图"]}, {"id": "q210", "title": "热点网站统计", "score": 100, "file": "OJ_title/(B卷,100分)- 热点网站统计（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q538", "title": "热点网站统计", "score": 100, "file": "OJ_title/(E卷,100分) - 热点网站统计（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q459", "title": "爱吃蟠桃的孙悟空", "score": 100, "file": "OJ_title/(C卷,100分)- 爱吃蟠桃的孙悟空（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q576", "title": "爱吃蟠桃的孙悟空", "score": 100, "file": "OJ_title/(E卷,100分)-爱吃蟠桃的孙悟空（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q080", "title": "猜字谜", "score": 100, "file": "OJ_title/(A卷,100分)- 猜字谜（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q577", "title": "猜字谜", "score": 100, "file": "OJ_title/(E卷,100分)-猜字谜（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q081", "title": "猜数字", "score": 100, "file": "OJ_title/(A卷,100分)- 猜数字（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q578", "title": "猜数字", "score": 100, "file": "OJ_title/(E卷,100分)-猜数字（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q460", "title": "猴子爬山", "score": 100, "file": "OJ_title/(C卷,100分)- 猴子爬山（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q211", "title": "玩牌高手", "score": 100, "file": "OJ_title/(B卷,100分)- 玩牌高手（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q539", "title": "环中最长子串字符成环找偶数O", "score": 100, "file": "OJ_title/(E卷,100分) - 环中最长子串字符成环找偶数O（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "字符串"]}, {"id": "q461", "title": "生成哈夫曼树", "score": 100, "file": "OJ_title/(C卷,100分)- 生成哈夫曼树（Java & JS & Python & C）.html", "tags": ["C卷", "树"]}, {"id": "q540", "title": "生成哈夫曼树（C++ Java JavaScript Python C语言）", "score": 100, "file": "OJ_title/(E卷,100分) - 生成哈夫曼树（C++ Java JavaScript Python C语言）.html", "tags": ["E卷", "树"]}, {"id": "q212", "title": "生日礼物", "score": 100, "file": "OJ_title/(B卷,100分)- 生日礼物（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q462", "title": "用户调度问题", "score": 100, "file": "OJ_title/(C卷,100分)- 用户调度问题（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q463", "title": "用连续自然数之和来表达整数", "score": 100, "file": "OJ_title/(C卷,100分)- 用连续自然数之和来表达整数（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q213", "title": "相对开音节", "score": 100, "file": "OJ_title/(B卷,100分)- 相对开音节（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q082", "title": "真正的密码", "score": 100, "file": "OJ_title/(A卷,100分)- 真正的密码（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q214", "title": "矩形相交的面积", "score": 100, "file": "OJ_title/(B卷,100分)- 矩形相交的面积（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q541", "title": "矩形相交的面积（C++ Java JavaScript Python C语言）", "score": 100, "file": "OJ_title/(E卷,100分) - 矩形相交的面积（C++ Java JavaScript Python C语言）.html", "tags": ["E卷"]}, {"id": "q215", "title": "矩阵元素的边界值", "score": 100, "file": "OJ_title/(B卷,100分)- 矩阵元素的边界值（Java & JS & Python & C）.html", "tags": ["B卷", "矩阵"]}, {"id": "q008", "title": "矩阵扩散", "score": 100, "file": "OJ_title/(100分)- 矩阵扩散（Java & JS & Python & C）.html", "tags": ["矩阵"]}, {"id": "q216", "title": "矩阵最大值", "score": 100, "file": "OJ_title/(B卷,100分)- 矩阵最大值（Java & JS & Python & C）.html", "tags": ["B卷", "矩阵"]}, {"id": "q217", "title": "矩阵稀疏扫描", "score": 100, "file": "OJ_title/(B卷,100分)- 矩阵稀疏扫描（Java & JS & Python & C）.html", "tags": ["B卷", "矩阵"]}, {"id": "q314", "title": "石头剪刀布游戏", "score": 100, "file": "OJ_title/(CD卷,100分)- 石头剪刀布游戏（Java & JS & Python & C）.html", "tags": []}, {"id": "q218", "title": "磁盘容量排序", "score": 100, "file": "OJ_title/(B卷,100分)- 磁盘容量排序（Java & JS & Python）.html", "tags": ["B卷", "排序"]}, {"id": "q542", "title": "磁盘容量排序", "score": 100, "file": "OJ_title/(E卷,100分) - 磁盘容量排序（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "排序"]}, {"id": "q083", "title": "租车骑绿岛", "score": 100, "file": "OJ_title/(A卷,100分)- 租车骑绿岛（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q084", "title": "积木最远距离", "score": 100, "file": "OJ_title/(A卷,100分)- 积木最远距离（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q085", "title": "称砝码", "score": 100, "file": "OJ_title/(A卷,100分)- 称砝码（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q086", "title": "端口合并", "score": 100, "file": "OJ_title/(A卷,100分)- 端口合并（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q009", "title": "符合要求的元组的个数", "score": 100, "file": "OJ_title/(100分)- 符合要求的元组的个数（Java & JS & Python & C）.html", "tags": []}, {"id": "q219", "title": "符合要求的元组的个数", "score": 100, "file": "OJ_title/(B卷,100分)- 符合要求的元组的个数（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q464", "title": "第k个排列", "score": 100, "file": "OJ_title/(C卷,100分)- 第k个排列（Java & JS & Python）.html", "tags": ["C卷", "数学"]}, {"id": "q543", "title": "第k个排列", "score": 100, "file": "OJ_title/(E卷,100分) - 第k个排列（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "数学"]}, {"id": "q087", "title": "等和子数组最小和", "score": 100, "file": "OJ_title/(A卷,100分)- 等和子数组最小和（Java & JS & Python）.html", "tags": ["A卷", "数组"]}, {"id": "q088", "title": "简单的自动曝光、平均像素值", "score": 100, "file": "OJ_title/(A卷,100分)- 简单的自动曝光、平均像素值（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q544", "title": "简单的自动曝光平均像素值", "score": 100, "file": "OJ_title/(E卷,100分) - 简单的自动曝光平均像素值（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q545", "title": "简易压缩算法一种字符串压缩表示的解压", "score": 100, "file": "OJ_title/(E卷,100分) - 简易压缩算法一种字符串压缩表示的解压（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "字符串"]}, {"id": "q089", "title": "箱子之字形摆放", "score": 100, "file": "OJ_title/(A卷,100分)- 箱子之字形摆放（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q220", "title": "篮球比赛", "score": 100, "file": "OJ_title/(B卷,100分)- 篮球比赛（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q465", "title": "精准核酸检测", "score": 100, "file": "OJ_title/(C卷,100分)- 精准核酸检测（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q466", "title": "素数之积", "score": 100, "file": "OJ_title/(C卷,100分)- 素数之积（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q546", "title": "素数之积RSA加密算法", "score": 100, "file": "OJ_title/(E卷,100分) - 素数之积RSA加密算法（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q467", "title": "约瑟夫问题", "score": 100, "file": "OJ_title/(C卷,100分)- 约瑟夫问题（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q221", "title": "组成最大数", "score": 100, "file": "OJ_title/(B卷,100分)- 组成最大数（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q222", "title": "经典屏保", "score": 100, "file": "OJ_title/(B卷,100分)- 经典屏保（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q468", "title": "绘图机器", "score": 100, "file": "OJ_title/(C卷,100分)- 绘图机器（Java & JS & Python & C）.html", "tags": ["C卷", "图"]}, {"id": "q579", "title": "绘图机器", "score": 100, "file": "OJ_title/(E卷,100分)-绘图机器（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "图"]}, {"id": "q090", "title": "统一限载货物数最小值(1)", "score": 100, "file": "OJ_title/(A卷,100分)- 统一限载货物数最小值（Java & JS & Python）(1).html", "tags": ["A卷"]}, {"id": "q223", "title": "统计射击比赛成绩", "score": 100, "file": "OJ_title/(B卷,100分)- 统计射击比赛成绩（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q010", "title": "网上商城优惠活动", "score": 100, "file": "OJ_title/(100分)- 网上商城优惠活动（Java & JS & Python）.html", "tags": []}, {"id": "q091", "title": "网上商城优惠活动(1)", "score": 100, "file": "OJ_title/(A卷,100分)- 网上商城优惠活动（Java & JS & Python）(1).html", "tags": ["A卷"]}, {"id": "q469", "title": "翻牌求最大分", "score": 100, "file": "OJ_title/(C卷,100分)- 翻牌求最大分（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q470", "title": "考勤信息", "score": 100, "file": "OJ_title/(C卷,100分)- 考勤信息（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q547", "title": "考勤信息", "score": 100, "file": "OJ_title/(E卷,100分) - 考勤信息（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q471", "title": "英文输入法", "score": 100, "file": "OJ_title/(C卷,100分)- 英文输入法（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q548", "title": "英文输入法", "score": 100, "file": "OJ_title/(E卷,100分) - 英文输入法（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q092", "title": "获取最大软件版本号", "score": 100, "file": "OJ_title/(A卷,100分)- 获取最大软件版本号（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q472", "title": "虚拟理财游戏", "score": 100, "file": "OJ_title/(C卷,100分)- 虚拟理财游戏（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q557", "title": "虚拟理财游戏", "score": 100, "file": "OJ_title/(E卷,100分) -虚拟理财游戏（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q473", "title": "螺旋数字矩阵", "score": 100, "file": "OJ_title/(C卷,100分)- 螺旋数字矩阵（Java & JS & Python & C）.html", "tags": ["C卷", "矩阵"]}, {"id": "q549", "title": "螺旋数字矩阵", "score": 100, "file": "OJ_title/(E卷,100分) - 螺旋数字矩阵（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "矩阵"]}, {"id": "q224", "title": "补种未成活胡杨", "score": 100, "file": "OJ_title/(B卷,100分)- 补种未成活胡杨（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q550", "title": "补种未成活胡杨", "score": 100, "file": "OJ_title/(E卷,100分) - 补种未成活胡杨（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q474", "title": "表达式括号匹配", "score": 100, "file": "OJ_title/(C卷,100分)- 表达式括号匹配（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q475", "title": "解密犯罪时间", "score": 100, "file": "OJ_title/(C卷,100分)- 解密犯罪时间（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q476", "title": "计算三叉搜索树的高度", "score": 100, "file": "OJ_title/(C卷,100分)- 计算三叉搜索树的高度（Java & JS & Python & C）.html", "tags": ["C卷", "树", "搜索"]}, {"id": "q551", "title": "计算三叉搜索树的高度", "score": 100, "file": "OJ_title/(E卷,100分) - 计算三叉搜索树的高度（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "树", "搜索"]}, {"id": "q093", "title": "计算数组中心位置", "score": 100, "file": "OJ_title/(A卷,100分)- 计算数组中心位置（Java & JS & Python）.html", "tags": ["A卷", "数组"]}, {"id": "q225", "title": "计算最大乘积", "score": 100, "file": "OJ_title/(B卷,100分)- 计算最大乘积（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q226", "title": "计算最接近的数", "score": 100, "file": "OJ_title/(B卷,100分)- 计算最接近的数（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q477", "title": "计算礼品发放的最小分组数目", "score": 100, "file": "OJ_title/(C卷,100分)- 计算礼品发放的最小分组数目（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q094", "title": "识图谱新词挖掘", "score": 100, "file": "OJ_title/(A卷,100分)- 识图谱新词挖掘（Java & JS & Python）.html", "tags": ["A卷", "图"]}, {"id": "q095", "title": "货币单位换算", "score": 100, "file": "OJ_title/(A卷,100分)- 货币单位换算（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q558", "title": "货币单位换算", "score": 100, "file": "OJ_title/(E卷,100分) -货币单位换算（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q227", "title": "路灯照明问题", "score": 100, "file": "OJ_title/(B卷,100分)- 路灯照明问题（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q012", "title": "跳房子I", "score": 100, "file": "OJ_title/(100分)- 跳房子I（Java & JS & Python）.html", "tags": []}, {"id": "q228", "title": "跳房子I", "score": 100, "file": "OJ_title/(B卷,100分)- 跳房子I（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q011", "title": "跳房子II", "score": 100, "file": "OJ_title/(100分)- 跳房子II（Java & JS & Python & C）.html", "tags": []}, {"id": "q315", "title": "转盘寿司", "score": 100, "file": "OJ_title/(CD卷,100分)- 转盘寿司（Java & JS & Python & C）.html", "tags": []}, {"id": "q552", "title": "转盘寿司", "score": 100, "file": "OJ_title/(E卷,100分) - 转盘寿司（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q478", "title": "输出指定字母在字符串的中的索引", "score": 100, "file": "OJ_title/(C卷,100分)- 输出指定字母在字符串的中的索引（Java & JS & Python）.html", "tags": ["C卷", "字符串"]}, {"id": "q229", "title": "运维日志排序", "score": 100, "file": "OJ_title/(B卷,100分)- 运维日志排序（Java & JS & Python & C）.html", "tags": ["B卷", "排序"]}, {"id": "q553", "title": "运维日志排序", "score": 100, "file": "OJ_title/(E卷,100分) - 运维日志排序（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "排序"]}, {"id": "q479", "title": "连续字母长度", "score": 100, "file": "OJ_title/(C卷,100分)- 连续字母长度（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q580", "title": "连续字母长度", "score": 100, "file": "OJ_title/(E卷,100分)-连续字母长度（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q230", "title": "选修课", "score": 100, "file": "OJ_title/(B卷,100分)- 选修课（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q554", "title": "选修课", "score": 100, "file": "OJ_title/(E卷,100分) - 选修课（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q096", "title": "通信误码", "score": 100, "file": "OJ_title/(A卷,100分)- 通信误码（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q480", "title": "部门人力分配", "score": 100, "file": "OJ_title/(C卷,100分)- 部门人力分配（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q231", "title": "金字塔，BOSS的收入", "score": 100, "file": "OJ_title/(B卷,100分)- 金字塔，BOSS的收入（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q232", "title": "阿里巴巴找黄金宝箱(I)", "score": 100, "file": "OJ_title/(B卷,100分)- 阿里巴巴找黄金宝箱(I)（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q233", "title": "阿里巴巴找黄金宝箱(II)", "score": 100, "file": "OJ_title/(B卷,100分)- 阿里巴巴找黄金宝箱(II)（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q234", "title": "阿里巴巴找黄金宝箱(III)", "score": 100, "file": "OJ_title/(B卷,100分)- 阿里巴巴找黄金宝箱(III) （Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q235", "title": "阿里巴巴找黄金宝箱(V)", "score": 100, "file": "OJ_title/(B卷,100分)- 阿里巴巴找黄金宝箱(V)（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q236", "title": "需要打开多少监控器", "score": 100, "file": "OJ_title/(B卷,100分)- 需要打开多少监控器（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q097", "title": "静态扫描", "score": 100, "file": "OJ_title/(A卷,100分)- 静态扫描（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q237", "title": "非严格递增连续数字序列", "score": 100, "file": "OJ_title/(B卷,100分)- 非严格递增连续数字序列（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q481", "title": "靠谱的车", "score": 100, "file": "OJ_title/(C卷,100分)- 靠谱的车（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q098", "title": "预订酒店", "score": 100, "file": "OJ_title/(A卷,100分)- 预订酒店（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q555", "title": "预订酒店", "score": 100, "file": "OJ_title/(E卷,100分) - 预订酒店（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q238", "title": "食堂供餐", "score": 100, "file": "OJ_title/(B卷,100分)- 食堂供餐（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q239", "title": "高矮个子排队", "score": 100, "file": "OJ_title/(B卷,100分)- 高矮个子排队（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q556", "title": "高矮个子排队", "score": 100, "file": "OJ_title/(E卷,100分) - 高矮个子排队（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q634", "title": "200分-WIFI设备网络规划", "score": 200, "file": "OJ_title/200分-WIFI设备网络规划.html", "tags": []}, {"id": "q635", "title": "200分-勇攀数字高峰(JavaPyCC++JsGo)", "score": 200, "file": "OJ_title/200分-勇攀数字高峰(JavaPyCC++JsGo).html", "tags": []}, {"id": "q636", "title": "200分-小猫钓鱼纸牌游戏", "score": 200, "file": "OJ_title/200分-小猫钓鱼纸牌游戏.html", "tags": []}, {"id": "q637", "title": "200分-直捣黄龙(Py.Java.C.C++.Js.Go)", "score": 200, "file": "OJ_title/200分-直捣黄龙(Py.Java.C.C++.Js.Go).html", "tags": []}, {"id": "q638", "title": "2025B -200分黑白格子棋盘", "score": 200, "file": "OJ_title/2025B -200分黑白格子棋盘.html", "tags": ["2025B"]}, {"id": "q639", "title": "2025B-200分 -工程师日志解析资源调度", "score": 200, "file": "OJ_title/2025B-200分 -工程师日志解析资源调度.html", "tags": ["2025B"]}, {"id": "q316", "title": "5G网络建设", "score": 200, "file": "OJ_title/(CD卷,200分)- 5G网络建设（Java & JS & Python & C）.html", "tags": []}, {"id": "q099", "title": "Excel单元格数值统计", "score": 200, "file": "OJ_title/(A卷,200分)- Excel单元格数值统计（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q240", "title": "MELON的难题", "score": 200, "file": "OJ_title/(B卷,200分)- MELON的难题（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q581", "title": "MELON的难题", "score": 200, "file": "OJ_title/(E卷,200分) - MELON的难题（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q317", "title": "N进制减法", "score": 200, "file": "OJ_title/(CD卷,200分)- N进制减法（Java & JS & Python）.html", "tags": []}, {"id": "q318", "title": "TLV解析 Ⅱ", "score": 200, "file": "OJ_title/(CD卷,200分)- TLV解析 Ⅱ（Java & JS & Python）.html", "tags": []}, {"id": "q319", "title": "Wonderland", "score": 200, "file": "OJ_title/(CD卷,200分)- Wonderland（Java & JS & Python & C）.html", "tags": []}, {"id": "q100", "title": "上班之路", "score": 200, "file": "OJ_title/(A卷,200分)- 上班之路（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q101", "title": "不含101的数", "score": 200, "file": "OJ_title/(A卷,200分)- 不含101的数（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q241", "title": "不开心的小朋友", "score": 200, "file": "OJ_title/(B卷,200分)- 不开心的小朋友（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q482", "title": "两个字符串间的最短路径问题", "score": 200, "file": "OJ_title/(C卷,200分)- 两个字符串间的最短路径问题（Java & JS & Python & C）.html", "tags": ["C卷", "字符串", "图"]}, {"id": "q320", "title": "中文分词模拟器", "score": 200, "file": "OJ_title/(CD卷,200分)- 中文分词模拟器（Java & JS & Python & C）.html", "tags": ["模拟"]}, {"id": "q582", "title": "中文分词模拟器", "score": 200, "file": "OJ_title/(E卷,200分) - 中文分词模拟器（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "模拟"]}, {"id": "q483", "title": "九宫格按键输入", "score": 200, "file": "OJ_title/(C卷,200分)- 九宫格按键输入（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q583", "title": "九宫格按键输入", "score": 200, "file": "OJ_title/(E卷,200分) - 九宫格按键输入（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q102", "title": "九宫格（20220529）", "score": 200, "file": "OJ_title/(A卷,200分)- 九宫格（20220529）.html", "tags": ["A卷"]}, {"id": "q242", "title": "书籍叠放", "score": 200, "file": "OJ_title/(B卷,200分)- 书籍叠放（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q243", "title": "二叉树中序遍历", "score": 200, "file": "OJ_title/(B卷,200分)- 二叉树中序遍历（Java & JS & Python）.html", "tags": ["B卷", "树"]}, {"id": "q484", "title": "二叉树的广度优先遍历", "score": 200, "file": "OJ_title/(C卷,200分)- 二叉树的广度优先遍历（Java & JS & Python & C）.html", "tags": ["C卷", "树", "搜索"]}, {"id": "q485", "title": "二叉树计算", "score": 200, "file": "OJ_title/(C卷,200分)- 二叉树计算（Java & JS & Python & C）.html", "tags": ["C卷", "树"]}, {"id": "q584", "title": "二叉树计算", "score": 200, "file": "OJ_title/(E卷,200分) - 二叉树计算 （Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "树"]}, {"id": "q244", "title": "二维伞的雨滴效应", "score": 200, "file": "OJ_title/(B卷,200分)- 二维伞的雨滴效应（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q103", "title": "二进制差异数", "score": 200, "file": "OJ_title/(A卷,200分)- 二进制差异数（Java & JS & Python）.html", "tags": ["A卷", "位运算"]}, {"id": "q585", "title": "云短信平台优惠活动", "score": 200, "file": "OJ_title/(E卷,200分) - 云短信平台优惠活动（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q015", "title": "亲子游戏", "score": 200, "file": "OJ_title/(200分)- 亲子游戏（Java & JS & Python & C）.html", "tags": []}, {"id": "q321", "title": "亲子游戏", "score": 200, "file": "OJ_title/(CD卷,200分)- 亲子游戏（Java & JS & Python & C）.html", "tags": []}, {"id": "q245", "title": "人气最高的店铺", "score": 200, "file": "OJ_title/(B卷,200分)- 人气最高的店铺（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q246", "title": "代表团坐车", "score": 200, "file": "OJ_title/(B卷,200分)- 代表团坐车（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q322", "title": "任务最优调度", "score": 200, "file": "OJ_title/(CD卷,200分)- 任务最优调度（Java & JS & Python & C）.html", "tags": []}, {"id": "q104", "title": "任务调度", "score": 200, "file": "OJ_title/(A卷,200分)- 任务调度（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q247", "title": "仿LISP运算", "score": 200, "file": "OJ_title/(B卷,200分)- 仿LISP运算（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q105", "title": "优选核酸检测点", "score": 200, "file": "OJ_title/(A卷,200分)- 优选核酸检测点（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q106", "title": "优雅子数组", "score": 200, "file": "OJ_title/(A卷,200分)- 优雅子数组（Java & JS & Python）.html", "tags": ["A卷", "数组"]}, {"id": "q107", "title": "会议接待", "score": 200, "file": "OJ_title/(A卷,200分)- 会议接待（Java & JS & Python & C）.html", "tags": ["A卷"]}, {"id": "q108", "title": "信号发射和接收", "score": 200, "file": "OJ_title/(A卷,200分)- 信号发射和接收（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q323", "title": "信道分配", "score": 200, "file": "OJ_title/(CD卷,200分)- 信道分配（Java & JS & Python & C）.html", "tags": []}, {"id": "q109", "title": "农场施肥", "score": 200, "file": "OJ_title/(A卷,200分)- 农场施肥（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q016", "title": "几何平均值最大子数组", "score": 200, "file": "OJ_title/(200分)- 几何平均值最大子数组（Java & JS & Python）.html", "tags": ["数组"]}, {"id": "q110", "title": "几何平均值最大子数组", "score": 200, "file": "OJ_title/(A卷,200分)- 几何平均值最大子数组（Java & JS & Python）.html", "tags": ["A卷", "数组"]}, {"id": "q324", "title": "出错的或电路", "score": 200, "file": "OJ_title/(CD卷,200分)- 出错的或电路（Java & JS & Python & C）.html", "tags": []}, {"id": "q111", "title": "分奖金", "score": 200, "file": "OJ_title/(A卷,200分)- 分奖金（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q325", "title": "分月饼", "score": 200, "file": "OJ_title/(CD卷,200分)- 分月饼（Java & JS & Python & C）.html", "tags": []}, {"id": "q017", "title": "分积木", "score": 200, "file": "OJ_title/(200分)- 分积木（Java & JS & Python & C）.html", "tags": []}, {"id": "q248", "title": "分积木", "score": 200, "file": "OJ_title/(B卷,200分)- 分积木（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q112", "title": "创建二叉树", "score": 200, "file": "OJ_title/(A卷,200分)- 创建二叉树（Java & JS & Python）.html", "tags": ["A卷", "树"]}, {"id": "q113", "title": "区块链文件转储系统", "score": 200, "file": "OJ_title/(A卷,200分)- 区块链文件转储系统（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q114", "title": "区间交叠问题", "score": 200, "file": "OJ_title/(A卷,200分)- 区间交叠问题（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q018", "title": "区间交集", "score": 200, "file": "OJ_title/(200分)- 区间交集（Java & JS & Python）.html", "tags": []}, {"id": "q249", "title": "区间交集", "score": 200, "file": "OJ_title/(B卷,200分)- 区间交集（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q250", "title": "单词搜索", "score": 200, "file": "OJ_title/(B卷,200分)- 单词搜索（Java & JS & Python）.html", "tags": ["B卷", "搜索"]}, {"id": "q115", "title": "去除多余空格", "score": 200, "file": "OJ_title/(A卷,200分)- 去除多余空格（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q486", "title": "反射计数", "score": 200, "file": "OJ_title/(C卷,200分)- 反射计数（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q487", "title": "发广播（20210310）", "score": 200, "file": "OJ_title/(C卷,200分)- 发广播（20210310）.html", "tags": ["C卷"]}, {"id": "q488", "title": "叠积木", "score": 200, "file": "OJ_title/(C卷,200分)- 叠积木（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q326", "title": "可以处理的最大任务数", "score": 200, "file": "OJ_title/(CD卷,200分)- 可以处理的最大任务数（Java & JS & Python & C）.html", "tags": []}, {"id": "q586", "title": "可以处理的最大任务数", "score": 200, "file": "OJ_title/(E卷,200分) - 可以处理的最大任务数（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q327", "title": "可以组成网络的服务器", "score": 200, "file": "OJ_title/(CD卷,200分)- 可以组成网络的服务器（Java & JS & Python & C）.html", "tags": []}, {"id": "q328", "title": "启动多任务排序", "score": 200, "file": "OJ_title/(CD卷,200分)- 启动多任务排序（Java & JS & Python & C）.html", "tags": ["排序"]}, {"id": "q329", "title": "员工派遣", "score": 200, "file": "OJ_title/(CD卷,200分)- 员工派遣（Java & JS & Python & C）.html", "tags": []}, {"id": "q251", "title": "周末爬山", "score": 200, "file": "OJ_title/(B卷,200分)- 周末爬山（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q610", "title": "周末爬山", "score": 200, "file": "OJ_title/(E卷,200分) -周末爬山（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q330", "title": "园区参观路径", "score": 200, "file": "OJ_title/(CD卷,200分)- 园区参观路径（Java & JS & Python & C）.html", "tags": []}, {"id": "q489", "title": "图像物体的边界", "score": 200, "file": "OJ_title/(C卷,200分)- 图像物体的边界（Java & JS & Python）.html", "tags": ["C卷", "图"]}, {"id": "q116", "title": "垃圾短信识别", "score": 200, "file": "OJ_title/(A卷,200分)- 垃圾短信识别（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q117", "title": "基站维护工程师", "score": 200, "file": "OJ_title/(A卷,200分)- 基站维护工程师（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q118", "title": "士兵过河", "score": 200, "file": "OJ_title/(A卷,200分)- 士兵过河（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q119", "title": "天然蓄水库", "score": 200, "file": "OJ_title/(A卷,200分)- 天然蓄水库（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q613", "title": "字母组合过滤组合字符串", "score": 200, "file": "OJ_title/(E卷,200分)-字母组合过滤组合字符串（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "字符串", "数学"]}, {"id": "q252", "title": "字符串划分", "score": 200, "file": "OJ_title/(B卷,200分)- 字符串划分（Java & JS & Python & C）.html", "tags": ["B卷", "字符串"]}, {"id": "q253", "title": "字符串化繁为简", "score": 200, "file": "OJ_title/(B卷,200分)- 字符串化繁为简（Java & JS & Python）.html", "tags": ["B卷", "字符串"]}, {"id": "q614", "title": "字符串化繁为简", "score": 200, "file": "OJ_title/(E卷,200分)-字符串化繁为简（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "字符串"]}, {"id": "q019", "title": "字符串拼接", "score": 200, "file": "OJ_title/(200分)- 字符串拼接（Java & JS & Python & C）.html", "tags": ["字符串"]}, {"id": "q331", "title": "字符串拼接", "score": 200, "file": "OJ_title/(CD卷,200分)- 字符串拼接（Java & JS & Python & C）.html", "tags": ["字符串"]}, {"id": "q587", "title": "字符串拼接", "score": 200, "file": "OJ_title/(E卷,200分) - 字符串拼接（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "字符串"]}, {"id": "q332", "title": "字符串比较", "score": 200, "file": "OJ_title/(CD卷,200分)- 字符串比较（Java & JS & Python）.html", "tags": ["字符串"]}, {"id": "q120", "title": "字符串解密", "score": 200, "file": "OJ_title/(A卷,200分)- 字符串解密（Java & JS & Python）.html", "tags": ["A卷", "字符串"]}, {"id": "q254", "title": "字符匹配", "score": 200, "file": "OJ_title/(B卷,200分)- 字符匹配（Java & JS & Python）.html", "tags": ["B卷", "字符串"]}, {"id": "q255", "title": "学生方阵", "score": 200, "file": "OJ_title/(B卷,200分)- 学生方阵（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q256", "title": "完全二叉树非叶子部分后序遍历", "score": 200, "file": "OJ_title/(B卷,200分)- 完全二叉树非叶子部分后序遍历（Java & JS & Python & C）.html", "tags": ["B卷", "树"]}, {"id": "q257", "title": "宜居星球改造计划", "score": 200, "file": "OJ_title/(B卷,200分)- 宜居星球改造计划（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q588", "title": "宜居星球改造计划", "score": 200, "file": "OJ_title/(E卷,200分) - 宜居星球改造计划（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q020", "title": "寻找最优的路测线路", "score": 200, "file": "OJ_title/(200分)- 寻找最优的路测线路（Java & JS & Python & C）.html", "tags": []}, {"id": "q333", "title": "寻找最优的路测线路", "score": 200, "file": "OJ_title/(CD卷,200分)- 寻找最优的路测线路（Java & JS & Python & C）.html", "tags": []}, {"id": "q021", "title": "寻找最大价值的矿堆", "score": 200, "file": "OJ_title/(200分)- 寻找最大价值的矿堆（Java & JS & Python）.html", "tags": []}, {"id": "q258", "title": "寻找最大价值的矿堆", "score": 200, "file": "OJ_title/(B卷,200分)- 寻找最大价值的矿堆（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q022", "title": "寻找最大价值的矿堆_1", "score": 200, "file": "OJ_title/(200分)- 寻找最大价值的矿堆（Java & JS & Python）_1.html", "tags": []}, {"id": "q121", "title": "寻找符合要求的最长子串", "score": 200, "file": "OJ_title/(A卷,200分)- 寻找符合要求的最长子串（Java & JS & Python）.html", "tags": ["A卷", "字符串"]}, {"id": "q589", "title": "寻找符合要求的最长子串", "score": 200, "file": "OJ_title/(E卷,200分) - 寻找符合要求的最长子串 （Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "字符串"]}, {"id": "q334", "title": "导师请吃火锅", "score": 200, "file": "OJ_title/(CD卷,200分)- 导师请吃火锅（Java & JS & Python）.html", "tags": []}, {"id": "q615", "title": "导师请吃火锅", "score": 200, "file": "OJ_title/(E卷,200分)-导师请吃火锅（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q335", "title": "小朋友分组最少调整次数", "score": 200, "file": "OJ_title/(CD卷,200分)- 小朋友分组最少调整次数（Java & JS & Python & C）.html", "tags": []}, {"id": "q122", "title": "工单调度策略（20220413）", "score": 200, "file": "OJ_title/(A卷,200分)- 工单调度策略（20220413）.html", "tags": ["A卷"]}, {"id": "q023", "title": "开放日活动、取出尽量少的球", "score": 200, "file": "OJ_title/(200分)- 开放日活动、取出尽量少的球（Java & JS & Python）.html", "tags": []}, {"id": "q123", "title": "开放日活动、取出尽量少的球", "score": 200, "file": "OJ_title/(A卷,200分)- 开放日活动、取出尽量少的球（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q024", "title": "快递员的烦恼", "score": 200, "file": "OJ_title/(200分)- 快递员的烦恼（Java & JS & Python & C）.html", "tags": []}, {"id": "q336", "title": "快递员的烦恼", "score": 200, "file": "OJ_title/(CD卷,200分)- 快递员的烦恼（Java & JS & Python & C）.html", "tags": []}, {"id": "q124", "title": "快递投放问题", "score": 200, "file": "OJ_title/(A卷,200分)- 快递投放问题（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q337", "title": "快速人名查找", "score": 200, "file": "OJ_title/(CD卷,200分)- 快速人名查找（Java & JS & Python）.html", "tags": []}, {"id": "q125", "title": "快速开租建站", "score": 200, "file": "OJ_title/(A卷,200分)- 快速开租建站（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q259", "title": "战场索敌", "score": 200, "file": "OJ_title/(B卷,200分)- 战场索敌（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q590", "title": "战场索敌", "score": 200, "file": "OJ_title/(E卷,200分) - 战场索敌（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q338", "title": "打印任务排序", "score": 200, "file": "OJ_title/(CD卷,200分)- 打印任务排序（Java & JS & Python & C）.html", "tags": ["排序"]}, {"id": "q591", "title": "打印任务排序", "score": 200, "file": "OJ_title/(E卷,200分) - 打印任务排序（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "排序"]}, {"id": "q260", "title": "找出两个整数数组中同时出现的整数", "score": 200, "file": "OJ_title/(B卷,200分)- 找出两个整数数组中同时出现的整数（Java & JS & Python）.html", "tags": ["B卷", "数组"]}, {"id": "q339", "title": "找到比自己强的人数", "score": 200, "file": "OJ_title/(CD卷,200分)- 找到比自己强的人数（Java & JS & Python）.html", "tags": []}, {"id": "q340", "title": "找单词", "score": 200, "file": "OJ_title/(CD卷,200分)- 找单词（Java & JS & Python）.html", "tags": []}, {"id": "q616", "title": "找单词", "score": 200, "file": "OJ_title/(E卷,200分)-找单词（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q341", "title": "找城市", "score": 200, "file": "OJ_title/(CD卷,200分)- 找城市（Java & JS & Python & C）.html", "tags": []}, {"id": "q342", "title": "找数字", "score": 200, "file": "OJ_title/(CD卷,200分)- 找数字（Java & JS & Python & C）.html", "tags": []}, {"id": "q343", "title": "抢7游戏", "score": 200, "file": "OJ_title/(CD卷,200分)- 抢7游戏（Java & JS & Python & C）.html", "tags": []}, {"id": "q261", "title": "报文解压缩", "score": 200, "file": "OJ_title/(B卷,200分)- 报文解压缩（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q262", "title": "排队游戏", "score": 200, "file": "OJ_title/(B卷,200分)- 排队游戏（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q126", "title": "探索地块建立", "score": 200, "file": "OJ_title/(A卷,200分)- 探索地块建立（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q490", "title": "推荐多样性", "score": 200, "file": "OJ_title/(C卷,200分)- 推荐多样性（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q592", "title": "推荐多样性", "score": 200, "file": "OJ_title/(E卷,200分) - 推荐多样性（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q491", "title": "攀登者2", "score": 200, "file": "OJ_title/(C卷,200分)- 攀登者2（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q127", "title": "数字加减游戏", "score": 200, "file": "OJ_title/(A卷,200分)- 数字加减游戏（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q263", "title": "数字序列比大小", "score": 200, "file": "OJ_title/(B卷,200分)- 数字序列比大小（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q025", "title": "数字游戏", "score": 200, "file": "OJ_title/(200分)- 数字游戏（Java & JS & Python）.html", "tags": []}, {"id": "q264", "title": "数字游戏", "score": 200, "file": "OJ_title/(B卷,200分)- 数字游戏（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q593", "title": "数字游戏", "score": 200, "file": "OJ_title/(E卷,200分) - 数字游戏（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q265", "title": "数据最节约的备份方法", "score": 200, "file": "OJ_title/(B卷,200分)- 数据最节约的备份方法（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q344", "title": "数组二叉树", "score": 200, "file": "OJ_title/(CD卷,200分)- 数组二叉树（Java & JS & Python）.html", "tags": ["数组", "树"]}, {"id": "q026", "title": "文件缓存系统", "score": 200, "file": "OJ_title/(200分)- 文件缓存系统（Java & JS & Python）.html", "tags": []}, {"id": "q345", "title": "文件缓存系统", "score": 200, "file": "OJ_title/(CD卷,200分)- 文件缓存系统（Java & JS & Python）.html", "tags": []}, {"id": "q346", "title": "文本统计分析", "score": 200, "file": "OJ_title/(CD卷,200分)- 文本统计分析（Java & JS & Python）.html", "tags": []}, {"id": "q611", "title": "文本统计分析", "score": 200, "file": "OJ_title/(E卷,200分) -文本统计分析（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q128", "title": "无向图染色", "score": 200, "file": "OJ_title/(A卷,200分)- 无向图染色（Java & JS & Python）.html", "tags": ["A卷", "图"]}, {"id": "q347", "title": "智能驾驶", "score": 200, "file": "OJ_title/(CD卷,200分)- 智能驾驶（Java & JS & Python & C）.html", "tags": []}, {"id": "q594", "title": "智能驾驶", "score": 200, "file": "OJ_title/(E卷,200分) - 智能驾驶（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q129", "title": "最优资源分配", "score": 200, "file": "OJ_title/(A卷,200分)- 最优资源分配（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q130", "title": "最优高铁城市修建方案（20220529）", "score": 200, "file": "OJ_title/(A卷,200分)- 最优高铁城市修建方案（20220529）.html", "tags": ["A卷"]}, {"id": "q131", "title": "最佳对手", "score": 200, "file": "OJ_title/(A卷,200分)- 最佳对手（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q595", "title": "最佳对手实力差距最小总和", "score": 200, "file": "OJ_title/(E卷,200分) - 最佳对手实力差距最小总和（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q027", "title": "最佳植树距离", "score": 200, "file": "OJ_title/(200分)- 最佳植树距离（Java & JS & Python & C）.html", "tags": ["树"]}, {"id": "q266", "title": "最佳植树距离", "score": 200, "file": "OJ_title/(B卷,200分)- 最佳植树距离（Java & JS & Python & C）.html", "tags": ["B卷", "树"]}, {"id": "q267", "title": "最佳的出牌方法", "score": 200, "file": "OJ_title/(B卷,200分)- 最佳的出牌方法（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q132", "title": "最多几个直角三角形", "score": 200, "file": "OJ_title/(A卷,200分)- 最多几个直角三角形（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q133", "title": "最多等和不相交连续子序列", "score": 200, "file": "OJ_title/(A卷,200分)- 最多等和不相交连续子序列（Java & JS & Python）.html", "tags": ["A卷", "字符串"]}, {"id": "q134", "title": "最多获得的短信条数、云短信平台优惠活动", "score": 200, "file": "OJ_title/(A卷,200分)- 最多获得的短信条数、云短信平台优惠活动（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q135", "title": "最大化控制资源成本", "score": 200, "file": "OJ_title/(A卷,200分)- 最大化控制资源成本（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q136", "title": "最大平分数组", "score": 200, "file": "OJ_title/(A卷,200分)- 最大平分数组（Java & JS & Python）.html", "tags": ["A卷", "数组"]}, {"id": "q137", "title": "最大数字", "score": 200, "file": "OJ_title/(A卷,200分)- 最大数字（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q596", "title": "最大相连男生数学生方阵", "score": 200, "file": "OJ_title/(E卷,200分) - 最大相连男生数学生方阵（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "数学"]}, {"id": "q348", "title": "最大社交距离", "score": 200, "file": "OJ_title/(CD卷,200分)- 最大社交距离（Java & JS & Python & C）.html", "tags": []}, {"id": "q617", "title": "最大社交距离", "score": 200, "file": "OJ_title/(E卷,200分)-最大社交距离（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q268", "title": "最小传输时延", "score": 200, "file": "OJ_title/(B卷,200分)- 最小传输时延（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q349", "title": "最小传输时延Ⅱ", "score": 200, "file": "OJ_title/(CD卷,200分)- 最小传输时延Ⅱ（Java & JS & Python）.html", "tags": []}, {"id": "q269", "title": "最小循环子数组", "score": 200, "file": "OJ_title/(B卷,200分)- 最小循环子数组（Java & JS & Python & C）.html", "tags": ["B卷", "数组"]}, {"id": "q350", "title": "最小矩阵宽度", "score": 200, "file": "OJ_title/(CD卷,200分)- 最小矩阵宽度（Java & JS & Python & C）.html", "tags": ["矩阵"]}, {"id": "q028", "title": "最小矩阵宽度(1)", "score": 200, "file": "OJ_title/(200分)- 最小矩阵宽度（Java & JS & Python & C）(1).html", "tags": ["矩阵"]}, {"id": "q270", "title": "最少面试官数", "score": 200, "file": "OJ_title/(B卷,200分)- 最少面试官数（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q138", "title": "最差产品奖", "score": 200, "file": "OJ_title/(A卷,200分)- 最差产品奖（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q597", "title": "最长子字符串的长度", "score": 200, "file": "OJ_title/(E卷,200分) - 最长子字符串的长度（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "字符串"]}, {"id": "q351", "title": "最长子字符串的长度(二)", "score": 200, "file": "OJ_title/(CD卷,200分)- 最长子字符串的长度(二)（Java & JS & Python & C）.html", "tags": ["字符串"]}, {"id": "q271", "title": "最长广播响应", "score": 200, "file": "OJ_title/(B卷,200分)- 最长广播响应（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q618", "title": "最长方连续方波信号", "score": 200, "file": "OJ_title/(E卷,200分)-最长方连续方波信号（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q272", "title": "最长的完全交替连续方波信号", "score": 200, "file": "OJ_title/(B卷,200分)- 最长的完全交替连续方波信号（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q273", "title": "最长的顺子", "score": 200, "file": "OJ_title/(B卷,200分)- 最长的顺子（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q139", "title": "服务中心选址", "score": 200, "file": "OJ_title/(A卷,200分)- 服务中心选址（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q274", "title": "服务失效判断", "score": 200, "file": "OJ_title/(B卷,200分)- 服务失效判断（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q492", "title": "机器人走迷宫", "score": 200, "file": "OJ_title/(C卷,200分)- 机器人走迷宫（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q140", "title": "机房布局", "score": 200, "file": "OJ_title/(A卷,200分)- 机房布局（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q275", "title": "查字典", "score": 200, "file": "OJ_title/(B卷,200分)- 查字典（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q493", "title": "查找一个有向网络的头节点和尾节点", "score": 200, "file": "OJ_title/(C卷,200分)- 查找一个有向网络的头节点和尾节点（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q141", "title": "查找充电设备组合", "score": 200, "file": "OJ_title/(A卷,200分)- 查找充电设备组合（Java & JS & Python）.html", "tags": ["A卷", "数学"]}, {"id": "q619", "title": "查找充电设备组合", "score": 200, "file": "OJ_title/(E卷,200分)-查找充电设备组合（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "数学"]}, {"id": "q142", "title": "查找树中元素", "score": 200, "file": "OJ_title/(A卷,200分)- 查找树中元素（Java & JS & Python）.html", "tags": ["A卷", "树"]}, {"id": "q276", "title": "树状结构查询", "score": 200, "file": "OJ_title/(B卷,200分)- 树状结构查询（Java & JS & Python）.html", "tags": ["B卷", "树"]}, {"id": "q598", "title": "树状结构查询", "score": 200, "file": "OJ_title/(E卷,200分) - 树状结构查询（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "树"]}, {"id": "q029", "title": "根据IP查找城市", "score": 200, "file": "OJ_title/(200分)- 根据IP查找城市（Java & JS & Python & C）.html", "tags": []}, {"id": "q352", "title": "根据IP查找城市", "score": 200, "file": "OJ_title/(CD卷,200分)- 根据IP查找城市（Java & JS & Python & C）.html", "tags": []}, {"id": "q033", "title": "模拟数据序列化传输", "score": 200, "file": "OJ_title/(2025B.200分)-模拟数据序列化传输.html", "tags": ["2025B", "模拟"]}, {"id": "q620", "title": "模拟目录管理", "score": 200, "file": "OJ_title/(E卷,200分)-模拟目录管理（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "模拟"]}, {"id": "q353", "title": "模拟目录管理功能", "score": 200, "file": "OJ_title/(CD卷,200分)- 模拟目录管理功能（Java & JS & Python & C）.html", "tags": ["模拟"]}, {"id": "q599", "title": "模拟目录管理功能", "score": 200, "file": "OJ_title/(E卷,200分) - 模拟目录管理功能（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "模拟"]}, {"id": "q354", "title": "欢乐的周末", "score": 200, "file": "OJ_title/(CD卷,200分)- 欢乐的周末（Java & JS & Python & C）.html", "tags": []}, {"id": "q355", "title": "比较两个版本号的大小", "score": 200, "file": "OJ_title/(CD卷,200分)- 比较两个版本号的大小（Java & JS & Python）.html", "tags": []}, {"id": "q356", "title": "污染水域", "score": 200, "file": "OJ_title/(CD卷,200分)- 污染水域（Java & JS & Python & C）.html", "tags": []}, {"id": "q357", "title": "没有回文串", "score": 200, "file": "OJ_title/(CD卷,200分)- 没有回文串（Java & JS & Python & C）.html", "tags": ["字符串"]}, {"id": "q358", "title": "特殊的加密算法", "score": 200, "file": "OJ_title/(CD卷,200分)- 特殊的加密算法（Java & JS & Python & C）.html", "tags": []}, {"id": "q600", "title": "特殊的加密算法", "score": 200, "file": "OJ_title/(E卷,200分) - 特殊的加密算法（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q359", "title": "猜密码", "score": 200, "file": "OJ_title/(CD卷,200分)- 猜密码（Java & JS & Python）.html", "tags": []}, {"id": "q360", "title": "田忌赛马", "score": 200, "file": "OJ_title/(CD卷,200分)- 田忌赛马（Java & JS & Python & C）.html", "tags": []}, {"id": "q361", "title": "电脑病毒感染", "score": 200, "file": "OJ_title/(CD卷,200分)- 电脑病毒感染（Java & JS & Python & C）.html", "tags": []}, {"id": "q601", "title": "电脑病毒感染", "score": 200, "file": "OJ_title/(E卷,200分) - 电脑病毒感染（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q277", "title": "目录删除", "score": 200, "file": "OJ_title/(B卷,200分)- 目录删除（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q278", "title": "相同数字组成图形的周长", "score": 200, "file": "OJ_title/(B卷,200分)- 相同数字组成图形的周长（Java & JS & Python & C）.html", "tags": ["B卷", "图"]}, {"id": "q153", "title": "矩形绘制-Java &  Python & C++", "score": 200, "file": "OJ_title/(A卷,200分)-矩形绘制-Java &  Python & C++.html", "tags": ["A卷"]}, {"id": "q362", "title": "矩阵匹配", "score": 200, "file": "OJ_title/(CD卷,200分)- 矩阵匹配（Java & JS & Python & C）.html", "tags": ["矩阵"]}, {"id": "q602", "title": "矩阵匹配", "score": 200, "file": "OJ_title/(E卷,200分) - 矩阵匹配（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "矩阵"]}, {"id": "q279", "title": "矩阵扩散", "score": 200, "file": "OJ_title/(B卷,200分)- 矩阵扩散（Java & JS & Python & C）.html", "tags": ["B卷", "矩阵"]}, {"id": "q143", "title": "硬件产品销售方案", "score": 200, "file": "OJ_title/(A卷,200分)- 硬件产品销售方案（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q621", "title": "空栈压数", "score": 200, "file": "OJ_title/(E卷,200分)-空栈压数（Java & Python& JS & C++ & C ）.html", "tags": ["E卷", "栈"]}, {"id": "q280", "title": "竖直四子棋", "score": 200, "file": "OJ_title/(B卷,200分)- 竖直四子棋（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q363", "title": "符号运算", "score": 200, "file": "OJ_title/(CD卷,200分)- 符号运算（Java & JS & Python & C）.html", "tags": []}, {"id": "q144", "title": "简单的解压缩算法", "score": 200, "file": "OJ_title/(A卷,200分)- 简单的解压缩算法（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q494", "title": "简易内存池", "score": 200, "file": "OJ_title/(C卷,200分)- 简易内存池（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q364", "title": "篮球游戏", "score": 200, "file": "OJ_title/(CD卷,200分)- 篮球游戏（Java & JS & Python & C）.html", "tags": []}, {"id": "q145", "title": "组合出合法最小数", "score": 200, "file": "OJ_title/(A卷,200分)- 组合出合法最小数（Java & JS & Python）.html", "tags": ["A卷", "数学"]}, {"id": "q146", "title": "组装新的数组", "score": 200, "file": "OJ_title/(A卷,200分)- 组装新的数组（Java & JS & Python）.html", "tags": ["A卷", "数组"]}, {"id": "q030", "title": "组装最大可靠性设备", "score": 200, "file": "OJ_title/(200分)- 组装最大可靠性设备（Java & JS & Python）.html", "tags": []}, {"id": "q281", "title": "组装最大可靠性设备", "score": 200, "file": "OJ_title/(B卷,200分)- 组装最大可靠性设备（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q031", "title": "组装最大可靠性设备_1", "score": 200, "file": "OJ_title/(200分)- 组装最大可靠性设备（Java & JS & Python）_1.html", "tags": []}, {"id": "q365", "title": "结队编程", "score": 200, "file": "OJ_title/(CD卷,200分)- 结队编程（Java & JS & Python & C）.html", "tags": []}, {"id": "q282", "title": "编码能力提升计划", "score": 200, "file": "OJ_title/(B卷,200分)- 编码能力提升计划（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q147", "title": "羊、狼、农夫过河", "score": 200, "file": "OJ_title/(A卷,200分)- 羊、狼、农夫过河（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q366", "title": "考古学家", "score": 200, "file": "OJ_title/(CD卷,200分)- 考古学家（Java & JS & Python）.html", "tags": []}, {"id": "q148", "title": "荒地", "score": 200, "file": "OJ_title/(A卷,200分)- 荒地（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q283", "title": "荒岛求生", "score": 200, "file": "OJ_title/(B卷,200分)- 荒岛求生（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q603", "title": "荒岛求生", "score": 200, "file": "OJ_title/(E卷,200分) - 荒岛求生（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q284", "title": "观看文艺汇演问题", "score": 200, "file": "OJ_title/(B卷,200分)- 观看文艺汇演问题（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q604", "title": "观看文艺汇演问题", "score": 200, "file": "OJ_title/(E卷,200分) - 观看文艺汇演问题（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q605", "title": "解压报文压缩报文还原", "score": 200, "file": "OJ_title/(E卷,200分) - 解压报文压缩报文还原（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q149", "title": "计算快递主站点", "score": 200, "file": "OJ_title/(A卷,200分)- 计算快递主站点（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q367", "title": "计算疫情扩散时间", "score": 200, "file": "OJ_title/(CD卷,200分)- 计算疫情扩散时间（Java & JS & Python & C）.html", "tags": []}, {"id": "q622", "title": "计算疫情扩散时间", "score": 200, "file": "OJ_title/(E卷,200分)-计算疫情扩散时间（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q150", "title": "计算网络信号、信号强度", "score": 200, "file": "OJ_title/(A卷,200分)- 计算网络信号、信号强度（Java & JS & Python & C）.html", "tags": ["A卷"]}, {"id": "q606", "title": "计算网络信号信号强度", "score": 200, "file": "OJ_title/(E卷,200分) - 计算网络信号信号强度（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q285", "title": "计算误码率", "score": 200, "file": "OJ_title/(B卷,200分)- 计算误码率（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q286", "title": "评论转换输出", "score": 200, "file": "OJ_title/(B卷,200分)- 评论转换输出（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q368", "title": "贪吃的猴子", "score": 200, "file": "OJ_title/(CD卷,200分)- 贪吃的猴子（Java & JS & Python & C）.html", "tags": []}, {"id": "q495", "title": "贪吃蛇", "score": 200, "file": "OJ_title/(C卷,200分)- 贪吃蛇（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q369", "title": "贪心歌手", "score": 200, "file": "OJ_title/(CD卷,200分)- 贪心歌手（Java & JS & Python & C）.html", "tags": ["贪心"]}, {"id": "q287", "title": "购物", "score": 200, "file": "OJ_title/(B卷,200分)- 购物（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q370", "title": "路口最短时间问题", "score": 200, "file": "OJ_title/(CD卷,200分)- 路口最短时间问题（Java & JS & Python & C）.html", "tags": []}, {"id": "q607", "title": "跳房子I", "score": 200, "file": "OJ_title/(E卷,200分) - 跳房子I（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q288", "title": "跳房子II", "score": 200, "file": "OJ_title/(B卷,200分)- 跳房子II（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q289", "title": "跳格子1", "score": 200, "file": "OJ_title/(B卷,200分)- 跳格子1（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q290", "title": "跳格子2", "score": 200, "file": "OJ_title/(B卷,200分)- 跳格子2（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q371", "title": "跳格子3", "score": 200, "file": "OJ_title/(CD卷,200分)- 跳格子3（Java & JS & Python & C）.html", "tags": []}, {"id": "q608", "title": "跳格子3", "score": 200, "file": "OJ_title/(E卷,200分) - 跳格子3 （Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q291", "title": "跳格子游戏", "score": 200, "file": "OJ_title/(B卷,200分)- 跳格子游戏（Java & JS & Python）.html", "tags": ["B卷"]}, {"id": "q372", "title": "跳马", "score": 200, "file": "OJ_title/(CD卷,200分)- 跳马（Java & JS & Python & C）.html", "tags": []}, {"id": "q623", "title": "跳马", "score": 200, "file": "OJ_title/(E卷,200分)-跳马（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q496", "title": "转骰子", "score": 200, "file": "OJ_title/(C卷,200分)- 转骰子（Java & JS & Python）.html", "tags": ["C卷"]}, {"id": "q609", "title": "转骰子", "score": 200, "file": "OJ_title/(E卷,200分) - 转骰子（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q373", "title": "运输时间", "score": 200, "file": "OJ_title/(CD卷,200分)- 运输时间（Java & JS & Python & C）.html", "tags": []}, {"id": "q292", "title": "返回矩阵中非1的元素个数", "score": 200, "file": "OJ_title/(B卷,200分)- 返回矩阵中非1的元素个数（Java & JS & Python & C）.html", "tags": ["B卷", "矩阵"]}, {"id": "q151", "title": "连接器问题", "score": 200, "file": "OJ_title/(A卷,200分)- 连接器问题（Java & JS & Python）.html", "tags": ["A卷"]}, {"id": "q374", "title": "连续出牌数量", "score": 200, "file": "OJ_title/(CD卷,200分)- 连续出牌数量（Java & JS & Python & C）.html", "tags": []}, {"id": "q375", "title": "迷宫问题", "score": 200, "file": "OJ_title/(CD卷,200分)- 迷宫问题（Java & JS & Python）.html", "tags": []}, {"id": "q152", "title": "递增字符串", "score": 200, "file": "OJ_title/(A卷,200分)- 递增字符串（Java & JS & Python）.html", "tags": ["A卷", "字符串"]}, {"id": "q293", "title": "通过软盘拷贝文件", "score": 200, "file": "OJ_title/(B卷,200分)- 通过软盘拷贝文件（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q624", "title": "通过软盘拷贝文件", "score": 200, "file": "OJ_title/(E卷,200分)-通过软盘拷贝文件（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q294", "title": "采样过滤", "score": 200, "file": "OJ_title/(B卷,200分)- 采样过滤（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q295", "title": "阿里巴巴找黄金宝箱(IV)", "score": 200, "file": "OJ_title/(B卷,200分)- 阿里巴巴找黄金宝箱(IV)（Java & JS & Python & C）.html", "tags": ["B卷"]}, {"id": "q376", "title": "项目排期", "score": 200, "file": "OJ_title/(CD卷,200分)- 项目排期（Java & JS & Python & C）.html", "tags": []}, {"id": "q612", "title": "项目排期", "score": 200, "file": "OJ_title/(E卷,200分) -项目排期（Java & Python& JS & C++ & C ）.html", "tags": ["E卷"]}, {"id": "q497", "title": "高效的任务规划", "score": 200, "file": "OJ_title/(C卷,200分)- 高效的任务规划（Java & JS & Python & C）.html", "tags": ["C卷"]}, {"id": "q377", "title": "高效货运", "score": 200, "file": "OJ_title/(CD卷,200分)- 高效货运（Java & JS & Python & C）.html", "tags": []}];
-var HUAWEI_OD_CONFIG = { questions: HUAWEI_OD_QUESTIONS };
-
-// ==================== 标签提取 ====================
-function extractTags(title, filename) {
-    var text = title + ' ' + (filename || '');
-    var tags = [];
-    var catMap = {
-        '字符串': ['字符串','子串','字符','子序列','回文'],
-        '数组': ['数组','下标'],
-        '动态规划': ['动态规划','DP','dp'],
-        '排序': ['排序','冒泡','快排'],
-        '树': ['树','二叉树','BST'],
-        '图': ['图','最短路径','拓扑','Dijkstra'],
-        '矩阵': ['矩阵','螺旋'],
-        '栈': ['栈','Stack'],
-        '队列': ['队列','Queue'],
-        '链表': ['链表','List'],
-        '贪心': ['贪心'],
-        '哈希': ['哈希','Hash','散列'],
-        '二分': ['二分','折半'],
-        '回溯': ['回溯','DFS','深度优先'],
-        '搜索': ['搜索','BFS','广度优先'],
-        '滑动窗口': ['滑动窗口'],
-        '双指针': ['双指针'],
-        '模拟': ['模拟'],
-        '递归': ['递归'],
-        '位运算': ['位运算','二进制','比特'],
-        '设计': ['设计','LRU','LFU'],
-        '数学': ['数学','概率','排列','组合'],
-    };
-    for (var cat in catMap) {
-        for (var k = 0; k < catMap[cat].length; k++) {
-            if (text.indexOf(catMap[cat][k]) !== -1) {
-                tags.push(cat);
-                break;
-            }
-        }
-    }
-    return tags;
-}
-
-// ==================== 状态管理 ====================
-var state = {
-    questions: [],
-    filteredQuestions: [],
-    currentIndex: -1,
-    currentFilter: 'all',
-    categoryFilter: '',
-    sidebarCollapsed: false,
-    isLoading: false
+// ==================== OJ Core ====================
+var OJ = {
+    problems: [],
+    currentId: null,
+    currentData: null,
+    isLoading: false,
 };
 
-var editor = null;
-
-// ==================== 初始化 ====================
 function init() {
-    // 从内嵌数据加载（无需网络请求，100%可靠）
-    state.questions = HUAWEI_OD_QUESTIONS.slice();
-    state.filteredQuestions = state.questions.slice();
-    
-    // 尝试后台拉取完整描述数据（失败不影响列表）
-    tryFetchFullData();
-    
-    initEditor();
-    renderQuestionList();
-    updateCount();
-    renderCatTags();
-    if (state.questions.length > 0) {
-        selectQ(0);
-    }
-    document.addEventListener('keydown', handleKey);
-    tryRegisterSW();
+    loadIndex();
 }
 
-// ==================== 后台拉取完整数据 ====================
-function tryFetchFullData() {
+function loadIndex() {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'conf/questions.json?' + Date.now(), true);
+    xhr.open('GET', 'conf/problems/index.json?' + Date.now(), true);
     xhr.onload = function() {
         if (xhr.status === 200) {
             try {
-                var data = JSON.parse(xhr.responseText);
-                if (data.questions && data.questions.length > 0) {
-                    HUAWEI_OD_CONFIG.questions = data.questions;
-                    console.log('完整描述数据已加载 (' + data.questions.length + ' 题)');
-                    // 刷新当前题目显示（如果有选中题目）
-                    if (state.currentIndex >= 0) {
-                        var content = document.getElementById('questionContent');
-                        if (content && content.style.display !== 'none') {
-                            loadQ(state.currentIndex);
-                        }
-                    }
-                }
-            } catch(e) { console.warn('描述数据解析失败', e); }
-        } else {
-            console.warn('conf/questions.json 加载失败, 使用嵌入数据');
+                OJ.problems = JSON.parse(xhr.responseText);
+                renderList();
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            } catch(e) { console.error('Index parse error', e); }
         }
     };
     xhr.onerror = function() {
-        console.warn('conf/questions.json 网络错误, 使用嵌入数据');
+        console.warn('Failed to load index.json');
+        document.getElementById('loadingOverlay').classList.add('hidden');
     };
     xhr.send();
 }
 
-// ==================== 编辑器 ====================
-function initEditor() {
-    var ta = document.getElementById('codeEditor');
-    if (typeof CodeMirror !== 'undefined') {
-        try {
-            editor = CodeMirror.fromTextArea(ta, {
-                mode: 'python',
-                theme: 'monokai',
-                lineNumbers: true,
-                autoCloseBrackets: true,
-                matchBrackets: true,
-                extraKeys: {
-                    'Ctrl-Enter': runCode,
-                    'Tab': function(cm) {
-                        if (cm.somethingSelected()) cm.indentSelection('add');
-                        else cm.replaceSelection('    ', 'end');
-                    }
-                },
-                indentUnit: 4,
-                tabSize: 4,
-                lineWrapping: true
-            });
-            editor.setValue('# 华为OD在线编程题库\n# 在左侧选择题目，在此编写Python代码\n# Ctrl+Enter 运行\n\ndef solve():\n    pass\n\nsolve()\n');
-            return;
-        } catch(e) {}
-    }
-    // 备选：纯文本编辑框
-    ta.style.display = 'block';
-    ta.style.width = '100%';
-    ta.style.height = '100%';
-    ta.style.background = '#282a36';
-    ta.style.color = '#e2e8f0';
-    ta.style.border = 'none';
-    ta.style.padding = '16px';
-    ta.style.fontFamily = "'JetBrains Mono','Consolas',monospace";
-    ta.style.fontSize = '14px';
-    ta.style.resize = 'none';
-    ta.style.outline = 'none';
-    ta.value = '# 华为OD在线编程题库\n# 在左侧选择题目，在此编写Python代码\n# Ctrl+Enter 运行\n\ndef solve():\n    pass\n\nsolve()\n';
-    editor = {
-        getValue: function() { return ta.value; },
-        setValue: function(v) { ta.value = v; }
-    };
-}
-
-// ==================== 题目列表 ====================
-function renderQuestionList() {
+function renderList() {
     var list = document.getElementById('questionList');
-    var qs = state.filteredQuestions;
-    if (qs.length === 0) {
-        list.innerHTML = '<div style="padding:30px;text-align:center;color:var(--text-secondary);"><div style="font-size:48px;margin-bottom:12px;">🔍</div><div style="font-size:15px;">未找到匹配的题目</div><div style="font-size:13px;margin-top:4px;">请尝试其他筛选条件</div></div>';
-        return;
-    }
+    var filtered = getFiltered();
     var html = '';
-    for (var i = 0; i < qs.length; i++) {
-        var q = qs[i];
-        var gi = state.questions.indexOf(q);
-        var active = gi === state.currentIndex ? ' active' : '';
-        var scoreClass = q.score >= 200 ? ' high' : '';
-        var tagHtml = '';
-        var tags = q.tags || [];
-        tags = tags.concat(extractTags(q.title, q.file) || []);
-        var seen = {};
-        for (var t = 0; t < tags.length; t++) {
-            if (!seen[tags[t]]) { seen[tags[t]] = true; tagHtml += '<span class="q-tag">' + escapeHtml(tags[t]) + '</span>'; }
-        }
-        html += '<div class="question-item' + active + '" onclick="selectQ(' + gi + ')" title="' + escapeHtml(q.title) + '">'
-            + '<div class="q-num">' + (gi + 1) + '</div>'
-            + '<div class="q-info">'
-            + '<div class="q-title">' + escapeHtml(q.title) + '</div>'
-            + '<div class="q-meta">'
-            + '<span class="q-score' + scoreClass + '">' + q.score + '分</span>'
-            + tagHtml
-            + '</div></div></div>';
-    }
-    list.innerHTML = html;
-    updateCount();
-    if (state.currentIndex >= 0) {
-        setTimeout(function() {
-            var el = list.querySelector('.question-item.active');
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 100);
-    }
-}
-
-function updateCount() {
-    var el = document.getElementById('questionCount');
-    var text = '共 ' + state.filteredQuestions.length + ' 道题目';
-    if (state.currentFilter !== 'all') text += ' (筛选: ' + state.currentFilter + '分)';
-    if (state.categoryFilter) text += ' [' + state.categoryFilter + ']';
-    el.textContent = text;
-}
-
-// ==================== 筛选 ====================
-function setFilter(f, btn) {
-    state.currentFilter = f;
-    var btns = document.querySelectorAll('#filterTags .filter-tag');
-    for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
-    if (btn) btn.classList.add('active');
-    doFilter();
-}
-
-function setCategoryFilter(cat, btn) {
-    state.categoryFilter = cat;
-    var btns = document.querySelectorAll('#categoryTags .filter-tag');
-    for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
-    if (btn) btn.classList.add('active');
-    doFilter();
-}
-
-function doFilter() {
-    var qs = state.questions.slice();
-    if (state.currentFilter === '100') qs = qs.filter(function(q) { return q.score === 100; });
-    else if (state.currentFilter === '200') qs = qs.filter(function(q) { return q.score === 200; });
-    
-    if (state.categoryFilter) {
-        qs = qs.filter(function(q) {
-            var tags = (q.tags || []).slice();
-            var extra = extractTags(q.title, q.file);
-            for (var i = 0; i < extra.length; i++) { if (tags.indexOf(extra[i]) === -1) tags.push(extra[i]); }
-            return tags.indexOf(state.categoryFilter) !== -1;
-        });
-    }
-    
-    var searchText = document.getElementById('searchInput').value.toLowerCase().trim();
-    if (searchText) {
-        var kws = searchText.split(/[\s,，、]+/).filter(function(s) { return s; });
-        qs = qs.filter(function(q) {
-            var target = (q.title + ' ' + (q.file || '') + ' ' + (q.tags || []).join(' ')).toLowerCase();
-            for (var k = 0; k < kws.length; k++) {
-                if (target.indexOf(kws[k]) === -1) return false;
-            }
-            return true;
-        });
-        qs.sort(function(a, b) {
-            var aT = a.title.toLowerCase(), bT = b.title.toLowerCase();
-            var aE = true, bE = true;
-            for (var k = 0; k < kws.length; k++) { if (aT.indexOf(kws[k]) === -1) { aE = false; } if (bT.indexOf(kws[k]) === -1) { bE = false; } }
-            if (aE && !bE) return -1;
-            if (!aE && bE) return 1;
-            return 0;
-        });
-    }
-    
-    state.filteredQuestions = qs;
-    renderQuestionList();
-}
-
-// ==================== 分类标签渲染 ====================
-function renderCatTags() {
-    var container = document.getElementById('categoryTags');
-    var priority = ['字符串','数组','动态规划','排序','树','图','矩阵','栈','队列','链表','贪心','哈希','二分','回溯','搜索','滑动窗口','双指针','模拟'];
-    var catCount = {};
-    var catSet = {};
-    for (var i = 0; i < state.questions.length; i++) {
-        var q = state.questions[i];
-        var tags = (q.tags || []).slice();
-        var extra = extractTags(q.title, q.file);
-        for (var j = 0; j < extra.length; j++) { if (tags.indexOf(extra[j]) === -1) tags.push(extra[j]); }
-        for (var j = 0; j < tags.length; j++) {
-            catSet[tags[j]] = true;
-            catCount[tags[j]] = (catCount[tags[j]] || 0) + 1;
-        }
-    }
-    var ordered = [];
-    for (var p = 0; p < priority.length; p++) { if (catSet[priority[p]]) ordered.push(priority[p]); }
-    var remaining = Object.keys(catSet).filter(function(k) { return ordered.indexOf(k) === -1; });
-    remaining.sort(function(a, b) { return (catCount[b] || 0) - (catCount[a] || 0); });
-    ordered = ordered.concat(remaining);
-    
-    if (ordered.length === 0) { container.style.display = 'none'; return; }
-    container.style.display = 'flex';
-    var html = '<button class="filter-tag active" onclick="setCategoryFilter(\"\", this)" data-cat="">全部</button>';
-    for (var i = 0; i < ordered.length; i++) {
-        html += '<button class="filter-tag" onclick="setCategoryFilter(\'' + ordered[i] + '\', this)" data-cat="' + ordered[i] + '">' + ordered[i] + ' (' + catCount[ordered[i]] + ')</button>';
-    }
-    container.innerHTML = html;
-}
-
-// ==================== 题目选择 ====================
-function selectQ(index) {
-    if (index < 0 || index >= state.questions.length || state.isLoading) return;
-    state.currentIndex = index;
-    loadQ(index);
-    renderQuestionList();
-    updateNavInfo();
-}
-
-function loadQ(index) {
-    var q = state.questions[index];
-    if (!q) return;
-    var content = document.getElementById('questionContent');
-    var emptyState = document.getElementById('emptyState');
-    var loading = document.getElementById('loadingOverlay');
-    state.isLoading = true;
-    loading.classList.remove('hidden');
-    emptyState.style.display = 'none';
-    content.style.display = 'none';
-    
-    var title = q.title || '';
-    var score = q.score || 100;
-    var tags = (q.tags || []).join(' | ');
-    
-    // 从完整数据中获取描述（按索引匹配，两个数组顺序一致）
-    var desc = '';
-    if (HUAWEI_OD_CONFIG.questions && HUAWEI_OD_CONFIG.questions.length > index) {
-        if (HUAWEI_OD_CONFIG.questions[index].desc) desc = HUAWEI_OD_CONFIG.questions[index].desc;
-    }
-    
-    setTimeout(function() {
-        state.isLoading = false;
-        loading.classList.add('hidden');
-        
-        var html = '<div class="question-header">';
-        html += '<h2>' + escapeHtml(title) + ' <span class="score-badge">' + score + '分</span></h2>';
-        if (tags) {
-            html += '<div class="tag-list">';
-            var tagArr = tags.split(' | ');
-            for (var ti = 0; ti < tagArr.length; ti++) {
-                html += '<span class="tag">' + escapeHtml(tagArr[ti]) + '</span>';
+    for (var i = 0; i < filtered.length; i++) {
+        var p = filtered[i];
+        var active = p.id === OJ.currentId ? ' active' : '';
+        var solClass = p.solutions && p.solutions.length > 0 ? ' has-solution' : '';
+        html += '<div class="problem-item' + active + solClass + '" onclick="loadProblem(\'' + p.id + '\')">';
+        html += '<div class="item-top">';
+        html += '<span class="item-title">' + esc(p.title) + '</span>';
+        html += '<span class="item-score">' + p.score + '分</span>';
+        html += '</div>';
+        if (p.tags && p.tags.length > 0) {
+            html += '<div class="item-tags">';
+            for (var t = 0; t < p.tags.length; t++) {
+                html += '<span class="item-tag">' + esc(p.tags[t]) + '</span>';
             }
             html += '</div>';
         }
+        html += '<div class="item-meta">';
+        html += '<span class="item-id">' + p.id + '</span>';
+        if (p.solutions && p.solutions.length > 0) {
+            html += '<span class="item-sol">有题解</span>';
+        }
         html += '</div>';
-        
-        // 获取结构化HTML描述
-        var qhtml = '';
-        if (HUAWEI_OD_CONFIG.questions && HUAWEI_OD_CONFIG.questions.length > index) {
-            if (HUAWEI_OD_CONFIG.questions[index].html) qhtml = HUAWEI_OD_CONFIG.questions[index].html;
-        }
-        
-        if (qhtml) {
-            html += '<div class="question-body">' + qhtml + '</div>';
-        } else if (desc) {
-            html += '<div class="question-body"><pre class="plain-desc">' + escapeHtml(desc) + '</pre></div>';
+        html += '</div>';
+    }
+    list.innerHTML = html;
+    document.getElementById('questionCount').textContent = '共 ' + OJ.problems.length + ' 道题目';
+    buildCategoryTags();
+}
+
+function buildCategoryTags() {
+    var tags = {};
+    for (var i = 0; i < OJ.problems.length; i++) {
+        var pt = OJ.problems[i].tags;
+        if (pt) { for (var j = 0; j < pt.length; j++) { tags[pt[j]] = (tags[pt[j]] || 0) + 1; } }
+    }
+    var sorted = Object.keys(tags).sort(function(a, b) { return tags[b] - tags[a]; });
+    var html = '<button class="filter-tag' + (!_filterTag ? ' active' : '') + '" onclick="setCategoryFilter(\'\', this)">全部</button>';
+    for (var i = 0; i < sorted.length && i < 20; i++) {
+        var active = _filterTag === sorted[i] ? ' active' : '';
+        html += '<button class="filter-tag' + active + '" onclick="setCategoryFilter(\'' + sorted[i] + '\', this)">' + sorted[i] + '</button>';
+    }
+    document.getElementById('categoryTags').innerHTML = html;
+}
+
+function setCategoryFilter(tag, btn) {
+    _filterTag = tag;
+    var btns = document.getElementById('categoryTags').querySelectorAll('.filter-tag');
+    for (var i = 0; i < btns.length; i++) btns[i].className = 'filter-tag';
+    if (btn) btn.className = 'filter-tag active';
+    renderList();
+}
+
+var _filterScore = 'all';
+var _filterTag = '';
+var _searchText = '';
+
+function setFilter(val, btn) {
+    _filterScore = val;
+    var btns = document.getElementById('filterTags').querySelectorAll('.filter-tag');
+    for (var i = 0; i < btns.length; i++) btns[i].className = 'filter-tag';
+    if (btn) btn.className = 'filter-tag active';
+    renderList();
+}
+
+function filterQuestions() {
+    var inp = document.getElementById('searchInput');
+    _searchText = inp.value;
+    renderList();
+}
+
+function getFiltered() {
+    var result = OJ.problems.slice();
+    
+    // Score filter
+    if (_filterScore === '100') result = result.filter(function(p) { return p.score === 100; });
+    else if (_filterScore === '200') result = result.filter(function(p) { return p.score === 200; });
+    
+    // Tag filter
+    if (_filterTag) {
+        result = result.filter(function(p) {
+            return p.tags && p.tags.indexOf(_filterTag) !== -1;
+        });
+    }
+    
+    // Search
+    if (_searchText) {
+        var kw = _searchText.toLowerCase();
+        result = result.filter(function(p) {
+            return p.title.toLowerCase().indexOf(kw) !== -1 ||
+                   p.id.toLowerCase().indexOf(kw) !== -1;
+        });
+    }
+    
+    return result;
+}
+
+function loadProblem(id) {
+    OJ.currentId = id;
+    renderList();
+    OJ.isLoading = true;
+    
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('questionContent').style.display = 'none';
+    document.getElementById('loadingOverlay').classList.remove('hidden');
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'conf/problems/' + id + '.json?' + Date.now(), true);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            try {
+                OJ.currentData = JSON.parse(xhr.responseText);
+                renderProblem();
+            } catch(e) { console.error('Problem parse error', e); }
         } else {
-            html += '<div class="question-body"><div class="loading-hint">（题目描述加载中...）</div></div>';
+            document.getElementById('questionContent').innerHTML = '<div class="error-state">加载失败</div>';
+            document.getElementById('questionContent').style.display = 'block';
+        }
+        OJ.isLoading = false;
+        document.getElementById('loadingOverlay').classList.add('hidden');
+    };
+    xhr.onerror = function() {
+        OJ.isLoading = false;
+        document.getElementById('loadingOverlay').classList.add('hidden');
+        document.getElementById('questionContent').innerHTML = '<div class="error-state">网络错误</div>';
+        document.getElementById('questionContent').style.display = 'block';
+    };
+    xhr.send();
+}
+
+function renderProblem() {
+    var d = OJ.currentData;
+    if (!d) return;
+    
+    document.getElementById('currentInfo').textContent = d.id + ' - ' + d.title + ' (' + d.score + '分)';
+    
+    var content = document.getElementById('questionContent');
+    
+    // Tabs
+    var html = '<div class="oj-tabs">';
+    html += '<button class="oj-tab active" onclick="switchTab(this, \'desc\')">📖 题目描述</button>';
+    var hasSol = d.solutions && Object.keys(d.solutions).length > 0;
+    if (hasSol) {
+        html += '<button class="oj-tab" onclick="switchTab(this, \'solution\')">💻 题解</button>';
+    }
+    html += '</div>';
+    
+    // Description tab
+    html += '<div class="oj-tab-content" id="tab-desc">';
+    html += renderSections(d.sections);
+    html += '</div>';
+    
+    // Solution tab
+    if (hasSol) {
+        html += '<div class="oj-tab-content" id="tab-solution" style="display:none">';
+        html += renderSolutions(d.solutions);
+        html += '</div>';
+    }
+    
+    content.innerHTML = html;
+    content.style.display = 'block';
+}
+
+function renderSections(sections) {
+    if (!sections || sections.length === 0) {
+        return '<div class="empty-hint">暂无题目描述</div>';
+    }
+    
+    var html = '';
+    for (var i = 0; i < sections.length; i++) {
+        var s = sections[i];
+        html += '<div class="oj-section section-' + s.type + '">';
+        html += '<div class="oj-section-title">' + iconFor(s.type) + ' ' + esc(s.title || '') + '</div>';
+        html += '<div class="oj-section-body">';
+        
+        if (s.type === 'examples' && s.cases && s.cases.length > 0) {
+            html += renderCases(s.cases);
+        } else {
+            html += fmtText(s.content);
         }
         
-        html += '<div class="question-footer"><span class="hint">在右侧编辑器中编写Python代码，完成后复制到本地运行测试。</span></div>';
-        
-        content.innerHTML = html;
-        content.style.display = 'block';
-    }, 200);
+        html += '</div></div>';
+    }
+    return html;
 }
 
-function escapeHtml(text) {
+function iconFor(type) {
+    return {'description':'📖','input_spec':'⌨️','output_spec':'🖥️','examples':'📋','note':'💡','analysis':'🔍'}[type] || '📄';
+}
+
+function renderCases(cases) {
+    var html = '';
+    for (var i = 0; i < cases.length; i++) {
+        var c = cases[i];
+        html += '<div class="test-case">';
+        if (c.input) html += '<div class="tc-label">输入</div><pre class="tc-code">' + esc(c.input) + '</pre>';
+        if (c.output) html += '<div class="tc-label">输出</div><pre class="tc-code">' + esc(c.output) + '</pre>';
+        if (c.explanation) html += '<div class="tc-label">说明</div><div class="tc-text">' + esc(c.explanation) + '</div>';
+        html += '</div>';
+    }
+    return html;
+}
+
+function fmtText(text) {
     if (!text) return '';
-    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    var lines = text.split('\n');
+    var html = '';
+    var inCode = false;
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        var t = line.trim();
+        if (!t) {
+            if (inCode) { html += '</pre>'; inCode = false; }
+            html += '<br>'; continue;
+        }
+        if (isCode(t)) {
+            if (!inCode) { html += '<pre class="oj-code">'; inCode = true; }
+            html += esc(line) + '\n';
+        } else {
+            if (inCode) { html += '</pre>'; inCode = false; }
+            html += '<p>' + esc(t) + '</p>';
+        }
+    }
+    if (inCode) html += '</pre>';
+    return html;
 }
 
-function showSolution(btn, lang) {
-    var container = btn.parentElement.parentElement;
-    var tabs = container.querySelectorAll('.lang-tab');
-    var codes = container.querySelectorAll('.solution-code');
-    for (var i = 0; i < tabs.length; i++) tabs[i].className = 'lang-tab';
-    btn.className = 'lang-tab active';
+function isCode(line) {
+    return line.length > 60 || /[{}=;]/.test(line) ||
+        /^(const|var|let|function|def|public|private|import|#include|using|int|string|bool|void|if\s*\()/.test(line);
+}
+
+function renderSolutions(solutions) {
+    var langs = Object.keys(solutions);
+    var html = '<div class="sol-tabs">';
+    for (var i = 0; i < langs.length; i++) {
+        html += '<button class="sol-tab' + (i === 0 ? ' active' : '') + '" onclick="switchSol(this,\'' + langs[i] + '\')">' + langs[i] + '</button>';
+    }
+    html += '</div>';
+    for (var i = 0; i < langs.length; i++) {
+        html += '<div class="sol-code" data-lang="' + langs[i] + '" style="display:' + (i === 0 ? 'block' : 'none') + '"><pre><code>' + esc(solutions[langs[i]]) + '</code></pre></div>';
+    }
+    return html;
+}
+
+function switchTab(btn, tab) {
+    var tabs = btn.parentElement.querySelectorAll('.oj-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].className = 'oj-tab';
+    btn.className = 'oj-tab active';
+    var desc = document.getElementById('tab-desc');
+    var sol = document.getElementById('tab-solution');
+    if (desc) desc.style.display = tab === 'desc' ? 'block' : 'none';
+    if (sol) sol.style.display = tab === 'solution' ? 'block' : 'none';
+}
+
+function switchSol(btn, lang) {
+    var container = btn.parentElement;
+    var tabs = container.querySelectorAll('.sol-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].className = 'sol-tab';
+    btn.className = 'sol-tab active';
+    var codes = container.parentElement.querySelectorAll('.sol-code');
     for (var i = 0; i < codes.length; i++) {
         codes[i].style.display = codes[i].getAttribute('data-lang') === lang ? 'block' : 'none';
     }
 }
 
-function prevQ() {
-    if (state.filteredQuestions.length === 0) return;
-    var cq = state.questions[state.currentIndex];
-    var fi = state.filteredQuestions.indexOf(cq);
-    if (fi > 0) { selectQ(state.questions.indexOf(state.filteredQuestions[fi - 1])); }
-}
-
-function nextQ() {
-    if (state.filteredQuestions.length === 0) return;
-    var cq = state.questions[state.currentIndex];
-    var fi = state.filteredQuestions.indexOf(cq);
-    if (fi < state.filteredQuestions.length - 1) { selectQ(state.questions.indexOf(state.filteredQuestions[fi + 1])); }
-}
-
-function updateNavInfo() {
-    var info = document.getElementById('currentInfo');
-    if (state.currentIndex >= 0) {
-        var q = state.questions[state.currentIndex];
-        info.textContent = '#' + (state.currentIndex + 1) + ' - ' + q.title + ' (' + q.score + '分)';
-    } else {
-        info.textContent = '未选择题目';
-    }
-}
-
-function toggleSidebar() {
-    state.sidebarCollapsed = !state.sidebarCollapsed;
-    var sb = document.getElementById('sidebar');
-    if (state.sidebarCollapsed) sb.classList.add('collapsed');
-    else sb.classList.remove('collapsed');
-}
-
-// ==================== 代码运行 ====================
-function runCode() {
-    var code = editor ? editor.getValue() : '';
-    var out = document.getElementById('outputBody');
-    if (!code.trim()) { out.textContent = '⚠️ 请先编写代码再运行'; return; }
-    out.textContent = '🔄 浏览器内运行Python需要Skulpt库支持...\n💡 目前为在线编辑环境，请复制代码到本地运行\n\n--- 你的代码 ---\n' + code;
-    out.style.color = '#a0aec0';
-}
-
-function clearOutput() {
-    var out = document.getElementById('outputBody');
-    out.textContent = '运行结果将显示在这里...';
-    out.style.color = '#a0aec0';
-}
-
-// ==================== AI判题 ====================
-async function aiJudge() {
-    showToast('AI判题需要在左侧选择题目后使用', 'error');
-}
-
-// ==================== 刷新 ====================
-function refreshQuestion() {
-    if (state.currentIndex >= 0) { loadQ(state.currentIndex); showToast('✅ 已刷新'); }
-}
-
-// ==================== 弹窗 ====================
-function showNotice() { document.getElementById('noticeModal').classList.add('show'); }
-function closeNotice() { document.getElementById('noticeModal').classList.remove('show'); }
-
-// ==================== 键盘 ====================
-function handleKey(e) {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (e.target.closest('.CodeMirror')) return;
-    if (e.key === 'ArrowUp') { e.preventDefault(); prevQ(); }
-    else if (e.key === 'ArrowDown') { e.preventDefault(); nextQ(); }
-    else if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) { e.preventDefault(); toggleSidebar(); }
-}
-
-// ==================== Toast ====================
-function showToast(msg, type) {
-    var t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'toast ' + (type || 'success') + ' show';
-    clearTimeout(t._to);
-    t._to = setTimeout(function() { t.classList.remove('show'); }, 2500);
-}
-
-// ==================== SW ====================
-function tryRegisterSW() {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').catch(function() {});
-    }
-}
-
-// ==================== 工具 ====================
-function escapeHtml(text) {
+function esc(text) {
     if (!text) return '';
-    var d = document.createElement('div');
-    d.textContent = text;
-    return d.innerHTML;
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-// ==================== 启动 ====================
-document.addEventListener('DOMContentLoaded', init);
+// Navigation
+function prevQuestion() {
+    var filtered = getFiltered();
+    if (filtered.length === 0) return;
+    for (var i = 0; i < filtered.length; i++) {
+        if (filtered[i].id === OJ.currentId && i > 0) {
+            loadProblem(filtered[i - 1].id); return;
+        }
+    }
+}
+function nextQuestion() {
+    var filtered = getFiltered();
+    if (filtered.length === 0) return;
+    for (var i = 0; i < filtered.length; i++) {
+        if (filtered[i].id === OJ.currentId && i < filtered.length - 1) {
+            loadProblem(filtered[i + 1].id); return;
+        }
+    }
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowUp') { e.preventDefault(); prevQuestion(); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); nextQuestion(); }
+});
+
+// Init
+window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
