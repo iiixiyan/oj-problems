@@ -1,0 +1,59 @@
+{
+  "id": "q066",
+  "title": "日志限流（20220921）",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "某软件系统会在运行过程中持续产生日志，系统每天运行N单位时间，运行期间每单位时间产生的日志条数保行在数组records中。records[i]表示第i单位时间内产生日志条数。\n由于系统磁盘空间限制，每天可记录保存的日志总数上限为total条。\n如果一天产生的日志总条数大于total，则需要对当天内每单位时间产生的日志条数进行限流后保存，请计算每单位时间最大可保存日志条数limit，以确保当天保存的总日志条数不超过total。\n对于单位时间内产生日志条数不超过limit的日志全部记录保存;\n对于单位时间内产生日志条数超过limit的日志，则只记录保存limit条日志；\n如果一天产生的日志条数总和小于等于total，则不需要启动限流机制．result为-1。\n请返回result的最大值或者-1。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为系统某一天运行的单位时间数N,1<=N<=10^5\n第二行为表示这一天每单位时间产生的日志数量的数组records[]，0 <= records[i] <= 10^5\n第三行为系统一天可以保存的总日志条数total。1 <= total <= 10^9"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "每单位时间内最大可保存的日志条数limit，如果不需要启动限流机制，返回-1。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n6\n3 3 8 7 10 15\n40\n输出\n9",
+      "cases": [
+        {
+          "input": "6\n3 3 8 7 10 15\n40",
+          "output": "9",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "图示如下\n本题其实和\n华为OD机试 - 开放日活动_伏城之外的博客-CSDN博客\n几乎一模一样，本题将采用二分查找策略解题。\n首先，根据\n华为OD机试 - 开放日活动_伏城之外的博客-CSDN博客\n我们可以知道，本题有一个理想的limit，值为total / n，取这个limit，得到限流后总日志数只可能小于等于total，原因很简单，大家可以自己想想。\n因此，我们可以将 total / n 当成最小limit取值，而最大limit取值其实就是max(records)，即初始时：\nmax_limit = max(records)\nmin_limit = total / n\n我们每次都取min_limit和max_limit的二分值作为测试limit，测试逻辑如下：\n遍历records每一个record，如果record数量小于等于limit，则不做限流，如果record大于limit，则限流为limit条，然后求限流后日志总条数tmp\n得到日志总条数后，如果\ntmp < total，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "limit取小了，则应该提高limit值，即让min_limit = limit\ntmp > total，则\n\nlimit取大了，则应该降低limit值，即让max_limit = limit\ntmp == total，则\n\nlimit取得刚刚好，此时的limit就是最佳limit\n当然我们可能无法遇到tmp == total的情况，此时我们应该定义一个ans变量，保存tmp < total时的limit值，如果最终没有tmp == total的情况，则最后应该返回ans作为"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "。\n另外，在这些逻辑之前，我们可以先对records求和sum，如果sum <= total，则不需要做上面逻辑。\n上面算法的时间复杂度为 O(log(total) * N)\n1<=N<=10^5\n1 <= total <= 10^9\n因此性能还算比较优异。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

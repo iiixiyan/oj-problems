@@ -1,0 +1,57 @@
+{
+  "id": "q047",
+  "title": "字符串重新排列、字符串重新排序",
+  "score": 100,
+  "tags": [
+    "A卷",
+    "字符串",
+    "排序",
+    "数学"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个字符串s，s包括以空格分隔的若干个单词，请对s进行如下处理后输出：\n1、单词内部调整：对每个单词字母重新按字典序排序\n2、单词间顺序调整：\n1）统计每个单词出现的次数，并按次数降序排列\n2）次数相同，按单词长度升序排列\n3）次数和单词长度均相同，按字典升序排列\n请输出处理后的字符串，每个单词以一个空格分隔。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一行字符串，每个字符取值范围：[a-zA-z0-9]以及空格，字符串长度范围：[1，1000]"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出处理后的字符串，每个单词以一个空格分隔。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nThis is an apple\n输出\nan is This aelpp",
+      "cases": [
+        {
+          "input": "This is an apple",
+          "output": "an is This aelpp",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nMy sister is in the house not in the yard\n输出\nin in eht eht My is not adry ehosu eirsst\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是，先进行单词内部调整，然后再进行单词间顺序。\n考察的是排序。\nPython解法的第16行排序原理，请看：\nPython3 - list sort方法实现多条件自定义排序_伏城之外的博客-CSDN博客\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

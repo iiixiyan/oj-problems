@@ -1,0 +1,54 @@
+{
+  "id": "q051",
+  "title": "寻找相似单词",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个可存储若干单词的字典，找出指定单词的所有相似单词，并且按照单词名称从小到大排序输出。\n单词仅包括字母，但可能大小写并存（大写不一定只出现在首字母）。\n相似单词"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：给定一个单词X，如果通过任意交换单词中字母的位置得到不同的单词Y，那么定义Y是X的相似单词，如abc、bca即为相似单词（大小写是不同的字母，如a和A算两个不同字母）。\n字典序排序： 大写字母<小写字母。同样大小写的字母，遵循26字母顺序大小关系。\n即\nA<B<C<…<X<Y<Z<a<b<c<…<x<y<z\n. 如\nBac<aBc<acB<cBa\n."
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为给定的单词个数N（N为非负整数）\n从第二行到地N+1行是具体的单词（每行一个单词）\n最后一行是指定的待检测单词（用于检测上面给定的单词中哪些是与该指定单词是相似单词，该单词可以不是上面给定的单词）"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "从给定的单词组中，找出指定单词的相似单词，并且按照从小到大字典序排列输出，中间以空格隔开\n如果不存在，则输出null（字符串null）"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\nabc\ndasd\ntad\nbca\nabc\n输出\nabc bca",
+      "cases": [
+        {
+          "input": "4\nabc\ndasd\ntad\nbca\nabc",
+          "output": "abc bca",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "在给定的输入种，与abc是兄弟单词的是abc bca，且输出按照字典序大小排序，输出的所有单词以空格隔开\n输入\n4\nabc\ndasd\ntad\nbca\nabd\n输出\nnull\n\n给定的单词组中，没有与给定单词abd是兄弟单词，输出为null（字符串null）"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "简单的排序题，逻辑请看代码。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

@@ -1,0 +1,84 @@
+{
+  "id": "q049",
+  "title": "密室逃生游戏",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小强正在参加《密室逃生》游戏，当前关卡要求找到符合给定 密码K（升序的不重复小写字母组成） 的箱子，并给出箱子编号，箱子编号为 1~N 。\n每个箱子中都有一个 字符串s ，字符串由大写字母、小写字母、数字、\n标点符号\n、\n空格\n组成，需要在这些字符串中找到所有的字母，忽略大小写后排列出对应的密码串，并返回匹配密码的箱子序号。\n提示：满足条件的箱子不超过1个。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为 key 的字符串，\n第二行为箱子 boxes，为数组样式，以\n空格\n分隔\n箱子 N 数量满足 1 ≤ N ≤ 10000,\ns 长度满足 0 ≤ s.length ≤ 50，\n密码为仅包含小写字母的升序字符串，且不存在重复字母，\n密码 K 长度1 ≤ K.length ≤ 26"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "返回对应箱子编号\n如不存在符合要求的密码箱，则返回 -1。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "箱子中字符拼出的字符串与密码的匹配忽略大小写，且要求与密码完全匹配，如密码abc匹配aBc，但是密码abc不匹配abcd"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nabc\ns,sdf134 A2c4b\n输出\n2",
+      "cases": [
+        {
+          "input": "abc\ns,sdf134 A2c4b",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "第 2 个箱子中的 Abc ，符合密码 abc。\n输入\nabc\ns,sdf134 A2c4bd 523[]\n输出\n-1\n\n第2个箱子中的Abcd，与密码不完全匹配，不符合要求"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "2023.03.26 本题更新了"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "，增加"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "，增加了一个新"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "。\n新的题目信息，依旧是存在问题的，即第二行输入的箱子字符串中可能包含空格，但是"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "中又说让我们按照空格分割，这里我的解法默认第二行输入的每个箱子字符串中不包含空格。\n其次，本题"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2中，第二个箱子只保留字母后，变为字符串Abcd，从"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "可知，该字符串机试转为小写升序后的abcd和依旧不能密码abc完全匹配，因此题目的完全匹配意思应该是和密码要完全相同。\n但是如果箱子字符串是aabbcc这种，能否和密码abc完全匹配呢？\n看了满分答案后，这种情况也是不能完全匹配，即不能对箱子字符串做去重处理。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

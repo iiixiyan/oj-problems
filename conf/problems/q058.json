@@ -1,0 +1,65 @@
+{
+  "id": "q058",
+  "title": "打印机队列",
+  "score": 100,
+  "tags": [
+    "A卷",
+    "队列"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有5台打印机打印文件，每台打印机有自己的待打印队列。\n因为打印的文件内容有轻重缓急之分，所以队列中的文件有1~10不同的代先级，其中\n数字越大优先级越高\n。\n打印机会从自己的待打印队列中选择\n优先级最高\n的文件来打印。\n如果存在两个优先级一样的文件，则选择\n最早进入队列\n的那个文件。\n现在请你来模拟这5台打印机的打印过程。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "每个输入包含1个测试"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "，\n每个测试"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "第一行给出发生事件的数量N（0 < N < 1000）。\n接下来有 N 行，分别表示发生的事件。共有如下两种事件：\n“IN P NUM”，表示有一个拥有优先级 NUM 的文件放到了打印机 P 的待打印队列中。（0< P <= 5, 0 < NUM <= 10)；\n“OUT P”，表示打印机 P 进行了一次文件打印，同时该文件从待打印队列中取出。（0 < P <= 5）。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "对于每个测试"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "，每次”OUT P”事件，请在一行中\n输出文件的编号\n。\n如果此时没有文件可以打印，请输出”\nNULL\n“。\n文件的编号定义为”IN P NUM”事件发生第 x 次，此处待打印文件的编号为x。编号从\n1\n开始。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n7\nIN 1 1\nIN 1 2\nIN 1 3\nIN 2 1\nOUT 1\nOUT 2\nOUT 2\n输出\n3\n4\nNULL",
+      "cases": [
+        {
+          "input": "7\nIN 1 1\nIN 1 2\nIN 1 3\nIN 2 1\nOUT 1\nOUT 2\nOUT 2",
+          "output": "3\n4\nNULL",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n5\nIN 1 1\nIN 1 3\nIN 1 1\nIN 1 3\nOUT 1\n输出\n2\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以基于优先队列实现打印机总是打印优先级最高的文件。\n优先队列，如果想简单一点的话，则可以基于有序数组实现，但是有序数组是整体有序，每次有新任务入队，都需要O(n)时间复杂度维持。\n优先队列最好是基于堆结构实现，所谓堆结构，即一颗完全二叉树。本题是优先级数值越大，优先级越高，因此我们可以使用大顶堆。\n关于基于堆结构实现优先队列，可以参考\nLeetCode - 1705 吃苹果的最大数目_伏城之外的博客-CSDN博客\nJavaScript算法源码\n基于有序数组实现优先队列"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

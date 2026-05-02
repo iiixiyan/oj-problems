@@ -1,0 +1,56 @@
+{
+  "id": "q070",
+  "title": "最大利润",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "商人经营一家店铺，有number种商品，\n由于仓库限制每件商品的最大持有数量是item[index]\n每种商品的价格是item-price[item_index][day]\n通过对商品的买进和卖出获取利润\n请给出商人在days天内能获取的最大的利润\n注：同一件商品可以反复买进和卖出"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入商品的数量number，比如3\n第二行输入商品售货天数 days，比如3\n第三行输入仓库限制每件商品的最大持有数量是item[index]，比如4 5 6\n后面继续输入number行days列，含义如下：\n第一件商品每天的价格，比如1 2 3\n第二件商品每天的价格，比如4 3 2\n第三件商品每天的价格，比如1 5 3"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出商人在这段时间内的最大利润。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n3\n4 5 6\n1 2 3\n4 3 2\n1 5 2\n输出\n32",
+      "cases": [
+        {
+          "input": "3\n3\n4 5 6\n1 2 3\n4 3 2\n1 5 2",
+          "output": "32",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "含义如下所示\n因此最多可以赚8 + 24 = 32元。\n另外，本题描述说：同一件商品可以反复买进和卖出，因此上面图示买卖操作还可以变为这样：\n本题算是\n华为机试 - 最大股票收益_伏城之外的博客-CSDN博客\n的变种题。\n我们只要找到商品价格走势的上升区段，然后低价all in买入，高价all out卖出即可求得最大利润。\n那么如何找到上升区段呢？\n我们假设商品1的第 i 天的价格为 price1[i]，那么只要price1[i] < price1[i+1]，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "当前处于上升区段的低价位，因此可以all in，然后到i+1天的时候all out。\nJavaScript算法源码\n根据网友20221207的优化补充，下面代码中25~27行会将代码正确率从40%提高到70%"
+    }
+  ],
+  "solutions": {
+    "JavaScript": "根据网友20221207的优化补充，下面代码中25~27行会将代码正确率从40%提高到70%"
+  },
+  "verified": false
+}

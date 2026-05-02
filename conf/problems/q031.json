@@ -1,0 +1,82 @@
+{
+  "id": "q031",
+  "title": "组装最大可靠性设备_1",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一个设备由N种类型元器件组成(每种类型元器件只需要一个，类型type编号从0~N-1)，\n每个元器件均有可靠性属性reliability，可靠性越高的器件其价格price越贵。\n而设备的可靠性由组成设备的所有器件中可靠性最低的器件决定。\n给定预算S，购买N种元器件( 每种类型元器件都需要购买一个)，在不超过预算的情况下，请给出能够组成的设备的最大可靠性。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "S N // S总的预算，N元器件的种类\ntotal // 元器件的总数，每种型号的元器件可以有多种;\n此后有total行具体器件的数据\ntype reliability price // type 整数类型，代表元器件的类型编号从0 ~ N-1; reliabilty 整数类型 ，代表元器件的可靠性; price 整数类型 ，代表元器件的价格"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "符合预算的设备的最大可靠性，如果预算无法买齐N种器件，则返回 -1"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "0 <= S,price <= 10000000\n0 <= N <= 100\n0 <= type <= N-1\n0 <= total <= 100000\n0 < reliability <= 100000"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n500 3\n6\n0 80 100\n0 90 200\n1 50 50\n1 70 210\n2 50 100\n2 60 150\n输出\n60",
+      "cases": [
+        {
+          "input": "500 3\n6\n0 80 100\n0 90 200\n1 50 50\n1 70 210\n2 50 100\n2 60 150",
+          "output": "60",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "预算500，设备需要3种元件组成，方案\n类型0的第一个(可靠性80),\n类型1的第二个(可靠性70),\n类型2的第二个(可靠性60),\n可以使设备的可靠性最大 60\n输入\n100 1\n1\n0 90 200\n输出\n-1\n\n组成设备需要1个元件，但是元件价格大于预算，因此无法组成设备，返回-1"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题很像是分组背包问题，但是细看却不是，因为"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "中说：\n每种类型元器件都需要购买一个\n我的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "是二分。\n首先，不分种类，收集所有器件出现过的可靠性到一个Set集合中，收集完后，进行升序排序，升序后可靠性数组设为maybe，即maybe数组里面的可靠性都有可能是\n\n。\n之后，将所有器件按类型统计，由于题目输入已经给出了种类数n，因此可以定义一个长度为n的数组kinds，即为种类数组，kinds[type]下记录对应类型的所有器件。统计完后，我们需要遍历每一个kinds[type]，然后将它按照器件的可靠性进行升序。\n预备处理如上。\n接下来我们需要在maybe中二分取中间值maybe[mid]，作为一个可能的\n\n，即设备最大可靠性。然后遍历kinds，在每一个种类的器件中，找到一个可靠性>=maybe[mid]，且最接近maybe[mid]的器件，这里需要想清楚两点："
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "：而设备的可靠性由组成设备的所有器件中可靠性最低的器件决定。因此，maybe[mid]作为"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "的话，则每一个种类中选取的器件的可靠性要大于等于maybe[mid]才行。"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "还说：可靠性越高的器件其价格price越贵。因此，按照贪心原则，我们选取一个大于等于且最接近maybe[mid]可靠性的器件，是花费最少的。这样省下来的钱就可以买其他器件。\n由于之前，已经对kinds[type]进行了升序，因此这里可以二分查找：可靠性>=maybe[mid]，且最接近maybe[mid]的器件\n这里又涉及到二分查找的目标位置和有序插入位置的知识，具体可以看：\n当找到所有kinds[type]中可靠性>=maybe[mid]，且最接近maybe[mid]的器件后，对这些器件的price进行求和，得到sumPrice：\n如果sumPrice <= 总预算s，那么"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "，当前maybe[mid]真的是一个可能解，但不一定是最优解，我们需要继续二分找到更小的maybe[mid]\n如果sumPrice > 总预算s，那么\n\n，当前maybe[mid]选大了，我们下次二分应该选更小一点的maybe[mid]来尝试\n按此二分逻辑，将最后一次符合要求的maybe[mid]可能解返回即可，如果没有符合要求的maybe[mid]，则返回-1。\nJava算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

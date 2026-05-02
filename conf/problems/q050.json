@@ -1,0 +1,49 @@
+{
+  "id": "q050",
+  "title": "对称美学",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "对称就是最大的美学，现有一道关于对称字符串的美学。已知：\n第1个字符串：R\n第2个字符串：BR\n第3个字符串：RBBR\n第4个字符串：BRRBRBBR\n第5个字符串：RBBRBRRBBRRBRBBR\n相信你已经发现规律了，没错！就是第 i 个字符串 = 第 i - 1 号字符串取反 + 第 i - 1 号字符串；\n取反（R->B, B->R）;\n现在告诉你n和k，让你求得第n个字符串的第k个字符是多少。（k的编号从0开始）"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入一个T，表示有T组"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "；\n解析来输入T行，每行输入两个数字，表示n，k\n1 ≤ T ≤ 100；\n1 ≤ n ≤ 64；\n0 ≤ k ＜ 2^(n-1)；"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出T行表示答案；\n输出 \"blue\" 表示字符是B；\n输出 \"red\" 表示字符是R。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "：输出字符串区分大小写，请\n\n输出小写字符串，不带双引号。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n1 0\n2 1\n3 2\n4 6\n5 8\n输出",
+      "cases": [
+        {
+          "input": "5\n1 0\n2 1\n3 2\n4 6\n5 8\n输出",
+          "output": "",
+          "explanation": ""
+        }
+      ]
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

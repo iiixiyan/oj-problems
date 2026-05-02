@@ -1,0 +1,52 @@
+{
+  "id": "q026",
+  "title": "文件缓存系统",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "请设计一个文件缓存系统，该文件缓存系统可以指定缓存的最大值（单位为字节）。\n文件缓存系统有两种操作：\n存储文件（put）\n读取文件（get）\n操作命令为：\nput fileName fileSize\nget fileName\n存储文件是把文件放入文件缓存系统中；\n读取文件是从文件缓存系统中访问已存在，如果文件不存在，则不作任何操作。\n当缓存空间不足以存放新的文件时，根据规则删除文件，直到剩余空间满足新的文件大小位置，再存放新文件。\n具体的删除规则为：\n文件访问过后，会更新文件的最近访问时间和总的访问次数，当缓存不够时，按照第一优先顺序为访问次数从少到多，第二顺序为时间从老到新的方式来删除文件。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为缓存最大值 m（整数，取值范围为 0 < m ≤ 52428800）\n第二行为文件操作序列个数 n（0 ≤ n ≤ 300000）\n从第三行起为文件操作序列，每个序列单独一行，文件操作定义为：\nop  file_name  file_size\nfile_name 是文件名，file_size 是文件大小"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出当前文件缓存中的文件名列表，文件名用英文逗号分隔，按字典顺序排序，如：\na,c\n如果文件缓存中没有文件，则输出NONE"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "如果新文件的文件名和文件缓存中已有的文件名相同，则不会放在缓存中\n新的文件第一次存入到文件缓存中时，文件的总访问次数不会变化，文件的最近访问时间会更新到最新时间\n每次文件访问后，总访问次数加1，最近访问时间更新到最新时间\n任何两个文件的最近访问时间不会重复\n文件名不会为空，均为小写字母，最大长度为10\n缓存空间不足时，不能存放新文件\n每个文件大小都是大于 0 的整数"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n50\n6\nput a 10\nput b 20\nget a\nget a\nget b\nput c 30\n输出\na,c",
+      "cases": [
+        {
+          "input": "50\n6\nput a 10\nput b 20\nget a\nget a\nget b\nput c 30",
+          "output": "a,c",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n50\n1\nget file\n输出\nNONE\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题中的：\nfileName 相当于 key\nfileSize 相当于 val\n本题中的：\nget(key)操作：\n如果 key 不存在，不需要做任何操作\n如果 key 存在，则仅增加key的访问次数\nput(key, val)操作：\n如果 key 存在，不需要做任何操作\n如果 key 不存在，则进行新增操作，这里可以初始化访问次数为1\n本题还有一个变化点就是，put新增操作时，检查到LFU缓存的容量不足，LFUCache.capacity 小于 put的val值（文件大小），此时我们需要删除LFU缓存中最少，最远使用的key（文件名），此时可能需要进行多次删除，直到LFUCache.capacity >= put的val值。\nJS算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

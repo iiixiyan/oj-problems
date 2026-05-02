@@ -1,0 +1,49 @@
+{
+  "id": "q040",
+  "title": "冗余覆盖",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定两个字符串s1和s2和正整数K，其中s1长度为n1，s2长度为n2，在s2中选一个子串，满足:\n该子串长度为n1+k\n该子串中包含s1中全部字母，\n该子串每个字母出现次数不小于s1中对应的字母，\n我们称s2以长度k冗余覆盖s1，给定s1，s2，k，求最左侧的s2以长度k冗余覆盖s1的子串的\n首个元素的下标\n，如果没有返回\n-1\n。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入三行，第一行为s1，第二行为s2，第三行为k，s1和s2只包含小写字母"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最左侧的s2以长度k冗余覆盖s1的子串首个元素下标，如果没有返回\n-1。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nab\naabcd\n1\n输出\n0",
+      "cases": [
+        {
+          "input": "ab\naabcd\n1",
+          "output": "0",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题的难点在于如何计算s2选中子串是否能够覆盖住s1，即s2选中子串的中的对应字符个数都大于s1中每个字符个数。\n本题可以参考最小覆盖子串中统计覆盖子串字符个数的求解思路。\n请大家看：\nLeetCode - 76 最小覆盖子串_伏城之外的博客-CSDN博客\n华为机试 - 完美走位_伏城之外的博客-CSDN博客_完美走位华为\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

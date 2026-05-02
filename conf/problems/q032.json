@@ -1,0 +1,47 @@
+{
+  "id": "q032",
+  "title": "小明减肥",
+  "score": 100,
+  "tags": [
+    "2025B"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "(2025B\n卷\n,100\n分\n)\n小明减肥（\nJava & JS & Python\n）\n-"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "待更新"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小明最近想通过运动减肥。他列出了\nn\n种不同的运动，\n1 <= n <= 10\n。每种运动消耗的卡路里分别为\ncalories[\ni\n]\n，\ncalories[\ni\n]\n>= 0\n。他希望选择恰好\nK\n种运动进行锻炼，使得这些运动消耗的总卡路里恰好等于目标\nT\n，\nT >= 0\n。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "，每种运动最多只能选一次，且\nk >= 0\n。请你帮助小明计算，共有多少种不同的运动组合方式可以达到目标。两种组合不同当且仅当至少包含一个不同的运动。\n▶"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行三个整数\nn\n、\nT\n、\nK\n，表示运动的总数量、目标卡路里和需要选择的运动数量。\n第二行\nn\n个\n整数，表示每种运动的消耗。\n▶"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "一个整数，表示不同的组合数目。\n示例\n1\n输入\n5 6 3 [1,2,3,4,5]\n输出\n1"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "唯一满足条件的组合是『\n1, 2, 3\n』（总和为\n6\n，恰好选\n3\n个运动）。\n示例\n2\n输入\n7 7 3 [0,1,2,3,4,5,6]\n输出\n4\n\n满足条件的组合是『\n0,1,6\n』『\n0,2,5\n』『\n0,3,4\n』『\n1,2,4\n』（总和为\n7\n，恰好选\n3\n个运动）"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

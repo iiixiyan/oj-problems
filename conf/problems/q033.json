@@ -1,0 +1,101 @@
+{
+  "id": "q033",
+  "title": "模拟数据序列化传输",
+  "score": 200,
+  "tags": [
+    "2025B",
+    "模拟"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "(2025B\n卷\n,200\n分\n)\n模拟数据序列化传输\n-"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "待更新"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "模拟一套简化的序列化传输方式，\n请实现\n下面的数据编码与解码过程\n编码前数据格式为\n[\n位置\n,\n类型\n,\n值\n]\n，多个数据的时候用逗号分隔，位置仅支持数字，不考虑重复等场景；类型仅支持：\nInteger / String / Compose\n（\nCompose\n的数据类型表示该存储的数据也需要编码） 编码后数据参考图示，数据区的格式是：位置\n#\n类型\n#\n长度\n#\n数据，类型存储需要编码，\nInteger->0\n；\nString->1\n；\nCompose->2\n，长度是指数据的字符长度；数据仅允许数字、大小写字母、空格。\nimage\n输入的编码字符长度不能超过\n1000\n，一个数据的格式错误，则解析剩下数据，其他错误输出\nENCODE_ERROR\n。 输入的解码字符不能超过\n1000\n，数据区异常则跳过继续解析剩余数据区，其他异常输出\nDECODE_ERROR\n。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入有两行：\n第一行是命令，\n1\n表示编码，\n2\n表示解码\n第二行输入待编码、解码的字符 数据最多嵌套\n10\n层，\n[1,Compose,[1,String,Second]]\n为\n2\n层嵌套。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "如果输入要求是编码，则输出编码结果；\n如果输入要求是解码，则输出解码结果；\n当异常时输出对应的错误字符。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入\n1\n[\n1,String\n,I am\nMary\n],[2,Integer\n,23\n],[3,Long\n,1000000\n],[4,Compose,[1,String\n,I am Kitty\n],[2,Integer\n,44]]\n输出\n1#1#9#I am Mary2#0#2#234#2#25#1#1#10#I am\nKitty2#0#2#44",
+      "cases": [
+        {
+          "input": "1\n[\n1,String\n,I am\nMary\n],[2,Integer\n,23\n],[3,Long\n,1000000\n],[4,Compose,[1,String\n,I am Kitty\n],[2,Integer\n,44]]",
+          "output": "1#1#9#I am Mary2#0#2#234#2#25#1#1#10#I am\nKitty2#0#2#44",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "由于\nLong\n型为不支持类型，所以数据\n[3,Long,1000000]\n自动被过滤掉"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2\n输入\n2\n1#1#9#I am\nMary2#0#2#233#0#3#8794#2#25#1#1#10#I am Kitty2#0#2#44\n输出\n[\n1,String\n,I am\nMary\n],[2,Integer\n,23\n],[3,Integer\n,879\n],[4,Compose,[1,String\n,I am Kitty\n],[2,Integer\n,44]]",
+      "cases": [
+        {
+          "input": "2\n1#1#9#I am\nMary2#0#2#233#0#3#8794#2#25#1#1#10#I am Kitty2#0#2#44",
+          "output": "[\n1,String\n,I am\nMary\n],[2,Integer\n,23\n],[3,Integer\n,879\n],[4,Compose,[1,String\n,I am Kitty\n],[2,Integer\n,44]]",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "3\n输入\n2\nxxx\n输出\nDECODE_ERROR",
+      "cases": [
+        {
+          "input": "2\nxxx",
+          "output": "DECODE_ERROR",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "输入的待解码数据不满足格式要求"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "4\n输入\n1\n[\n1,String\n,I am\nMary\n],[2,Integer\n,23]],\n输出\nENCODE_ERROR",
+      "cases": [
+        {
+          "input": "1\n[\n1,String\n,I am\nMary\n],[2,Integer\n,23]],",
+          "output": "ENCODE_ERROR",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "输入格式不满足输入格式要求"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

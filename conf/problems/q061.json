@@ -1,0 +1,75 @@
+{
+  "id": "q061",
+  "title": "挑选字符串",
+  "score": 100,
+  "tags": [
+    "A卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定a-z，26个英文字母小写字符串组成的字符串A和B，其中A可能存在重复字母，B不会存在重复字母，现从字符串A中按规则挑选一些字母可以组成字符串B。\n挑选规则如下：\n同一个位置的字母只能挑选一次，\n被挑选字母的相对先后顺序不能被改变，\n求最多可以同时从A中挑选多少组能组成B的字符串。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为2行，第一行输入字符串a,第二行输入字符串b，行首行尾\n没有多余空格"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一行，包含一个数字，表示最多可以同时从a中挑选多少组能组成b的字符串，行末没有多余空格"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nbadc\nbac\n输出\n1",
+      "cases": [
+        {
+          "input": "badc\nbac",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题求解可以参考\nLeetCode - 1419 数青蛙_伏城之外的博客-CSDN博客\n华为机试 - 数大雁_伏城之外的博客-CSDN博客\n题目的"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "不能"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "问题，我们可以通过下面"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "bbadcbacdaccccbac\nbac"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：统计时，a的数量应该小于等于b的数量，c的数量应该小于等于a的数量，这样才能满足顺序要求：\n被挑选字母的相对先后顺序不能被改变\n因此上面这步统计到的c不应该被计入。\n由于c <= b <= a，因此有几个c，字符串a中就能挑选出几个字符串b。\n上面算法只需要一次遍历，即可完成"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "，时间复杂度O（n）\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

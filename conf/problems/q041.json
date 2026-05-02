@@ -1,0 +1,74 @@
+{
+  "id": "q041",
+  "title": "匿名信",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "电视剧《分界线》里面有一个片段，男主为了向警察透露案件细节，且不暴露自己，于是将报刊上的字减下来，剪拼成匿名信。\n现在又一名举报人，希望借鉴这种手段，使用英文报刊完成举报操作。\n但为了增加文章的混淆度，只需满足每个单词中字母数量一致即可，不关注每个字母的顺序。\n解释：单词on允许通过单词no进行替代。\n报纸代表newspaper，匿名信代表anonymousLetter，求报纸内容是否可以拼成匿名信。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入newspaper内容，包括1-N个字符串，用空格分开\n第二行输入anonymousLetter内容，包括1-N个字符串，用\n空格\n分开。\nnewspaper和anonymousLetter的字符串由小写英文字母组成，且每个字母只能使用一次；\nnewspaper内容中的每个字符串字母顺序可以任意调整，但必须保证字符串的完整性（每个字符串不能有多余字母）\n1 < N < 100,\n1 <= newspaper.length,anonymousLetter.length <= 10^4"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "如果报纸可以拼成匿名信返回true，否则返回false"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nab cd\nab\n输出\ntrue",
+      "cases": [
+        {
+          "input": "ab cd\nab",
+          "output": "true",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nab ef\naef\n输出\nfalse\n\n无\n输入\nab bcd ef\ncbd fe\n输出\ntrue\n\n无\n输入\nab bcd ef\ncd ef\n输出\nfalse\n\n无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1的意思是：\n报纸上有两个单词：ab、cd，而要写的匿名信需要一个单词ab，因此可以直接使用报纸上的单词ab，所以可以写出匿名信。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2的意思是：\n报纸上有两个单词：ab、ef，而要写的匿名信需要一个aef，根据题目意思\n只需满足每个单词中字母数量一致即可\n如果想用报纸上的单词，代替匿名信上的单词，则这两个单词的字母数量必须一致。\n因此，对于匿名信单词aef，有三个字母，而报纸上没有有三个字母的单词，因此输出false。\n我增加一个自测"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "，"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "下面这个特点\n不关注每个字母的顺序。单词on允许通过单词no进行替代。\n比如，报纸单词ba、cd，匿名信需要单词ab，而题目说\n不关注每个字母的顺序\n因此匿名信的单词ab可以用报纸的单词ba代替，因此输出true。\n本题需要关注下数量级：1 <= newspaper.length,anonymousLetter.length <= 10^4\n因此双重for的O(n^2)时间复杂度会高达一亿次循环，会超时。\n我的策略如下，统计出newspaper中每个单词出现的次数到count对象中，统计前，对每个单词进行字典序排序，这样就可以忽略字母顺序了。\n比如，"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1的newspaper会统计出count: { \"ab\":1, \"cd\": 1}，这个时间复杂度是O(n)\n然后，再遍历anonymousLetter每个单词，并对单词进行字典序排序，忽略字母顺序，然后用排序后单词去count中找，如果count[letter] > 0，则可以找到，然后count[letter]--\n遵循题目意思：每个字母只能使用一次\n如果count[letter]不存在，或者count[letter]===0，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "匿名信中的某个单词在报纸单词中找不到替代，因此可以直接返回false。\n如果全部都可以找到，则返回true。\n这个过程的时间复杂度是O(n)。\n因此总的时间复杂度是O(n)。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

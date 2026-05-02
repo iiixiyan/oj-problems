@@ -1,0 +1,64 @@
+{
+  "id": "q043",
+  "title": "单词倒序",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "输入单行英文句子，里面包含英文字母，空格以及,.?三种标点符号，请将句子内每个单词进行倒序，并输出倒序后的语句。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入字符串S，S的长度 1 ≤ N ≤ 100"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出倒序后的字符串"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "标点符号左右的空格 ≥ 0，单词间空格＞0"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nyM eman si boB.\n输出\nMy name is Bob.",
+      "cases": [
+        {
+          "input": "yM eman si boB.",
+          "output": "My name is Bob.",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nwoh era uoy ? I ma enif.\n输出\nhow are you ? I am fine.\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "从"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "可以看出，单词的倒序并不难，将字符串单词转为字符数组后，reverse一下就行了。但是单词中如果有标点符号的话，则标点符号的位置不能改变，比如enif. 倒序后为 fine. 其中 . 的位置在倒序前后是一样的。\n我的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "如下，从左到右遍历每一个字符，如果字符是 , . ? 或者空格，则看成一个分界符，将分界符之间的单词片段进行倒序。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

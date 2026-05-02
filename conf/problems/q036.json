@@ -1,0 +1,49 @@
+{
+  "id": "q036",
+  "title": "二元组个数",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定两个数组a，b，若a[i] == b[j] 则称 [i, j] 为一个二元组，求在给定的两个数组中，二元组的个数。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入 m\n第二行输入m个数，表示第一个数组\n第三行输入 n\n第四行输入n个数，表示第二个数组"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "二元组个数。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\n1 2 3 4\n1\n1\n输出\n1",
+      "cases": [
+        {
+          "input": "4\n1 2 3 4\n1\n1",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "二元组个数为 1个\n输入\n6\n1 1 2 2 4 5\n3\n2 2 4\n输出\n5\n\n二元组个数为 5 个。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "很简单的双重for，"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

@@ -1,0 +1,44 @@
+{
+  "id": "q035",
+  "title": "MVP争夺战",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "(E卷,100分)- MVP争夺战（Java & JS & Python）\n\n在星球争霸篮球赛对抗赛中，最大的宇宙战队希望每个人都能拿到MVP，MVP的条件是单场最高分得分获得者。\n可以并列所以宇宙战队决定在比赛中尽可能让更多队员上场，并且让所有得分的选手得分都相同，\n然而比赛过程中的每1分钟的得分都只能由某一个人包揽。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入第一行为一个数字 t ，表示为有得分的分钟数 1 ≤ t ≤ 50\n第二行为 t 个数字，代表每一分钟的得分 p， 1 ≤ p ≤ 50"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出有得分的队员都是MVP时，最少得MVP得分。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n9 5 2 1 5 2 1 5 2 1\n输出\n6",
+      "cases": [
+        {
+          "input": "9 5 2 1 5 2 1 5 2 1",
+          "output": "6",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "样例解释 一共 4 人得分，分别都是 6 分 5 + 1 ， 5 + 1 ， 5 + 1 ， 2 + 2 + 2\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}
