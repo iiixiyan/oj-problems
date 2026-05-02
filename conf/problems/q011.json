@@ -1,0 +1,67 @@
+{
+  "id": "q011",
+  "title": "跳房子II",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "跳房子，也叫跳飞机，是一种世界性的儿童游戏。\n游戏参与者需要分多个回合按顺序跳到第1格直到房子的最后一格，然后获得一次选房子的机会，直到所有房子被选完，房子最多的人获胜。\n跳房子的过程中，如果有踩线等违规行为，会结束当前回合，甚至可能倒退几步。\n假设房子的总格数是count，小红每回合可能连续跳的步数都放在数组steps中，请问数组中是否有一种步数的组合，可以让小红三个回合跳到最后一格?\n如果有，请输出索引和最小的步数组合（数据保证索引和最小的步数组合是唯一的）。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：数组中的步数可以重复，但数组中的元素不能重复使用。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为房子总格数count，它是int整数类型。\n第二行输入为每回合可能连续跳的步数，它是int整数数组类型"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "返回索引和最小的满足要求的步数组合（顺序保持steps中原有顺序）"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "count ≤ 10000\n3 ≤ steps.length ≤ 10000\n-100000 ≤ steps[i] ≤ 100000"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n[1,4,5,2,0,2]\n9\n输出\n[4,5,0]",
+      "cases": [
+        {
+          "input": "[1,4,5,2,0,2]\n9",
+          "output": "[4,5,0]",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n[1,5,2,0,2,4]\n9\n输出\n[5,2,2]\n\n无\n输入\n[-1,2,4,9]\n12\n输出\n[-1,4,9]\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题其实就是\n15. 三数之和 - 力扣（LeetCode）\n的变种题\n即给的一个数组steps，让你从中找出三个数，保证这三个数的和等于count。\n本题的变化在于，可能存在多个三数组合满足要求，但是我们只取其中三数的索引和最小的。即我们不仅要算三数的值之和，还是算三数的索引之和。\n因此，我首先根据输入的steps数组，将其转化为newSteps数组，\nnewSteps数组的元素是{val: steps[i]， idx: i}，\n然后将newSteps数组按照元素的val值进行升序，若val值相同，则继续按照idx值升序。\n之后，就按照leetcode三数之和的逻辑求解满足要求的三数组合，即定义一个双重循环，\n外层for循环遍历newSteps每一个元素，指针为 i，然后再定义两个指针 l = i + 1， r = newSteps.length - 1，假设valSum = newSteps[i].val+ newSteps[l].val + newSteps[r].val，\n如果 valSum < count，则 l++\n如果 valSum > count，则 r--\n如果 valSum == count，那么i，l，r指向的三数，就是一个符合要求的三数组合，此时再计算下三数的索引之和：idxSum = newSteps[i].idx+ newSteps[l].idx+ newSteps[r].idx\n比较idxSum和minIdxSum：\n如果idxSum < minIdxSum，则当前三数组合就是更优解，我们更新minIdxSum = idxSum，然后继续尝试更优解，即 r--："
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "，这里为什么要r--，因为输入的steps数组是存在重复元素的，因此可能存在steps[r-1] == steps[r]，而因此i,l,r-1也能形成符合要求的三数组合，且索引和更小\n\n，这里为什么不l++，虽然steps[l+1]可能与steps[l]相同，因此i,l+1,r也能形成符合要求的三数组合，但是索引和更大，而本题要求索引和最小的，因此不需要尝试l++\n如果idxSum > minIdxSum，丢弃\n如果idxSum == minIdxSum，不存在此场景，因为"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "中说：数据保证索引和最小的步数组合是唯一的\n本题数量级较大，需要做剪枝优化，才有可能不超时，三数之和问题一般有下面剪枝优化：\n1、如果steps[i] > count的话，则steps[i] + steps[l] + steps[r] > count是必然的？\n前提是：steps[i] > 0 ，以及count > 0，即i ,l ,r 指向的元素全正数的情况。此时就可以break掉 i 的遍历\n2、避免统计重复组合，即组合元素都相同的组合\n2.1、关于R指针的组合去重策略\n比如排序后steps为：[0,1,2,3,3,3]\n如下例子，我们发现可能存在连续的steps[r] == steps[r-1]的情况，对于这种情况，我们可以开一个循环，不停左移R指针，且这个过程会产生更优解，我们还有记录更优解\n2.2、关于L指针的组合去重策略\n比如排序后steps为：[0,1,1,1,2,3]，\n即会存在连续的steps[l] == steps[l+1]，此时虽然 i, l+1, r 三元组不会产生更优解，但是我们仍有必要尝试 L 指针右移，来避免产生重复组合\n2.3、关于 i 指针的组合去重策略：\n当i > 0时，如果steps[i] == steps[i-1]，则也会产生重复组合，且此时 i,l,r三元组的索引和要大于 i-1,l,r三元组的，因此此情况也可以直接continue掉\n2023.08.06\n根据考友提示，Python语言存在超时现象，因此考友补充了一个剪枝方案：\n即确定 i 指针后，其实L，R指针指向数的目标和已经确定了，即 count - steps[i]\n而 L，R指针必然存在 steps[L] <= steps[R] 的关系，因此\n必然存在关系：\nsteps[L] <=  (count - steps[i]) / 2\nsteps[R] >=  (count - steps[i]) / 2\n因此，如果初始时steps[L]，steps[R]不满足上面关系，则可以剪枝。\nJS算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}
