@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>华为OD在线编程题库</title>
     
-    <!-- CodeMirror CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/lib/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/theme/monokai.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/hint/show-hint.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/fold/foldgutter.min.css">
+    <!-- CodeMirror CSS (国内可用CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/monokai.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldgutter.min.css">
     
     <style>
         :root {
@@ -867,7 +867,7 @@
                 <span style="font-size:12px;color:var(--text-secondary);">Ctrl+Space 补全 | Ctrl+Enter 运行</span>
             </div>
             <div class="editor-body" id="editorBody">
-                <textarea id="codeEditor"></textarea>
+                <textarea id="codeEditor" style="display:none;width:100%;height:100%;background:#282a36;color:#e2e8f0;border:none;padding:16px;font-family:'JetBrains Mono','Consolas',monospace;font-size:14px;line-height:1.6;resize:none;outline:none;"></textarea>
             </div>
             <div class="output-panel">
                 <div class="output-header">
@@ -1028,27 +1028,26 @@
             }
         }
 
-    <!-- CodeMirror JS -->
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/lib/codemirror.min.js">
+    <!-- CodeMirror JS (国内可用CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/mode/python/python.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/hint/show-hint.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.js">
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/edit/closebrackets.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/fold/foldcode.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldcode.min.js">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/fold/foldgutter.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldgutter.min.js">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/fold/brace-fold.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/brace-fold.min.js">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/fold/indent-fold.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/indent-fold.min.js">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/fold/comment-fold.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/comment-fold.min.js">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/selection/active-line.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js">
     </script>
 
     <script>
@@ -1172,10 +1171,13 @@
 
         // ==================== CodeMirror初始化 ====================
         let editor;
+        let editorFallback = false;
 
         function initCodeMirror() {
             const textarea = document.getElementById('codeEditor');
-            editor = CodeMirror.fromTextArea(textarea, {
+            try {
+                if (typeof CodeMirror === 'undefined') throw new Error('CodeMirror not loaded');
+                editor = CodeMirror.fromTextArea(textarea, {
                 mode: 'python',
                 theme: 'monokai',
                 lineNumbers: true,
@@ -1206,6 +1208,26 @@
 
             // 设置默认代码
             editor.setValue('# 华为OD在线编程题库\n# 在左侧选择题目，在此编写Python代码\n# 使用 Ctrl+Enter 运行代码\n# 使用 Ctrl+Space 触发代码补全\n# 使用 ↑↓ 键切换题目\n\n# 示例代码：\ndef solve():\n    # 在此编写你的解题代码\n    pass\n\nif __name__ == "__main__":\n    solve()\n');
+            } catch (e) {
+                console.warn('⚠️ CodeMirror加载失败,使用备选编辑器:', e.message);
+                editorFallback = true;
+                textarea.style.display = 'block';
+                textarea.style.width = '100%';
+                textarea.style.height = '100%';
+                textarea.style.background = '#282a36';
+                textarea.style.color = '#e2e8f0';
+                textarea.style.border = 'none';
+                textarea.style.padding = '16px';
+                textarea.style.fontFamily = "'JetBrains Mono','Consolas',monospace";
+                textarea.style.fontSize = '14px';
+                textarea.style.resize = 'none';
+                textarea.style.outline = 'none';
+                textarea.placeholder = '# 在左侧选择题目，在此编写Python代码';
+                editor = {
+                    getValue: function() { return textarea.value; },
+                    setValue: function(v) { textarea.value = v; }
+                };
+            }
         }
 
         // ==================== 题目列表渲染 ====================
