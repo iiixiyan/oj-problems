@@ -1,0 +1,47 @@
+{
+  "id": "q004",
+  "title": "最长的密码",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小王在进行游戏大闯关，有一个关卡需要输入一个密码才能通过，密码获得的条件如下：\n在一个密码本中，每一页都有一个由26个小写字母组成的若干位密码，每一页的密码不同，需要从这个密码本中寻找这样一个最长的密码，\n从它的末尾开始依次去掉一位得到的新密码也在密码本中存在。\n请输出符合要求的密码，如果有多个符合要求的密码，则返回\n字典序最大\n的密码。\n若没有符合要求的密码，则返回\n空字符串\n。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "密码本由一个字符串数组组成，不同元素之间使用空格隔开，每一个元素代表密码本每一页的密码。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "一个字符串"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nh he hel hell hello\n输出\nhello",
+      "cases": [
+        {
+          "input": "h he hel hell hello",
+          "output": "hello",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nb ereddred bw bww bwwl bwwlm bwwln\n输出\nbwwln\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "根据考友反馈，本题支持单字符为符合要求的密码。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}
