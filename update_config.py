@@ -1,14 +1,20 @@
 """
-OJ题库增量更新工具
-扫描OJ_title目录，提取新增HTML文件的题目描述，追加到已有的config.json和config.js中。
-
-用法:
-  python update_config.py            # 增量更新（仅处理新增文件）
-  python update_config.py --rebuild  # 全量重建（重新提取所有文件描述）
-  python update_config.py --dir PATH # 指定题目目录（默认OJ_title）
+|OJ题库增量更新工具
+|扫描OJ_title目录，提取新增HTML文件的题目描述，追加到已有的配置文件中。
+|
+|输出文件:
+|  - config.json:      原始完整配置（用于向后兼容）
+|  - problems-100.json: 100分题独立文件（按需加载）
+|  - problems-200.json: 200分题独立文件（按需加载）
+|
+|用法:
+|  python update_config.py            # 增量更新（仅处理新增文件）
+|  python update_config.py --rebuild  # 全量重建（重新提取所有文件描述）
+|  python update_config.py --dir PATH # 指定题目目录（默认OJ_title）
 """
 import os, json, re, sys
 from html.parser import HTMLParser
+from collections import Counter
 
 
 class TextExtractor(HTMLParser):
@@ -107,6 +113,38 @@ def parse_filename(f):
         tags.append(vm.group(1))
     if '2025B' in f:
         tags.append('2025B')
+    
+    # 从文件名提取分类标签
+    cat_keywords = {
+        '字符串': ['字符串', '子串', '字符', '子序列', '回文'],
+        '数组': ['数组', '下标'],
+        '动态规划': ['动态规划', 'DP', 'dp'],
+        '排序': ['排序', '冒泡', '快排'],
+        '树': ['树', '二叉树', 'BST'],
+        '图': ['图', '最短路径', '拓扑', 'Dijkstra'],
+        '矩阵': ['矩阵', '螺旋'],
+        '栈': ['栈', 'Stack'],
+        '队列': ['队列', 'Queue'],
+        '链表': ['链表', 'List'],
+        '贪心': ['贪心'],
+        '哈希': ['哈希', 'Hash', '散列'],
+        '二分': ['二分', '折半'],
+        '回溯': ['回溯', 'DFS', '深度优先'],
+        '搜索': ['搜索', 'BFS', '广度优先'],
+        '滑动窗口': ['滑动窗口'],
+        '双指针': ['双指针'],
+        '模拟': ['模拟'],
+        '递归': ['递归'],
+        '位运算': ['位运算', '二进制', '比特'],
+        '设计': ['设计', 'LRU', 'LFU'],
+        '数学': ['数学', '概率', '排列', '组合'],
+    }
+    for cat, keywords in cat_keywords.items():
+        for kw in keywords:
+            if kw in f:
+                if cat not in tags:
+                    tags.append(cat)
+                break
 
     title = f
     for pat in [
@@ -138,18 +176,27 @@ def load_existing_config(config_path):
     return {'questions': []}
 
 
-def save_config(config, config_path, js_path):
+def save_config(config, config_path, js_path=None):
+    # 保存完整 config.json（向后兼容）
     with open(config_path, 'w', encoding='utf-8') as f:
         json.dump(config, f, ensure_ascii=False, indent=2)
 
-    js_content = 'window.questionsConfig = ' + json.dumps(config, ensure_ascii=False, indent=2) + ';'
-    with open(js_path, 'w', encoding='utf-8') as f:
-        f.write(js_content)
+    # 拆分为 problems-100.json 和 problems-200.json（按需加载）
+    questions = config.get('questions', [])
+    q100 = sorted([q for q in questions if q.get('score') == 100], key=lambda x: x.get('title', ''))
+    q200 = sorted([q for q in questions if q.get('score') == 200], key=lambda x: x.get('title', ''))
+    
+    base_dir = os.path.dirname(config_path) if config_path else '.'
+    with open(os.path.join(base_dir, 'problems-100.json'), 'w', encoding='utf-8') as f:
+        json.dump({'questions': q100, 'total': len(q100), 'type': '100分题'}, f, ensure_ascii=False, indent=2)
+    with open(os.path.join(base_dir, 'problems-200.json'), 'w', encoding='utf-8') as f:
+        json.dump({'questions': q200, 'total': len(q200), 'type': '200分题'}, f, ensure_ascii=False, indent=2)
+    
+    print(f'  已保存: config.json + problems-100.json ({len(q100)}题) + problems-200.json ({len(q200)}题)')
 
 
 def update(dir_path='OJ_title', rebuild=False):
     config_path = 'config.json'
-    js_path = 'config.js'
 
     config = load_existing_config(config_path) if not rebuild else {'questions': []}
     existing_files = {q['file'] for q in config['questions']}
@@ -192,7 +239,7 @@ def update(dir_path='OJ_title', rebuild=False):
         })
         new_count += 1
 
-    save_config(config, config_path, js_path)
+    save_config(config, config_path)
 
     total = len(config['questions'])
     has_desc = sum(1 for q in config['questions'] if q.get('desc', '').strip())
@@ -200,7 +247,7 @@ def update(dir_path='OJ_title', rebuild=False):
     print(f'  新增: {new_count} 道')
     print(f'  补充描述: {update_count} 道')
     print(f'  总计: {total} 道 (含描述: {has_desc})')
-    print(f'  已写入: {config_path}, {js_path}')
+    print(f'  已写入: config.json, problems-100.json, problems-200.json')
 
 
 if __name__ == '__main__':

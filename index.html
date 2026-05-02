@@ -789,11 +789,12 @@
                     <span class="search-icon">🔍</span>
                     <input type="text" id="searchInput" placeholder="搜索题目名称..." oninput="filterQuestions()">
                 </div>
-                <div class="filter-tags">
+                <div class="filter-tags" id="filterTags">
                     <button class="filter-tag active" onclick="setFilter('all', this)">全部</button>
                     <button class="filter-tag" onclick="setFilter('100', this)">100分</button>
                     <button class="filter-tag" onclick="setFilter('200', this)">200分</button>
                 </div>
+                <div class="filter-tags" id="categoryTags" style="margin-top:6px;"></div>
                 <div class="question-count" id="questionCount">共 0 道题目</div>
             </div>
             <div class="question-list" id="questionList">
@@ -880,8 +881,123 @@
         </div>
     </div>
 
-    <!-- 题目配置数据 -->
-    <script src="config.js"></script>
+    <!-- 题目配置数据 - 按需加载 -->
+    <script>
+        // ==================== 智能标签提取 ====================
+        function extractTagsFromTitle(title, filename) {
+            const tags = [];
+            const text = title + ' ' + (filename || '');
+            const catMap = {
+                '字符串': ['字符串', '子串', '字符', '子序列', '回文'],
+                '数组': ['数组', '下标'],
+                '动态规划': ['动态规划', 'DP', 'dp'],
+                '排序': ['排序', '冒泡', '快排'],
+                '树': ['树', '二叉树', 'BST'],
+                '图': ['图', '最短路径', '拓扑', 'Dijkstra'],
+                '矩阵': ['矩阵', '螺旋'],
+                '栈': ['栈', 'Stack'],
+                '队列': ['队列', 'Queue'],
+                '链表': ['链表', 'List'],
+                '贪心': ['贪心'],
+                '哈希': ['哈希', 'Hash', '散列'],
+                '二分': ['二分', '折半'],
+                '回溯': ['回溯', 'DFS', '深度优先'],
+                '搜索': ['搜索', 'BFS', '广度优先'],
+                '滑动窗口': ['滑动窗口'],
+                '双指针': ['双指针'],
+                '模拟': ['模拟'],
+                '递归': ['递归'],
+                '位运算': ['位运算', '二进制', '比特'],
+                '设计': ['设计', 'LRU', 'LFU'],
+                '数学': ['数学', '概率', '排列', '组合'],
+            };
+            for (const [cat, keywords] of Object.entries(catMap)) {
+                for (const kw of keywords) {
+                    if (text.includes(kw)) {
+                        tags.push(cat);
+                        break;
+                    }
+                }
+            }
+            return tags;
+        }
+
+        // ==================== 配置加载（按需） ====================
+        let config = { questions: [] };
+        let allTags = new Set();
+
+        async function loadConfig() {
+            try {
+                // 先加载100分题（大部分用户主要做100分题）
+                console.log('📥 正在加载100分题...');
+                const resp100 = await fetch('problems-100.json?' + Date.now());
+                if (resp100.ok) {
+                    const data100 = await resp100.json();
+                    config.questions = data100.questions || [];
+                    console.log('✅ 100分题加载完成: ' + config.questions.length + ' 道');
+                    
+                    // 收集标签
+                    config.questions.forEach(q => {
+                        (q.tags || []).forEach(t => allTags.add(t));
+                        const extraTags = extractTagsFromTitle(q.title, q.file);
+                        extraTags.forEach(t => allTags.add(t));
+                    });
+                    
+                    // 后台预加载200分题
+                    setTimeout(() => {
+                        loadMoreQuestions();
+                    }, 500);
+                }
+            } catch (e) {
+                console.warn('⚠️ problems-100.json 加载失败:', e);
+            }
+            
+            if (config.questions.length === 0) {
+                try {
+                    const resp = await fetch('config.json?' + Date.now());
+                    if (resp.ok) {
+                        config = await resp.json();
+                        config.questions.forEach(q => {
+                            (q.tags || []).forEach(t => allTags.add(t));
+                            const extraTags = extractTagsFromTitle(q.title, q.file);
+                            extraTags.forEach(t => allTags.add(t));
+                        });
+                    }
+                } catch (e) {
+                    console.warn('⚠️ config.json 加载也失败');
+                }
+            }
+        }
+
+        async function loadMoreQuestions() {
+            try {
+                console.log('📥 正在加载200分题...');
+                const resp200 = await fetch('problems-200.json?' + Date.now());
+                if (resp200.ok) {
+                    const data200 = await resp200.json();
+                    const currentIds = new Set(config.questions.map(q => q.id));
+                    const newQuestions = (data200.questions || []).filter(q => !currentIds.has(q.id));
+                    config.questions = config.questions.concat(newQuestions);
+                    
+                    newQuestions.forEach(q => {
+                        (q.tags || []).forEach(t => allTags.add(t));
+                        const extraTags = extractTagsFromTitle(q.title, q.file);
+                        extraTags.forEach(t => allTags.add(t));
+                    });
+                    
+                    console.log('✅ 200分题加载完成: ' + newQuestions.length + ' 道 (累计 ' + config.questions.length + ' 道)');
+                    
+                    // 重新渲染
+                    state.questions = config.questions;
+                    state.filteredQuestions = [...state.questions];
+                    renderQuestionList();
+                    updateQuestionCount();
+                    renderCategoryTags();
+                }
+            } catch (e) {
+                console.warn('⚠️ problems-200.json 加载失败:', e);
+            }
+        }
 
     <!-- CodeMirror JS -->
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/lib/codemirror.min.js">
@@ -967,51 +1083,16 @@
             // 由于数据量太大，实际使用时请从config.json加载
         ];
 
-        // ==================== 配置加载 ====================
-        let config = { questions: [] };
+        // ==================== 配置加载（旧版兼容） ====================
+        let configFallback = { questions: [] };
 
-        async function loadConfig() {
-            // 优先使用config.js全局变量（支持file://协议直接打开）
+        // 从 window 对象获取数据（兼容旧版 config.js）
+        function loadConfigFallback() {
             if (window.questionsConfig && window.questionsConfig.questions && window.questionsConfig.questions.length > 0) {
-                config = window.questionsConfig;
-                const count = config.questions.length;
-                console.log('✅ 从config.js加载题目配置成功，共' + count + '道');
-                return;
+                configFallback = window.questionsConfig;
+                return true;
             }
-
-            try {
-                const response = await fetch('config.json?' + Date.now());
-                if (response.ok) {
-                    config = await response.json();
-                    const count = config.questions ? config.questions.length : 0;
-                    console.log('✅ 从config.json加载题目配置成功，共' + count + '道');
-                    return;
-                }
-            } catch (e) {
-                console.log('⚠️ config.json加载失败，尝试其他方式...');
-            }
-
-            try {
-                const response = await fetch('questions.json?' + Date.now());
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.files && Array.isArray(data.files)) {
-                        config.questions = parseQuestionsFromData(data.files);
-                        console.log('✅ 从questions.json加载题目成功，共' + config.questions.length + '道');
-                        return;
-                    }
-                }
-            } catch (e) {
-                console.log('⚠️ questions.json也未找到');
-            }
-
-            if (embeddedFilesData.length > 0) {
-                config.questions = parseQuestionsFromData(embeddedFilesData);
-                console.log('✅ 使用内嵌题目数据，共' + config.questions.length + '道');
-            } else {
-                console.warn('⚠️ 没有找到任何题目数据，请创建config.json或questions.json');
-                config.questions = [];
-            }
+            return false;
         }
 
         // ==================== 状态管理 ====================
@@ -1026,7 +1107,14 @@
 
         // ==================== 初始化 ====================
         async function init() {
-            await loadConfig();
+            // 先尝试旧版 config.js（file://协议兼容）
+            if (loadConfigFallback()) {
+                config.questions = configFallback.questions;
+                console.log('✅ 从config.js加载完成，共' + config.questions.length + '道');
+            } else {
+                // 新版按需加载
+                await loadConfig();
+            }
 
             state.questions = config.questions || [];
             state.filteredQuestions = [...state.questions];
@@ -1040,8 +1128,14 @@
                 selectQuestion(0);
             }
 
+            // 渲染分类标签
+            renderCategoryTags();
+
             // 键盘快捷键
             document.addEventListener('keydown', handleKeyboard);
+
+            // 注册 Service Worker
+            registerSW();
 
             console.log('💻 华为OD在线编程题库已就绪');
             console.log('📊 共加载 ' + state.questions.length + ' 道题目');
@@ -1137,10 +1231,66 @@
             if (state.currentFilter !== 'all') {
                 text += ` (已筛选: ${state.currentFilter}分)`;
             }
+            if (state.categoryFilter) {
+                text += ` [${state.categoryFilter}]`;
+            }
             if (state.filteredQuestions.length < state.questions.length) {
                 text += ` / 总计 ${state.questions.length} 道`;
             }
             countEl.textContent = text;
+        }
+
+        // ==================== 分类标签渲染 ====================
+        let orderedCategories = [];
+
+        function renderCategoryTags() {
+            const container = document.getElementById('categoryTags');
+            // 从文件名中提取的分类标签（优先展示）
+            const priorityCats = ['字符串','数组','动态规划','排序','树','图','矩阵','栈','队列','链表','贪心','哈希','二分','回溯','搜索','滑动窗口','双指针','模拟'];
+            
+            // 统计所有题目中的标签数
+            const catCount = {};
+            const catSet = new Set();
+            state.questions.forEach(q => {
+                (q.tags || []).forEach(t => {
+                    catSet.add(t);
+                    catCount[t] = (catCount[t] || 0) + 1;
+                });
+                const extra = extractTagsFromTitle(q.title, q.file);
+                extra.forEach(t => {
+                    catSet.add(t);
+                    catCount[t] = (catCount[t] || 0) + 1;
+                });
+            });
+
+            // 按优先级排序
+            orderedCategories = priorityCats.filter(c => catSet.has(c));
+            orderedCategories = orderedCategories.concat(
+                [...catSet].filter(c => !priorityCats.includes(c))
+                    .sort((a, b) => (catCount[b] || 0) - (catCount[a] || 0))
+            );
+
+            if (orderedCategories.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            container.style.display = 'flex';
+
+            let html = `<button class="filter-tag active" onclick="setCategoryFilter('', this)" data-cat="">全部</button>`;
+            orderedCategories.forEach(cat => {
+                const count = catCount[cat] || 0;
+                html += `<button class="filter-tag" onclick="setCategoryFilter('${cat}', this)" data-cat="${cat}">${cat} (${count})</button>`;
+            });
+            container.innerHTML = html;
+        }
+
+        let stateCategoryFilter = '';
+
+        function setCategoryFilter(cat, btn) {
+            state.categoryFilter = cat;
+            document.querySelectorAll('#categoryTags .filter-tag').forEach(t => t.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            filterQuestions();
         }
 
         // ==================== 题目筛选 ====================
@@ -1162,13 +1312,39 @@
                 filtered = filtered.filter(q => q.score === 200);
             }
 
-            // 按搜索关键词筛选
+            // 按分类标签筛选
+            if (state.categoryFilter) {
+                filtered = filtered.filter(q => {
+                    const allTags = [...(q.tags || []), ...extractTagsFromTitle(q.title, q.file)];
+                    return allTags.includes(state.categoryFilter);
+                });
+            }
+
+            // 按搜索关键词模糊筛选
             if (searchText) {
-                filtered = filtered.filter(q =>
-                    q.title.toLowerCase().includes(searchText) ||
-                    q.file.toLowerCase().includes(searchText) ||
-                    q.tags.some(tag => tag.toLowerCase().includes(searchText))
-                );
+                // 中文拼音分词支持（简单版：拆成单个字匹配）
+                const searchKeywords = searchText.split(/[\s,，、]+/).filter(s => s);
+                filtered = filtered.filter(q => {
+                    const searchTarget = (q.title + ' ' + q.file + ' ' + (q.tags || []).join(' ')).toLowerCase();
+                    // 模糊匹配：所有关键词都必须出现在搜索目标中
+                    return searchKeywords.every(kw => {
+                        if (searchTarget.includes(kw)) return true;
+                        // 支持用空格分割的独立关键词
+                        const titleParts = q.title.toLowerCase().split(/[\s,，、\-_]+/);
+                        return titleParts.some(part => part.includes(kw) || kw.includes(part));
+                    });
+                });
+                
+                // 按匹配度排序：完全匹配 > 前缀匹配 > 部分匹配
+                filtered.sort((a, b) => {
+                    const aTitle = a.title.toLowerCase();
+                    const bTitle = b.title.toLowerCase();
+                    const aExact = searchKeywords.every(kw => aTitle.includes(kw));
+                    const bExact = searchKeywords.every(kw => bTitle.includes(kw));
+                    if (aExact && !bExact) return -1;
+                    if (!aExact && bExact) return 1;
+                    return 0;
+                });
             }
 
             state.filteredQuestions = filtered;
@@ -1629,6 +1805,18 @@ ${code}
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        // ==================== Service Worker ====================
+        async function registerSW() {
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.register('sw.js');
+                    console.log('✅ Service Worker 注册成功:', registration.scope);
+                } catch (e) {
+                    console.log('ℹ️ Service Worker 注册失败（可忽略）:', e.message);
+                }
+            }
         }
 
         // ==================== 启动 ====================
