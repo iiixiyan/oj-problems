@@ -1,0 +1,40 @@
+{
+  "id": "q619",
+  "title": "查找充电设备组合",
+  "score": 200,
+  "tags": [
+    "E卷",
+    "数学"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n某个\n充电站\n，可提供 n 个充电设备，每个充电设备均有对应的输出功率。\n任意个\n充电设备\n组合的输出功率总和，均构成功率集合 P 的 1 个元素。\n功率集合 P 的最优元素，表示最接近充电站最大输出功率 p_max 的元素。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为 3 行：\n第 1 行为充电设备个数 n\n第 2 行为每个充电设备的输出功率\n第 3 行为充电站最大输出功率 p_max"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "充电设备个数 n > 0\n最优元素必须\n小于或等于\n充电站最大输出功率 p_max"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "功率集合 P 的最优元素"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "n = int(input())\np = list(map(int, input().split()))\np_max = int(input())\n\ndp = [[0 for i in range(p_max + 1)] for j in range(n + 1)]\n\nfor i in range(n + 1):\n    for j in range(p_max + 1):\n        if i == 0 or j == 0:\n            continue\n\n        if p[i - 1] > j:\n            dp[i][j] = dp[i - 1][j]\n        else:\n            dp[i][j] = max(dp[i - 1][j], p[i - 1] + dp[i - 1][j - p[i - 1]])\n\nprint(dp[n][p_max])"
+  },
+  "verified": false
+}

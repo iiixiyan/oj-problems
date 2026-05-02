@@ -1,0 +1,49 @@
+{
+  "id": "q326",
+  "title": "可以处理的最大任务数",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在某个项目中有多个任务（用task数组表示）需要你进行处理，其中：\ntask[i] = [si, ei]\n你可以在 si ≤ day ≤ ei 中的任意一天处理该任务，请返回你可以处理的最大任务数。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为任务数量 n\n1 ≤ n ≤ 100000\n后面 n 行表示各个任务的开始时间和终止时间，使用 si，ei 表示\n1 ≤ si ≤ ei ≤ 100000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出为一个整数，表示可以处理的最大任务数。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n1 1\n1 2\n1 3\n输出\n3",
+      "cases": [
+        {
+          "input": "3\n1 1\n1 2\n1 3",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以利用贪心思维+优先队列来求解。\n我们可以将所有任务时间区间按照：优先按照结束时间降序，如果结束时间相同，则按照开始时间降序。这样排序的原因如下：\n首先，任务优先按照结束时间降序后，那么第一个任务的结束时间就是最晚的（最大的），此时我们可以让第一个任务就在最晚时刻执行，如下面例子：\n3\n1 4\n2 3\n1 2\n按照结束时间降序后：[1,4] , [2, 3],  [1, 2] ，第一个任务[1,4]在时刻4执行\n这样做的好处是，避免第一个任务抢夺后面任务的执行时间，如下图所示：\n如果第一个任务在时刻4执行，则第二个任务就有两个选择，时刻2或时刻3\n如果第一个任务在时刻3执行，则第二个任务就只有一个选择，只能在时刻2执行\n如果存在多个任务的结束时间都相同的话，则还需要对这些任务按照开始时间降序，这么做的原因是：\n\"时间长\" 的任务 \"可选执行时刻\" 多\n\"时间短\" 的任务 \"可选执行时刻\" 少\n因此应该优先让时间跨度短的任务先执行，如下图所示：\n如果优先时间短的任务，则三个任务都能执行\n如果优先时间长的任务，则只能执行两个任务\n但是上面逻辑是存在问题的，请看下面图示：\n此时按照前面逻辑的话，只能执行三个任务\n但是其实可以执行四个任务，执行策略如下：\n主要问题是，当我们按照结束时间降序后，第一个任务选择时刻8执行完，此时后面三个任务的截止时间其实都是相同的，变为了时刻7。\n因此，此时我们应该对后面三个任务重新按照时间跨度降序，再优先执行短的任务。\n本题数量级较大，因此如果每次执行完一个任务，都对剩余任务进行更新结束时间，并重新排序的话，会超时。\n改进策略是，使用优先队列，即：\n如果当前任务的结束时间end >= 上一个任务的执行时刻last_end，则更新当前任务的结束为last_end - 1。如果 last_end - 1 > 当前任务开始时间start，则将当前任务重新入队排优先级。否则当前任务不可执行。\nJava和Python有内置的优先队列类，而JS和C没有，因此JS和C需要手动实现一个优先队列，关于优先队列的实现原理请看：\nLeetCode - 1705 吃苹果的最大数目-CSDN博客\n经过测试，下面逻辑在本题数量级下会超时：\n如果当前任务的结束时间end >= 上一个任务的执行时刻last_end，则更新当前任务的结束为last_end - 1。如果 last_end - 1 > 当前任务开始时间start，则将当前任务重新入队排优先级。否则当前任务不可执行。\n因为，我们需要频繁更新任务的结束时间，并且入队出队。\n为了避免频繁的更新任务结束时间，以及入队出队，我们可以做如下改动：\n1、统计输入的所有任务的时间段，仅按照结束时间降序，得到数组ranges\n2、定义一个优先队列pq，仅用于保存任务的开始时间（开始时间越大，优先级越高），我们可以认为优先队列中保存的任务（的开始时间）对应的结束时间都是相同的，我们定义这个公共结束时间为pq_end\n3、遍历ranges，得到每一个任务的开始，结束时间range：[start, end]，然后比较遍历到任务的end 和 优先队列中所有任务的公共结束时间pq_end：\n如果 end < pq_end，则在end ~ pq_end 这段间隔时间内，我们可以从pq中挑选出pq_end - end 个 较短任务进行执行，执行前需要检查 对应任务的开始时间 start <= pq_end，若不满足则不执行。每执行一个任务，则pq_end -= 1，count += 1（count是已执行的任务数量）。当pq_end == end时，则将当前遍历的任务的start 加入 优先队列。\n具体过程如下图所示：\nJS算法源码\n超时解法，但是好理解，是下一种解法的基础"
+    }
+  ],
+  "solutions": {
+    "Python": "import heapq\nimport sys\n\n\nclass Range:\n    def __init__(self, start, end):\n        self.start = start\n        self.end = end\n\n    # 结束时间越大&#xff08;越晚&#xff09;优先级越高,结束时间相同时,开始时间越大&#xff08;越晚&#xff09;优先级越高\n    def __gt__(self, other):\n        if self.end != other.end:\n            return other.end > self.end\n        else:\n            return other.start > self.start\n\n\n# 输入获取\nn = int(input())\n\npq = []\nfor _ in range(n):\n    start, end = map(int, input().split())\n    heapq.heappush(pq, Range(start, end))\n\n\n# 算法入口\ndef getResult():\n    # 记录最大任务数\n    count = 0\n\n    # 记录上一个任务的执行时刻\n    last_end = sys.maxsize\n\n    while len(pq) > 0:\n        ran = heapq.heappop(pq)\n\n        if ran.end < last_end:\n            # 当前任务结束时刻end < 上个任务结束时刻last_end,则当前任务选择在end时刻执行\n            last_end = ran.end\n            count += 1\n        elif last_end > ran.start:\n            # 当前任务结束时刻end ≥ 上个任务结束时刻last_end,则更新当前任务的结束时间为last_end-1,后重新加入优先队列排队\n            # 同时注意range新的结束时间last_end - 1不能小于range.start,否则该任务无法执行\n            ran.end = last_end - 1\n            heapq.heappush(pq, ran)\n\n    return count\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

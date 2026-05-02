@@ -1,0 +1,52 @@
+{
+  "id": "q229",
+  "title": "运维日志排序",
+  "score": 100,
+  "tags": [
+    "B卷",
+    "排序"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "运维工程师采集到某产品线网运行一天产生的日志n条，现需根据日志时间先后顺序对日志进行排序，日志时间格式为H:M:S.N。\nH表示小时(0~23)\nM表示分钟(0~59)\nS表示秒(0~59)\nN表示毫秒(0~999)\n时间可能并没有补全，也就是说，01:01:01.001也可能表示为1:1:1.1。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入一个整数n表示日志条数，1<=n<=100000，接下来n行输入n个时间。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "按时间升序排序之后的时间，如果有两个时间表示的时间相同，则保持输入顺序。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2\n01:41:8.9\n1:1:09.211\n输出\n1:1:09.211\n01:41:8.9",
+      "cases": [
+        {
+          "input": "2\n01:41:8.9\n1:1:09.211",
+          "output": "1:1:09.211\n01:41:8.9",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n3\n23:41:08.023\n1:1:09.211\n08:01:22.0\n输出\n1:1:09.211\n08:01:22.0\n23:41:08.023\n\n无\n输入\n2\n22:41:08.023\n22:41:08.23\n输出\n22:41:08.023\n22:41:08.23\n\n两个时间表示的时间相同，保持输入顺序"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "排序日志时间用到的知识是：\n将字符串时间中各要素提取出来（正则捕获组），然后计算出总毫秒数\n根据Array.prototype.sort自定义排序策略，来算出的总毫秒数进行排序\n2023.08.15 优化\n将字符串时间中各要素提取出来，其实可以简单地按照 \":\" 和 \".\" 进行分割，这里可以使用正则 [:.] ，作为分隔符。\n2023.10.15\n本题考试Java如果出现超时，则大概率是输入获取超时，可以考虑使用BufferedReader高效输入获取方式。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nimport re\n\nn = int(input())\nlogs = [input() for _ in range(n)]\n\n\ndef convert(log):\n    tmp = re.split(r\"[:.]\", log)\n\n    H = int(tmp[0]) * 60 * 60 * 1000\n    M = int(tmp[1]) * 60 * 1000\n    S = int(tmp[2]) * 1000\n    N = int(tmp[3])\n\n    return H + M + S + N\n\n\n# 算法入口\ndef getResult():\n    logs.sort(key=convert)\n    return \"\\n\".join(logs)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

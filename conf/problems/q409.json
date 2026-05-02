@@ -1,0 +1,51 @@
+{
+  "id": "q409",
+  "title": "寻找身高相近的小朋友",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小明今年升学到了小学1年级来到新班级后，发现其他小朋友身高参差不齐，然后就想基于各小朋友和自己的身高差，对他们进行排序，请帮他实现排序。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为正整数 h和n，0<h<200 为小明的身高，0<n<50 为新班级其他小朋友个数。\n第二行为n个正整数，h1 ~ hn分别是其他小朋友的身高，取值范围0<hi<200，且n个正整数各不相同。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出排序结果，各正整数以\n空格\n分割，\n和小明身高差绝对值最小的小朋友排在前面，\n和小明身高差绝对值最大的小朋友排在后面，\n如果两个小朋友和小明身高差一样，则个子较小的小朋友排在前面。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n100 10\n95 96 97 98 99 101 102 103 104 105\n输出\n99 101 98 102 97 103 96 104 95 105",
+      "cases": [
+        {
+          "input": "100 10\n95 96 97 98 99 101 102 103 104 105",
+          "output": "99 101 98 102 97 103 96 104 95 105",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "小明身高100，班级学生10个，身高分别为95 96 97 98 99 101 102 103 104 105，按身高差排序后结果为：99 101 98 102 97 103 96 104 95 105。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "考察多条件排序。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nh, n = map(int, input().split())\nheights = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    heights.sort(key=lambda x: (abs(x-h), x))\n    return \" \".join(map(str, heights))\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

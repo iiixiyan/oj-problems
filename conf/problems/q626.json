@@ -1,0 +1,47 @@
+{
+  "id": "q626",
+  "title": "100分-API请求日志去重分析",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "100\n分\n-\nAPI\n请求日志去重分析\n(C/C++/Py/Java/Js/Go)\n\n某微服务系统的日志监控平台需要分析\nAPI\n调用记录。日志中包含大量重复的请求记录，为了优化存储和后续分析，需要对相邻的重复请求进行合并统计。\n具体规则如下：\n日志按时间顺序排列，每条记录包含请求路径和响应时间。\n如果连续出现相同的请求路径，需要将这些记录合并为一条。\n合并后的记录需要统计该路径连续出现的次数，并保留所有响应时间的平均值。\n相同路径但被其他路径分隔的，视为不同的记录组，需要分别合并。\n请实现一个函数，对给定的日志数据进行去重合并处理。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入请求路径\npath\n数组，按时间顺序排列。\n输入对应的响应时间\nresponseTimes\n数组，单位为毫秒。\n补充\n0 < paths.length <= 10^5\n0 < responseTimes.length <= 10^5\npaths.length == responseTimes.length\n1 <= responseTimes[i] <= 10^4\n路径长度不超过\n100\n个字符"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "按顺序输出每个记录组信息，每个记录组包含以下三个元素：\n该路径在输入数组中首次出现的索引\n该路径连续出现的次数\n该组路径的平均响应时间，向下取整"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入\npath =\n[/api/user,/api/user,/api/order,/api/user,/api/order,/api/order]\nresponseTimes = [100,200,150,300,250,350]\n输出\n0,2,150 2,1,150 3,1,300 4,2,300",
+      "cases": [
+        {
+          "input": "path =\n[/api/user,/api/user,/api/order,/api/user,/api/order,/api/order]\nresponseTimes = [100,200,150,300,250,350]",
+          "output": "0,2,150 2,1,150 3,1,300 4,2,300",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "/api/user\n在索引\n0~1\n连续出现，平均响应时间为\n(100+200)/2 = 150\n/api/order\n在索引\n2\n单独出现，平均响应时间为\n150\n/api/user\n在索引\n3\n单独出现，由于被分割，视为新组，平均响应时间为\n300\n/api/order\n在索引\n4~5\n连续出现\n2\n次，平均响应时间为\n(250+350)/2 = 300"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "思路：双指针\n使用双指针统计每个相同请求地址的连续区间，记录起始位置、结束位置，并累计该区间总响应时间。\n对每个连续区间计算：\n首次索引\n连续次数\n平均响应时间\n按出现顺序保存结果并返回。\nC++\n#include<iostream>\n#include<vector>\n#include<string>\n#include <utility>\n#include <sstream>\n#include<algorithm>\n#include<cmath>\n#include<map>\nusing namespace std;\n//\n通用 切割函数 函数 将字符串\nstr\n根据\ndelimiter\n进行切割\nvector<string> split(const\nstring& str, const string& delimiter) {\nvector<string>\nresult;\nsize_t start = 0;\nsize_t end =\nstr.find(delimiter);\nwhile (end !=\nstring::npos) {\nresult.push_back(str.substr(start, end - start));\nstart = end + delimiter.length();\nend = str.find(delimiter, start);\n}\n//\n添加最后一个部分\nresult.push_back(str.substr(start));\nreturn result;\n}\n//\n统计函数\nvector<vector<int>>\nhanle(vector<string> path, vector<int> responseTime) {\nvector<vector<int>> res;\nint n = path.size();\nfor (int i = 0; i <\nn; ) {\nint totalTime = responseTime[i];\nint j = i;\n//\n获取相同路径起始和终止连续位置\nwhile (j + 1< n && path[j] == path[j+1]) {\ntotalTime += responseTime[j+1];\nj++;\n}\nres.push_back({i, j - i + 1, totalTime / (j - i + 1)});\ni = j + 1;\n}\nreturn res;\n}\nint main() {\nstring pathInput;\nstring responseInput;\ngetline(cin, pathInput);\ngetline(cin,\nresponseInput);\nvector<string>\npaths = split(pathInput, \",\");\nvector<int>\nresponseTime(paths.size());\nvector<string> tmp\n= split(responseInput, \",\");\nfor (int i = 0; i <\ntmp.size(); i++) {\nresponseTime[i] = stoi(tmp[i]);\n}\nvector<vector<int>> res = hanle(paths, responseTime);\n//\n输出结果\nfor (int i = 0; i <\nres.size(); i++) {\ncout << res[i][0] << \",\" << res[i][1] <<\n\",\" << res[i][2];\nif (i != res.size() -1) {\ncout << \" \";\n}\n}\nreturn 0;\n}\nJava\nimport java.util.*;\npublic class Main {\n//\n统计函数\nstatic List<int[]>\nhanle(List<String> path, List<Integer> responseTime) {\nList<int[]> res = new ArrayList<>();\nint n = path.size();\nfor (int i = 0; i < n;) {\nint totalTime = responseTime.get(i);\nint j = i;\n//\n获取相同路径起始和终止连续位置\nwhile (j + 1 < n && path.get(j).equals(path.get(j + 1))) {\ntotalTime += responseTime.get(j + 1);\nj++;\n}\nres.add(new int[]{i, j - i + 1, totalTime / (j - i + 1)});\ni = j + 1;\n}\nreturn res;\n}\npublic static void\nmain(String[] args) {\nScanner sc ="
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

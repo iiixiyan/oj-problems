@@ -1,0 +1,51 @@
+{
+  "id": "q077",
+  "title": "查找单入口空闲区域",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个 m x n 的矩阵，由若干字符 ‘X’ 和 ‘O’构成，’X’表示该处已被占据，’O’表示该处空闲，请找到最大的单入口空闲区域。\n解释：\n空闲区域是由连通的’O’组成的区域，位于边界的’O’可以构成入口，\n单入口空闲区域即有且只有一个位于边界的’O’作为入口的由连通的’O’组成的区域。\n如果两个元素在水平或垂直方向相邻，则称它们是“连通”的。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为两个数字，第一个数字为行数m，第二个数字为列数n，两个数字以空格分隔，1<=m,n<=200。\n剩余各行为矩阵各行元素，元素为‘X’或‘O’，各元素间以空格分隔。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "若有唯一符合要求的最大单入口空闲区域，输出三个数字\n第一个数字为入口行坐标（0~m-1）\n第二个数字为入口列坐标（0~n-1）\n第三个数字为区域大小\n三个数字以空格分隔；\n若有多个符合要求，则输出区域大小最大的，若多个符合要求的单入口区域的区域大小相同，则此时只需要输出区域大小，不需要输出入口坐标。\n若没有，输出NULL。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4 4\nX X X X\nX O O X\nX O O X\nX O X X\n输出\n3 1 5",
+      "cases": [
+        {
+          "input": "4 4\nX X X X\nX O O X\nX O O X\nX O X X",
+          "output": "3 1 5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "存在最大单入口区域，入口坐标(3,1)，区域大小5\n输入\n4 5\nX X X X X\nO O O O X\nX O O O X\nX O X X O\n输出\n3 4 1\n\n存在最大单入口区域，入口坐标（3,4），区域大小1\n输入\n5 4\nX X X X\nX O O O\nX O O O\nX O O X\nX X X X\n输出\nNULL\n\n不存在最大单入口区域\n输入\n5 4\nX X X X\nX O O O\nX X X X\nX O O O\nX X X X\n输出\n3\n\n存在两个大小为3的最大单入口区域，两个入口坐标分别为(1,3)、(3,3)"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用深度优先搜索来解题。\n首先，我们可以遍历矩阵元素，当遍历到“O”时，已该“O”的坐标位置开始向其上、下、左、右方向开始深度优先搜索，每搜索到一个“O”，则该空闲区域数量+1，如果搜索到的“O”的坐标位置处于矩阵第一列，或最后一列，或者第一行，或者最后一行，那么该“O”位置就是空闲区域的入口位置，我们将其缓存到out数组中。\n当所有深度优先搜索的分支都搜索完了，则判断out统计的入口数量，\n如果只有1个，则该空闲区域是符合题意得单入口空闲区域，输出入口坐标位置，以及空闲区域数量。\n如果有多个，则该区域不符合要求\n另外，我们还需要定义一个check集合来缓存，已经被递归过的\"O\"位置，避免重复的深度优先搜索。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, n = map(int, input().split())\nmatrix = [input().split() for i in range(m)]\n\n\n# 算法入口\ndef getResult(matrix, m, n):\n    checked = set()\n\n    offsets = ((0, -1), (0, 1), (-1, 0), (1, 0))\n\n    def dfs(i, j, count, out):\n        pos = f\"{i}-{j}\"\n\n        if i < 0 or i >= m or j < 0 or j >= n or matrix[i][j] == \"X\" or pos in checked:\n            return count\n\n        checked.add(pos)\n\n        if i == 0 or i == m - 1 or j == 0 or j == n - 1:\n            out.append([i, j])\n\n        count += 1\n\n        for offsetX, offsetY in offsets:\n            newI = i + offsetX\n            newJ = j + offsetY\n            count = dfs(newI, newJ, count, out)\n\n        return count\n\n    ans = []\n\n    for i in range(m):\n        for j in range(n):\n            if matrix[i][j] == \"O\" and f\"{i}-{j}\" not in checked:\n                out = []\n                count = dfs(i, j, 0, out)\n                if len(out) == 1:\n                    tmp = out[0][:]\n                    tmp.append(count)\n                    ans.append(tmp)\n\n    if len(ans) == 0:\n        return \"NULL\"\n\n    ans.sort(key=lambda x: -x[2])\n\n    if len(ans) == 1 or ans[0][2] > ans[1][2]:\n        return \" \".join(map(str, ans[0]))\n    else:\n        return ans[0][2]\n\n\n# 算法调用\nprint(getResult(matrix, m, n))"
+  },
+  "verified": false
+}

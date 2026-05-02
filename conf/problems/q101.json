@@ -1,0 +1,51 @@
+{
+  "id": "q101",
+  "title": "不含101的数",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小明在学习二进制时，发现了一类不含 101的数，也就是：\n将数字用二进制表示，不能出现 101 。\n现在给定一个整数区间 [l,r] ，请问这个区间包含了多少个不含 101 的数？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的唯一一行包含两个正整数 l， r（ 1 ≤ l ≤ r ≤ 10^9）。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出的唯一一行包含一个整数，表示在 [l,r] 区间内一共有几个不含 101 的数。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1 10\n输出\n8",
+      "cases": [
+        {
+          "input": "1 10",
+          "output": "8",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "区间 [1,10] 内， 5 的二进制表示为 101 ，10的二进制表示为 1010 ，因此区间 [ 1 , 10 ] 内有 10−2=8 个不含 101的数。\n输入\n10 20\n输出\n7\n\n区间 [10,20] 内，满足条件的数字有 [12,14,15,16,17,18,19] 因此答案为 7。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题如果用暴力法求解，很简单"
+    }
+  ],
+  "solutions": {
+    "Python": "# 算法实现\ndef dfs(p, limit, f, arr, pre, prepre):\n    if p == len(arr):\n        return 1\n\n    if not limit and f[p][pre][prepre] > 0:\n        return f[p][pre][prepre]\n\n    maxV = arr[p] if limit else 1\n    count = 0\n\n    for i in range(maxV + 1):\n        if i == 1 and pre == 0 and prepre == 1:\n            continue\n        count += dfs(p + 1, limit and i == maxV, f, arr, i, pre)\n\n    if not limit:\n        f[p][pre][prepre] = count\n\n    return count\n\n\ndef digitSearch(num):\n    arr = list(map(int, list(format(num, 'b'))))\n    f = [[[0 for k in range(2)] for j in range(2)] for i in range(len(arr))]\n    return dfs(0, True, f, arr, 0, 0)\n\n\n# 输入获取\nL, R = map(int, input().split())\n\n# 算法调用\nprint(digitSearch(R) - digitSearch(L - 1))"
+  },
+  "verified": false
+}

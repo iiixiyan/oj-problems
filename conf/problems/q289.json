@@ -1,0 +1,56 @@
+{
+  "id": "q289",
+  "title": "跳格子1",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小明和朋友玩跳格子游戏，有 n 个连续格子，每个格子有不同的分数，小朋友可以选择以任意格子起跳，但是不能跳连续的格子，也不能回头跳；\n给定一个代表每个格子得分的非负整数数组，计算能够得到的最高分数。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "给定一个数列，如：1 2 3 1"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出能够得到的最高分，如：4"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1 ≤ nums.length ≤ 100\n0 ≤ nums[i] ≤ 1000"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1 2 3 1\n输出\n4",
+      "cases": [
+        {
+          "input": "1 2 3 1",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "选择跳第一个格子和第三个格子\n输入\n2 7 9 3 1\n输出\n12\n\n2+9+1=12"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是\nLeetCode - 198 打家劫舍_伏城之外的博客-CSDN博客\n换皮题\n解析可以看链接博客。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nnums = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    n = len(nums)\n\n    dp = [0] * n\n\n    if n >= 1:\n        dp[0] = nums[0]\n\n    if n >= 2:\n        dp[1] = max(nums[0], nums[1])\n\n    for i in range(2, n):\n        dp[i] = max(dp[i - 1], dp[i - 2] + nums[i])\n\n    return dp[n - 1]\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

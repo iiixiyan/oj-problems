@@ -1,0 +1,56 @@
+{
+  "id": "q202",
+  "title": "最长公共后缀",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "编写一个函数来查找字符串数组中的最长公共后缀；\n如果不存在公共后缀，返回固定字符串： @Zero。\n补充"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：\n字符串长度范围：[2, 1000]\n字符串中字符取值范围为[1, 126]"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "无"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n[\"abc\",\"bbc\",\"c\"]\n输出\n\"c\"",
+      "cases": [
+        {
+          "input": "[\"abc\",\"bbc\",\"c\"]",
+          "output": "\"c\"",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "返回公共后缀: c\n输入\n[\"aa\",\"bb\",\"cc\"]\n输出\n\"@Zero\"\n\n不存在公共后缀，返回固定结果: @Zero"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题应该是采用核心代码模式，非ACM模式，因此不需要我们处理输入输出。\n下面代码仍然以ACM模式实现，但是会将输入输出处理 和 核心代码 分离。考试时，只需要写出核心代码即可。\n关于核心代码实现，我的思路如下\n假设输入的字符串数组为strs，则可以：\n将strs[0]假设为最长公共后缀suffx\n之后，再找出suffix和strs[1]的最长公共后缀，并覆盖给suffix，按此逻辑继续找出suffix和其他strs[i]的最长公共后缀\n当然，在上面过程中，一旦发现suffix == “”，即最长公共后缀是空串，则可以直接返回@Zero。\n否则，返回suffix。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nstrs = eval(input())\n\n\ndef getLCS(s1, s2):\n    \"\"\"\n    求两个字符串的最长公共后缀\n    :param s1:\n    :param s2:\n    :return: 最长公共后缀\n    \"\"\"\n    if s1[-1] != s2[-1]:\n        return \"\"  # 如果尾字符不同,则没有公共后缀\n\n    # 最长公共后缀的长度上限是&#xff1a;两个字符串中较短的那个的长度值\n    maxLen = min(len(s1), len(s2))\n\n    # 开始逐位比较\n    for i in range(-2, -maxLen - 1, -1):\n        if s1[i] != s2[i]:\n            # 如果某位对应字符不同, 则该位后面的就是最长公共后缀\n            return s1[i + 1:]\n\n    # 如果比较完了,都没有发现对应位不同字符,则说明,两个字符串中较短者本身就是最长公共后缀\n    return s1[-maxLen:]\n\n\n# 核心代码\ndef getResult():\n    # 假设第0个字符串就是最长公共后缀\n    suffix = strs[0]\n\n    # 从第1个字符串开始,求解和最长公共后缀suffix的最长公共后置\n    for i in range(1, len(strs)):\n        suffix = getLCS(suffix, strs[i])\n\n        # 如果最长公共后缀为“”,则直接返回\"&#64;Zero\"\n        if suffix == \"\":\n            return \"&#64;Zero\"\n\n    return suffix\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

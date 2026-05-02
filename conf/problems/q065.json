@@ -44,6 +44,8 @@
       "content": "0 + 10 + 20 + 30 + 40 = 100\n10 + 0 + 10 +20 + 30 = 70\n20 + 10 +0 + 10 + 20 = 50\n将学校建在30，40点上，其实和建在10，0点上相同，此处不再赘述。\n因此，我们发现，将学校建在所有学生家位置的共同中心点位置的距离最短。\n本题其实就是中位数定理。\n本题通过率100%，反馈的考友使用的是Java编程语言。\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "import math\n\n# 输入获取\nn = int(input())\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(arr, n):\n    arr.sort()\n\n    if n % 2 == 0:\n        mid = int(n / 2)\n        return arr[mid - 1]\n    else:\n        return arr[math.floor(n / 2)]\n\n\n# 算法调用\nprint(getResult(arr, n))"
+  },
   "verified": false
 }

@@ -1,0 +1,61 @@
+{
+  "id": "q402",
+  "title": "多段线数据压缩",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在线OJ刷题\n题目详情 - 多段线数据压缩 - Hydro\n\n下图中，每个方块代表一个像素，每个像素用其行号和列号表示。\n为简化处理，多线段的走向只能是水平、竖直、斜向45度。\n上图中的多线段可以用下面的坐标串表示：(2,8),(3,7),(3,6),(3,5),(4,4),(5,3),(6,2),(7,3),(8,4),(7,5)。\n但可以发现，这种表示不是最简的，其实只需要存储6个蓝色的关键点即可，它们是线段的起点、拐点、终点，而剩下4个点是冗余的。\n现在，请根据输入的包含有冗余数据的多线段坐标列表，输出其最简化的结果。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "2 8 3 7 3 6 3 5 4 4 5 3 6 2 7 3 8 4 7 5\n所有数字以空格分隔，每两个数字一组，第一个数字是行号，第二个数字是列号；\n行号和列号范围 为 [0, 64)，"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入保证不会越界，考生不必检查；\n输入数据至少包含两个坐标点"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "2 8 3 7 3 5 6 2 8 4 7 5\n压缩后的最简化坐标列表，和输入数据的格式相同。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "输出的坐标相对顺序不能变化"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2 8 3 7 3 6 3 5 4 4 5 3 6 2 7 3 8 4 7 5\n输出\n2 8 3 7 3 5 6 2 8 4 7 5",
+      "cases": [
+        {
+          "input": "2 8 3 7 3 6 3 5 4 4 5 3 6 2 7 3 8 4 7 5",
+          "output": "2 8 3 7 3 5 6 2 8 4 7 5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "如上图所示，6个蓝色像素的坐标依次是：\n(2, 8)、(3, 7)、(3, 5)、(6, 2)、(8, 4)、(7, 5)\n将他们按顺序输出即可。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题其实就是要我们保留拐点。\n那么怎么判断一个点是不是拐点呢？\n拐点拐点，自然是运动方向发生改变的点。\n那么如何判断一个点的运动方向呢？\n运动，指的是从点A到点B，而运动的方向，自然是点A到点B的方向。那么如何描述点A到点B的方向呢？\n假设点A（2, 8），点B（3 7），那么此时点A到点B的偏移量为：\noffsetX = 3 - 2 = 1\noffsetY = 7 - 8 = -1\n则（offsetX, offsetY）就是A→B的向量坐标。\n当然还有可能出现这样的情况，比如A坐标（3,5），B坐标（6,2），此时A→B向量坐标为（3, -3）\n此时（3,-3）向量的方向其实和（1,-1）是相同的。\n因此，我们需要对这种向量做简化，方便后续相同方向的比较，即将（3,-3）简化为（1,-1），字面上看，其实就是横坐标、纵坐标都除以3，那么base=3该如何求解呢？求解公式如下\nbase = max(abs(offsetX), abs(offsetY))\n这个公式的好处是，兼容(-5, 0)，(0, 10)这种向量。\n当我们知道了A→B的方向，那么只要判断下一步B→C的方向是否发生改变，如果发生改变，那么就可以确定B是拐点，比如\nA→B的向量为（-1, 0）\nB→C的向量为（-1, 0）\n因此B不是拐点\nB→C的向量为（-1, 0）\nC→D的向量为（1, -1）\n因此C是拐点\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nnums = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    ans = []\n\n    # 上一个点坐标&#xff08;preX, preY&#xff09;\n    preX = nums[0]\n    preY = nums[1]\n\n    # 上一次的运动方向&#xff08;preDirectX, preDirectY&#xff09;\n    preDirectX = 0\n    preDirectY = 0\n\n    for i in range(2, len(nums), 2):\n        # 当前点坐标&#xff08;curX, curY&#xff09;\n        curX = nums[i]\n        curY = nums[i + 1]\n\n        # 上一个点到当前点的偏移量&#xff08;offsetX, offsetY&#xff09;\n        offsetX = curX - preX\n        offsetY = curY - preY\n\n        # 根据偏移量得出本次的运动方向\n        base = max(abs(offsetX), abs(offsetY))\n        directX = offsetX // base\n        directY = offsetY // base\n\n        # 如果两次运动的方向不同\n        if directX != preDirectX or directY != preDirectY:\n            # 则上一个点是拐点,需要记录下来\n            ans.extend([preX, preY])\n\n        preX = curX\n        preY = curY\n\n        preDirectX = directX\n        preDirectY = directY\n\n    # 注意收尾\n    ans.extend([preX, preY])\n\n    return \" \".join(map(str, ans))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,34 @@
+{
+  "id": "q561",
+  "title": "分糖果",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n小明从糖果盒中随意抓一把糖果，每次小明会取出一半的糖果分给同学们。\n当糖果不能平均分配时，小明可以选择从糖果盒中（假设盒中糖果足够）取出一个糖果或放回一个糖果。\n小明最少需要多少次（取出、放回和平均分配均记一次），能将手中糖果分至只剩一颗。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "抓取的糖果数（<10000000000）：15"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最少分至一颗糖果的次数：5"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nnum = int(input())\n\n\ndef recursive(num, count, ans):\n    if num == 1:\n        ans[0] = min(ans[0], count)\n        return\n\n    if num % 2 == 0:\n        recursive(num // 2, count + 1, ans)\n    else:\n        recursive(num + 1, count + 1, ans)\n        recursive(num - 1, count + 1, ans)\n\n\n# 算法入口\ndef getResult():\n    ans = [sys.maxsize]\n    recursive(num, 0, ans)\n    return ans[0]\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

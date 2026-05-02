@@ -44,6 +44,8 @@
       "content": "图示如下：\n一共需要4-1=3秒。\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nm, n, i, j, k, l = map(int, input().split(\",\"))\n\n\n# 算法入口\ndef getResult(m, n, i, j, k, l):\n    \"\"\"\n    :param m: 矩阵行数\n    :param n: 矩阵列数\n    :param i: 扩散点1行号\n    :param j: 扩散点1列好\n    :param k: 扩散点2行号\n    :param l: 扩散点2列号\n    :return: 矩阵的所有元素变为1所需要秒数\n    \"\"\"\n    matrix = [[0 for _ in range(n)] for _ in range(m)]\n    matrix[i][j] = 1\n    matrix[k][l] = 1\n\n    # count记录未被扩散的点的数量\n    count = m * n - 2\n\n    # 多源BFS实现队列\n    queue = [[i, j], [k, l]]\n\n    # 上下左右偏移量\n    offsets = ((1, 0), (-1, 0), (0, 1), (0, -1))\n\n    day = 0\n\n    # 如果扩散点没有了,或者所有点已被扩散,则停止循环\n    while len(queue) > 0 and count > 0:\n        newQueue = []\n\n        for x, y in queue:\n            for offsetX, offsetY in offsets:\n                newX = x + offsetX\n                newY = y + offsetY\n\n                if 0 <= newX < m and 0 <= newY < n and matrix[newX][newY] == 0:\n                    # 将点被扩散的时间记录为该点的值\n                    matrix[newX][newY] = 1\n                    # 被扩散到的点将变为新的扩散源\n                    newQueue.append([newX, newY])\n                    # 未被扩散点的数量--\n                    count -= 1\n\n        queue = newQueue\n        day += 1\n\n    return day\n\n\n# 算法调用\nprint(getResult(m, n, i, j, k, l))"
+  },
   "verified": false
 }

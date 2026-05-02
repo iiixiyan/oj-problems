@@ -1,0 +1,34 @@
+{
+  "id": "q604",
+  "title": "观看文艺汇演问题",
+  "score": 200,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n为了庆祝中国共产党成立100周年，某公园将举行多场文艺表演，很多演出都是同时进行，一个人只能同时观看一场演出，且不能迟到早退，由于演出分布在\n不同的\n演出场地，所以连续观看的演出最少有15分钟的时间间隔，\n小明是一个狂热的文艺迷，想观看尽可能多的演出， 现给出演出时间表，请帮小明计算他最多能观看几场演出。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为一个数 N，表示演出场数\n1 ≤ N ≤ 1000\n接下来 N 行，每行有被空格分割的整数，第一个整数 T 表示演出的开始时间，第二个整数 L 表示演出的持续时间\nT 和 L 的单位为分钟\n0 ≤ T ≤ 1440\n0 < L ≤ 180"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出最多能观看的演出场数。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\ntmp = [list(map(int, input().split())) for _ in range(n)]\nrans = list(map(lambda ran: [ran[0], ran[0] + ran[1]], tmp))\n\n\n# 算法入口\ndef getResult():\n    rans.sort(key=lambda ran: ran[1])\n\n    t = rans[0][1]\n    ans = 1\n\n    for i in range(1, len(rans)):\n        l, r = rans[i]\n        if l - t >= 15:\n            ans += 1\n            t = r\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,40 @@
+{
+  "id": "q506",
+  "title": "关联子串",
+  "score": 100,
+  "tags": [
+    "E卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n给定两个字符串str1和str2，如果字符串str1中的字符，经过\n排列组合\n后的字符串中，只要有一个字符串是str2的子串，则认为str1是str2的关联子串。\n若str1是str2的关联子串，请返回子串在str2的起始位置；\n若不是关联子串，则返回-1。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入两个字符串，分别为题目中描述的str1、str2。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "输入的字符串只包含小写字母；\n两个字符串的长度范围[1, 100000]之间；"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "若str1是str2的关联子串，请返回子串在str2的起始位置；\n若不是关联子串，则返回-1。\n若str2中有多个str1的组合子串，请返回最小的起始位置。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nstr1, str2 = input().split()\n\n\n# 算法入口\ndef getResult():\n    # count用于统计str1中各字符的数量\n    count = {}\n    for c in str1:\n        count[c] = count.get(c, 0) + 1\n\n    # total统计str1总共字符个数\n    total = len(str1)\n\n    # 初始滑窗,滑窗范围内容,就是一个子串\n    for i in range(len(str1)):\n        # 滑窗子串新增的字符\n        add = str2[i]\n\n        # 如果新增字符是str1的字符,即count[add] > 0时,则说明滑窗子串已找到一个目标字符,此时剩余add字符数量count[add]--,剩余目标字符总数total--\n        if count.get(add) is not None:\n            if count[add] > 0:\n                total -= 1\n            count[add] -= 1\n\n    # 如果total == 0,则说明滑窗内所有字符都是str1内的字符,由于限定了滑窗的长度就是str1的长度,因此滑窗内字符和str1完全匹配\n    if total == 0:\n        return 0\n\n    # 下一个滑窗范围是 i ~ i + str1.length() - 1\n    for i in range(1, len(str2) - len(str1) + 1):\n        # 相较于上一个滑窗失去的字符remove\n        remove = str2[i-1]\n        # 相较于上一个滑窗新增的字符add\n        add = str2[i + len(str1) - 1]\n\n        # 本轮滑窗remove字符,在上一轮是被add的字符,我们假设此字符为c&#xff1a;\n        # 1、c是str1的字符,则初始统计时count[c]>0,上一轮滑窗加入c字符,则count[c]--,此轮count[c]是有可能>=0或者<0的,\n        #    1.1、如果本轮count[c]>=0,则说明上轮滑窗并没有找到所有的c字符,因此本轮移除的c字符可以还原total数量\n        #    1.2、如果本轮count[c]<0,这说明上轮滑窗内的c字符超标了,即c字符是目标字符,但是滑窗内包含的c字符数量超过了str1中c字符的数量,因此本轮移除c字符是超标部分,不会还原total\n        if count.get(remove) is not None:\n            if count[remove] >= 0:\n                total += 1\n            count[remove] += 1\n\n        if count.get(add) is not None:\n            if count[add] > 0:\n                total -= 1\n            count[add] -= 1\n\n        if total == 0:\n            return i\n\n    return -1\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

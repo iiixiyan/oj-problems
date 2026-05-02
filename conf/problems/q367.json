@@ -1,0 +1,54 @@
+{
+  "id": "q367",
+  "title": "计算疫情扩散时间",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在一个地图中(地图由n*n个区域组成），有部分区域被感染病菌。 感染区域每天都会把周围（上下左右）的4个区域感染。 请根据给定的地图计算，多少天以后，全部区域都会被感染。 如果初始地图上所有区域全部都被感染，或者没有被感染区域，返回-1"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一行N*N个数字（只包含0,1，不会有其他数字）表示一个地图，数字间用,分割，0表示未感染区域，1表示已经感染区域 每N个数字表示地图中一行，输入数据共表示N行N列的区域地图。\n例如输入1,0,1,0,0,0,1,0,1，表示地图\n1,0,1\n0,0,0\n1,0,1"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "一个整数，表示经过多少天以后，全部区域都被感染 1<=N<200"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1,0,1,0,0,0,1,0,1\n输出\n2",
+      "cases": [
+        {
+          "input": "1,0,1,0,0,0,1,0,1",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "1天以后，地图中仅剩余中心点未被感染；2天以后，全部被感染。\n输入\n0,0,0,0\n输出\n-1\n\n无感染区域\n输入\n1,1,1,1,1,1,1,1,1\n输出\n-1\n\n全部都感染"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "自测"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "：0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0\n一共8x8个区域\n感染区传播过程如上图所示。\n本题其实就是图结构的多源BFS。\n每个感染区就是图结构中需要进行广度优先搜索的起点。感染区就相当于我们往水面扔了一颗石子，广度优先搜索就相当于荡起的一圈涟漪。\n本题的广度优先搜索是基于队列实现的。\n创建一个队列queue，初始时，遍历矩阵，找到所有感染区位置，并加入队列。\nqueue初始化完成后，我们对queue进行出队操作，每一个出队元素就是一个感染区位置，我们需要将其上下左右的区域全部改为感染区，并将新的感染区入队queue。\n这样的话才能保证  第一批感染区  的传播才能优先进行，达到广度优先搜索的目的。\n我们再举一个例子，如果采用stack栈来保存感染区的话，则必然先弹栈一个感染区位置，然后将其上下左右区域感染，这个过程中，将新的感染区压栈，而之后再次弹栈，必然是第二批的感染区位置，也就是后进先出，这将会产生深度优先搜索的效果。\n最终会产生如下效果\n了解图的多源广度优先搜索的实现后，我们就需要考虑如何统计感染时间了，这里我们可以将感染区标记和感染时间捆绑在一起，比如第0天的新增感染区标记为1（即矩阵初始时元素1），第1天的新增感染区标记为2，这个标记是我们广度优先搜索过程中，遍历每个感染区位置上下左右时标记的。\n因此，最后一次被标记的时间就是感染全区的时间，但是要减去1，因为我们是第1天标记为2了，因此第n天标记为n+1了。\n2023.06.08\n上面统计天数的方案，是将天数和矩阵元素值耦合起来，即矩阵元素格子内的值是几，就代表该格子是第几天被感染的。\n下面提供一种新方案来统计天数，我们知道，初始时，第一批（第一天）感染区都被统计到了queue中，之后进入bfs逻辑后，我们将新增的感染区也记录到了queue里面，这导致不同天的感染区都被记录到了一起，因此不好区分。\n我们可以选择创建一个新的newQueue，来记录新增感染区，比如我们可以遍历queue，来讲queue中感染区扩散出去的新感染区都放到newQueue，如果queue中统计的是第一天的感染区，那么newQueue中统计的就是第二天的感染区。\n这样的话，就可以将不同天数的感染区分开统计了。\n最后为了保证bfs的正常运行，我们只要将newQueue赋值给queue，进行下一轮感染即可。\n而这个过程中，每遍历完queue，就相当于day+1\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import math\n\n# 输入获取\narr = list(map(int, input().split(\",\")))\n\n\n# 算法入口\ndef getResult(arr):\n    # 题目说会输入n*n个值\n    n = int(math.sqrt(len(arr)))\n\n    #  将一维arr输入转为二维矩阵matrix\n    matrix = [[0 for _ in range(n)] for _ in range(n)]\n\n    # 将矩阵中所有感染区域位置记录到queue中,这里选择queue先进先出的原因是保证当天的感染区域并发扩散\n    queue = []\n\n    for i in range(n):\n        for j in range(n):\n            matrix[i][j] = arr[i * n + j]\n            if matrix[i][j] == 1:\n                queue.append([i, j])\n\n    # 全是感染区,或全是健康区\n    if len(queue) == 0 or len(queue) == len(arr):\n        return -1\n\n    # 健康区个数\n    healthy = len(arr) - len(queue)\n\n    # 上下左右偏移量\n    offsets = ((-1, 0), (1, 0), (0, -1), (0, 1))\n\n    # day用于统计感染全部花费的时间\n    day = 0\n    # 如果健康区个数为0,说明感染完了\n    while len(queue) > 0 and healthy > 0:\n        newQueue = []\n\n        # 遍历完当前queue的所有感染区,即过去一天\n        for x, y in queue:\n            for offsetX, offsetY in offsets:\n                newX = x + offsetX\n                newY = y + offsetY\n\n                if n > newX >= 0 and n > newY >= 0 and matrix[newX][newY] == 0:\n                    healthy -= 1\n                    matrix[newX][newY] = 1\n                    # 新增感染区加到newQue中,不影响queue的当前遍历\n                    newQueue.append([newX, newY])\n\n        day += 1\n        queue = newQueue\n\n    return day\n\n\n# 算法调用\nprint(getResult(arr))"
+  },
+  "verified": false
+}

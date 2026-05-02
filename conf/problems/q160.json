@@ -1,0 +1,56 @@
+{
+  "id": "q160",
+  "title": "事件推送",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "同一个数轴X上有两个点的集合A={A1, A2, …, Am}和B={B1, B2, …, Bn}，Ai和Bj均为正整数，A、B已经按照从小到大排好序，\nA、B均不为空，给定一个距离R(正整数)，列出同时满足如下条件的所有（Ai, Bj）数对：\nAi <= Bj\nAi, Bj之间的距离小于等于R\n在满足1,2的情况下,每个Ai只需输出距离最近的Bj\n输出结果按Ai从小到大的顺序排序"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行三个正整数m,n,R\n第二行m个正整数,表示集合A\n第三行n个正整数,表示集合B\n输入限制：\n1<=R<=100000, 1<=n,m<=100000, 1<=Ai,Bj<=1000000000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "每组数对输出一行Ai和Bj,以空格隔开"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4 5 5\n1 5 5 10\n1 3 8 8 20\n输出\n1 1\n5 8\n5 8",
+      "cases": [
+        {
+          "input": "4 5 5\n1 5 5 10\n1 3 8 8 20",
+          "output": "1 1\n5 8\n5 8",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题数量级非常大，因此使用双重for是肯定会超时的。\n我的\n\n是利用二分查找。\n关于标准二分查找的实现可以参考Java的Arrays.binarySearch，其他语言实现可以看：\n算法设计 - 二分法和三分法，洛谷P3382_伏城之外的博客-CSDN博客\n中关于binarySearch的具体实现，特别是其中关于有序插入位置的实现原理。\n本题，我们只需要遍历每一个a[i]，然后通过二分查找去找他们在b中的位置 j ：\n如果 j >= 0，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "b数组中有一个b[j] == a[i]，此时a[i] b[j]就是符合要求的组合\n如果 j < 0，则\n\nb数组中没有b[j] == a[i]，此时 j 其实就是 - insertIdx - 1，其中insertIdx就是a[i]在b中的有序插入位置，因此b[insertIdx] > a[i]，如果 b[insertIdx] - a[i] <= r，那么a[i] b[insertIdx]就是符合要求的组合\n上面算法的事件复杂度只有O(nlogn)，不会超时。\n2023.06.15\n找到的有序插入位置可能 insertIdx == b.length，即使越界位置，此情况b数组中不存在比a[i]大的值\n2023.07.08\n本题最优策略为同向双指针，可达O(n)时间复杂度\n二分查找解法\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, n, r = map(int, input().split())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\n\ndef binarySearch(arr, target):\n    low = 0\n    high = len(arr) - 1\n\n    while low <= high:\n        mid = (low + high) >> 1\n        midVal = arr[mid]\n\n        if midVal > target:\n            high = mid - 1\n        elif midVal < target:\n            low = mid + 1\n        else:\n            return mid\n\n    return -low - 1\n\n\n# 算法入口\ndef getResult():\n    for ai in a:\n        j = binarySearch(b, ai)\n        if j >= 0:\n            print(f\"{ai} {b[j]}\")\n        else:\n            insertIdx = -j - 1\n            if insertIdx == len(b):\n                continue\n            if b[insertIdx] - ai <= r:\n                print(f\"{ai} {b[insertIdx]}\")\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

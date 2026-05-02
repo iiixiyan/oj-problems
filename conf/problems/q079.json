@@ -1,0 +1,57 @@
+{
+  "id": "q079",
+  "title": "模拟商场优惠打折",
+  "score": 100,
+  "tags": [
+    "A卷",
+    "模拟"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "模拟商场优惠打折，有三种优惠券可以用，满减券、打折券和无门槛券。\n满减券：满100减10，满200减20，满300减30，满400减40，以此类推不限制使用；\n打折券：固定折扣92折，且打折之后向下取整，每次购物只能用1次；\n无门槛券：一张券减5元，没有使用限制。\n每个人结账使用优惠券时有以下限制：\n每人每次只能用两种优惠券，并且同一种优惠券必须一次用完，不能跟别的穿插使用（比如用一张满减，再用一张打折，再用一张满减，这种顺序不行）。\n求不同使用顺序下每个人用完券之后得到的最低价格和对应使用优惠券的总数；如果两种顺序得到的价格一样低，就取使用优惠券数量较少的那个。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行三个数字m,n,k，分别表示每个人可以使用的满减券、打折券和无门槛券的数量;\n第二行一个数字x, 表示有几个人购物;\n后面x行数字，依次表示是这几个人打折之前的商品总价。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出每个人使用券之后的最低价格和对应使用优惠券的数量"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 2 5\n3\n100\n200\n400\n输出\n65 6\n135 8\n275 8",
+      "cases": [
+        {
+          "input": "3 2 5\n3\n100\n200\n400",
+          "output": "65 6\n135 8\n275 8",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "输入：\n第一行三个数字m,n,k，分别表示每个人可以使用的满减券、打折券和无门槛券的数量。\n输出：\n第一个人使用 1 张满减券和5张无门槛券价格最低。（100-10=90, 90-5*5=65）\n第二个人使用 3 张满减券和5张无门槛券价格最低。（200-20-10-10=160, 160 – 5*5 = 135）\n第二个人使用 3 张满减券和5张无门槛券价格最低。（400-40-30-30=300, 300 – 5*5=275）"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题的\n\n如下，首先实现满减，打折，无门槛的逻辑：\n满减逻辑，只要总价price大于等于100，且还有满减券，则不停price -= Math.floor(price / 100) * 10; 直到总价price小于100，或者满减券用完。\n打折逻辑，按照题目意思，打折券只能使用一次，因此无论打折券有多少张，都只能使用一次，因此只要打折券数量大于等于1，那么price = Math.floor(price * 0.92);\n无门槛逻辑，只要总价price大于0，且还有无门槛券，则不停price -= 5; 直到price小于等于0，或者无门槛券用完。\n接下来就是求上面三种逻辑的任选2个的排列：\n假设满减是M，打折是N，无门槛是K，则有排列如下：\nMN、NM\nMK、KM\nNK、KN"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "，券的使用对顺序敏感。\n因此，求出以上排列后，对每个人的总价使用六种方式减价，只保留减价最多，用券最少的那个。\n根据网友iygvh提供的优化思路：\n对于无门槛券的使用，无门槛券总是在最后使用才会最优。\n对于满减来说，无门槛肯定是最后使用最优惠，\n对于92折来说，\n先用无门槛后打折(x-5y)*0.92 = x*0.92 -\n5*0.92*y\n先打折后用无门槛 x*0.92 -\n5y\n对比可以看出，先92折，再无门槛最优惠，因此确实可以直接排除KM和KN的情况，即先无门槛的情况。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "m, n, k = map(int, input().split())\n\nx = int(input())\n\nprices = []\nfor i in range(x):\n    prices.append(int(input()))\n\n\ndef fullSubtraction(price, m):\n    \"\"\"\n    满减规则\n    :param price: 总价\n    :param m: 满减券数量\n    :return: 总价满减后结果,对应数组含义是 (用券后剩余总价, 剩余满减券数量)\n    \"\"\"\n    while price >= 100 and m > 0:\n        price -= int(price / 100) * 10\n        m -= 1\n\n    return price, m\n\n\ndef discount(price, n):\n    \"\"\"\n    打折规则\n    :param price: 总价\n    :param n: 打折券数量\n    :return: 总价打折后结果,对应数组含义是 (用券后剩余总价, 剩余打折券数量)\n    \"\"\"\n    if n >= 1:\n        price = int(price * 0.92)\n        n -= 1\n    return price, n\n\n\ndef thresholdFree(price, k):\n    \"\"\"\n    无门槛你规则\n    :param price: 总价\n    :param k: 无门槛券数量\n    :return: 门槛券用后结果,对应数组含义是 (用券后剩余总价, 剩余无门槛券数量)\n    \"\"\"\n    while price > 0 and k > 0:\n        price -= 5\n        price = max(price, 0)  # 无门槛券过多会导致优惠后总价小于0,此时我们应该避免\n        k -= 1\n    return price, k\n\n\nfor price in prices:\n    ans = []\n\n    resM = fullSubtraction(price, m)  # 先满减\n\n    resMN_N = discount(resM[0], n)  # 满减后打折\n    ans.append((resMN_N[0], m + n - (resM[1] + resMN_N[1])))  # m + n 是满减后打折方式的总券数量, resM[1] + resMN_N[1] 是满减券剩余数+打折券剩余数\n\n    resMK_K = thresholdFree(resM[0], k)  # 满减后无门槛\n    ans.append((resMK_K[0], m + k - (resM[1] + resMK_K[1])))\n\n    resN = discount(price, n)  # 先打折\n\n    resNM_M = fullSubtraction(resN[0], m)  # 打折后满减\n    ans.append((resNM_M[0], n + m - (resN[1] + resNM_M[1])))\n\n    resNK_K = thresholdFree(resN[0], k)  # 打折后无门槛\n    ans.append((resNK_K[0], n + k - (resN[1] + resNK_K[1])))\n\n    # 对ans进行排序,排序规则是&#xff1a;优先按剩余总价升序,如果剩余总价相同,则再按“使用掉的券数量”升序\n    ans.sort(key=lambda x: (x[0], x[1]))\n\n    print(\" \".join(map(str, ans[0])))"
+  },
+  "verified": false
+}

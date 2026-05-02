@@ -1,0 +1,57 @@
+{
+  "id": "q128",
+  "title": "无向图染色",
+  "score": 200,
+  "tags": [
+    "A卷",
+    "图"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给一个无向图染色，可以填红黑两种颜色，必须保证相邻两个节点不能同时为红色，输出有多少种不同的染色方案？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入M(图中节点数) N(边数)\n后续N行格式为：V1 V2表示一个V1到V2的边。\n数据范围：1 <= M <= 15,0 <= N <= M * 3，不能保证所有节点都是连通的。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个数字表示染色方案的个数。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4 4\n1 2\n2 4\n3 4\n1 3\n输出\n7",
+      "cases": [
+        {
+          "input": "4 4\n1 2\n2 4\n3 4\n1 3",
+          "output": "7",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "4个节点，4条边，1号节点和2号节点相连，\n2号节点和4号节点相连，3号节点和4号节点相连，\n1号节点和3号节点相连，\n若想必须保证相邻两个节点不能同时为红色，总共7种方案。\n输入\n3 3\n1 2\n1 3\n2 3\n输出\n4\n\n无\n输入\n4 3\n1 2\n2 3\n3 4\n输出\n8\n\n无\n输入\n4 3\n1 2\n1 3\n2 3\n输出\n8\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "2022.12.25 更正解析"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "，感谢Andy___Zhong指出错误。\n本题其实就是求解连通图的染色方案，\n目前我想到的最好方式是暴力法，即通过回溯算法，求解出染红节点的全组合，\nn个数的全组合数量一共有 (2^n) - 1。\n比如：1,2,3的全组合情况有：1、2、3、12、13、23、123，即 (2^3) - 1 = 7个。\n本题中节点一共有m个，而1 <= m <= 15，即最多有 (2^15) - 1 = 32767 个组合情况，这个数量级不算多。 因此暴力法可行。\n我们需要尝试对组合中的节点进行染红色，但是相邻节点不能同时染成红色。因此，在求解全组合时，还可以进行剪枝优化，即判断新加入的节点  是否和 已存在的节点相邻，如果相邻，则剪枝，如果不相邻则继续递归。"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, n = map(int, input().split())\narr = [list(map(int, input().split())) for i in range(n)]\n\n\n# 算法入口\ndef getResult(arr, m):\n    \"\"\"\n    :param arr: 边,即[v1, v2]\n    :param m: 点数量\n    :return: 染色方案数\n    \"\"\"\n\n    # connect用于存放每个节点的相邻节点\n    connect = {}\n\n    for v1, v2 in arr:\n        if connect.get(v1) is None:\n            connect[v1] = set()\n        connect[v1].add(v2)\n\n        if connect.get(v2) is None:\n            connect[v2] = set()\n        connect[v2].add(v1)\n\n    # 节点从1开始\n    return dfs(m, 1, [], 1, connect)\n\n\n# 求解染红节点的全组合情况\ndef dfs(m, index, path, count, connect):\n    \"\"\"\n    :param m: 点数量,点从1计数\n    :param index: 当前第几个点\n    :param path: 保存点的容器\n    :param count: 染色方案数量\n    :param connect: 每个节点的相邻节点\n    :return: 染色方案数量\n    \"\"\"\n    if len(path) == m:\n        return count\n\n    flag = False\n\n    for i in range(index, m + 1):\n        #  如果新加入节点和已有节点相邻,则说明新加入节点不能染成红色,需要进行剪枝\n        for p in path:\n            if i in p:\n                flag = True\n                break\n\n        if flag:\n            flag = False\n            continue\n\n        count += 1\n\n        if connect.get(i) is not None:\n            path.append(connect.get(i))\n            count = dfs(m, i + 1, path, count, connect)\n            path.pop()\n        else:\n            count = dfs(m, i + 1, path, count, connect)\n\n    return count\n\n\n# 算法调用\nprint(getResult(arr, m))"
+  },
+  "verified": false
+}

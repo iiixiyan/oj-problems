@@ -1,0 +1,64 @@
+{
+  "id": "q335",
+  "title": "小朋友分组最少调整次数",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "n 个学生排成一排，学生编号分别是 1 到 n，n 为 3 的整倍数。\n老师随机抽签决定将所有学生分成 m 个 3 人的小组（n == 3 * m） ，\n为了便于同组学生交流，老师决定将小组成员安排到一起，也就是同组成员彼此相连，同组任意两个成员之间无其它组的成员。\n因此老师决定调整队伍，老师每次可以调整任何一名学生到队伍的任意位置，计为调整了一次， 请计算最少调整多少次可以达到目标。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：对于小组之间没有顺序要求，同组学生之间没有顺序要求。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入初始排队顺序序列\n第二行输入分组排队顺序序列"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最少调整多少次数"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4 2 8 5 3 6 1 9 7\n6 3 1 2 4 8 7 9 5\n输出\n1",
+      "cases": [
+        {
+          "input": "4 2 8 5 3 6 1 9 7\n6 3 1 2 4 8 7 9 5",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "分组分别为：6,3,1一组，2,4,8一组，7,9,5一组\n初始排队顺序中，只要将5移动到1后面，变为：\n4 2 8 3 6 1 5 9 7\n即可满足分组排队顺序要求。\n因此至少需要调整1次站位。\n输入\n8 9 7 5 6 3 2 1 4\n7 8 9 4 2 1 3 5 6\n输出\n0\n\n无\n输入\n7 9 8 5 6 4 2 1 3\n7 8 9 4 2 1 3 5 6\n输出\n1\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题有两个难点：\n如何快速判断两个小朋友是否为一组\n如何调整站队，才能花费次数最少\n关于1，我们可以根据第二行输入做如下处理（以"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1为例）：\n由于第二行输入的分组排队序列，每3个一组，因此我们只要将分组序列的各元素索引值整除3，即可得出各元素（小朋友序号）所在的分组。\n即我们可以根据第二行输入，能得到一个：“序号->组号” 的映射关系。\n这组映射关系，我们可以保存为一个map数组，map数组索引就是小朋友序号，map数组元素就是小朋友组号。\n之后，我们再根据map的映射关系，就可以将第一行输入的初始小朋友（序号）排队顺序，映射为初始小朋友（组号）顺序，比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1：\n初始小朋友（序号）排队顺序：4 2 8 5 3 6 1 9 7\n初始小朋友（组号）排队顺序：1 1 1 2 0 0 0 2 2\n之后，分组调整只需要按照 “初始小朋友（组号）排队顺序” 进行即可。\n关于2，由于小朋友按3人一组，因此初始组号排队顺序可能存在如下情况：\n1 1 x 1 y z\n1 x 1 1 y z\n1 x 1 y 1 z\n上面三种情况，我们需要让组号1的小朋友组合在一起。\n对于情况1：\n我们可以这样调整一次\n此时分组1，不会对其他分组造成影响。比如具体示例：\n1 1 2 1 2 2 按上面策略调整后 1 1 1 2 2 2\n1 1 2 2 1 2 按上面策略调整后 1 1 1 2 2 2\n1 1 2 2 2 1 按上面策略调整后 1 1 1 2 2 2\n但是，如果我们像下面这样调整，需要调整2次\n并且可能会影响到x的调整，比如具体示例：\n1 1 2 1 2 2 按上面策略调整后 2 1 1 1 2 2\n1 1 2 2 1 2 按上面策略调整后 2 2 1 1 1 2\n1 1 2 2 2 1 按上面策略调整后 2 2 2 1 1 1\n因此，对于情况1而言，最优策略是将后面的单独1并入到开头两个1中，只需要调整1次。\n对于情况2：\n如果将开头单独1并入后面两个2中，只需要调整一次，但是可能会对x造成影响\n比如：\n1 2 2 1 1 2 按照上面策略调整后 2 2 1 1 1 2，此时2还需要至少调整1次\n1 2 1 1 2 2 按照上面策略调整后 2 1 1 1 2 2，此时2还需要至少调整1次\n但是对于\n1 2 2 2 1 1 这种情况，当前调整策略是最优的\n如果将后面两个1并入到开头单独1中，那么需要调整2次\n比如对于下面情况，当前调整策略是最优的\n1 2 2 1 1 2 按照上面策略调整后 1 1 1 2 2 2\n1 2 1 1 2 2 按照上面策略调整后 1 1 1 2 2 2\n但是对于\n1 2 2 2 1 1 这种情况，当前调整策略不是最优。\n因此，对于情况2，我们需要判断，开头单独1和后面两个1之间是否是连续完整分组：\n如果是，那么只需要调整一次，开头单独1并入到后面两个1中\n如果不是，那么需要调整两次，后面两个1并入到开头单独1中\n对于情况3，有如下调整策略：\n可以发现，无论怎么调整都需要两次。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 分块&#xff08;即连续的相同组的小朋友&#xff09;\nclass NumberCount:\n    def __init__(self, num, count):\n        self.num = num\n        self.count = count\n\n\n# 输入获取\nnums = list(map(int, input().split()))  # 初始小朋友&#xff08;序号&#xff09;排队顺序\nsorted_nums = list(map(int, input().split()))  # 小朋友&#xff08;序号&#xff09;分组排队顺序\n\nn = len(nums)\n\n# 序号->组号 映射关系\nmapping = [0] * (n + 1)\nfor i in range(n):\n    num = sorted_nums[i]\n    mapping[num] = i // 3\n\n# 初始小朋友&#xff08;组号&#xff09;排队顺序\nnums = map(lambda x: mapping[x], nums)\n\n\n# 算法入口\ndef getResult():\n    # 按初始排队顺序记录分块\n    queue = []\n\n    # 记录组号对应的分块, key是组号,val是对应组号的小朋友分块\n    blocks = {}\n\n    for num in nums:\n        if len(queue) == 0 or queue[-1].num != num:\n            # 相邻相同组号合并为块\n            queue.append(NumberCount(num, 1))\n            # 记录相同组号的各个分块\n            blocks.setdefault(num, [])\n            blocks[num].append(queue[-1])\n        else:\n            queue[-1].count += 1\n\n    # 记录调整次数\n    moved_count = 0\n    while len(queue) > 0:\n        first = queue.pop(0)\n\n        # 如果开头块是空的,或者开头块已经包含3个小朋友,那么不需要调整位置\n        if first.count == 0 or first.count == 3:\n            continue\n\n        if len(queue) == 0:\n            break\n\n        # 第二块\n        second = queue[0]\n        while second.count == 0:\n            queue.pop(0)\n            second = queue[0]\n\n        # 如果开头块和第二块组号相同,则合并&#xff08;前面并入后面&#xff09;\n        if first.num == second.num:\n            second.count += first.count\n            continue\n\n        \"\"\"\n        如果开头块和第二块组号不同,则进入具体情况分析\n        \"\"\"\n\n        if first.count == 2:\n            # 开头块有2个小朋友,则情况如下组号1例子,此时需要将后面的单独1,并入开头两个1中,即调整一次\n            # 1 1 x 1\n            moved_count += 1\n\n            # 后面单独1所在块的小朋友数量清空\n            for block in blocks[first.num]:\n                block.count = 0\n\n            continue\n\n        if first.count == 1:\n            # 开头块只有1个小朋友,则有两种情况\n            if len(blocks[first.num]) == 3:\n                # 对于组号的分块有三个,即如下组号1例子\n                # 1 x 1 y 1 z\n                # 此时需要将后面两个单独1,并入到开头1中,即调整两次\n                moved_count += 2\n                # 后面两个单独1所在块的小朋友数量清空\n                for block in blocks[first.num]:\n                    block.count = 0\n            else:\n                # 对于组号的分块有两个,则如下组号1例子\n                # 1 x 1 1\n                # 此时需要将开头单独1并入到后面两个1中,即调整一次\n                moved_count += 1\n                # 后面两个1所在块的小朋友数量变为3个\n                for block in blocks[first.num]:\n                    block.count = 3\n\n    return moved_count\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

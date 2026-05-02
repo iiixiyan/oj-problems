@@ -1,0 +1,34 @@
+{
+  "id": "q220",
+  "title": "篮球比赛",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "篮球(5V5)比赛中，每个球员拥有一个战斗力，每个队伍的所有球员战斗力之和为该队伍的总体战斗力。\n现有10个球员准备分为两队进行训练赛，教练希望2个队伍的战斗力差值能够尽可能的小，以达到最佳训练效果。\n给出10个球员的战斗力，如果你是教练，你该如何分队，才能达到最佳训练效果?请说出该分队方案下的\n最小战斗力差值。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "10个篮球队员的战斗力(整数，范围[1,10000]),战斗力之间用空格分隔，如:10987654321\n不需要考虑异常输入的场景。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最小的战斗力差值，如:1"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = list(map(int, input().split()))\n\n\n# 求解去重组合\ndef dfs(arr, index, level, sumV, res):\n    if level == 5:\n        res.append(sumV)\n        return\n\n    for i in range(index, 10):\n        if i > index and arr[i] == arr[i - 1]: # arr已经升序,这里进行树层去重\n            continue\n        dfs(arr, i + 1, level + 1, sumV + arr[i], res)\n\n\n# 算法入口\ndef getResult(arr):\n    arr.sort()\n\n    res = []\n    # dfs求10选5的去重组合,并将组合之和记录进res中,即res中记录的是所有可能性的5人小队实力值之和\n    dfs(arr, 0, 0, 0, res)\n\n    sumV = sum(arr)\n    #  某队实力为subSum,则另一队实力为sum - subSum,则两队实力差为 abs((sum - subSum) - subSum),先求最小实力差\n    return min(map(lambda subSum: abs(sumV - 2 * subSum), res))\n\n\n# 算法调用\nprint(getResult(arr))"
+  },
+  "verified": false
+}

@@ -1,0 +1,19 @@
+{
+  "id": "q089",
+  "title": "箱子之字形摆放",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有一批箱子（形式为字符串，设为str），\n要求将这批箱子按从上到下以之字形的顺序摆放在宽度为 n 的空地，请输出箱子的摆放位置。\n例如：箱子ABCDEFG，空地宽度为3，摆放结果如图：\n则输出结果为："
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns, n = input().split()\n\n\n# 算法入口\ndef getResult(s, n):\n    n = int(n)\n\n    matrix = [[] for i in range(n)]\n\n    reverse = True\n    for i in range(len(s)):\n        k = i % n\n        if k == 0:\n            reverse = not reverse\n        if reverse:\n            k = n - 1 - k\n        matrix[k].append(s[i])\n\n    for arr in matrix:\n        print(\"\".join(arr))\n\n\n# 算法调用\ngetResult(s, n)"
+  },
+  "verified": false
+}

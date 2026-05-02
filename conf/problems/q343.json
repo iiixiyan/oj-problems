@@ -1,0 +1,44 @@
+{
+  "id": "q343",
+  "title": "抢7游戏",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "A、B两个人玩抢7游戏，游戏规则为：\nA先报一个起始数字 X（10 ≤ 起始数字 ≤ 10000），B报下一个数字 Y （X - Y < 3），A再报一个数字 Z（Y - Z < 3），以此类推，直到其中一个抢到7，抢到7即为胜者；\n在B赢得比赛的情况下，一共有多少种组合？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "起始数字 M\n10 ≤ M ≤ 10000\n如：\n100"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "B能赢得比赛的组合次数"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n10\n输出\n1",
+      "cases": [
+        {
+          "input": "10",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n数学分析解法（可能会超时）\n下面模拟M为10~14时，B能够获胜的一些情况：\n看完上图，我们可以发现：\n抛开A首次叫的数字M，剩下的 M - 7 长度（上图中有颜色的），必须发生奇数次叫，才能保证B获胜。\n原因是：奇数次叫中，第一次必然是B，由于是奇数次，因此最后一次也必然是B，比如\nBAB\nBABAB\n都是奇数次。\n因此我们只需要将整数 M - 7 划分为奇数块即可，且每块取值只能是1或2。\n我们可以假设初始时，一共发生了M-7次叫（M-7可能不是奇数），即每块长度都是1，此时我们设\noneCount = M - 7\ntwoCount = 0\n然后检查 oneCount + twoCount 的和（一共叫几次）：\n若为奇数，则计算 oneCount 个 1 和 twoCount 个 2 形成的不重复的全排列的个数，统计进结果ans\n若为偶数，则B无法获胜\n之后，我们应该合并两个1为一个2，即：\noneCount -= 2\ntwoCount += 1\n此时就会产生一种新的叫声情况，将新的oneCount和twoCount带入前面逻辑，进行循环处理，知道oneCount < 0 停止。\n本题的数量级很大，10 ≤ M ≤ 10000，因此满足要求的情况数量可能极端大，此时我们应该使用大数记录结果。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import decimal  # 超大数运算内置库\nfrom decimal import Decimal\ndecimal.setcontext(decimal.Context(prec=2500))  # 设置超大数精度\n\nm = int(input())\nfactor = []\n\n\n# 阶乘\ndef initFactor(n):\n    factor.append(Decimal(1))\n\n    for i in range(1, n+1):\n        factor.append(Decimal(i) * factor[-1])\n\n\n# 求解不重复的全排列数\ndef getPermutationCount(oneCount, twoCount):\n    if oneCount == 0 or twoCount == 0:\n        # 即 1 1 1 1 1 或 2 2 2 这种情况,此时只有一种排列\n        return 1\n    else:\n        # 排列数去重,比如 1 1 1 2 2 的不重复排列数为 5! / 3! / 2! = 10\n        return factor[oneCount + twoCount] / factor[oneCount] / factor[twoCount]\n\n\ndef getResult():\n    initFactor(m - 7)\n\n    oneCount = m - 7\n    twoCount = 0\n\n    # 记录B赢的情况数\n    ans = Decimal(0)\n\n    while oneCount >= 0:\n        # 叫的次数为奇数时,才能B赢\n        if (oneCount + twoCount) % 2 != 0:\n            ans += getPermutationCount(oneCount, twoCount)\n\n        # 合并两个1为一个2\n        oneCount -= 2\n        twoCount += 1\n\n    return ans\n\n\nprint(\"{:.0f}\".format(getResult()))"
+  },
+  "verified": false
+}

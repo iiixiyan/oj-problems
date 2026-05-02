@@ -1,0 +1,52 @@
+{
+  "id": "q136",
+  "title": "最大平分数组",
+  "score": 200,
+  "tags": [
+    "A卷",
+    "数组"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个数组nums，可以将元素分为若干个组，使得每组和相等，求出满足条件的所有分组中，最大的平分组个数。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入 m\n接着输入m个数，表示此数组\n数据范围:1<=M<=50, 1<=nums[i]<=50"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最大的平分组数个数"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n7\n4 3 2 3 5 2 1\n输出\n4",
+      "cases": [
+        {
+          "input": "7\n4 3 2 3 5 2 1",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "可以等分的情况有：\n4 个子集（5），（1,4），（2,3），（2,3）\n2 个子集（5, 1, 4），（2,3, 2,3）\n最大的平分组数个数为4个。\n输入\n9\n5 2 1 5 2 1 5 2 1\n输出\n4\n\n可以等分的情况有：\n4 个子集（5，1），（5，1），（5，1），（2，2，2）\n2 个子集（5, 1, 5,1），（2,2, 2,5,1）\n最大的平分组数个数为4个。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题和\nLeetCode - 698 划分为k个相等的子集_伏城之外的博客-CSDN博客\n华为机试 - 叠积木_伏城之外的博客-CSDN博客_叠积木 算法\n华为机试 - 等和子数组最小和_伏城之外的博客-CSDN博客\n属于类似，解题步骤基本相同。\n\n请看leetcode划分划分k个相等子集。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm = int(input())\nlink = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(link, m):\n    link.sort(reverse=True)\n\n    sumV = 0\n    for ele in link:\n        sumV += ele\n\n    while m >= 1:\n        if canPartitionMSubsets(link[:], sumV, m):\n            return m\n        m -= 1\n\n\ndef canPartitionMSubsets(link, sumV, m):\n    if sumV % m != 0:\n        return False\n\n    subSum = sumV / m\n\n    if subSum < link[0]:\n        return False\n\n    while len(link) > 0 and link[0] == subSum:\n        link.pop(0)\n        m -= 1\n\n    buckets = [0] * m\n\n    return partition(link, 0, buckets, subSum)\n\n\ndef partition(link, index, buckets, subSum):\n    if index == len(link):\n        return True\n\n    select = link[index]\n\n    for i in range(len(buckets)):\n        if i > 0 and buckets[i] == buckets[i - 1]:\n            continue\n\n        if select + buckets[i] <= subSum:\n            buckets[i] += select\n            if partition(link, index + 1, buckets, subSum):\n                return True\n            buckets[i] -= select\n\n    return False\n\n\n# 算法调用\nprint(getResult(link, m))"
+  },
+  "verified": false
+}

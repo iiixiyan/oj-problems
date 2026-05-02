@@ -1,0 +1,51 @@
+{
+  "id": "q193",
+  "title": "数据分类",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "对一个数据a进行分类，\n分类方法\n为：\n此数据a（四个字节大小）的四个字节相加对一个给定的值b取模，如果得到的结果小于一个给定的值c，则数据a为有效类型，其类型为取模的值；如果得到的结果大于或者等于c，则数据a为无效类型。\n比如一个数据a=0x01010101，b=3，按照分类方法计算（0x01+0x01+0x01+0x01）%3=1，\n所以如果c=2，则此a为有效类型，其类型为1，如果c=1，则此a为无效类型；\n又比如一个数据a=0x01010103，b=3，按照分类方法计算（0x01+0x01+0x01+0x03）%3=0，\n所以如果c=2，则此a为有效类型，其类型为0，如果c=0，则此a为无效类型。\n输入12个数据，第一个数据为c，第二个数据为b，剩余10个数据为需要分类的数据，\n请找到有效类型中包含数据最多的类型，并输出该类型含有多少个数据。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入12个数据，用空格分隔，第一个数据为c，第二个数据为b，剩余10个数据为需要分类的数据。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出最多数据的有效类型有多少个数据。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 4 256 257 258 259 260 261 262 263 264 265\n输出\n3",
+      "cases": [
+        {
+          "input": "3 4 256 257 258 259 260 261 262 263 264 265",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "10个数据4个字节相加后的结果分别为1 2 3 4 5 6 7 8 9 10，\n故对4取模的结果为1 2 3 0 1 2 3 0 1 2，c为3，所以0 1 2都是有效类型，类型为1和2的有3个数据，类型为0的只有2个数据，故输出3。\n输入\n1 4 256 257 258 259 260 261 262 263 264 265\n输出\n2\n\n10个数据4个字节相加后的结果分别为1 2 3 4 5 6 7 8 9 10，\n故对4取模的结果为1 2 3 0 1 2 3 0 1 2，c为1，\n所以只有0是有效类型，类型为0的有2个数据，故输出2。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "逻辑题，按照题目意思写过程即可。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ntmp = list(map(int, input().split()))\nc = tmp[0]\nb = tmp[1]\narr = tmp[2:]\n\n\n# 判断是否有效\ndef classify(a):\n    s = hex(a)[2:]  # hex方法会将十进制转为0x开头的16进制数,这里去除0x前缀\n\n    if len(s) % 2 != 0:\n        s = \"0\" + s  # 补足0\n\n    sumV = 0\n    for i in range(0, len(s) - 1, 2):\n        sumV += int(s[i:i + 2], 16)\n\n    t = sumV % b\n\n    if t < c:\n        return t\n    else:\n        return -1\n\n\n# 算法入口\ndef getResult():\n    count = {}\n\n    for t in map(classify, arr):\n        if t != -1:\n            if count.get(t) is None:\n                count[t] = 1\n            else:\n                count[t] += 1\n\n    return max(count.values())\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

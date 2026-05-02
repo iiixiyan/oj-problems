@@ -1,0 +1,66 @@
+{
+  "id": "q362",
+  "title": "矩阵匹配",
+  "score": 200,
+  "tags": [
+    "矩阵"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "从一个 N * M（N ≤ M）的矩阵中选出 N 个数，任意两个数字不能在同一行或同一列，求选出来的 N 个数中第 K 大的数字的最小值是多少。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入矩阵要求：1 ≤ K ≤ N ≤ M ≤ 150\n输入格式：\nN M K\nN*M矩阵"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "N*M 的矩阵中可以选出 M! / N! 种组合数组，每个组合数组种第 K 大的数中的最小值。无需考虑重复数字，直接取字典排序结果即可。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：结果是第 K 大的数字的最小值"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 4 2\n1 5 6 6\n8 3 4 3\n6 8 6 3\n输出\n3",
+      "cases": [
+        {
+          "input": "3 4 2\n1 5 6 6\n8 3 4 3\n6 8 6 3",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "N*M的矩阵中可以选出 M！/ N！种组合数组，每个组合数组种第 K 大的数中的最小值；\n上述输入中选出数组组合为：\n1,3,6;\n1,3,3;\n1,4,8;\n1,4,3;\n......\n上述输入样例中选出的组合数组有24种，最小数组为1,3,3，则第2大的最小值为3"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题需要我们从矩阵中选取N个元素，这个N元素的特点是：任意两个不能同行同列。\n而满足上面条件的N个元素存在多组，我们需要找到着各个组中第K大元素的最小值。\n难点一：如何从矩阵中找到N个互相不同行同列的元素呢？\n暴力枚举的话，肯定会超时，因此需要寻找更优解法。\n根据要求，每行每列只能有一个元素被选择，即可以认为每个行号只能和一个列号进行配对，且配对过的列号不能再和其他行号配对，而形成了配对关系的行号，列号，其实就是一个元素的坐标位置。\n因此，找N个互相不同行同列的元素，其实就是在二分图（所有行号一部分，所有列号一部分）找N个边的匹配。\n如下图所示\n关于二分图的知识可以看下：\nHDU - 2063 过山车（Java & JS & Python & C）-CSDN博客\n看完上面博客后，我们就可以继续后面"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "了。\n现在我们已经有了二分图了，也就可以找到具有N个边的\"匹配\"，但是这种\"匹配\"可能非常多，难道要全部找出来，然后对比每个\"匹配\"中第K大，那不还是暴力吗？\n题目需要我们多组N个元素中的第K大元素的最小取值，\n换位思考一下，假设我们已经知道了第K大的最小取值是kth，那么：\n检查矩阵中是否至多找到（N - K + 1 个） ≤ kth 的元素值，且这些元素值互不同行同列\nN个数中，有K-1个数比kth大，那么相对应的有 (N - (K-1)) = (N - K + 1 ) 个数 ≤ kth。\n即找的 N - K + 1 个数中包含了 kth（第K大值）本身。\n而kth的大小和二分图最大匹配是正相关的，因为：\n每个匹配边 其实就是 行号到列号的配对连线\n而行号和列号的组合其实就是坐标位置，根据坐标位置可以得到一个矩阵元素值\n因此kth越小，意味着可以找到的 ≤ kth 的矩阵元素越少，相反的，kth 越大，则找到的 ≤ kth 的矩阵元素越多。\n因此kth值大小和二分图最大匹配数是线性关系，我们可以使用二分法，来枚举kth。\n二分枚举的范围是：1 ~ 矩阵元素最大值，这里不用担心二分枚举到kth不是矩阵元素，因为这种情况会被过滤掉，原因是：我们要找 N - K + 1 个 <= kth 的矩阵元素，最后把关的必然是 kth 本身，即我们必然要在矩阵中找到一个 kth 值，如果二分枚举到的 kth 不是矩阵元素，则无法满足这个要求。\n二分枚举到一个kth值：\n如果kth使得二分图最大匹配 >= N-K+1 个，则\n\n当前kth取大了，我们应该尝试更小的kth值，即缩小二分右边界为kth-1\n如果kth使得二分图最大匹配 < N-K+1 个，则\n\n当前kth取小了，我们应该继续尝试更大的kth值，即扩大二分左边界为kth+1\n当二分左右边界重合时的kth值即为"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "。\n关于二分法，可以看下：\n算法设计 - 二分法和三分法，洛谷P3382_二分法与三分法-CSDN博客\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nn, m, k = map(int, input().split())\nmatrix = [list(map(int, input().split())) for _ in range(n)]\n\n\ndef dfs(i, kth, match, vis):\n    # 列号 i 发起了配对请求\n\n    # 遍历每一个行号j\n    for j in range(m):\n        # 如果当前行号j未被增广路探索过 && 当前行j列号i可以配对&#xff08;如果行列号位置(i,j)对应矩阵元素值小于等于kth&#xff08;第K大值&#xff09;,则可以配对&#xff09;\n        if not vis[j] and matrix[i][j] <= kth:\n            vis[j] = True\n\n            # 如果对应行号j未配对,或者,已配对但是配对的雷浩match[j]可以找到其他行号重新配对\n            if match[j] == -1 or dfs(match[j], kth, match, vis):\n                # 则当前列号i 和 行号j 可以配对\n                match[j] = i\n                return True\n\n    return False\n\n\ndef check(kth):\n    # 利用二分图最大匹配来求解,小于等于kth&#xff08;第K大值&#xff09;的元素个数&#xff08;即二分图最大匹配&#xff09;\n    smallerCount = 0\n\n    # 记录每个行号的匹配成功的列号\n    # 初始时每个行号都处于未配对状态,此时将行号配对的列号赋值为-1\n    match = [-1] * m\n\n    # 遍历列号,每个列号对互相心仪的行号发起配对请求\n    for i in range(n):\n        # 记录增广路访问过的行号\n        vis = [False] * m\n        if dfs(i, kth, match, vis):\n            smallerCount += 1\n\n    return smallerCount >= n - k + 1\n\n\n# 算法入口\ndef getResult():\n    low = 1\n    high = -sys.maxsize\n\n    for i in range(n):\n        for j in range(m):\n            high = max(high, matrix[i][j])\n\n    # 二分枚举第K大值\n    while low <= high:\n        # mid就是被枚举出来的N个数中的第K大值\n        mid = (low + high) >> 1\n\n        # 检查mid作为N个数中第K大值时,是否存在N-K+1个<=它的值\n        if check(mid):\n            high = mid - 1\n        else:\n            low = mid + 1\n\n    return low\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

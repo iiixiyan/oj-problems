@@ -1,0 +1,49 @@
+{
+  "id": "q303",
+  "title": "执行时长",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "为了充分发挥GPU算力，需要尽可能多的将任务交给GPU执行，现在有一个任务数组，数组元素表示在这1秒内新增的任务个数且每秒都有新增任务。\n假设GPU最多一次执行n个任务，一次执行耗时1秒，在保证GPU不空闲情况下，最少需要多长时间执行完成。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一个参数为GPU一次最多执行的任务个数，取值范围[1, 10000]\n第二个参数为任务数组长度，取值范围[1, 10000]\n第三个参数为任务数组，数字范围[1, 10000]"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "执行完所有任务最少需要多少秒。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n5\n1 2 3 4 5\n输出\n6",
+      "cases": [
+        {
+          "input": "3\n5\n1 2 3 4 5",
+          "output": "6",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "一次最多执行3个任务，最少耗时6s\n输入\n4\n5\n5 4 1 1 1\n输出\n5\n\n一次最多执行4个任务，最少耗时5s"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "题干中有一个段话很关键：\"\n数组元素表示在这1秒内新增的任务个数且每秒都有新增任务\n\"，也就是说，数组中的任务个数不是一次性push完的，而是每过1s才push一次，而这刚好和GPU单次执行时间1s相温吻合。\n比如"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ntaskA, taskB, num = map(int, input().split(\",\"))\n\n\n# 算法入口\ndef getResult(taskA, taskB, num):\n    if num == 0:\n        return \"[]\"\n\n    if taskA == taskB:\n        return [taskA * num]\n\n    ans = set()\n    for i in range(num + 1):\n        ans.add(taskA * i + taskB * (num - i))\n\n    return sorted(ans)\n\n\n# 算法调用\nprint(getResult(taskA, taskB, num))"
+  },
+  "verified": false
+}

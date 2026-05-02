@@ -49,6 +49,8 @@
       "content": "简单的排序题，逻辑请看代码。\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "n = int(input())\n\nwords = []\nfor i in range(n):\n    words.append(input())\n\ntarget = input()\n\nsorted_target = sorted(target)\n\nans = []\n\nfor word in words:\n    sorted_word = sorted(word)\n\n    if sorted_target == sorted_word:\n        ans.append(word)\n\nif len(ans) > 0:\n    ans.sort()\n    print(\" \".join(ans))\nelse:\n    print(\"null\")"
+  },
   "verified": false
 }

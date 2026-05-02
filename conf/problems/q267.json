@@ -1,0 +1,66 @@
+{
+  "id": "q267",
+  "title": "最佳的出牌方法",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "手上有一副扑克牌，每张牌按牌面数字记分（J=11,Q=12,K=13，没有大小王)，出牌时按照以下规则记分：\n出单张，记牌面分数，例如出一张2，得分为2\n出对或3张，记牌面分数总和再x2，例如出3张3，得分为(3+3+3)x2=18\n出5张顺，记牌面分数总和再x2，例如出34567顺，得分为(3+4+5+6+7)x2=50\n出4张炸弹，记牌面分数总和再x3，例如出4张4，得分为4x4x3=48\n求出一副牌最高的得分数"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "按顺序排好的一副牌，最少1张，最多15张。\n1-9输入为数字1-9，10输入为数字0，JQK输入为大写字母JQK.\n无需考虑输入非法的情况，例如输入字符不在[0-9JQK]范围或某一张牌超过4张"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最高的得分数"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "积分规则中没有的出牌方式不支持，例如不支持3带1、4带2，不支持5张以上的顺，且10JQKA (0JQK1) 不算顺。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n33445677\n输出\n67",
+      "cases": [
+        {
+          "input": "33445677",
+          "output": "67",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "出对3、对4、对7，单张5、6，得分为67;\n出34567顺，再出单张3、4、7，得分为64\n因此最高得分是按对出，可得到最高分67，输出结果67"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题数量级不大，可以考虑暴力破解。\n首先定义一个数组card_count，数组索引就是牌分数，数组元素就是牌数量\n因为本题中牌面是不连续的，比如0代表10，但是牌分数是连续的。\n因此，将牌分数作为数组索引来看的话，就可以用一个长度为5的滑窗来在card_count中找顺子。\n由于K牌面分数是13，因此我们只需要定义card_count数组长度为14即可，题目"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "可得数组如下：\n有了card_count之后，我们就可以开始遍历每一种牌（即遍历card_count数组的索引 i ）：\ncard_count[i] >= 1，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "当前牌面 i 至少有1张，那么此时可以选择：\n出单张，那么总牌数量 - 1，总分 + i\n出顺子，但是需要先检查 i+1, i+2, i+3, i+4 牌的数量是否至少有1张，如果有的话，才可以出顺子，那么总牌数了 - 5，总分+  ( i + (i+1) + (i+2) + (i+3) + (i+4) ) * 2\ncard_count[i] >= 2，则\n\n当前牌面 i 至少有2张，那么此时可以选择出对子，总牌数量 - 2，总分 + i * 2 * 2\ncard_count[i] >= 3，则\n\n当前牌面 i 至少有3张，那么此时可以选择出三张，总牌数量 - 3，总分 + i * 3 * 2\ncard_count[i] >= 4，则\n\n当前牌面 i 至少有4张，那么此时可以选择出炸弹，总牌数量 - 4，总分 + i * 4 * 3\n对于上面这些出牌策略，我们都可以选或者不选，\n比如当前card_count[i] >= 2，那么我们可以选择出对子，也可以选择不出对子\n只有这样，我们才能尝试出所有出牌的策略组合，这里明显需要用到递归和回溯。\n2023.10.29\n之前的代码逻辑中，如下（C语言代码，其他语言的考友可以当成伪代码看）\n上面代码逻辑是存在重复探索的。\nstartIdx 位置的牌，可以从 for 循环进入出牌逻辑，也可以从 递归进入出牌逻辑，这会产生冗余探索。\n我们可以只基于递归来完成所有出牌策略的探索。只是需要增加 card_count[startIdx] == 0 时，即 startIdx 位置没有牌时，自动递归到 startIdx + 1 位置出牌的逻辑。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ncards = input()\n\n# 保存最大分数\nmax_score = 0\n\n\n# 获取牌的最大得分\ndef getMaxScore(card_count, unused_card_count, i, score):\n    \"\"\"\n    获取最大分数\n    :param card_count: 各种牌的数量\n    :param unused_card_count: 剩余牌的总数量\n    :param i: 从哪个位置开始选牌\n    :param score: 此时已获得的总分数\n    \"\"\"\n    global max_score\n\n    # 所有牌都打完了\n    if unused_card_count == 0:\n        # 则比较此时出牌策略获得的总分score,和历史最高分max_score,保留较大者\n        max_score = max(max_score, score)\n        return\n\n    # 没有可以出的牌,则继续递归到i+1开始出牌\n    if card_count[i] == 0:\n        getMaxScore(card_count, unused_card_count, i + 1, score);\n\n    # 还有可以出的牌,则从i开始出牌\n    # 如果当前牌的数量至少1张\n    if card_count[i] >= 1:\n        # 策略1、可以尝试出顺子,由于最大的顺子是9,10,J,Q,K,因此 i 作为顺子起始牌的话,不能超过9,且后续牌面 i+1, i+2, i+3, i+4 的数量都至少有1张\n        if i <= 9 and card_count[i + 1] >= 1 and card_count[i + 2] >= 1 and card_count[i + 3] >= 1 and card_count[i + 4] >= 1:\n            card_count[i] -= 1\n            card_count[i + 1] -= 1\n            card_count[i + 2] -= 1\n            card_count[i + 3] -= 1\n            card_count[i + 4] -= 1\n            # 顺子是5张牌,因此出掉顺子后,可用牌数量减少5张,总分增加 (i + (i+1) + (i+2) + (i+3) + (i+4)) * 2\n            getMaxScore(card_count, unused_card_count - 5, i, score + (5 * i + 10) * 2)\n            # 回溯\n            card_count[i] += 1\n            card_count[i + 1] += 1\n            card_count[i + 2] += 1\n            card_count[i + 3] += 1\n            card_count[i + 4] += 1\n\n        # 策略2、出单张\n        card_count[i] -= 1\n        getMaxScore(card_count, unused_card_count - 1, i, score + i)\n        card_count[i] += 1\n\n    # 如果当前牌的数量至少2张,那么可以出对子\n    if card_count[i] >= 2:\n        card_count[i] -= 2\n        getMaxScore(card_count, unused_card_count - 2, i, score + i * 2 * 2)\n        card_count[i] += 2\n\n    # 如果当前牌的数量至少3张,那么可以出三张\n    if card_count[i] >= 3:\n        card_count[i] -= 3\n        getMaxScore(card_count, unused_card_count - 3, i, score + i * 3 * 2)\n        card_count[i] += 3\n\n    # 当前当前牌的数量至少4张,那么可以出炸弹\n    if card_count[i] >= 4:\n        card_count[i] -= 4\n        getMaxScore(card_count, unused_card_count - 4, i, score + i * 4 * 3)\n        card_count[i] += 4\n\n\n# 算法入口\ndef getResult():\n    # 数组索引是牌面分数, 数组元素是牌面数量, 其中 0 索引不用\n    card_count = [0] * 14\n\n    # 统计各种牌的数量\n    for card in cards:\n        # 1-9输入为数字1-9,10输入为数字0,JQK输入为大写字母JQK\n        # 1-9 牌面分数就是 1-9, 0的牌面分数是 10, J=11,Q=12,K=13, 可以发现牌面分数是连续的,可以和card_count数组的索引对应起来\n        if card == '0':\n            card_count[10] += 1\n        elif card == 'J':\n            card_count[11] += 1\n        elif card == 'Q':\n            card_count[12] += 1\n        elif card == 'K':\n            card_count[13] += 1\n        else:\n            i = ord(card) - ord('0')\n            card_count[i] += 1\n\n    getMaxScore(card_count, len(cards), 1, 0)\n\n    return max_score\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

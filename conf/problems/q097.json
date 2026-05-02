@@ -1,0 +1,56 @@
+{
+  "id": "q097",
+  "title": "静态扫描",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "静态扫描可以快速识别源代码的缺陷，静态扫描的结果以扫描报告作为输出：\n1、文件扫描的成本和文件大小相关，如果文件大小为N，则扫描成本为N个金币\n2、扫描报告的缓存成本和文件大小无关，每缓存一个报告需要M个金币\n3、扫描报告缓存后，后继再碰到该文件则不需要扫描成本，直接获取缓存结果\n给出源代码文件标识序列和文件大小序列，求解采用合理的缓存策略，最少需要的金币数。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为缓存一个报告金币数M，L<= M <= 100\n第二行为文件标识序列：F1,F2,F3,....,Fn。\n第三行为文件大小序列：S1,S2,S3,....,Sn。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "：\n1 <= N <= 10000\n1 <= Fi <= 1000\n1 <= Si <= 10"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "采用合理的缓存策略，需要的最少金币数"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n1 2 2 1 2 3 4\n1 1 1 1 1 1 1\n输出\n7",
+      "cases": [
+        {
+          "input": "5\n1 2 2 1 2 3 4\n1 1 1 1 1 1 1",
+          "output": "7",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "文件大小相同，扫描成本均为1个金币。缓存任意文件均不合算，因而最少成本为7金币。\n输入\n5\n2 2 2 2 2 5 2 2 2\n3 3 3 3 3 1 3 3 3\n输出\n9\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "简单的贪心思维逻辑题，解析请看代码注释。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm = int(input())\nf = list(map(int, input().split()))\ns = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(m, f, s):\n    # count用于保存每个文件出现的次数\n    count = {}\n    # size用于保存文件的大小,即扫描成本\n    size = {}\n\n    for i in range(len(f)):\n        # k是文件标识\n        k = f[i]\n        if count.get(k) is None:\n            count[k] = 1\n        else:\n            count[k] += 1\n\n        if size.get(k) is None:\n            size[k] = s[i]\n\n    ans = 0\n    for k in count.keys():\n        # 选择每次都重新扫描的成本  和  扫描一次+缓存的成本  中最小的\n        ans += min(count[k] * size[k], size[k] + m)\n    return ans\n\n\nprint(getResult(m, f, s))"
+  },
+  "verified": false
+}

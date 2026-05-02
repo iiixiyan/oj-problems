@@ -1,0 +1,56 @@
+{
+  "id": "q191",
+  "title": "数大雁",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一群大雁往南飞，给定一个字符串记录地面上的游客听到的大雁叫声，请给出叫声最少由几只大雁发出。\n具体的：\n大雁发出的完整叫声为”quack“，因为有多只大雁同一时间嘎嘎作响，所以字符串中可能会混合多个”quack”。\n大雁会依次完整发出”quack”，即字符串中’q’ ,‘u’, ‘a’, ‘c’, ‘k’ 这5个字母按顺序完整存在才能计数为一只大雁。如果不完整或者没有按顺序则不予计数。\n如果字符串不是由’q’, ‘u’, ‘a’, ‘c’, ‘k’ 字符组合而成，或者没有找到一只大雁，请返回-1。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一个字符串，包含大雁quack的叫声。1 <= 字符串长度 <= 1000，字符串中的字符只有’q’, ‘u’, ‘a’, ‘c’, ‘k’。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "大雁的数量"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nquackquack\n输出\n1",
+      "cases": [
+        {
+          "input": "quackquack",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nqaauucqckk\n输出\n-1\n\n无\n输入\nquacqkuac\n输出\n1\n\n无\n输入\nqququaauqccauqkkcauqqkcauuqkcaaukccakkck\n输出\n5\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "首先看一个例子：\n对于标黄的\"uack\"，我们应该归属于哪一个绿色的\"q\"呢？\n如果归属于第一个绿色\"q\"，那么该例子就至少有两只大雁\n如果归属于第二个绿色\"q\"，那么该例子就至少有一只大雁\n这里的两个\"q\"更准确的描述是：\n第一个\"q\"是前一次完整叫声\n中\n的第一个\"q\"\n第二个\"q\"是前一次完整叫声\n后\n的第一个\"q\"\n下面我对这两种理解都做了实现\n归属于第一个\"q\"解法（90%通过率）\n此解法虽然看起来和\nLeetCode - 1419 数青蛙_伏城之外的博客-CSDN博客\n很像，但是难度却要大于leetcode这道题，原因是\n大雁会依次完整发出”quack”，即字符串中’q’ ,‘u’, ‘a’, ‘c’, ‘k’ 这5个字母按顺序完整存在才能计数为一只大雁。\n如果不完整或者没有按顺序则不予计数\n。\n而leetcode数青蛙\n如果字符串 croakOfFrogs 不是由若干有效的 \"croak\" 字符混合而成，请返回 -1 。\nleetcode这题，如果存在不完整或者不按顺序的叫声，则直接返回-1。结束程序。\n而本题，则对于不完整或者不按顺序的叫声，只是不予计数，后面还要继续统计。\n比如 quaquck\n如果按照leetcode数青蛙逻辑来做的话，结果应该返回-1。\n而本题逻辑却需要返回1。\nleetcode难度小的原因是，不需要考虑剔除不完整或者不按顺序的叫声。\n而本题难度大的原因是，需要考虑剔除不完整或者不按顺序的叫声。\n我的\n\n是，求出每个叫声quack的区间范围，即一次叫声的：[q索引位置，k索引位置]。\n实现是：从左到右遍历叫声字符串，遇到q，则将其索引位置加入缓存中，\n遇到u，则判断u出现的次数是否超过了q出现的次数，若是则忽略本次u，否则u次数++\n遇到a，则判断a出现的次数是否超过了u出现的次数，若是则忽略本次a，否则a次数++\n遇到c，则判断c出现的次数是否超过了a出现的次数，若是则忽略本次c，否则c次数++\n遇到k，则判断c次数是否大于等于1，若否，则忽略本次k，否则出队第一个q出现索引和本次k的索引，组合成一个区间范围，然后u--,a--,c--，表示取出了一次叫声。\n按照上面逻辑，我们可以剔除掉不完整或者不按顺序的叫声，并且获得每个合法叫声的区间范围。\n接下来就是遍历每一个区间，和后面区间比较，看是否有交集，若有，则记录交集数。\n最终最大的交集数就是最多大雁数。\n下图是"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "3：qququaauqccauqkkcauqqkcauuqkcaaukccakkck\n各合法叫声区间的交集示意图\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nquacks = input()\n\n\n# 算法入口\ndef getResult():\n    q = []\n    u, a, c = 0, 0, 0\n\n    rans = []\n\n    for i in range(len(quacks)):\n        char = quacks[i]\n\n        if char == 'q':\n            q.append(i)\n        elif char == 'u':\n            if u + 1 <= len(q):\n                u += 1\n        elif char == 'a':\n            if a + 1 <= u:\n                a += 1\n        elif char == 'c':\n            if c + 1 <= a:\n                c += 1\n        elif char == 'k':\n            if c >= 1:\n                rans.append([q.pop(0), i])\n                u -= 1\n                a -= 1\n                c -= 1\n        else:\n            return -1\n\n    if len(rans) == 0:\n        return -1\n\n    ans = 1\n    for i in range(len(rans)):\n        count = 1\n        for j in range(i + 1, len(rans)):\n            if rans[i][1] >= rans[j][0]:\n                count += 1\n\n        ans = max(ans, count)\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

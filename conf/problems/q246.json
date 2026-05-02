@@ -1,0 +1,51 @@
+{
+  "id": "q246",
+  "title": "代表团坐车",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "某组织举行会议，来了多个代表团同时到达，接待处只有一辆汽车，可以同时接待多个代表团，为了提高车辆利用率，请帮接待员计算可以坐满车的接待方案，输出方案数量。\n约束:\n一个团只能上一辆车，并且代表团人数 (代表团数量小于30，每个代表团人数小于30)小于汽车容量(汽车容量小于100)\n需要将车辆坐满"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行 代表团人数，英文逗号隔开，代表团数量小于30，每个代表团人数小于30\n第二行 汽车载客量，汽车容量小于100"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "坐满汽车的方案数量\n如果无解输出0"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5,4,2,3,2,4,9\n10\n输出\n4",
+      "cases": [
+        {
+          "input": "5,4,2,3,2,4,9\n10",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "解释 以下几种方式都可以坐满车，所以，优先接待输出为4\n[2,3,5]\n[2,4,4]\n[2,3,5]\n[2,4,4]"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以转化为01背包的装满背包的方案数问题。\n解析可以参考：\nLeetCode - 494 目标和_伏城之外的博客-CSDN博客\n也可以尝试下：\n华为校招机试 - 求和（Java & JS & Python）_伏城之外的博客-CSDN博客\n2023.10.14\n根据考友反馈，本题存在异常格式输入，\n我猜测是类似于\n华为OD机试 - 生日礼物（Java & JS & Python & C）_java生日礼物-CSDN博客\n中的格式异常输入，即可能输入如下：\n[\n5,4,2,3,2,4,9\n]\n10\n或者是类似于\n华为OD机试 - 数组拼接（Java & JS & Python）_伏城之外的博客-CSDN博客\n中的格式异常输入，即可能输入如下：\n5,4,2,3,2\n,,\n4,9\n10\n具体是哪种输入格式，抽到该题的考友没有反馈，但是可以在考试时，通过提示的异常日志来看。\n上面两种格式的异常处理，可以参照对应博客内的处理。\n不处理输入格式异常也可得90%通过率。\nJava算法源码\n二维数组解法"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nnums = list(map(int, input().split(\",\")))\nbag = int(input())\n\n\n# 算法入口\ndef getResult():\n    n = len(nums)\n\n    dp = [[0] * (bag + 1) for _ in range(n+1)]\n    dp[0][0] = 1\n\n    for i in range(1, n + 1):\n        num = nums[i - 1]\n        for j in range(bag + 1):\n            if j < num:\n                dp[i][j] = dp[i - 1][j]\n            else:\n                dp[i][j] = dp[i - 1][j] + dp[i - 1][j - num]\n\n    return dp[n][bag]\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

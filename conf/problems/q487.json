@@ -1,0 +1,51 @@
+{
+  "id": "q487",
+  "title": "发广播（20210310）",
+  "score": 200,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "某地有N个广播站，站点之间有些有连接，有些没有。有连接的站点在接受到广播后会互相发送。\n给定一个N*N的二维数组matrix,数组的元素都是字符’0’或者’1’。\nmatrix[i][j] = ‘1’, 代表i和j站点之间有连接，\nmatrix[i][j] = ‘0’, 代表没连接，\n现在要发一条广播，问初始最少给几个广播站发送，才能保证所有的广播站都收到消息。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "从stdin输入，共一行数据，表示二维数组的各行，用逗号分隔行。保证每行字符串所含的字符数一样的。\n比如：110,110,001。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "返回初始最少需要发送广播站个数"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n110,110,001\n输出\n2",
+      "cases": [
+        {
+          "input": "110,110,001",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "站点1和站点2直接有连接，站点3和其他的都没连接，所以开始至少需要给两个站点发送广播。\n输入\n100,010,001\n输出\n3\n\n3台服务器互不连接，所以需要分别广播这3台服务器。\n输入\n11,11\n输出\n1\n\n2台服务器相互连接，所以只需要广播其中一台服务器"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "题目中说：“有连接的站点在接受到广播后会\n互相\n发送。”\n这表明了如果matrix[\ni\n][\nj\n] = ‘1’,则必然matrix[\nj\n][\ni\n] = ‘1’，即如下图中二维矩阵中元素值，会沿左上右下对角线轴对称\n因此，解决本题，我们只需要看对角线的一侧即可。\n有了上面的前提，下面我们可以通过画图来解决此题\n比如输入：1101,1100,0011,1011，画图如下\n因此可得联通图如下\n由于站点之间的连接是双向的，因此上面例子只要给一个站点发送广播，所有站点就都能收到广播了\n再比如，输入11010,11000,00110,10110,00001\n此时0，1，2，3站点是互联的，4没有任何连接，因此我们需要给至少两个站点发送广播。\n那么如何才能构建上面这种连通图呢？\n最好的方式就是创建 并查集 结构。\n并查集本身其实就是一个数组，数组的\n索引\n指代\n站点\n，数组的\n元素值\n指代当前索引站点的\n祖先站点\n。\n比如上面例子中，我们有5个站点，因此我们可以创建一个长度为5的数组arr，初始时，每个站点都可以视为互不相连的，即每个站点的祖先站点都是自己\n我们开始遍历输入的二维数组对角线一侧的站点连接情况，来更新上面的并查集结构，实现代码如下"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nmatrix = input().split(\",\")\n\n\n# 并查集实现\nclass UnionFindSet:\n    def __init__(self, n):\n        self.fa = [i for i in range(n)]\n        self.count = n\n\n    def find(self, x):\n        if x != self.fa[x]:\n            self.fa[x] = self.find(self.fa[x])\n            return self.fa[x]\n        return x\n\n    def union(self, x, y):\n        x_fa = self.find(x)\n        y_fa = self.find(y)\n\n        if x_fa != y_fa:\n            self.fa[y_fa] = x_fa\n            self.count -= 1\n\n\n# 算法入口\ndef getResult(matrix):\n    n = len(matrix)\n\n    ufs = UnionFindSet(n)\n\n    for i in range(n):\n        for j in range(i + 1, n):\n            if matrix[i][j] == \"1\":\n                ufs.union(i, j)\n\n    return ufs.count\n\n\n# 算法调用\nprint(getResult(matrix))"
+  },
+  "verified": false
+}

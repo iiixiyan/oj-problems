@@ -1,0 +1,61 @@
+{
+  "id": "q208",
+  "title": "求最小步数",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "求从坐标零点到坐标点n的最小步数，一次只能沿横坐标轴向左或向右移动 2 或 3。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：途径的坐标点可以为负数"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "坐标点n"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出从坐标零点移动到坐标点n的最小步数"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1 <= n <= 10^9"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\n输出\n2",
+      "cases": [
+        {
+          "input": "4",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "从坐标零点移动到4，最小需要两步，即右移2，再右移2"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以从简单的小数量级问题种推导出复杂的大数量级问题的规律：\n1  = -2 + 3\n2  = 2\n3  = 3\n4  = 2 + 2\n5  = 3 + 2\n6  = 3 + 3\n7  = 3 + 2 + 2\n8  = 3 + 3 + 2\n9  = 3 + 3 + 3\n10 = 3 + 3 + 2 + 2\n11 = 3 + 3 + 3 + 2\n12 = 3 + 3 + 3 + 3\n13 = 3 + 3 + 3 + 2 + 2\n14 = 3 + 3 + 3 + 3 + 2\n15 = 3 + 3 + 3 + 3 + 3\n16 = 3 + 3 + 3 + 3 + 2 + 2\n从上面推导过程，\n我们可以发现，n=1,2,3时不具备规律，但是当n>=4时，n每增加3，则对应最少步数+1，\n其实原因也很简单，通过上面过程我们可以发现，\n其实n>=4开始，\n如果n的分解数中存在2，那么n+1，其实就是将2变为3，此时最小步数保持不变。\n4  = 2 + 2\n5  = 3 + 2\n如果n的分解数种不存在2，那么n+1，其实就是将3变为2+2，此时会产生最小步数+1的效果。\n6  = 3 + 3\n7  = 3 + 2 + 2\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\n\n\n# 算法入口\ndef getResult():\n    if n == 1:\n        return 2\n\n    if n == 2:\n        return 1\n\n    if n == 3:\n        return 1\n\n    base = 2\n    return (n - 4) // 3 + base\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

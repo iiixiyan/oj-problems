@@ -1,0 +1,56 @@
+{
+  "id": "q475",
+  "title": "解密犯罪时间",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "警察在侦破一个案件时，得到了线人给出的可能犯罪时间，形如 “HH:MM” 表示的时刻。\n根据警察和线人的约定，为了隐蔽，该时间是修改过的，\n解密规则为：利用当前出现过的数字，构造下一个距离当前时间最近的时刻，则该时间为可能的犯罪时间。\n每个出现数字都可以被无限次使用。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "形如HH:SS字符串，表示原始输入。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "形如HH:SS的字符串，表示推理处理的犯罪时间。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1.可以保证现任给定的字符串一定是合法的。\n例如，“01:35”和“11:08”是合法的，“1:35”和“11:8”是不合法的。\n2.最近的时刻可能在第二天。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n输出\n20:12\n20:20\n23:59\n22:22\n12:58\n15:11\n18:52\n18:55\n23:52\n23:53\n09:17\n09:19\n07:08\n08:00",
+      "cases": [
+        {
+          "input": "输出\n20:12\n20:20\n23:59\n22:22\n12:58\n15:11\n18:52\n18:55\n23:52\n23:53\n09:17\n09:19\n07:08\n08:00",
+          "output": "20:12\n20:20\n23:59\n22:22\n12:58\n15:11\n18:52\n18:55\n23:52\n23:53\n09:17\n09:19\n07:08\n08:00",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "解密规则为：利用当前出现过的数字，构造\n下一个\n距离当前时间最近的时刻，则该时间为可能的犯罪时间。\n本题重在理解“\n下一个\n”最近时间，这里是“下一个”，而不是“上一个”，因此要求的时间在当前时间之后。但是"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "中又说：“最近的时刻可能在第二天。”\n也就是说，要求的时间  并不是严格 比当前时间 小的。\n这题其实用dfs求全排列的话，就很简单。\n我们基于dfs求得输入“20:12”的全部排列，\n即由0，1，2构成的四层排列，题目说“每个出现数字都可以被无限次使用”，因此每层多可以使用相同的数字。\n当然，求得的全排列中必然含有不合法的时间，我们需要利用正则来过滤掉非法的时间，正则如下"
+    }
+  ],
+  "solutions": {
+    "Python": "import re\n\nreg = re.compile(\"(([01][0-9])|([2][0-3]))[0-5][0-9]\")\n\n# 输入获取\nhour, minute = input().split(\":\")\n\n\ndef dfs(arr, path, res):\n    if len(path) == 4:\n        timeStr = \"\".join(path)\n        if reg.search(timeStr) is not None:\n            res.append(timeStr)\n        return\n\n    for i in range(len(arr)):\n        path.append(arr[i])\n        dfs(arr, path, res)\n        path.pop()\n\n\n# 算法入口\ndef getResult():\n    arr = list(hour)\n    arr.extend(list(minute))\n\n    arr = list(set(arr))\n\n    res = []\n    dfs(arr, [], res)\n    res.sort()\n\n    index = res.index(hour + minute)\n\n    if index == len(res) - 1:\n        recentTime = res[0]\n    else:\n        recentTime = res[index + 1]\n\n    ans = list(recentTime)\n    ans[1] += \":\"\n    return \"\".join(ans)\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

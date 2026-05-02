@@ -1,0 +1,66 @@
+{
+  "id": "q416",
+  "title": "德州扑克",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "五张牌，每张牌由牌大小和花色组成，牌大小2~10、J、Q、K、A，牌花色为红桃、黑桃、梅花、方块四种花色之一。\n判断牌型:\n牌型1，同花顺：同一花色的顺子，如红桃2红桃3红桃4红桃5红桃6。\n牌型2，四条：四张相同数字 + 单张，如红桃A黑桃A梅花A方块A + 黑桃K。\n牌型3，葫芦：三张相同数字 + 一对，如红桃5黑桃5梅花5 + 方块9梅花9。\n牌型4，同花：同一花色，如方块3方块7方块10方块J方块Q。\n牌型5，顺子：花色不一样的顺子，如红桃2黑桃3红桃4红桃5方块6。\n牌型6，三条：三张相同+两张单。"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：\n（1）五张牌里不会出现牌大小和花色完全相同的牌。\n（2）编号小的牌型较大，如同花顺比四条大，依次类推。\n（3）包含A的合法的顺子只有10 J Q K A和A 2 3 4 5;类似K A 2 3 4的序列不认为是顺子。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入由5行组成，每行为一张牌大小和花色，牌大小为2~10、J、Q、K、A，花色分别用字符H、S、C、D表示红桃、黑桃、梅花、方块。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出牌型序号，5张牌符合多种牌型时，取最大的牌型序号输出。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4 H\n5 S\n6 C\n7 D\n8 D\n输出\n5",
+      "cases": [
+        {
+          "input": "4 H\n5 S\n6 C\n7 D\n8 D",
+          "output": "5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "4 5 6 7 8构成顺子，输出5\n输入\n9 S\n5 S\n6 S\n7 S\n8 S\n输出\n1\n\n既是顺子又是同花，输出1，同花顺"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "这道题应该是一道逻辑题，这道题目输入了五张牌，然后我们需要对这五张牌进行六种情况的分析，并且分析有优先级：\n是否为同花顺\n是否为四条\n是否为葫芦\n是否同花\n是否为顺子\n是否为三条\n若满足了前面，则后面的就不需要再判断了。\n另外，同花顺情况判断，其实就是 同花 + 顺子，因此在写代码时可以再拆下代码。\n上面六种情况的判断，其实可以将五张牌的大小和花色分开来，分别检查。因此我将输入的五张牌的大小存入nums数组，花色存入colors数组。\n其中顺子的判断，其实不关心花色，只关心牌大小，我们只需要为牌定义好大小后，进行大小升序排序，若后面一张牌的大小总是比其前面一张牌大1，则就是顺子。\n另外还一个特殊情况，即‘A2345’也是顺子，这里我们给A定义的大小是14，因此nums升序排序后，只需要判断nums.join('')是否和'2345A'相等，即可判定为顺子。\n而四条的判断，也不关心花色，只关系牌大小，四条即 四个相同牌大小，一个不同牌大小。这个很好判断，我这里的方案是，new Set(nums)来去重，若去重后不是两张牌，那么就肯定不是四条，若有两张牌，则任取一张，看在nums中有几个，若为1个或4个，则可以判定为四条。\n葫芦、三条的判定和四条类似。\n同花的判定，即new Set(colors)，若去重后只有一个花色，则判定为同花。\n另外，本题没有说如果输入的五张牌都不满足上面六种情况时，该输出啥，一个可能是，"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证输入的五张牌肯定满足上面六种情况之一，因此不需要考虑这种异常场景。一个可能是，出题人遗漏了这种情况的输出"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "，我这里把不满足上面六种情况的输出自定义为0.\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = [input().split() for _ in range(5)]\n\n\n# 牌大小 映射为 数值\ndef cards(num):\n    if num == \"J\":\n        return 11\n    elif num == \"Q\":\n        return 12\n    elif num == \"K\":\n        return 13\n    elif num == \"A\":\n        return 14\n    else:\n        return int(num)\n\n\ndef countNums(nums, partCount, maxSameNumCount):\n    count = {}\n\n    for num in nums:\n        if count.get(num) is None:\n            count[num] = 0\n        count[num] += 1\n\n    if len(count.keys()) != partCount:\n        return False\n\n    return maxSameNumCount in count.values()\n\n\n# 三条\ndef isSantiao(nums):\n    # 三条由三部分组成,第一个部分由三张相同牌组成,第二个,第三个部分分别是两种不同的牌\n    return countNums(nums, 3, 3)\n\n\n# 葫芦\ndef isHulu(nums):\n    # 葫芦由两部分组成,一个部分三张牌相同,一个部分两张牌相同\n    return countNums(nums, 2, 3)\n\n\n# 四条\ndef isSitiao(nums):\n    # 四条由两部分组成,一个部分四张相同牌,一个部分一张牌\n    return countNums(nums, 2, 4)\n\n\n# 同花\ndef isTonghua(colors):\n    # 同花牌的所有花色都一样\n    return len(set(colors)) == 1\n\n\n# 顺子\ndef isShunzi(nums):\n    if \"\".join(nums) == \"2345A\":\n        return True\n\n    for i in range(1, len(nums)):\n        if cards(nums[i - 1]) + 1 != cards(nums[i]):\n            return False\n    return True\n\n\n# 算法入口\ndef getResult():\n    nums = []\n    colors = []\n\n    for num, color in arr:\n        nums.append(num)\n        colors.append(color)\n\n    nums.sort(key=lambda x: cards(x))\n\n    if isShunzi(nums) and isTonghua(colors):\n        return 1\n    elif isSitiao(nums):\n        return 2\n    elif isHulu(nums):\n        return 3\n    elif isTonghua(colors):\n        return 4\n    elif isShunzi(nums):\n        return 5\n    elif isSantiao(nums):\n        return 6\n    else:\n        return 0\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

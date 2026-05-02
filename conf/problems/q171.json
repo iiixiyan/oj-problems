@@ -1,0 +1,71 @@
+{
+  "id": "q171",
+  "title": "告警抑制",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "告警抑制，是指高优先级告警抑制低优先级告警的规则。高优先级告警产生后，低优先级告警不再产生。请根据原始告警列表和告警抑制关系，给出实际产生的告警列表。\n不会出现循环抑制的情况。\n告警不会传递，比如A->B,B->C，这种情况下A不会直接抑制C。但被抑制的告警仍然可以抑制其他低优先级告警。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为数字N，表示告警抑制关系个数，0 ≤ N ≤ 120\n接下来N行，每行是由空格分隔的两个告警ID，例如: id1 id2，表示id1抑制id2，告警ID的格式为：\n大写字母+0个或者1个数字\n最后一行为告警产生列表，列表长度[1,100]"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "真实产生的告警列表"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "告警ID之间以单个空格分隔"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2\nA B\nB C\nA B C D E\n输出\nA D E",
+      "cases": [
+        {
+          "input": "2\nA B\nB C\nA B C D E",
+          "output": "A D E",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "A抑制了B，B抑制了C，最后实际的告警为A D E\n输入\n4\nF G\nC B\nA G\nA0 A\nA B C D E\n输出\nA C D E\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "我们基于"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2来"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "下这题。\n有一个告警列表alertList，A B C D E，我们逐一检查对应的告警是否可以正常发生：\n第一个告警A，能够抑制它的只有A0，而当前告警列表alertList中没有A0，因此告警A可以正常发生\n第二个告警B，能够抑制它的只有C，而当前告警列表alertList中有C，因此告警B被抑制，不可以发生\n第三个告警C，没有能抑制它的告警，因此正常发生\n第四个告警D，没有能抑制它的告警，因此正常发生\n第五个告警E，没有能抑制它的告警，因此正常发生\n因此，本题的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "很简单，只需要记录每一个告警id2的所有抑制它的告警集合id1s，然后遍历告警列表alertList，遍历每一个告警id2：\n如果没有可以抑制id2的更高级的告警，则id2正常发生\n如果有可以抑制id2的更告警的告警id1，但是id1没有出现在alertList中，则id2正常发生\n其他情况，id2不可以发生\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nrelations = [input().split() for _ in range(n)]\nalertList = input().split()\n\n\n# 算法入口\ndef getResult():\n    fa = {}\n\n    # id1抑制id2\n    for id1, id2 in relations:\n        if fa.get(id2) is None:\n            fa[id2] = set()\n        # fa用于记录抑制id2的所有id1的集合\n        fa[id2].add(id1)\n\n    alertSet = set(alertList)\n\n    ans = []\n\n    for id2 in alertList:\n        # 如果没有抑制id2的更高级的告警,或者有抑制id2的更高级的告警,但是此高级告警没有出现在alertList列表中\n        if fa.get(id2) is None or alertSet.isdisjoint(fa[id2]):\n            # 此时id2就可以正常告警\n            ans.append(id2)\n\n    return \" \".join(ans)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,35 @@
+{
+  "id": "q508",
+  "title": "分割数组的最大差值",
+  "score": 100,
+  "tags": [
+    "E卷",
+    "数组"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n给定一个由若干整数组成的数组nums ，可以在数组内的任意位置进行分割，将该\n数组分割\n成两个非空子数组（即左数组和右数组），分别对子数组求和得到两个值，计算这两个值的差值，请输出所有分割方案中，差值最大的值。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入数组中元素个数n，1 < n ≤ 100000\n第二行输入数字序列，以空格进行分隔，数字取值为4字节整数"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出差值的最大取值"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nnums = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    leftSum = 0\n    rightSum = sum(nums)\n\n    maxDiff = 0\n\n    for i in range(n-1):\n        leftSum += nums[i]\n        rightSum -= nums[i]\n\n        diff = abs(leftSum - rightSum)\n        maxDiff = max(maxDiff, diff)\n\n    return maxDiff\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

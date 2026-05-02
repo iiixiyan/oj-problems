@@ -1,0 +1,82 @@
+{
+  "id": "q468",
+  "title": "绘图机器",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "图"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "绘图机器\n的绘图笔初始位置在原点(0,0)机器启动后按照以下规则来进行绘制直线。\n1. 尝试沿着横线坐标正向绘制直线直到给定的终点E\n2. 期间可以通过指令在纵坐标轴方向进行偏移，offsetY为正数表示正向偏移,为负数表示负向偏移\n给定的横坐标终点值E 以及若干条绘制指令，\n请计算绘制的直线和横坐标轴以及x=E的直线组成的图形面积。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "首行为两个整数 N 和 E\n表示有N条指令,机器运行的横坐标终点值E\n接下来N行 每行两个整数表示一条绘制指令\nx offsetY"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证横坐标x以递增排序的方式出现\n且不会出现相同横坐标x\n取值范围\n0<N<=10000\n0<=x<=E<=20000\n-10000<=offsetY<=10000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "一个整数表示计算得到的面积"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证结果范围在0到4294967295之内。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4 10\n1 1\n2 1\n3 1\n4 -2\n输出\n12",
+      "cases": [
+        {
+          "input": "4 10\n1 1\n2 1\n3 1\n4 -2",
+          "output": "12",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n2 4\n0 1\n2 -2\n输出\n4\n\n无\n\n下面每个拐点上标记不是坐标信息，而是 (x,offsetY)，其中offsetY是偏移"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "图示"
+    },
+    {
+      "type": "examples",
+      "title": "示例2",
+      "content": "图示\n这题将图画出来后，可能大家的思路就打开了。\n我的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "是这样的，将上面红色线框对应的复杂图形的面积求解，切割为横轴上每个单位长度的矩形面积求解，而每单位长度的矩形面积就等于对应的高度，即纵轴坐标的绝对值，因此我们只需要将offsetY偏移转为纵坐标的即可。\n而"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "中："
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证横坐标x以递增排序的方式出现。\n这里只强调递增没有强调连续，因此我们需要考虑不连续的offsetY转纵坐标的场景，其实也很简单，断档的offsetY其实默认为0。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 第一行输入解析\nn, end_x = map(int, input().split())\n\n# 记录题解\nans = 0\n\nlast_x = 0  # 上一个点的横坐标\nlast_y = 0  # 上一个点的纵坐标\n\n# 获取n行输入\nfor _ in range(n):\n    # 当前点的横坐标, 当前点纵坐标相较于上一个点纵坐标的偏移量\n    cur_x, offset_y = map(int, input().split())\n\n    # cur_x - last_x 结果是上一个点到当前点的横向距离, 这个距离过程中,高度保持为abs(last_y)\n    ans += (cur_x - last_x) * abs(last_y)\n\n    # 更新last_x, last_y\n    last_x = cur_x\n    last_y += offset_y\n\n# 注意结束位置的处理\nif end_x > last_x:\n    ans += (end_x - last_x) * abs(last_y)\n\nprint(ans)"
+  },
+  "verified": false
+}

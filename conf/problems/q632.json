@@ -1,0 +1,42 @@
+{
+  "id": "q632",
+  "title": "100分-计算数列位置N的值 (JavaPyCC++JsGo)",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "100\n分 计算数列位置\nN\n的值\n\n：\n1.\n输入\nM\n、\nN\n两个数，按照如下规则构建一个数列。\n2.\n数列的前\nM\n个元素的值为\n1\n到\nM\n。\n3.\n从第\nM+1\n个元素开始，计算的逻辑为：\no\n如果其前面的\nM\n个元素中，存在值相同的元素，则该位置上的数值等于前面\nM\n个数中最大的数值与最小的数值之和；\no\n如果其前面的\nM\n个元素中，不存在值相同的元素，则该位置上的数值等于前面\nM\n个数中最大的数值与最小的数值之差；\n请计算该数列第\nN\n个位置上的数值。\n补充"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：\nM\n取值范围：\n3 <= M <= 10\nN\n取值范围：\n1 <= N <= 50"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输出\nN\n和\nM\n，使用，分割"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出\nN\n位置上的数值"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入\n5,1\n输出\n1\n思路：逻辑分析\n1.\n此题数据量比较小，暴力递推所有前\nn\n个位置的值。\n2.\n对于\nn <= m\n的情况可以直接，返回\nn\n。\n3.\n对于\nn > m\n的情况，对于\nm+1\n及之后的位置可直接通过模拟，判断前\nn\n个数是否存在重复值，并记录最大值、最小值。从而确认当前位置值。\nC++\n#include<iostream>\n#include<vector>\n#include<string>\n#include <utility>\n#include <sstream>\n#include<algorithm>\n#include<cmath>\n#include<map>\n#include<set>\n#include<climits>\nusing namespace std;\nint positionValue(int m , int n)\n{\n//\n小于情况就是\nn\nif (n <= m) {\nreturn\nn;\n}\nvector<int> num(n\n+ 1);\n//\n初始化\nfor (int i =\n1; i <= m; i++) {\nnum[i]\n= i;\n}\n//\n数据量小\n->\n递推\nfor (int i =\nm + 1; i <= n; i++) {\nint\nmx = INT_MIN, mn = INT_MAX;\nset<int>\ns;\nbool dupFlag =\nfalse;\nfor\n(int j = i - m; j < i; j++) {\nif\n(s.count(num[j])) {\ndupFlag =\ntrue;\n}\ns.insert(num[j]);\nmx\n= max(mx, num[j]);\nmn = min(mn,\nnum[j]);\n}\nif\n(dupFlag) {\nnum[i]\n= mx + mn;\n}\nelse {\nnum[i]\n= mx - mn;\n}\n}\nreturn num[n];\n}\nint main() {\nint m, n;\nscanf(\"%d,%d\",\n&m, &n);\nint res\n= positionValue(m, n);\ncout << res;\nreturn 0;\n}\nJAVA\nimport java.util.*;\npublic class Main {\npublic static\nint positionValue(int m, int n) {\n//\n小于情况就是\nn\nif\n(n <= m) {\nreturn\nn;\n}\nint[]\nnum = new int[n + 1];\n//\n初始化\nfor\n(int i = 1; i <= m; i++) {\nnum[i]\n= i;\n}\n//\n数据量小\n->\n递推\nfor\n(int i = m + 1; i <= n; i++) {\nint\nmx = Integer.MIN_VALUE, mn = Integer.MAX_VALUE;\nHashSet<Integer>\nset = new HashSet<>();\nboolean dupFlag =\nfalse;\nfor\n(int j = i - m; j < i; j++) {\nif\n(set.contains(num[j])) {\ndupFlag =\ntrue;\n}\nset.add(num[j]);\nmx\n= Math.max(mx, num[j]);\nmn = Math.min(mn,\nnum[j]);\n}\nif\n(dupFlag) {\nnum[i]\n= mx + mn;\n}\nelse {\nnum[i]\n= mx - mn;\n}\n}\nreturn\nnum[n];\n}\npublic static\nvoid main(String[] args) {\nScanner sc =\nnew Scanner(System.in);\nString\ninput = sc.nextLine();\nString[]\nparts = input.split(\",\");\nint\nm = Integer.parseInt(parts[0]);\nint\nn = Integer.parseInt(parts[1]);\nSystem.out.println(positionValue(m,\nn));\n}\n}\nPython\nimport sys\ndef positionValue(m, n):\n#\n小于情况就是\nn\nif n <= m:\nreturn\nn\nnum = [0] * (n + 1)\n#\n初始化\nfor i in range(1,\nm + 1):\nnum[i]\n= i\n#\n数据量小\n->\n递推\nfor i in range(m\n+ 1, n + 1):\nmx\n= -10**9\nmn =\n10**9\ns\n= set()\ndupFlag =\nFalse\nfor\nj in range(i - m, i):\nif\nnum[j] in s:\ndupFlag =\nTrue\ns.add(num[j])\nmx\n= max(mx, num[j])\nmn = min(mn,\nnum[j])\nif dupFlag:\nnum[i]\n= mx + mn\nelse:\nnum[i]\n= mx - mn\nreturn num[n]\nif __name__ == \"__main__\":\nm, n\n= map(int, sys.stdin.readline().strip().split(\",\"))\nprint(positionValue(m, n))\nJS\nconst readline = require('readline');\nfunction positionValue(m, n) {\n//\n小于情况就是\nn\nif (n <= m) return\nn;\nconst num =\nnew Array(n + 1).fill(0);\n//\n初始化\nfor (let i =\n1; i <= m; i++) {\nnum[i]\n= i;\n}\n//\n数据量小\n->\n递推\nfor (let i =\nm + 1; i <= n; i++) {\nlet\nmx = -Infinity, mn = Infinity;\nlet\nset = new Set();\nlet dupFlag =\nfalse;\nfor\n(let j = i - m; j",
+      "cases": [
+        {
+          "input": "5,1",
+          "output": "1\n思路：逻辑分析\n1.\n此题数据量比较小，暴力递推所有前\nn\n个位置的值。\n2.\n对于\nn <= m\n的情况可以直接，返回\nn\n。\n3.\n对于\nn > m\n的情况，对于\nm+1\n及之后的位置可直接通过模拟，判断前\nn\n个数是否存在重复值，并记录最大值、最小值。从而确认当前位置值。\nC++\n#include<iostream>\n#include<vector>\n#include<string>\n#include <utility>\n#include <sstream>\n#include<algorithm>\n#include<cmath>\n#include<map>\n#include<set>\n#include<climits>\nusing namespace std;\nint positionValue(int m , int n)\n{\n//\n小于情况就是\nn\nif (n <= m) {\nreturn\nn;\n}\nvector<int> num(n\n+ 1);\n//\n初始化\nfor (int i =\n1; i <= m; i++) {\nnum[i]\n= i;\n}\n//\n数据量小\n->\n递推\nfor (int i =\nm + 1; i <= n; i++) {\nint\nmx = INT_MIN, mn = INT_MAX;\nset<int>\ns;\nbool dupFlag =\nfalse;\nfor\n(int j = i - m; j < i; j++) {\nif\n(s.count(num[j])) {\ndupFlag =\ntrue;\n}\ns.insert(num[j]);\nmx\n= max(mx, num[j]);\nmn = min(mn,\nnum[j]);\n}\nif\n(dupFlag) {\nnum[i]\n= mx + mn;\n}\nelse {\nnum[i]\n= mx - mn;\n}\n}\nreturn num[n];\n}\nint main() {\nint m, n;\nscanf(\"%d,%d\",\n&m, &n);\nint res\n= positionValue(m, n);\ncout << res;\nreturn 0;\n}\nJAVA\nimport java.util.*;\npublic class Main {\npublic static\nint positionValue(int m, int n) {\n//\n小于情况就是\nn\nif\n(n <= m) {\nreturn\nn;\n}\nint[]\nnum = new int[n + 1];\n//\n初始化\nfor\n(int i = 1; i <= m; i++) {\nnum[i]\n= i;\n}\n//\n数据量小\n->\n递推\nfor\n(int i = m + 1; i <= n; i++) {\nint\nmx = Integer.MIN_VALUE, mn = Integer.MAX_VALUE;\nHashSet<Integer>\nset = new HashSet<>();\nboolean dupFlag =\nfalse;\nfor\n(int j = i - m; j < i; j++) {\nif\n(set.contains(num[j])) {\ndupFlag =\ntrue;\n}\nset.add(num[j]);\nmx\n= Math.max(mx, num[j]);\nmn = Math.min(mn,\nnum[j]);\n}\nif\n(dupFlag) {\nnum[i]\n= mx + mn;\n}\nelse {\nnum[i]\n= mx - mn;\n}\n}\nreturn\nnum[n];\n}\npublic static\nvoid main(String[] args) {\nScanner sc =\nnew Scanner(System.in);\nString\ninput = sc.nextLine();\nString[]\nparts = input.split(\",\");\nint\nm = Integer.parseInt(parts[0]);\nint\nn = Integer.parseInt(parts[1]);\nSystem.out.println(positionValue(m,\nn));\n}\n}\nPython\nimport sys\ndef positionValue(m, n):\n#\n小于情况就是\nn\nif n <= m:\nreturn\nn\nnum = [0] * (n + 1)\n#\n初始化\nfor i in range(1,\nm + 1):\nnum[i]\n= i\n#\n数据量小\n->\n递推\nfor i in range(m\n+ 1, n + 1):\nmx\n= -10**9\nmn =\n10**9\ns\n= set()\ndupFlag =\nFalse\nfor\nj in range(i - m, i):\nif\nnum[j] in s:\ndupFlag =\nTrue\ns.add(num[j])\nmx\n= max(mx, num[j])\nmn = min(mn,\nnum[j])\nif dupFlag:\nnum[i]\n= mx + mn\nelse:\nnum[i]\n= mx - mn\nreturn num[n]\nif __name__ == \"__main__\":\nm, n\n= map(int, sys.stdin.readline().strip().split(\",\"))\nprint(positionValue(m, n))\nJS\nconst readline = require('readline');\nfunction positionValue(m, n) {\n//\n小于情况就是\nn\nif (n <= m) return\nn;\nconst num =\nnew Array(n + 1).fill(0);\n//\n初始化\nfor (let i =\n1; i <= m; i++) {\nnum[i]\n= i;\n}\n//\n数据量小\n->\n递推\nfor (let i =\nm + 1; i <= n; i++) {\nlet\nmx = -Infinity, mn = Infinity;\nlet\nset = new Set();\nlet dupFlag =\nfalse;\nfor\n(let j = i - m; j",
+          "explanation": ""
+        }
+      ]
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

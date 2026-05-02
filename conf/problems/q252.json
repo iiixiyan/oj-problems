@@ -1,0 +1,62 @@
+{
+  "id": "q252",
+  "title": "字符串划分",
+  "score": 200,
+  "tags": [
+    "B卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个小写字母组成的字符串 s，请找出字符串中两个不同位置的字符作为分割点，使得字符串分成三个连续子串且子串权重相等，"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "子串不包含分割点。\n若能找到满足条件的两个分割点，请输出这两个分割点在字符串中的位置下标，若不能找到满足条件的分割点请返回0,0。\n子串权重计算方式为:子串所有字符的ASCII码数值之和。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为一个字符串，字符串由a~z，26个小写字母组成，5 ≤ 字符串长度 ≤ 200。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出为两个分割点在字符串中的位置下标，以逗号分隔"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "只考虑唯一解，不存在一个输入多种输出解的情况"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nacdbbbca\n输出\n2,5",
+      "cases": [
+        {
+          "input": "acdbbbca",
+          "output": "2,5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "以位置2和5作为分割点，将字符串分割为ac，bb，ca三个子串，每一个的子串权重都为196，输出为：2,5\n输入\nabcabc\n输出\n0,0\n\n找不到符合条件的分割点，输出为：0,0"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题数量级不大，可以考虑暴力求解。即定义两个指针i, j，去模拟两个分割点，其中 i < j，且 j - i > 1，因为被分割的子串至少有1个字母。\n另外，为了避免重复求解某范围内的子串权重，我们可以使用前缀和，实现O(1)时间计算出任意区间内的子串权重。\n关于前缀和知识，可以看：\n算法设计 - 前缀和 & 差分数列_伏城之外的博客-CSDN博客\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult():\n    chars = list(map(ord, s))\n    n = len(chars)\n\n    # 前缀和\n    preSum = [0] * (n+1)\n    for i in range(1, n + 1):\n        preSum[i] = preSum[i - 1] + chars[i - 1]\n\n    # i,j是分割点\n    for i in range(1, n):\n        # sum1 是 0 ~ i-1 范围的ASCII码之和\n        sum1 = preSum[i] - preSum[0]\n\n        for j in range(i + 2, n):\n            # sum2 是 i + 1 ~ j - 1 范围的ASCII码之和\n            sum2 = preSum[j] - preSum[i + 1]\n\n            # 剪枝\n            if sum1 < sum2:\n                break\n\n            if sum1 == sum2:\n                # sum3 是 j + 1 ~ n - 1 范围的ASCII码之和\n                sum3 = preSum[n] - preSum[j + 1]\n\n                if sum2 == sum3:\n                    return f\"{i},{j}\"\n\n    return \"0,0\"\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

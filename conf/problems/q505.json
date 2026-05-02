@@ -1,0 +1,24 @@
+{
+  "id": "q505",
+  "title": "免单统计",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n华为商城举办了一个\n促销活动\n，如果某顾客是某一秒内最早时刻下单的顾客（可能是多个人），则可以获取免单。\n请你编程计算有多少顾客可以获取免单。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为 n 行数据，每一行表示一位顾客的下单时间\n以（年-月-日时-分-秒.毫秒） yyyy-MM-ddHH:mm:ss.fff 形式给出。"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\narr = [input() for _ in range(n)]\n\n\n# 算法入口\ndef getResult():\n    arr.sort(reverse=True)\n    stack = [arr.pop()]\n\n    while len(arr) > 0:\n        time = arr.pop()\n        top = stack[-1]\n\n        if top == time or top[:19] != time[:19]:\n            stack.append(time)\n\n    return len(stack)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

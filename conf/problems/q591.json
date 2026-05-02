@@ -1,0 +1,35 @@
+{
+  "id": "q591",
+  "title": "打印任务排序",
+  "score": 200,
+  "tags": [
+    "E卷",
+    "排序"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n某个打印机根据打印队列执行打印任务。打印任务分为九个优先级，分别用数字1-9表示，数字越大优先级越高。打印机每次从队列头部取出第一个任务A，\n然后检查队列余下任务中有没有比A优先级更高的任务，如果有比A优先级高的任务，则将任务A放到队列尾部，否则就执行任务A的打印。\n请编写一个程序，根据输入的打印队列，输出\n实际的打印顺序\n。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一行，为每个任务的优先级，优先级之间用逗号隔开，优先级取值范围是1~9。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一行，为每个任务的打印顺序，打印顺序从0开始，用逗号隔开"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\npriorities = list(map(int, input().split(\",\")))\n\n\n# 算法入口\ndef getResult():\n    link = [[p, i] for i, p in enumerate(priorities)]\n\n    n = len(priorities)\n\n    priorities.sort()\n    maxI = n - 1\n\n    ans = [0] * n\n    printIdx = 0\n    while len(link) > 0:\n        p, i = link.pop(0)\n\n        if p == priorities[maxI]:\n            ans[i] = printIdx\n            printIdx += 1\n            maxI -= 1\n        else:\n            link.append([p, i])\n\n    return \",\".join(map(str, ans))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

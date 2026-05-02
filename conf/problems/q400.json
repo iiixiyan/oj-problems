@@ -1,0 +1,62 @@
+{
+  "id": "q400",
+  "title": "在字符串中找出连续最长的数字串(含“+-”号)",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "请在一个字符串中找出连续最长的数字串，并返回这个数字串。\n如果存在长度相同的连续数字串，返回最后一个。\n如果没有符合条件的字符串，返回空字符串””。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：\n数字串可以由数字”0-9″、小数点”.”、正负号”±”组成，长度包括组成数字串的所有符号。\n“.”、“±”仅能出现一次，”.”的两边必须是数字，”±”仅能出现在开头且其后必须要有数字。\n长度不定，可能含有空格。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "无"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1234567890abcd9.+12345.678.9ed\n输出\n+12345.678",
+      "cases": [
+        {
+          "input": "1234567890abcd9.+12345.678.9ed",
+          "output": "+12345.678",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题我的思路是利用双指针。\n定义两个指针变量L，R，其中L指向数字串的开头，R用于扫描。\n首先，我们需要确定第一个数字串的开头位置，逻辑很简单，遍历输入字符串S的每一个字符c：\n如果c是数字，则c字符所在位置可以作为第一个数字串的开头位置，否则继续查找下一个c\n如果c是加减号，则还需要进一步检查这个加减号的后面是不是跟着数字，如果跟着数字，则可以作为第一个数字串的开头，否则继续查找下一个c\n找到第一个数字串的开头后，即知道L位置后，我们可以初始化R = L+1，即R从L+1位置开始扫描，假设扫描到的字符是c，则存在以下情况：\nc是数字，则不会中断数字串，可以继续R++扫描\nc是点，则需要先判断，这个点是否是合法的数字串点（即点位置R前后都是数字）：\n如果点位置前后不都是数字，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "，点位置 R 前面的内容无法复用到下一个数字串中，此时我们需要先将[L, R-1]范围的合法数字串记录下来，然后按照前面遍历S来找数字串开头位置的逻辑，来找下一个数字串开头位置\n如果点位置前后都是数字，则此时我们进一步判断，当前数字串，即[L, R-1]部分是否还有其他点，如果有，则一个数字串中不能包含两个点，此时我们需要先记录[L, R-1]范围内的合法数字串，假设第一个点位置是dotIdx，则下一个数字开头位置L = dotIdx + 1，这样才能保证下一个数字串最长，然后更新dotIdx = R，最后继续R++扫描\nc是加减号，此时会中断数字串，因此我们需要先记录[L, R-1]范围内的合法数字串，然后判断当前R位置的后面是否跟着数字，这将决定我们下一个数字的开头位置：\n如果R+1位置是数字，则下一个数字串的开头L=R，因为数字串可以以加减号开头，只要加减号后面跟着数字，之后R++继续扫描\n如果R+1位置不是数字，则我们应该按照前面遍历S来找数字串开头位置的逻辑，来找下一个数字串的开头位置。\nc是其他字符，则会中断数字串，此时我们应该记录[L, R-1]部分合法数字串，然后按照前面遍历S来找数字串开头位置的逻辑，来找下一个数字串的开头位置。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\ndef isSign(c):\n    return c == '+' or c == '-'\n\n\ndef isDot(c):\n    return c == '.'\n\n\n# ”±”仅能出现在开头且其后必须要有数字\ndef isValidSign(signIdx):\n    nxtIdx = signIdx + 1\n    return nxtIdx < len(s) and s[nxtIdx].isdigit()\n\n\n# ”.”的两边必须是数字\ndef isValidDot(dotIdx):\n    preIdx = dotIdx - 1\n    nxtIdx = dotIdx + 1\n    return preIdx >= 0 and s[preIdx].isdigit() and nxtIdx < len(s) and s[nxtIdx].isdigit()\n\n\n# 记录数字串时,只保留最长的数字串\ndef getAns(l, r, ans):\n    # 如果存在长度相同的连续数字串,返回最后一个。 因此下面判断是>=\n    return s[l:r] if l < len(s) and r - l >= len(ans) else ans\n\n\n# 从s字符串的start位置开始找数字串的开头字符,数字串的开头字符可以是数字,也可以是符号\ndef findStartIdx(i):\n    while i < len(s):\n        c = s[i]\n\n        if c.isdigit() or (isSign(c) and isValidSign(i)):\n            break\n\n        i += 1\n\n    return i\n\n\n# 算法入口\ndef getResult():\n    # 记录题解\n    ans = \"\"\n\n    # 记录数字串中“.”的位置,-1表示数字串中没有点\n    dotIdx = -1\n\n    # l 指向数字串的开头\n    l = findStartIdx(0)\n\n    # r 用于扫描数字串\n    r = l + 1\n    while r < len(s):\n        # 当前扫描的到的字符\n        c = s[r]\n\n        if c.isdigit():\n            # c是数字,则继续扫描下一个\n            r += 1\n        elif isSign(c):\n            # c是加减号,则数字串扫描中断,我们需要先记录[l, r-1]范围的数字串\n            ans = getAns(l, r, ans)\n\n            if isValidSign(r):\n                # 由于加减号可以作为数字串开头,如果r位置的加减号是一个合法数字串开头加减号,则可以当成下一个数字串的开头\n                l = r\n            else:\n                # 否则,从r+1开始继续找下一个数字的开头\n                l = findStartIdx(r+1)\n\n            # 新数字串的开头找到后,从l+1开始扫描\n            r = l + 1\n            # 同时注意重置dotIdx记录\n            dotIdx = -1\n        elif isDot(c):\n            # 由于dot处理比较复杂,这里无论dot是否会中断数字串扫描,都先将[l, r-1]部分的数字串记录下来\n            ans = getAns(l, r, ans)\n\n            if isValidDot(r):\n                # 如果是合法数字串dot, 则判断当前数字串是否已存在”.“\n                if dotIdx != -1:\n                    # 如果已存在\".\", 则当前数字串包含了两个\".\",肯定不合法,此时需要舍弃第一个\".\", 即新数字串开头位置设置在第一个\".\"后面\n                    l = dotIdx + 1\n\n                # 更新dotIdx为第二个\".\"的位置\n                dotIdx = r\n                # r继续扫描下一个\n                r += 1\n            else:\n                # 如果不是合法数字串dot,即该dot前后不都是数字,则新数字串不能包含进当前dot位置,新数字串开头需要从r+1开始找\n                l = findStartIdx(r+1)\n                r = l + 1\n                dotIdx = -1\n        else:\n            # c是其他字符, 则数字串被打断,此时需要先记录[l, r-1]范围的当前数字串, 然后重新寻找下一个数字串的开头\n            ans = getAns(l, r, ans)\n            l = findStartIdx(r + 1)\n            r = l + 1\n            dotIdx = -1\n\n    return getAns(l, r, ans)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

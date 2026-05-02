@@ -1,0 +1,51 @@
+{
+  "id": "q204",
+  "title": "构成正方形的数量",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "输入N个互不相同的二维整数坐标，求这N个坐标可以构成的正方形数量。[内积为零的的两个向量垂直]"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为N，N代表坐标数量，N为正整数。N <= 100\n之后的 K 行输入为坐标x y以空格分隔，x，y为整数，-10<=x, y<=10"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出可以构成的正方形数量。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n1 3\n2 4\n3 1\n输出\n0 （3个点不足以构成正方形）",
+      "cases": [
+        {
+          "input": "3\n1 3\n2 4\n3 1",
+          "output": "0 （3个点不足以构成正方形）",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n4\n0 0\n1 2\n3 1\n2 -1\n输出\n1\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "其实当我们知道正方形相邻两点的坐标，即某条边的坐标后，就可以求出其余两点的坐标。\n如下图中，我们知道正方形的红色点坐标后，就画出绿色点坐标和橙色点坐标来形成两个正方形，这其中似乎隐藏着什么规律？\n我们选取其中一个正方形来分析\n我们在目标正方形外面包裹一个更大的正方形，此时可以发现大正方形和小正方形相交点切割出了相同的几个尺寸：d1和d2。\n假设已知A点坐标(x1, y1)，B点坐标(x2,y2)，那么\nd1 = x1 - x2\nd2 = y1 - y2\n其实很容易可以发现，d1含义是A，B两点横向距离，d2是A，B两点纵向距离。\n基于A,B点坐标，以及d1，d2，我们可以算出C,D点坐标分别为：\nC坐标 （x2 + d2, y2 - d1）\nD坐标 （x1 + d2, y1 - d1）\n继续转化一下可得：\nC坐标 （x2 + y1 - y2, y2 - （x1 - x2））\nD坐标 （x1 + y1 - y2, y1 - （x1 - x2））\n这是求A，B右下方向C，D边得公式推导。\n同理，可以根据A，B推导出其左上方向E，F边，图示如下：\n基于A,B点坐标，以及d1，d2，我们可以算出E,F点坐标分别为：\nE坐标 （x1 - d2，y1 + d1）\nF坐标 （x2 - d2，y1 + d1）\n继续转化一下可得：\nE坐标 （x1 - （y1 - y2），y1 + x1 - x2）\nF坐标 （x2 - （y1 - y2），y1 + x1 - x2）\n此时我们就得到了根据正方形任意相邻两点坐标，求另外两点坐标的公式了。\n因此，接下来我们只需要遍历出两个点，然后通过公式得出另外可能的两个点，再在所有点中查找是否存在可能的两点，若存在，则正方形count++。\n最后的正方形个数squareCount 需要除以 4，原因是，如果输入中真的存在如下图中的绿色，橙色点，则遍历过程中也会将绿色，橙色点遍历出来，然后求它们的可能正方形\n也就是说上图中两个正方形，不仅会被两个红色点求出来两次次，还会被两个绿色点求出来一次，还会被两个橙色点求出来一次，还会被一绿一红求出来两次，被一橙一红求出来两次 ，总共是8次，而实际上只有2个正方形，因此最终结果要除以4。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\ncoordinates = [input() for _ in range(n)]\n\n\n# 算法入口\ndef getResult():\n    squareCount = 0\n\n    coordinatesSet = set(coordinates)\n\n    for i in range(n):\n        x1, y1 = map(int, coordinates[i].split())\n        for j in range(i + 1, n):\n            x2, y2 = map(int, coordinates[j].split())\n\n            x3 = x1 - (y1 - y2)\n            y3 = y1 + (x1 - x2)\n\n            x4 = x2 - (y1 - y2)\n            y4 = y2 + (x1 - x2)\n\n            if f\"{x3} {y3}\" in coordinatesSet and f\"{x4} {y4}\" in coordinatesSet:\n                squareCount += 1\n\n            x5 = x1 + (y1 - y2)\n            y5 = y1 - (x1 - x2)\n\n            x6 = x2 + (y1 - y2)\n            y6 = y2 - (x1 - x2)\n\n            if f\"{x5} {y5}\" in coordinatesSet and f\"{x6} {y6}\" in coordinatesSet:\n                squareCount += 1\n\n    return squareCount // 4\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

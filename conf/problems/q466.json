@@ -1,0 +1,51 @@
+{
+  "id": "q466",
+  "title": "素数之积",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "RSA加密算法在网络安全世界中无处不在，它利用了极大整数因数分解的困难度，数据越大，安全系数越高，给定一个 32 位正整数，请对其进行因数分解，找出是哪两个素数的乘积。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一个正整数 num 0 < num < 2147483647"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "如果成功找到，以单个空格分割，从小到大输出两个素数，分解失败，请输出-1, -1"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n15\n输出\n3 5\n输入\n27\n输出\n-1 -1",
+      "cases": [
+        {
+          "input": "15",
+          "output": "3 5",
+          "explanation": ""
+        },
+        {
+          "input": "27",
+          "output": "-1 -1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "首先，要了解素数概念，及素数判定方法\n判定素数的四种方法（JavaScript）_伏城之外的博客-CSDN博客\n其次再来解析题目\n给定一个 32 位正整数，请对其进行因数分解，找出是哪两个素数的乘积。\n15 可以被分解为 3 5，由于是这两个素数乘积为15，所以判定为分解成功；\n27 可以被分解为 3 3 3，由于不是两个素数的乘积，所以判定为分解失败；\n这里，我理解题目想表达的意思是，\n给定的正整数，要支持\n只能\n分解为\n两个素数因子\n，且两个素数乘积要为给定的正整数，那么\n若给定的正整数为素数，则只能分解为1和自身，而1不是素数，所以判定为分解失败\n这可以帮助我们缩小了给定的正整数的范围只能是非素数。\n另外如果一个正整数为两个素数的乘积，比如 11 * 13 = 143，则必然只能分解为这两个素数，因为这两个素数无法再次分解，所以该正整数没有其他的素数因子了。所以，一旦我们得到一个可以被正整数整除的素数因子，则另一个因子只能为素数。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import math\n\n# 输入获取\nn = int(input())\n\n\n# 素数判定\ndef isPrime(n):\n    if n <= 3:\n        return n > 1\n\n    if n % 6 != 1 and n % 6 != 5:\n        return False\n\n    for i in range(5, int(math.sqrt(n)) + 1, 6):\n        if n % i == 0 or n % (i + 2) == 0:\n            return False\n\n    return True\n\n\n# 算法入口\ndef getResult(n):\n    # 如果n为素数,则必然不可能是两个素数之积\n    if isPrime(n):\n        return \"-1 -1\"\n\n    # 假设i为n的因子\n    for i in range(2, n):\n        # 若n不能整除i,则i不是n的因子,继续下次循环,找新的i\n        # 若n可以整除i,则i就是n的因子\n        if n % i == 0:\n            # j为n的另一因子\n            j = n // i\n            # 只有i,j因子都为素数时,n才是符合题意的素数之积\n            if isPrime(i) and isPrime(j):\n                # 如果n为两个素数之积,则n只能分解为这两个因子,因为素数无法再次分解出其他因子,也就是说n不再有其他因子了&#xff08;因子不包含1和自身&#xff09;\n                return f\"{i} {j}\" if i < j else f\"{j} {i}\"\n            else:\n                # 如果i,j有一个不是素数因子,则说明n存在非素数因子,此时n不可能是素数之积\n                # 如果i,j为相同的素数因子,则n不是满足题意的素数之积\n                # 此时可以判定n不符合要求了,直接退出循环\n                break\n\n    return \"-1 -1\"\n\n\n# 算法调用\nprint(getResult(n))"
+  },
+  "verified": false
+}

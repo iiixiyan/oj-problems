@@ -1,0 +1,34 @@
+{
+  "id": "q586",
+  "title": "可以处理的最大任务数",
+  "score": 200,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n在某个项目中有多个任务(用tasks数组表示)需要您进行处理，其中tasks[i]=[si,ei],你可以在si <= day <= ei中的任意一天处理该任务，请返回你可以处理的最大任务数"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为任务数量n，1 <=n<= 100000。后面n行表示各个任务的开始时间和终止时间，使用si,ei表示,1 <= si <= ei <= 100000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出为一个整数，表示可以处理的最大任务数。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "import heapq\nimport sys\n\n\nclass Range:\n    def __init__(self, start, end):\n        self.start = start\n        self.end = end\n\n    # 结束时间越大&#xff08;越晚&#xff09;优先级越高,结束时间相同时,开始时间越大&#xff08;越晚&#xff09;优先级越高\n    def __gt__(self, other):\n        if self.end != other.end:\n            return other.end > self.end\n        else:\n            return other.start > self.start\n\n\n# 输入获取\nn = int(input())\n\npq = []\nfor _ in range(n):\n    start, end = map(int, input().split())\n    heapq.heappush(pq, Range(start, end))\n\n\n# 算法入口\ndef getResult():\n    # 记录最大任务数\n    count = 0\n\n    # 记录上一个任务的执行时刻\n    last_end = sys.maxsize\n\n    while len(pq) > 0:\n        ran = heapq.heappop(pq)\n\n        if ran.end < last_end:\n            # 当前任务结束时刻end < 上个任务结束时刻last_end,则当前任务选择在end时刻执行\n            last_end = ran.end\n            count += 1\n        elif last_end > ran.start:\n            # 当前任务结束时刻end ≥ 上个任务结束时刻last_end,则更新当前任务的结束时间为last_end-1,后重新加入优先队列排队\n            # 同时注意range新的结束时间last_end - 1不能小于range.start,否则该任务无法执行\n            ran.end = last_end - 1\n            heapq.heappush(pq, ran)\n\n    return count\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

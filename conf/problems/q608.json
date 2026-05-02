@@ -1,0 +1,39 @@
+{
+  "id": "q608",
+  "title": "跳格子3",
+  "score": 200,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n小明和朋友们一起玩跳格子游戏，每个格子上有特定的分数 score = [1, -1, -6, 7, -17, 7]，\n从起点score[0]开始，每次最大的步长为k，请你返回小明跳到终点 score[n-1] 时，能得到的最大得分。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入总的格子数量 n\n第二行输入每个格子的分数 score[i]\n第三行输入最大跳的步长 k"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "格子的总长度 n 和步长 k 的区间在 [1, 100000]\n每个格子的分数 score[i] 在 [-10000, 10000] 区间中"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出最大得分"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nscores = list(map(int, input().split()))\nk = int(input())\n\n\n# 算法入口\ndef getResult():\n    global k\n\n    # 第i个格子,可以从第i-k个格子~第i-1个格子调过来,因此本题滑窗的长度相当于k+1\n    k += 1\n\n    # dp[i]表示跳到第i个格子能得到的最大分数\n    dp = [0] * n\n    dp[0] = scores[0]\n\n    # 单调队列&#xff08;单调递减,队首是滑窗最大值&#xff09;\n    queue = [dp[0]]\n\n    # 初始滑窗的形成过程&#xff08;即只有新增尾部元素的过程&#xff09;\n    for i in range(1, min(k, n)):  # 注意当k > n时, 需要取n, 此时只有滑窗形成过程,没有滑窗移动过程\n        # dp[i] = max(dp[0]~dp[i-1]) + scores[i]\n        # 即单调队列队首保存的是max(dp[0]~dp[i-1])\n        dp[i] = queue[0] + scores[i]\n\n        # 保持单调队列的单调递减性,即如果后入队的dp[i] 大于 队尾元素,则队尾元素出队\n        while len(queue) > 0 and dp[i] > queue[-1]:\n            queue.pop()\n\n        # 当队尾没有比dp[i]更小的元素后,dp[i]才能入队\n        queue.append(dp[i])\n\n    # 滑窗的右移过程&#xff08;即相较于老滑窗失去一个首元素,新增一个尾元素&#xff09;\n    for i in range(k, n):\n        # 如果滑窗失去的元素dp[i - k],和单调队列的队首元素queue[0]相同,则单调队列需要弹出头部元素\n        if dp[i - k] == queue[0]:\n            queue.pop(0)\n\n        # 下面逻辑同之前\n        dp[i] = queue[0] + scores[i]\n\n        while len(queue) > 0 and dp[i] > queue[-1]:\n            queue.pop()\n\n        queue.append(dp[i])\n\n    return dp[n - 1]\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

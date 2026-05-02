@@ -1,0 +1,61 @@
+{
+  "id": "q257",
+  "title": "宜居星球改造计划",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "2XXX年，人类通过对火星的大气进行宜居改造分析，使得火星已在理论上具备人类宜居的条件；\n由于技术原因，无法一次性将火星大气全部改造，只能通过局部处理形式；\n假设将火星待改造的区域为row * column的网格，每个网格有3个值，宜居区、可改造区、死亡区，使用YES、NO、NA代替，YES表示该网格已经完成大气改造，NO表示该网格未进行改造，后期可进行改造，NA表示死亡区，不作为判断是否改造完的宜居，无法穿过；\n初始化下，该区域可能存在多个宜居区，并目每个宜居区能同时在每个大阳日单位向上下左右四个方向的相邻格子进行扩散，自动将4个方向相邻的真空区改造成宜居区；\n请计算这个待改造区域的网格中，可改造区是否能全部成宜居区，如果可以，则返回改造的大阳日天教，不可以则返回-1"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入row * column个网格数据，每个网格值枚举值如下: YES，NO，NA；\n样例:\nYES YES NO\nNO NO NO\nNA NO YES"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "可改造区是否能全部变成宜居区，如果可以，则返回改造的太阳日天数，不可以则返回-1。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "grid[i][j]只有3种情况，YES、NO、NA\nrow == grid.length\ncolumn == grid[i].length\n1 ≤ row, column ≤ 8"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nYES YES NO\nNO NO NO\nYES NO NO\n输出\n2",
+      "cases": [
+        {
+          "input": "YES YES NO\nNO NO NO\nYES NO NO",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "经过2个太阳日，完成宜居改造\n输入\nYES NO NO NO\nNO NO NO NO\nNO NO NO NO\nNO NO NO NO\n输出\n6\n\n经过6个太阳日，可完成改造\n输入\nNO NA\n输出\n-1\n\n无改造初始条件，无法进行改造\n输入\nYES NO NO YES\nNO NO YES NO\nNO YES NA NA\nYES NO NA NO\n输出\n-1\n\n-1 // 右下角的区域，被周边三个死亡区挡住，无法实现改造"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是图的多源BFS的经典题，解析可以参考：\n华为OD机试 - 计算疫情扩散时间（Java & JS & Python）_伏城之外的博客-CSDN博客"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "本题没有输入截止条件，因此，我将输入空行作为输入截止条件。\n2023.09.17\n根据考友反馈：\nJava和JS的可以使用空行作为输入截止条件，Python的貌似不可以。\nJava考友反馈\nJS考友反馈\nPython考友反馈\n关于无输入截止条件的ACM输入获取，可以参考下我这边篇博客\n华为OD机试关于无输入截止条件的ACM输入逻辑_伏城之外的博客-CSDN博客\n下面我将代码输入获取更新为最通用的处理方式，即上面博客第三种综合处理方式。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 算法入口\ndef getResult(matrix):\n    row = len(matrix)\n    col = len(matrix[0])\n\n    # 记录宜居取坐标位置\n    queue = []\n    # 记录可改造区数量\n    need = 0\n\n    for i in range(row):\n        for j in range(col):\n            if matrix[i][j] == \"YES\":\n                queue.append([i, j])\n            elif matrix[i][j] == \"NO\":\n                need += 1\n\n    # 如果没有宜居区,则无法改造,直接返回-1\n    if len(queue) == 0:\n        return -1\n    # 如果全是宜居区,则无需改造,直接返回0\n    elif len(queue) == row * col:\n        return 0\n\n    # 记录花费的天数\n    day = 0\n    # 上,下,左,右四个方向的偏移量\n    offsets = ((-1, 0), (1, 0), (0, -1), (0, 1))\n\n    # 图的多源BFS模板\n    while len(queue) > 0 and need > 0:\n        newQueue = []\n\n        for x, y in queue:\n            for offsetX, offsetY in offsets:\n                # 上,下,左,右四个方向扩散\n                newX = x + offsetX\n                newY = y + offsetY\n\n                # 如果新位置没有越界,且为NO,则可以被改造\n                if row > newX >= 0 and col > newY >= 0 and matrix[newX][newY] == \"NO\":\n                    matrix[newX][newY] = \"YES\"\n                    newQueue.append([newX, newY])\n                    need -= 1\n\n        day += 1\n        queue = newQueue\n\n    if need == 0:\n        return day\n    else:\n        return -1\n\n\n# 输入获取\nmatrix = []\n\n# 假设存在空行作为输入截止条件\n# while True:\n#     line = input()\n#     if line == \"\":\n#         print(getResult(matrix))\n#         break\n#     else:\n#         matrix.append(line.split())\n\n# 没有空行作为输入截止条件时\nwhile True:\n    try:\n        matrix.append(input().split())\n    except:\n        break\nprint(getResult(matrix))"
+  },
+  "verified": false
+}

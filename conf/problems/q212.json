@@ -1,0 +1,66 @@
+{
+  "id": "q212",
+  "title": "生日礼物",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小牛的孩子生日快要到了，他打算给孩子买蛋糕和小礼物，蛋糕和小礼物各买一个，他的预算不超过x元。蛋糕cake和小礼物gift都有多种价位的可供选择。\n请返回小牛共有多少种购买方案。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行表示cake的单价，以逗号分隔\n第二行表示gift的单价，以逗号分隔\n第三行表示x预算"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出数字表示购买方案的总数"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1 ≤ cake.length ≤ 10^5\n1 ≤ gift.length ≤10^5\n1 ≤ cake[i]，gift[i] ≤ 10^5\n1 ≤ X ≤ 2*10^5"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n10,20,5\n5,5,2\n15\n输出\n6",
+      "cases": [
+        {
+          "input": "10,20,5\n5,5,2\n15",
+          "output": "6",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "解释: 小牛有6种购买方案，所选蛋糕与所选礼物在数组中对应的下标分别是：\n第1种方案: cake [0] + gift [0] = 10 + 5 = 15;\n第2种方案: cake [0] + gift [1]= 10 + 5 = 15;\n第3种方案: cake [0] + gift [2] = 10 + 2 = 12;\n第4种方案: cake [2] + gift [0] = 5 + 5 = 10;\n第5种方案: cake [2] + gift [1]= 5 + 5 = 10;\n第6种方案: cake [2] + gift [2] = 5 + 2 = 7。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用二分查找解决。\n我的\n\n如下：\n由于蛋糕和小礼物各买一个，且总预算为x。\n因此，假设我们先买了蛋糕花了cake元，那么能用于买到的小礼物的最高价格就已经确定了，为x - cake元。因此只要<=x - cake元的小礼物，都可以可以cake元的蛋糕组合。\n为了避免花费O(n)时间在gifts中找<=x - cake元的小礼物，我们可以将gifts进行升序，然后通过二分查找x-cake元在升序后的gitfs中的位置\n二分查找目标值target在有序数组nums中的位置，有两种情况：\nnums中存在target，则二分查找最终会返回target在nums中的位置\nnums中不存在target，则二分查找会返回target在nums中的有序插入位置\n关于这两个位置的实现，可以看下面博客中二分查找部分：\n算法设计 - 二分法和三分法，洛谷P3382_三分法和二分法_伏城之外的博客-CSDN博客\n如果gifts进行升序后，二分查找x-cake元的位置 i ：\ni 是目标位置，则可以产生 i + 1 种组合\ni 是有序插入位置，则 i = -i -1，即需要先变为有序插入位置，而有序插入位置的必然 gitfs[i] >  x - cake，因此只能产生 i 种组合\n2023.06.12\n本题中如果存在多个相同的价格的蛋糕或者礼物，\n比如gifts数组升序后为：1,2,3,3,3,3,\n3\n,4\n而现在选择的蛋糕价格是3，总预算是6，那么gitfs最高价格可选3。\n因此，我们期望二分查找返回gifts中价格3的位置是6，即最后一个价格3的位置。\n而普通的二分查找，无法找最后一个目标值的位置，此时的解决思路是：\nLeetCode - 34 在排序数组中查找元素的第一个和最后一个位置_伏城之外的博客-CSDN博客\n另外，关于最终的购买方案，可能会存在价位重复的组合，那么是否需要去重？\n可以看下"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1中，第4种和第5种方案，是不需要去重的。\n2023.08.29\n根据考友实际考试反馈，本题实际机考系统中，存在20%的"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入格式如下：\n[10,20,5]\n[5,5,2]\n15\n即第一行，第二行输入多了一个左右方括号\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import re\n\n# 输入获取\n# 这里re.sub的原因是&#xff1a;有考友反馈实际考试存在20%的用例输入类似于 [10,20,5] 这种\ncakes = list(map(int, re.sub(r\"[\\[\\]]\", \"\", input()).split(\",\")))\ngifts = list(map(int, re.sub(r\"[\\[\\]]\", \"\", input()).split(\",\")))\nx = int(input())\n\n\ndef searchLast(arr, target):\n    low = 0\n    high = len(arr) - 1\n\n    while low <= high:\n        mid = (low + high) >> 1\n        midVal = arr[mid]\n\n        if midVal > target:\n            high = mid - 1\n        elif midVal < target:\n            low = mid + 1\n        else:\n            if mid == len(arr) - 1 or arr[mid] != arr[mid + 1]:\n                return mid\n            else:\n                low = mid + 1\n\n    return -low - 1\n\n\n# 算法入口\ndef getResult():\n    cakes.sort()\n\n    ans = 0\n    for gift in gifts:\n        if x <= gift:\n            continue\n\n        maxCake = x - gift\n        i = searchLast(cakes, maxCake)\n\n        if i >= 0:\n            ans += i + 1\n        else:\n            i = -i - 1\n            ans += i\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

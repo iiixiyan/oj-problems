@@ -1,0 +1,39 @@
+{
+  "id": "q527",
+  "title": "整数对最小和",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n给定两个整数数组array1、array2，数组元素按\n升序排列\n。\n假设从array1、array2中分别取出一个元素可构成一对元素，现在需要取出k对元素，\n并对取出的所有元素求和，计算和的\n最小值\n。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：\n两对元素如果对应于array1、array2中的两个下标均相同，则视为同一对元素。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入两行数组array1、array2，每行首个数字为数组大小size(0 < size <= 100);\n0 < array1[i] <= 1000\n0 < array2[i] <= 1000\n接下来一行为正整数k\n0 < k <= array1.size() * array2.size()"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "满足要求的最小和"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr1 = list(map(int, input().split()))[1:]\narr2 = list(map(int, input().split()))[1:]\nk = int(input())\n\n\n# 算法入口\ndef getResult():\n    pairs = []\n    for v1 in arr1:\n        for v2 in arr2:\n            pairs.append(v1 + v2)\n\n    pairs.sort()\n\n    sumV = 0\n    for i in range(k):\n        sumV += pairs[i]\n\n    return sumV\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

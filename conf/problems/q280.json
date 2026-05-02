@@ -1,0 +1,78 @@
+{
+  "id": "q280",
+  "title": "竖直四子棋",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "竖直四子棋的棋盘是竖立起来的，双方轮流选择棋盘的一列下子，棋子因重力落到棋盘底部或者其他棋子之上，当一列的棋子放满时，无法再在这列上下子。\n一方的4个棋子横、竖或者斜方向连成一线时获胜。\n现给定一个棋盘和红蓝对弈双方的下子步骤，判断红方或蓝方是否在某一步获胜。\n下面以一个6×5的棋盘图示"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "落子过程：\n下面给出横、竖和斜方向四子连线的图示："
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为2行，第一行指定棋盘的宽和高，为空格分隔的两个数字；\n第二行依次间隔指定红蓝双方的落子步骤，第1步为红方的落子，第2步为蓝方的落子，第3步为红方的落子，以此类推。\n步骤由空格分隔的一组数字表示，每个数字为落子的列的编号（最左边的列编号为1，往右递增）。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证数字均为32位有符号数。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "如果落子过程中红方获胜，输出 N,red ；\n如果落子过程中蓝方获胜，输出 N,blue ；\n如果出现非法的落子步骤，输出 N,error。\nN为落子步骤的序号，从1开始。如果双方都没有获胜，输出 0,draw 。\n非法落子步骤有两种，一是列的编号超过棋盘范围，二是在一个已经落满子的列上落子。\nN和单词red、blue、draw、error之间是英文逗号连接。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5 5\n1 1 2 2 3 3 4 4\n输出\n7,red",
+      "cases": [
+        {
+          "input": "5 5\n1 1 2 2 3 3 4 4",
+          "output": "7,red",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "在第7步，红方在第4列落下一子后，红方的四个子在第一行连成一线，故红方获胜，输出 7,red。\n输入\n5 5\n0 1 2 2 3 3 4 4\n输出\n1,error\n\n第1步的列序号为0，超出有效列编号的范围，故输出 1,error。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "纯逻辑题，我们只需要构造一个矩阵，并按照第二行输入来落子，需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是，当第7个及以后的落子，才可能会产生四连击，因此四连击判断放在step>=7中判断。\n另外，关于四连击的判断，要检查四个方向：\n水平方向\n垂直方向\n正斜边方向\n反斜边方向\n同时，需要以落子位置为中心，向当前方向两端发散检查。\n自测"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "5 5\n1 2 1 3 1 1 2 4 5 3 3 4 4 2 5 1\n输出：14,blue\n2023.07.31\n考虑到可能存在超过四子连珠的情况，因此isFour函数判断中，对应连续数量判断应该改为>=4更稳妥。\nJava算法源码",
+      "cases": [
+        {
+          "input": "",
+          "output": "14,blue\n2023.07.31\n考虑到可能存在超过四子连珠的情况，因此isFour函数判断中，对应连续数量判断应该改为>=4更稳妥。\nJava算法源码",
+          "explanation": ""
+        }
+      ]
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nc, r = map(int, input().split())\ncols = list(map(int, input().split()))\n\n# 构造棋盘,注意棋盘长宽都+1了,方便后面棋子获取\nmatrix = [[0] * (c + 1) for _ in range(r + 1)]\n# 上,左,左上,左下 偏移量\noffsets = ((-1, 0), (0, -1), (-1, -1), (-1, 1))\n\n\ndef isFour(x, y, player):\n    for offsetX, offsetY in offsets:\n        long = 1\n\n        # 向着某个方向延申判断是否存在相同子\n        x1, y1 = x, y\n        while True:\n            x1 += offsetX\n            y1 += offsetY\n            if r >= x1 >= 1 and c >= y1 >= 1 and matrix[x1][y1] == player:\n                long += 1\n            else:\n                break\n\n        # 向着上面方向的反方向延申判断是否存在相同子&#xff08;两个相反方向其实处于一条线上&#xff09;\n        x2, y2 = x, y\n        while True:\n            x2 -= offsetX\n            y2 -= offsetY\n            if r >= x2 >= 1 and c >= y2 >= 1 and matrix[x2][y2] == player:\n                long += 1\n            else:\n                break\n\n        # 如果此线可以形成四子连击,则直接返回true\n        if long >= 4:\n            return True\n\n    return False\n\n\n# 算法入口\ndef getResult():\n    # 这里i对应第几步,由于题目是从第1步开始算,而这里 i 从0开始算,因此最终返回要i+1\n    for i in range(len(cols)):\n        #  cols[i]代表第 i 步下在第几列\n        if cols[i] < 1 or cols[i] > c:\n            return f\"{i + 1},error\"\n\n        # player落子颜色&#xff1a;1代表红色,2代表蓝色\n        player = 1 if i % 2 == 0 else 2\n\n        # 落子逻辑\n        x, y = r, cols[i]\n        while matrix[x][y] > 0:\n            x -= 1  # 如果当前列底部有棋子,则需要往上查找\n            if x < 1:\n                return f\"{i + 1},error\"  # 如果当前列已经放满棋子,则报错\n\n        matrix[x][y] = player  # 如果当前列底部没有棋子,则可以放入\n\n        # i >= 6,即第七步及之后落子时,才可能产生四连击\n        if i >= 6 and isFour(x, y, player):\n            return f\"{i + 1},{'red' if player == 1 else 'blue'}\"\n\n    # 双方都没有获胜\n    return \"0,draw\"\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

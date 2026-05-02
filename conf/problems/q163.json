@@ -1,0 +1,62 @@
+{
+  "id": "q163",
+  "title": "全量和已占用字符集",
+  "score": 100,
+  "tags": [
+    "B卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定两个字符集合，一个是全量字符集，一个是已占用字符集，已占用字符集中的字符不能再使用。\n要求输出剩余可用字符集。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一个字符串 一定包含@，@前为全量字符集 @后的为已占用字符集\n已占用字符集中的字符一定是全量字符集中的字符\n字符集中的字符跟字符之间使用英文逗号隔开\n每个字符都表示为字符+数字的形式用英文冒号分隔，比如a:1标识一个a字符\n字符只考虑英文字母，区分大小写\n数字只考虑正整型 不超过100\n如果一个字符都没被占用 @标识仍存在，例如 a:3,b:5,c:2@"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出可用字符集\n不同的输出字符集之间用回车换行"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "输出的字符顺序要跟输入的一致，如下面"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "不能输出b:3,a:2,c:2\n如果某个字符已全部占用 则不需要再输出"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\na:3,b:5,c:2@a:1,b:2\n输出\na:2,b:3,c:2",
+      "cases": [
+        {
+          "input": "a:3,b:5,c:2@a:1,b:2",
+          "output": "a:2,b:3,c:2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "全量字符集为三个a，5个b，2个c\n已占用字符集为1个a，2个b\n由于已占用字符不能再使用\n因此剩余可用字符为2个a，3个b，2个c\n因此输出\na:2,b:3,c:2"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "考察字符串操作\n2023.06.30\n增加处理：7、如果一个字符都没被占用 @标识仍存在，例如 a:3,b:5,c:2@\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult():\n    all, used = s.split(\"&#64;\")\n\n    if used == \"\":\n        return all\n\n    allMap = {}\n    for k, v in list(map(lambda x: x.split(\":\"), all.split(\",\"))):\n        allMap[k] = int(v)\n\n    usedMap = {}\n    for k, v in list(map(lambda x: x.split(\":\"), used.split(\",\"))):\n        usedMap[k] = int(v)\n\n    for k in usedMap.keys():\n        # 已占用字符集中的字符一定是全量字符集中的字符\n        diff = allMap[k] - usedMap[k]\n        if diff > 0:\n            allMap[k] = diff\n        else:\n            # 如果某个字符已全部占用 则不需要再输出\n            allMap.pop(k)\n\n    return \",\".join(map(lambda x: \":\".join(map(str, x)), allMap.items()))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

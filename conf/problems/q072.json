@@ -1,0 +1,57 @@
+{
+  "id": "q072",
+  "title": "最小调整顺序次数、特异性双端队列",
+  "score": 100,
+  "tags": [
+    "A卷",
+    "队列"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有一个特异性的双端队列，该队列可以从头部或尾部添加数据，但是只能从头部移出数据。\n小A依次执行2n个指令往队列中添加数据和移出数据。其中n个指令是添加数据（可能从头部添加、也可能从尾部添加），依次添加1到n；n个指令是移出数据。\n现在要求移除数据的顺序为1到n。\n为了满足最后输出的要求，小A可以在任何时候调整队列中数据的顺序。\n请问 小A 最少需要调整几次才能够满足移除数据的顺序正好是1到n；"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行一个数据n，表示数据的范围。\n接下来的2n行，其中有n行为添加数据，指令为：\n\"\nhead add x\" 表示从头部添加数据 x，\n\"\ntail add x\" 表示从尾部添加数据x，\n另外 n 行为移出数据指令，指令为：\"remove\" 的形式，表示移出1个数据；\n1 ≤ n ≤ 3 * 10^5。\n所有的数据均合法。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "一个整数，表示 小A 要调整的最小次数。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\nhead add 1\ntail add 2\nremove\nhead add 3\ntail add 4\nhead add 5\nremove\nremove\nremove\nremove\n输出\n1",
+      "cases": [
+        {
+          "input": "5\nhead add 1\ntail add 2\nremove\nhead add 3\ntail add 4\nhead add 5\nremove\nremove\nremove\nremove",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题重在题目意思理解，本题最后要求：最小的\n调整顺序\n次数。而不是最小的交换次数。因此本题的难度大大降低了。\n比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "：\n1\nhead add 1\nqueue = [1]\n2\ntail add 2\nqueue = [1,2]\n3\nremove\n此时删除头部，顺序符合要求，因此不需要调整顺序，删除后，queue=[2]\n4\nhead add 3\nqueue = [3,2]\n5\ntail add 4\nqueue = [3,2,4]\n6\nhead add 5\nqueue = [5,3,2,4]\n7\nremove\n此时删除头部的元素应该是2，但实际是5，因此需要调整顺序，queue=[2,3,4,5]，然后再删除头部，queue = [3,4,5]\n8\nremove\n此时删除头部3\n9\nremove\n此时删除头部4\n10\nremove\n此时删除头部5\n因此，只需要在第7步调整一次顺序。\n本题不需要模拟出一个队列，因为那样需要频繁的验证队列元素顺序，以及调整顺序，非常不划算。\n我们可以总结规律：\n如果队列为空，即size===0，此时无论head add，还是tail add，都不会破坏队列顺序性。\n如果队列不为空，即size!==0，此时tail add不会破坏顺序性，head add会破坏顺序性。\n我们定义一个变量isSorted表示队列是否有序，初始时isSorted = true，表示初始时队列有序。当有序性被破坏，即isSorted = false。\nhead add和tail add会导致size++，remove会导致size--。\n我们定义一个count变量来记录调整顺序的次数，初始为0。\n当remove时，如果isSorted为false，则我们需要调整顺序，即count++，并更新isSorted = true。\n当head add时，如果size为0，则不破坏顺序性，isSorted为true，如果size不为0，则会破坏顺序性，即isSorted=false。另外size++。\n当tail add时，仅size++。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\ncmds = [input() for i in range(2 * n)]\n\n\n# 算法入口\ndef getResult(cmds):\n    size = 0\n    isSorted = True\n    count = 0\n\n    for cmd in cmds:\n        if cmd.startswith(\"head add\"):\n            if size > 0 and isSorted:\n                isSorted = False\n            size += 1\n        elif cmd.startswith(\"tail add\"):\n            size += 1\n        else:\n            if size <= 0:\n                continue\n\n            if not isSorted:\n                count += 1\n                isSorted = True\n\n            size -= 1\n\n    return count\n\n\n# 算法调用\nprint(getResult(cmds))"
+  },
+  "verified": false
+}

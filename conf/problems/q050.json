@@ -44,6 +44,8 @@
       ]
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nimport math\n\nt = int(input())\n# 注意这里需要转float\narr = [list(map(float, input().split())) for i in range(t)]\n\n\n# 算法入口\ndef getResult(arr):\n    for n, k in arr:\n        print(getNK(n, k))\n\n\ndef getNK(n, k):\n    # 题目没说异常如何处理,因此我默认输入无异常,比如n=1的话,则k只能取0\n    if n == 1:\n        return \"red\"\n\n    # n=2的话,则k只能取0或1\n    if n == 2:\n        if k == 0:\n            return \"blue\"\n        else:\n            return \"red\"\n\n    # 第n个字符串的一半长度half\n    half = math.pow(2, n - 2)\n\n    if k >= half:\n        return getNK(n - 1, k - half)\n    else:\n        return \"blue\" if getNK(n - 1, k) == \"red\" else \"red\"\n\n\n# 调用算法\ngetResult(arr)"
+  },
   "verified": false
 }

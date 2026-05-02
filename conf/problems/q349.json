@@ -1,0 +1,49 @@
+{
+  "id": "q349",
+  "title": "最小传输时延Ⅱ",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有M*N的节点矩阵，每个节点可以向8个方向（上、下、左、右及四个斜线方向）转发数据包，每个节点转发时会消耗固定时延，连续两个相同时延可以减少一个时延值（即当有K个相同时延的节点连续转发时可以减少K- 1个时延值），\n求左上角（0，0）开始转发数据包到右下角（M-1，N- 1）并转发出的最短时延。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行两个数字，M、N，接下来有M行，每行有N个数据，表示M* N的矩阵。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最短时延值。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 3\n0 2 2\n1 2 1\n2 2 1\n输出\n3",
+      "cases": [
+        {
+          "input": "3 3\n0 2 2\n1 2 1\n2 2 1",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n3 3\n2 2 2\n2 2 2\n2 2 2\n输出\n4\n\n（2 + 2 + 2 -（3-1))"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是求两点之间的最短路径。\n对于最短路径问题，最简单的求解思路就是BFS，但是BFS只适用于处理无权图的最短路径。\n所谓无权图，即图中各顶点之间的边没有权重，或者可以理解为各相连顶点之间距离相同。\n对于有权图的最短路径求解，有多种\n\n，比如Dijkstra，Floyed，Bellma-ford，SPFA。\n本题将使用SPFA算法来求解最短路径。\n所谓SPFA算法，其实就是对无权图的BFS算法的优化。\n在无权图的BFS扩散过程中，最先碰到终点的路径\n一定是\n最短路径，因为这条路径从起点到终点经历的节点数最少，而无权图中，相连节点之间的距离是相同的，因此路径中节点数越少，距离就越短。\n在有权图中的BFS扩散过程中，最先碰到终点的路径\n不一定是\n最短路径，此时各节点之间的距离是不同的，因此节点数少，不能代表路径就短。\n关于SPFA算法可以看下这个视频讲解：\nSPFA算法_哔哩哔哩_bilibili\n后面有时间会补充一篇博客。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nm, n = map(int, input().split())\nmatrix = [list(map(int, input().split())) for i in range(m)]\n\n# 最短距离矩阵\ndist = [[sys.maxsize for _ in range(n)] for _ in range(m)]\n\n# 八个方向的偏移量\noffsets = ((-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1))\n\n\n# 算法入口\ndef spfa():\n    queue = [[0, 0]]\n    dist[0][0] = matrix[0][0]\n\n    while len(queue) > 0:\n        x, y = queue.pop(0)\n\n        for offsetX, offsetY in offsets:\n            newX = x + offsetX\n            newY = y + offsetY\n\n            if m > newX >= 0 and n > newY >= 0:\n                newDist = dist[x][y] + matrix[newX][newY]\n\n                if matrix[newX][newY] == matrix[x][y] and matrix[newX][newY] >= 1:\n                    newDist -= 1\n\n                if newDist < dist[newX][newY]:\n                    dist[newX][newY] = newDist\n                    queue.append([newX, newY])\n\n    return dist[m-1][n-1]\n\n\n# 算法调用\nprint(spfa())"
+  },
+  "verified": false
+}

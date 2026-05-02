@@ -1,0 +1,51 @@
+{
+  "id": "q073",
+  "title": "最快到达医院的方法",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "新型冠状病毒疫情的肆虐，使得家在武汉的大壮不得不思考自己家和附近定点医院的具体情况。\n经过一番调查，大壮明白了距离自己家最近的定点医院有两家。其中：\n医院A和自己的距离是X公里\n医院B和自己的距离是Y公里\n由于武汉封城，公交停运，私家车不能上路，交通十分不便。现在：\n到达医院A只能搭乘志愿者计程车，已知计程车的平均速度是M米/分钟，上车平均等待时间为L分钟。\n到达医院B只能步行，平均速度是N米/分钟；\n给出X，Y，M，L，N的数据，请问大壮到达哪家医院最快？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一行，5个数。\n分别是到达A医院的距离，到达B医院的距离，计程车平均速度，上车等待时间，步行速度。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "一行，计程车（Taxi）、步行（Walk）、相等（Same）"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n50 5 500 30 90\n输出\nWalk",
+      "cases": [
+        {
+          "input": "50 5 500 30 90",
+          "output": "Walk",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题简单的有点过分。\n根据题目意思，去A只能Taxi，去B只能Walk，而对应的距离和速度都给出来了，因此解题逻辑应该没有什么悬念。\n这题难道在考察细心程度？就是距离单位是公里，速度单位是米/分钟？\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nx, y, m, l, n = map(float, input().split())\n\n\n# 算法入口\ndef getResult(x, y, m, l, n):\n    \"\"\"\n    :param x: 到达A医院的距离 (公里)\n    :param y: 到达B医院的距离 (公里)\n    :param m: 计程车平均速度  (米/分钟)\n    :param l: 上车等待时间    (分钟)\n    :param n: 步行速度        (米/分钟)\n    :return: 请问大壮到达哪家医院最快\n    \"\"\"\n    taxiToA = x * 1000 / m + l\n    walkToB = y * 1000 / n\n\n    if taxiToA == walkToB:\n        return \"Same\"\n    elif taxiToA > walkToB:\n        return \"Walk\"\n    else:\n        return \"Taxi\"\n\n\n# 算法调用\nprint(getResult(x, y, m, l, n))"
+  },
+  "verified": false
+}

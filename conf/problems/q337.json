@@ -1,0 +1,54 @@
+{
+  "id": "q337",
+  "title": "快速人名查找",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给一个字符串，表示用’,’分开的人名。\n然后给定一个字符串，进行快速人名查找，符合要求的输出。\n快速人名查找要求︰人名的每个单词的连续前几位能组成给定字符串，一定要用到每个单词。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行是人名，用’,’分开的人名\n第二行是 查找字符串"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出满足要求的人名"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nzhang san,zhang san san\nzs\n输出\nzhang san",
+      "cases": [
+        {
+          "input": "zhang san,zhang san san\nzs",
+          "output": "zhang san",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nzhang san san,zhang an sa,zhang hang,zhang seng,zhang sen a\nzhas\n输出\nzhang an sa,zhang seng\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题暂时没有想到更好的解法，只能通过暴力法求解。\n我的\n\n如下：\n比如人名为：zhang seng，前缀缩写为：zhas\n首先将人名字符串按照空格分隔为字符串数组，如Sting parts = [\"zhang\"，\"san\"]\n前缀缩写定义为 String abbr = \"zhas\"，用一个start指针指向abbr的被检查的字母，初始时start=0，即指向abbr的第0个字母。\n然后按照下图逻辑开始进行人名的每个part的前缀部分和abbr的匹配，匹配逻辑如下图所示：\nabbr开头字母必须首先要和parts[0]的开头字母匹配，如果无法匹配否则就表示当前人名无法缩写为abbr。\n通过上面图示，我们可以发现，parts[0]每匹配到一个abbr字母，就把下一次的匹配权让给了parts[1]，这是为什么呢？\n因为，这样可以避免abbr的扫描指针的回溯。啥意思呢？\n我们看看下面这个例子：\n人名：zhasta san\n缩写：zhasa\n如果优先parts[0]匹配的话，则必然会走到下面这种情况\n然后下一步匹配，就会出问题\n此时，我们就需要进行abbr的扫描指针回溯，然后将匹配权交到parts[1]手上。\n可能有人觉得这样匹配速度反而会更快一点，但是如果"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "是下面这种呢？\n人名：zhass san san\n缩写：zhass\n即我们可以在一个part中就完成了缩写匹配，但是题目要求所有的单词part都要使用到，此时我们应该如何回溯呢？\n这样的回溯操作逻辑将变得十分复杂，且性能不佳。因此我们需要尽量避免abbr的扫描指针回溯行为。\n如果，大家对上面部分都理解了，那么本题差不多就搞定了。\n上面例子都是两个part的人名，本题并没有说人名由几个part组成，因此我们无法确定要几重for循环解题，此时只能依赖于回溯递归来帮助我们。具体递归逻辑请看代码。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nnames = input().split(\",\")\nabbr = input()\n\n\n# 通过递归实现人名各部分和缩写的匹配\ndef recursive(parts, parts_index, abbr_index):\n    \"\"\"\n    :param parts: 人名组成\n    :param parts_index: 人名被匹配的组成部分的索引位置\n    :param abbr_index: 缩写被匹配的字符的索引位置\n    :return: 当前人名name是否匹配对应缩写abbr\n    \"\"\"\n    if abbr_index >= len(abbr):\n        # 如果缩写被匹配完,且人名组成也匹配到最后一个,则说明当前人名可以匹配对应缩写\n        return parts_index >= len(parts)\n\n    # 如果缩写尚未匹配完,但是人名组成已经匹配完,则说明当前人名无法匹配对应缩写\n    if parts_index >= len(parts):\n        return False\n\n    part_name = parts[parts_index]\n\n    for j in range(len(part_name)):\n        # 如果当前人名组成部分part_name的第 j 个字符 可以 匹配 缩写abbr的第 abbr_index个字符\n        if abbr_index < len(abbr) and part_name[j] == abbr[abbr_index]:\n            # 为了保证part_name匹配不回退,此时我们将缩写abbr的第abbr_index+1个字符的匹配权优先交给人名的parts_index + 1部分\n            abbr_index += 1\n            if recursive(parts, parts_index + 1, abbr_index):\n                return True\n        else:\n            return False\n\n    return False\n\n\n# 算法入口\ndef getResult():\n    ans = []\n\n    for name in names:\n        parts = name.split()\n\n        if len(parts) > len(abbr):\n            continue\n\n        if recursive(parts, 0, 0):\n            ans.append(name)\n\n    print(\",\".join(ans))\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

@@ -54,6 +54,8 @@
       "content": "来看，本题是要求解的是：不重复的指定长度的排列。且本题还增加了一个条件，即排列中相邻元素不能相同。\n而本题只需要在这两题的基础增加：排列中相邻元素不能相同即可。\nJS算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\ns, n = input().split()\nn = int(n)\n\n\n# 全排列求解\ndef dfs(cArr, pre, level, used, count):\n    \"\"\"\n    全排列求解\n    :param cArr: 基于cArr数组求解全排列\n    :param pre: 排列最后一个字符在cArr中的位置\n    :param level: 排列的长度\n    :param used: used[i] 用于标记 cArr[i] 元素是否已使用\n    :param count: 符号要求的排列有几个\n    :return: count\n    \"\"\"\n    # 当排列长度到达n,则是一个符合要求的排列\n    if level == n:\n        # 符合要求的排列个数+1\n        count += 1\n        return count\n\n    for i in range(len(cArr)):\n        # 每个字符只能用一次\n        if used[i]:\n            continue\n\n        # 相同的字符不能相邻, pre指向前面一个被选择的字符的在cArr中的位置,i指向当前被选择的字符在cArr中的位置\n        if pre >= 0 and cArr[i] == cArr[pre]:\n            continue\n\n        # 树层去重(去除重复排列)\n        if i > 0 and cArr[i] == cArr[i - 1] and not used[i - 1]:\n            continue\n\n        used[i] = True\n        count = dfs(cArr, i, level + 1, used, count)\n        used[i] = False\n\n    return count\n\n\n# 算法入口\ndef getResult():\n    if len(s) < n:\n        # 无法拼接出满足条件的字符串\n        return 0\n\n    for c in s:\n        if c < 'a' or c > 'z':\n            # 输入非法\n            return 0\n\n    cArr = list(s)\n    # 排序cArr,可以方便后面求解全排列时,进行树层去重\n    cArr.sort()\n\n    return dfs(cArr, -1, 0, [False] * len(cArr), 0)\n\n\n# 算法调用\nprint(getResult())"
+  },
   "verified": false
 }

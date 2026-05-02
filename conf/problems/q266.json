@@ -1,0 +1,73 @@
+{
+  "id": "q266",
+  "title": "最佳植树距离",
+  "score": 200,
+  "tags": [
+    "B卷",
+    "树"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "目录"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "JavaScript算法源码\nJava算法源码\nPython算法源码"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "按照环保公司要求，小明需要在沙化严重的地区进行植树防沙工作，初步目标是种植一条直线的树带。由于有些区域目前不适合种植树木，所以只能在一些可以种植的点来种植树木。\n在树苗有限的情况下，要达到最佳效果，就要尽量散开种植，不同树苗之间的最小间距要尽量大。给你一个适合种情树木的点坐标和一个树苗的数量，请帮小明选择一个最佳的最小种植间距。\n例如，适合种植树木的位置分别为1,3,5,6,7,10,13 树苗数量是3，种植位置在1,7,13，树苗之间的间距都是6，均匀分开，就达到了散开种植的目的，最佳的最小种植间距是6"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第1行表示适合种树的坐标数量\n第2行是适合种树的坐标位置\n第3行是树苗的数量\n例如：\n7\n1 5 3 6 10 7 13\n3"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最佳的最小种植间距"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "位置范围为1~10000000\n种植树苗的数量范围2~10000000"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "确保种桔的树苗数量不会超过有效种桔坐标数量"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n7\n1 5 3 6 10 7 13\n3\n输出\n6",
+      "cases": [
+        {
+          "input": "7\n1 5 3 6 10 7 13\n3",
+          "output": "6",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "3棵树苗分别种植在1，7，13位置时，树苗种植的最均匀，最小间距为6"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是\nLeetCode - 1552 两球之间的磁力_伏城之外的博客-CSDN博客\n的换皮题。\n\n请参考链接博客。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Java": "Python算法源码\n题目描述\n按照环保公司要求，小明需要在沙化严重的地区进行植树防沙工作，初步目标是种植一条直线的树带。由于有些区域目前不适合种植树木，所以只能在一些可以种植的点来种植树木。\n在树苗有限的情况下，要达到最佳效果，就要尽量散开种植，不同树苗之间的最小间距要尽量大。给你一个适合种情树木的点坐标和一个树苗的数量，请帮小明选择一个最佳的最小种植间距。\n例如，适合种植树木的位置分别为1,3,5,6,7,10,13 树苗数量是3，种植位置在1,7,13，树苗之间的间距都是6，均匀分开，就达到了散开种植的目的，最佳的最小种植间距是6\n输入描述\n第1行表示适合种树的坐标数量\n第2行是适合种树的坐标位置\n第3行是树苗的数量\n例如：\n7\n1 5 3 6 10 7 13\n3\n输出描述\n最佳的最小种植间距\n备注\n位置范围为1~10000000\n种植树苗的数量范围2~10000000\n用例确保种桔的树苗数量不会超过有效种桔坐标数量\n用例\n输入\n7\n1 5 3 6 10 7 13\n3\n输出\n6\n说明\n3棵树苗分别种植在1，7，13位置时，树苗种植的最均匀，最小间距为6\n题目解析\n本题是\nLeetCode - 1552 两球之间的磁力_伏城之外的博客-CSDN博客\n的换皮题。题解请参考链接博客。",
+    "Python": "# 输入获取\nn = int(input())\npositions = list(map(int, input().split()))\nm = int(input())\n\n\ndef check(minDis):\n    count = 1\n    curPos = positions[0]\n\n    for i in range(1, n):\n        if positions[i] - curPos >= minDis:\n            count += 1\n            curPos = positions[i]\n\n    return count >= m\n\n\n# 算法入口\ndef getResult():\n    positions.sort()\n\n    low = 1\n    high = positions[-1] - positions[0]\n    ans = 0\n\n    while low <= high:\n        mid = (low + high) >> 1\n\n        if check(mid):\n            ans = mid\n            low = mid + 1\n        else:\n            high = mid - 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

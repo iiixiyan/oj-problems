@@ -1,0 +1,68 @@
+{
+  "id": "q484",
+  "title": "二叉树的广度优先遍历",
+  "score": 200,
+  "tags": [
+    "C卷",
+    "树",
+    "搜索"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有一棵二叉树，每个节点由一个大写字母标识(最多26个节点）。\n现有两组字母，分别表示后序遍历（左孩子->右孩子->父节点）和中序遍历（左孩子->父节点->右孩子）的结果，请你输出层序遍历的结果。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "每个输入文件一行，第一个字符串表示后序遍历结果，第二个字符串表示中序遍历结果。（每串只包含大写字母）\n中间用单空格分隔。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出仅一行，表示层序遍历的结果，结尾换行。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nCBEFDA CBAEDF\n输出\nABDCEF",
+      "cases": [
+        {
+          "input": "CBEFDA CBAEDF",
+          "output": "ABDCEF",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "二叉树为：\nA\n/   \\\nB    D\n/      /  \\\nC    E   F"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "二叉树的三种遍历方式：\n前（根）序遍历：\n根\n左右\n中（根）序遍历：左\n根\n右\n后（根）序遍历：左右\n根\n可以发现，其实前、中、后指的是\n根\n的位置，而左右的顺序是不变的，即总是先左后右。\n比如，下面是一个最简单的二叉树结构\n其前序遍历结果为：ABC，中序遍历结果为BAC，后序遍历结果为BCA。\n而层序遍历，指的是，从树的顶层开始向下，每层中按照从左向右的顺序遍历节点，因此上图层序遍历结果为ABC。\n可能有人会将层序遍历和前序遍历混淆，但是二者是不同的，比如：\n前序遍历结果为：ABDC\n层序遍历结果为：ABCD\n有了以上关于二叉树遍历的知识后，我们就可以进行"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "分析了，"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入提供了一个二叉树的\n后序遍历CBEFDA，以及中序遍历CBAEDF的结果。\n首先，我们可以根据后序遍历，快速找到树根，即CBEFD\nA\n中的A，因为根据\n左右根\n遍历顺序，最后一个遍历元素肯定是这颗树的根节点。\n而找到根节点A后，我们又可以在中序遍历的\n左根右\n遍历顺序，找到A根的左、右子树，即中序遍历中A节点的左边就是A根的左子树，右边就是A根的右子树。\n而找到左右子树后，我们可以根据后序遍历，再分别找到左、右子树的根，然后再根据中序遍历结果，再找出左子树根的左右子树，以及右子树的左右子树。\n过程如下图所示：\n当我们找到的根的左右子树只有1个节点，或没有节点时，则可以停止递归。\n当递归完成后，就还原出了一颗树，接下来根据层序遍历规则，即可以得到结果：ABDCEF。\n本"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "题，貌似需要深度优先搜索DFS来生成树结构，其实不然，我们完全可以改变策略，使用广度优先搜索BFS，来实现层序遍历效果，避免构造树结构，进行二次搜索。\nBFS实现层序遍历的逻辑如下：\n首先，根据后序遍历结果，找到根A，然后根据中序遍历结果找到根A的左、右子树。\n然后，我们就得到了根A左、右子树各自的长度\n根据左右子树的长度，我们就可以从后序遍历结果中，截取出左、右子树，然后又可以得到左、右子树各自的根（即最后一个元素）。\n我们，每次优先遍历子树的根，然后再遍历子树的左右子树。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\npost, mid = input().split()\n\n\ndef devideLR(post, mid, queue, ans):\n    \"\"\"\n    本方法用于从后序遍历、中序遍历序列中分离出&#xff1a;根,以及其左、右子树的后序、中序遍历序列\n    :param post: 后序遍历结果\n    :param mid: 中序遍历结果\n    :param queue: BFS的执行队列\n    :param ans: 题解\n    \"\"\"\n    # 后序遍历的最后一个元素就是根\n    rootEle = post[-1]\n    # 将根加入题解\n    ans.append(rootEle)\n\n    # 在中序遍历中找到根的位置rootIdx,那么该位置左边就是左子树,右边就是右子树\n    rootIdx = mid.find(rootEle)\n\n    # 左子树长度,左子树是中序遍历的0~rootIdx-1范围,长度为rootIdx\n    leftLen = rootIdx\n\n    # 如果存在左子树,即左子树长度大于0\n    if leftLen > 0:\n        leftPost = post[:leftLen]  # 则从后序遍历中,截取出左子树的后序遍历\n        leftMid = mid[:rootIdx]  # 从中序遍历中,截取出左子树的中序遍历\n        queue.append([leftPost, leftMid])  # 将左子树的后、中遍历序列加入执行队列\n\n    # 如果存在右子树,即右子树长度大于0\n    if len(post) - 1 - leftLen > 0:\n        rightPost = post[leftLen:-1]  # 则从后序遍历中,截取出右子树的后序遍历\n        rightMid = mid[rootIdx + 1:]  # 从中序遍历中,截取出右子树的中序遍历\n        queue.append([rightPost, rightMid])  # 将右子树的后、中遍历序列加入执行队列\n\n\n# 算法入口\ndef getResult(post, mid):\n    # 广度优先搜索的执行队列,先加入左子树,再加入右子树\n    queue = []\n    # 层序遍历出来的元素存放在ans中\n    ans = []\n\n    devideLR(post, mid, queue, ans)\n\n    while len(queue) > 0:\n        post, mid = queue.pop(0)\n        devideLR(post, mid, queue, ans)\n\n    return \"\".join(ans)\n\n\n# 算法调用\nprint(getResult(post, mid))"
+  },
+  "verified": false
+}

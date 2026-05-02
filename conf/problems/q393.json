@@ -1,0 +1,71 @@
+{
+  "id": "q393",
+  "title": "分配土地",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "从前有个村庄，村民们喜欢在各种田地上插上小旗子，旗子上标识了各种不同的数字。\n某天集体村民决定将覆盖相同数字的最小矩阵形的土地分配给村里做出巨大贡献的村民，请问此次分配土地，做出贡献的村民种最大会分配多大面积?"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入 m 和 n，\nm 代表村子的土地的长\nn 代表土地的宽\n第二行开始输入地图上的具体标识"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "此次分配土地，做出贡献的村民种最大会分配多大面积"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "旗子上的数字为1~500，土地边长不超过500\n未插旗子的土地用0标识"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 3\n1 0 1\n0 0 0\n0 1 0\n输出\n9",
+      "cases": [
+        {
+          "input": "3 3\n1 0 1\n0 0 0\n0 1 0",
+          "output": "9",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "土地上的旗子为1，其坐标分别为(0,0)，(2,1)以及(0,2)，为了覆盖所有旗子，矩阵需要覆盖的横坐标为0和2，纵坐标为0和2，所以面积为9，即（2-0+1）*（2-0+1）= 9\n输入\n3 3\n1 0 2\n0 0 0\n0 3 4\n输出\n1\n\n由于不存在成对的小旗子，故而返回1，即一块土地的面积。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "根据"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "来看，最小矩形需要覆盖相同数字得所有旗子。\n土地上的旗子为1，其坐标分别为(0,0)，(2,1)以及(0,2)，\n为了覆盖所有旗子\n，矩阵需要覆盖的横坐标为0和2，纵坐标为0和2，所以面积为9，即（2-0+1）*（2-0+1）= 9\n但是这产生一个问题？比如下图所示：\n如果我要覆盖住所有的数字1，那么必然会同时覆盖了数字2，3，此时该怎么办呢？\n题目没有说怎么处理，那么我理解就不需要管，只需要保证覆盖所有1的矩形最小就行。\n本"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "题思路很简单，只需要统计出相同数字的出现的“所有坐标位置”中：\n最小的横坐标（矩形最上面一行的行号）\n最大的横坐标（矩形最下面一行的行号）\n最小的纵坐标（矩形最左边一列的列号）\n最大的纵坐标（矩形最右边一列的列号）\n即可。比如：前面图示中数字1的所有坐标位置(1,1)、(1,3)、(2,4)、(3,1)、(3,3)中：\n最小的横坐标：1\n最大的横坐标：3\n最小的纵坐标：1\n最大的纵坐标：4\n那么包含所有数字1的最小矩形面积为：\n(最大的横坐标 - 最小的横坐标 + 1) * (最大的纵坐标 - 最小的纵坐标 + 1)\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n\nclass Rect:\n    def __init__(self):\n        self.minRow = sys.maxsize\n        self.maxRow = -sys.maxsize\n        self.minCol = sys.maxsize\n        self.maxCol = -sys.maxsize\n\n    def setRow(self, row):\n        self.minRow = min(self.minRow, row)\n        self.maxRow = max(self.maxRow, row)\n\n    def setCol(self, col):\n        self.minCol = min(self.minCol, col)\n        self.maxCol = max(self.maxCol, col)\n\n\n# 输入获取\nm, n = map(int, input().split())\n\nrects = {}\n\nfor i in range(m):\n    nums = list(map(int, input().split()))\n    for j in range(n):\n        num = nums[j]\n\n        if num > 0:\n            rects.setdefault(num, Rect())\n            rects[num].setRow(i)\n            rects[num].setCol(j)\n\nmaxArea = 0\nfor num in rects:\n    rect = rects[num]\n\n    maxArea = max(maxArea, (rect.maxRow - rect.minRow + 1) * (rect.maxCol - rect.minCol + 1))\n\nprint(maxArea)"
+  },
+  "verified": false
+}

@@ -1,0 +1,51 @@
+{
+  "id": "q167",
+  "title": "分班",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "幼儿园两个班的小朋友在排队时混在了一起，每位小朋友都知道自己是否与前面一位小朋友同班，请你帮忙把同班的小朋友找出来。\n小朋友的编号是整数，与前一位小朋友同班用Y表示，不同班用N表示。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为空格分开的小朋友编号和是否同班标志。\n比如：6/N 2/Y 3/N 4/Y，表示4位小朋友，2和6同班，3和2不同班，4和3同班。\n其中，小朋友总数不超过999，每个小朋友编号大于0，小于等于999。\n不考虑输入格式错误问题。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出为两行，每一行记录一个班小朋友的编号，编号用空格分开，且：\n编号需按照大小升序排列，分班记录中第一个编号小的排在第一行。\n若只有一个班的小朋友，第二行为空行。\n若输入不符合要求，则直接输出字符串ERROR。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1/N 2/Y 3/N 4/Y\n输出\n1 2\n3 4",
+      "cases": [
+        {
+          "input": "1/N 2/Y 3/N 4/Y",
+          "output": "1 2\n3 4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "2的同班标记为Y，因此和1同班。\n3的同班标记为N，因此和1、2不同班。\n4的同班标记为Y，因此和3同班。\n所以1、2同班，3、4同班，输出为\n1 2\n3 4\n输入\n1/N 2/Y 3/N 4/Y 5/Y\n输出\n1 2\n3 4 5\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题应该只是逻辑分析题。\n我的\n\n如下：\n定义一个标志preBelongToOne，记录前一个小朋友是否属于一班，初始时为false，表示不属于一班。\n然后遍历排队的小朋友，被遍历的小朋友为kid，然后kid的标志如果是Y，则表示和前面一个小朋友同班，否则不同班。我们定义一个标志 isSameWithPre，来记录当前kid是否和前面一个小朋友同班。\n如果 preBelongToOne == true，则前一个小朋友属于一班：\n若 isSameWithPre == true，则当前小朋友也属于一班\n若 isSameWithPre == false，则当前小朋友属于二班，同时当前小朋友变为新的前一个小朋友，即需要更新preBelongToOne = false\n如果 preBelongToOne == false，则前一个小朋友属于二班：\n若 isSameWithPre == true，则当前小朋友也属于二班\n若 isSameWithPre == false，则当前小朋友属于一班，同时当前小朋友变为新的前一个小朋友，即需要更新preBelongToOne = true\n之后就是关注题目的校验要求和打印要求。\n关于校验要求，如果不符合下面要求，打印“None”：\n小朋友总数不超过999\n999 >= 小朋友编号 > 0\n关于打印要求：\n一班、二班需要各自升序，且比较第一个小朋友编号小的，则首先打印\n如果二班没有小朋友，则打印空行\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult():\n    kids = list(map(lambda x: x.split(\"/\"), s.split()))\n\n    # 小朋友总数不超过999\n    if len(kids) > 999:\n        # 若输入不符合要求,则直接输出字符串ERROR\n        print(\"ERROR\")\n        return\n\n    one = []\n    two = []\n\n    # 第一个小朋友前面没有人,因此第一个小朋友不可能和前面不存在的人同班\n    if kids[0][1] == \"Y\":\n        print(\"ERROR\")\n        return\n\n    preBelongToOne = False\n\n    for kid in kids:\n        idx = int(kid[0])\n\n        # 每个小朋友编号大于0,小于等于999\n        if idx <= 0 or idx > 999:\n            # 若输入不符合要求,则直接输出字符串ERROR\n            print(\"ERROR\")\n            return\n\n        isSameWithPre = \"Y\" == kid[1]\n\n        if preBelongToOne:\n            if isSameWithPre:\n                one.append(idx)\n            else:\n                two.append(idx)\n                preBelongToOne = False\n        else:\n            if isSameWithPre:\n                two.append(idx)\n            else:\n                one.append(idx)\n                preBelongToOne = True\n\n    # 编号需按照大小升序排列\n    one.sort()\n    oneStr = \" \".join(map(str, one))\n\n    # 若只有一个班的小朋友,第二行为空行。\n    if len(two) == 0:\n        print(oneStr)\n        print(\"\")\n        return\n\n    # 编号需按照大小升序排列\n    two.sort()\n    twoStr = \" \".join(map(str, two))\n\n    # 分班记录中第一个编号小的排在第一行\n    if one[0] < two[0]:\n        print(oneStr)\n        print(twoStr)\n    else:\n        print(twoStr)\n        print(oneStr)\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

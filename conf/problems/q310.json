@@ -1,0 +1,46 @@
+{
+  "id": "q310",
+  "title": "最大矩阵和",
+  "score": 100,
+  "tags": [
+    "矩阵"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个二维整数矩阵，要在这个矩阵中选出一个子矩阵，使得这个子矩阵内所有的\n数字和\n尽量大，我们把这个子矩阵称为\n和最大\n子矩阵，子矩阵的选取原则是原矩阵中一块相互连续的矩形区域。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的第一行包含2个整数n, m(1 <= n, m <= 10)，表示一个n行m列的矩阵，下面有n行，每行有m个整数，同一行中，每2个数字之间有1个空格，最后一个数字后面没有空格，所有的数字的在[-1000, 1000]之间。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一行一个数字，表示选出的和最大子矩阵内所有的数字和。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 4\n-3 5 -1 5\n2 4 -2 4\n-1 3 -1 3\n输出\n20",
+      "cases": [
+        {
+          "input": "3 4\n-3 5 -1 5\n2 4 -2 4\n-1 3 -1 3",
+          "output": "20",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "一个3*4的矩阵中，后面3列的子矩阵求和加起来等于20，和最大。\n题目分析\n看到这个题目标题，我很容易就联想到了最大子数组和，关于最大子数组和可以参考：\nLeetCode - 53 最大子数组和-CSDN博客\n区别在于最大子数组和是一维的，而最大子矩阵和是二维的。\n那么是不是有可能将最大子矩阵和的求解转成一维的呢？\n下面是子矩阵可能存在的区域，即一行子矩阵，两行子矩阵，三行子矩阵\n进一步简化，可得下图，即对求解下面每个区域的最大子矩阵\n此时因为子矩阵的行数已经确定，因此我们可以将多行压缩为一行\n此时对于最大子矩阵和的求解，就变为了最大子数组和的求解。\n而最大子数组和的求解的状态转移方程我们已经在前一小结总结出来了：\ndp[i] = max(dp[i-1], 0) + nums[i]。\n还有一个难点就是二维数组压缩为一维数组的问题，解决思路如下，获取二维数组的行数rows、列数cols，创建一个长度为cols的一维数组，然后将二维数组双重for循环，外层遍历cols，内层遍历rows，这样每次循环就可以得到二维数组一个列上的所有元素，然后求和存入一维数组中，实现如下"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn, m = map(int, input().split())\nmatrix = [list(map(int, input().split())) for i in range(n)]\n\n\n# 最大子数组和求解\ndef maxSubArraySum(nums):\n    dp = [0 for i in range(len(nums))]\n    res = dp[0] = nums[0]\n\n    for i in range(1, len(nums)):\n        dp[i] = max(dp[i - 1], 0) + nums[i]\n        res = max(res, dp[i])\n\n    return res\n\n\n# 将多行子矩阵,压缩为一维数组\ndef matrixZip(matrix):\n    cols = len(matrix[0])\n    rows = len(matrix)\n    zip = [0 for i in range(cols)]\n\n    for c in range(cols):\n        for r in range(rows):\n            zip[c] += matrix[r][c]\n\n    return zip\n\n\n# 算法入口\ndef getResult(n, m, matrix):\n    dp = []\n\n    for i in range(n):\n        dp.append(maxSubArraySum(matrix[i]))\n        for j in range(i + 1, n):\n            dp.append(maxSubArraySum(matrixZip(matrix[i:j + 1])))\n\n    dp.sort()\n\n    return dp[-1]\n\n\n# 算法调用\nprint(getResult(n, m, matrix))"
+  },
+  "verified": false
+}

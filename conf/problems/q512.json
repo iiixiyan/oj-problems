@@ -1,0 +1,39 @@
+{
+  "id": "q512",
+  "title": "单词接龙",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n单词接龙的规则是：\n可用于接龙的单词首字母必须要前一个单词的尾字母相同；\n当存在多个首字母相同的单词时，取长度最长的单词，如果长度也相等，则取字典序最小的单词；已经参与接龙的单词不能重复使用。\n现给定一组全部由小写字母组成单词数组，并指定其中的一个单词作为起始单词，进行单词接龙，\n请输出最长的单词串，单词串是单词拼接而成，中间没有空格。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的第一行为一个非负整数，表示起始单词在数组中的索引K，0 <= K < N ；\n输入的第二行为一个非负整数，表示单词的个数N；\n接下来的N行，分别表示单词数组中的单词。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "：\n单词个数N的取值范围为[1, 20]；\n单个单词的长度的取值范围为[1, 30]；"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个字符串，表示最终拼接的单词串。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nk = int(input())\nn = int(input())\nwords = [input() for _ in range(n)]\n\n\n# 算法入口\ndef getResult():\n    chain = [words.pop(k)]\n\n    prefix = {}\n    for word in words:\n        w = word[0]\n        if prefix.get(w) is None:\n            prefix[w] = []\n        prefix[w].append(word)\n\n    for w in prefix.keys():\n        prefix[w].sort(key=lambda x: (-len(x), [ord(i) for i in x]))\n\n    while True:\n        tail = chain[-1][-1]\n\n        if prefix.get(tail):\n            chain.append(prefix[tail].pop(0))\n        else:\n            break\n\n    return \"\".join(chain)\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

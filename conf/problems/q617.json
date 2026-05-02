@@ -1,0 +1,34 @@
+{
+  "id": "q617",
+  "title": "最大社交距离",
+  "score": 200,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n疫情期间需要大家保证一定的社交距离，公司组织开交流会议。座位一排共 N 个座位，编号分别为[0,N-1],\n要求员工一个接着一个进入会议室，并且可以在任何时候离开会议室。\n满足：\n每当一个员工进入时，需要坐到最大社交距离（最大化自己和其他人的距离的座位）；\n如果有多个这样的座位，则坐到索引最小的那个座位。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "会议室座位总数 seatNum\n1 ≤ seatNum ≤ 500\n员工的进出顺序 seatOrLeave 数组\n元素值为 1，表示进场\n元素值为负数，表示出场（特殊：位置 0 的员工不会离开）\n例如 -4 表示坐在位置 4 的员工离开（保证有员工坐在该座位上）"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最后进来员工，他会坐在第几个位置，如果位置已满，则输出-1。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nseatNum = int(input())\nseatOrLeave = eval(input())\n\n\n# 算法入口\ndef getResult():\n    # 记录已经坐人位置的序号\n    seatIdx = []\n\n    # 记录题解\n    lastSeatIdx = -1\n\n    # 遍历员工的进出顺序\n    for info in seatOrLeave:\n        # 如果当前元素值为负数,表示出场&#xff08;特殊&#xff1a;位置 0 的员工不会离开&#xff09;\n        # 例如 -4 表示坐在位置 4 的员工离开&#xff08;保证有员工坐在该座位上&#xff09;\n        if info < 0:\n            leaveIdx = -info\n            seatIdx.remove(leaveIdx)\n            continue\n\n        # 如果当前元素值为 1,表示进场\n        # 如果没有空闲位置,则坐不下\n        if len(seatIdx) == seatNum:\n            lastSeatIdx = -1\n            continue\n\n        if len(seatIdx) == 0:\n            # 当前人员进场前,座位上没有人,则当前人员是第一个进场的,直接坐第0个位置\n            seatIdx.append(0)\n            lastSeatIdx = 0\n        elif len(seatIdx) == 1:\n            # 当前人员进场前,座位上只有一个人,那么这个人肯定坐在第0个位置,则当前进场的人坐在 seatNum - 1 位置才能离 0 位置最远\n            seatIdx.append(seatNum - 1)\n            lastSeatIdx = seatNum - 1\n        else:\n            # 记录具有最大社交距离的座位号\n            bestSeatIdx = -1\n            # 记录最大社交距离\n            bestSeatDis = -1\n\n            # 找到连续空闲座位区域&#xff08;该区域左、右边界是坐了人的座位&#xff09;\n\n            left = seatIdx[0]  # 左边界\n            for i in range(1, len(seatIdx)):\n                right = seatIdx[i]  # 右边界\n\n                # 连续空闲座位区域的长度\n                dis = right - left - 1\n\n                # 如果连续空闲座位区域长度为0,则无法坐人,此时遍历下一个连续空闲座位区域\n                # 如果连续空闲座位区域长度大于0,则可以坐人\n                if dis > 0:\n                    # 当前空闲区域能产生的最大社交距离\n                    curSeatDis = dis // 2 - (1 if dis % 2 == 0 else 0)\n                    # 当前空闲区域中具备最大社交距离的位置\n                    curSeatIdx = left + curSeatDis + 1\n\n                    # 保留最优解\n                    if curSeatDis > bestSeatDis:\n                        bestSeatDis = curSeatDis\n                        bestSeatIdx = curSeatIdx\n\n                left = right\n\n            # 如果最后一个座位,即第 seatNum - 1 号座位没有坐人的话,比如 1 0 0 0 1 0 0 0 0,此时最后一段空闲区域是没有右边界的,需要特殊处理\n            if seatIdx[-1] < seatNum - 1:\n                # 此时可以直接坐到第 seatNum - 1 号座位,最大社交距离为 curSeatDis\n                curSeatDis = seatNum - 1 - seatIdx[-1] - 1\n                curSeatIdx = seatNum - 1\n\n                # 保留最优解\n                if curSeatDis > bestSeatDis:\n                    bestSeatIdx = curSeatIdx\n\n            # 如果能坐人,则将坐的位置加入seatIdx中\n            if bestSeatIdx > 0:\n                seatIdx.append(bestSeatIdx)\n                seatIdx.sort()\n\n            # 假设当前人就是最后一个人,那么无论当前人是否能坐进去,都更新lastSeatIdx = bestSeatIdx\n            lastSeatIdx = bestSeatIdx\n\n    return lastSeatIdx\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

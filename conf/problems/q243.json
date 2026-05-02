@@ -1,0 +1,62 @@
+{
+  "id": "q243",
+  "title": "二叉树中序遍历",
+  "score": 200,
+  "tags": [
+    "B卷",
+    "树"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "根据给定的二叉树结构描述字符串，输出该二叉树按照中序遍历结果字符串。中序遍历顺序为：左子树，根结点，右子树。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "由大小写字母、左右大括号、逗号组成的字符串:字母代表一个节点值，左右括号内包含该节点的子节点。\n左右子节点使用逗号分隔，逗号前为空则表示左子节点为空，没有逗号则表示右子节点为空。\n二叉树节点数最大不超过100。\n注:输入字符串格式是正确的，无需考虑格式错误的情况。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个字符串为二叉树中序遍历各节点值的拼接结果。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\na{b{d,e{g,h{,i}}},c{f}}\n输出\ndbgehiafc",
+      "cases": [
+        {
+          "input": "a{b{d,e{g,h{,i}}},c{f}}",
+          "output": "dbgehiafc",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "按照题目意思，"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "对应的二叉树如下：\n按照中序遍历规则，左根右，遍历结果为：dbgehiafc 。\n本题首先需要从给定字符串中解析出根、左子树、右子树信息，但是如果是从外到内解析，比如先提取最大的根：a，以及它的左右子树，那么将非常困难。大家可以尝试下。\n我的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "是，利用栈结构，找到匹配的{,}，然后提取出根、以及其左右子树，实现如下：\n首先定义两个栈结构stack，idxs，\n然后，遍历输入的字符串的字符：默认将非 } 的字符都压入stack栈中，如果遇到 { 字符，则记录它被压入stack栈中的索引位置到idxs中。\n如果遇到 } 字符\n则弹出idxs栈顶的 { 索引值idx，此时我们可以根据idx索引得到：\n一颗子树的根，即stack[idx-1]，比如\nh\n：a{b{d,e{g,\nh\n{\n,i\n根下的左右叶子：即stack的idx+1~stack.size-1，比如,i ：a{b{d,e{g,\nh{\n,i\n因此，遇到 } 字符，意味着，我们就能够解析出一颗子树。\n当解析出子树的根、以及左右叶子后，我们需要将这个子树按照中序遍历的特点重组为一个叶子节点，比如上面例子中，解析出子树的根为h，其左叶子为空，右叶子为i，则按照中序遍历，可以将该子树重组 \"\" + h + i ，得到一个值为 hi 得叶子。\n即此时stack栈内容为：a{b{d,e{g,\nhi\n之后再遇到 }，则重复该逻辑，比如\na{b{d,\ngehi\na{\ndbgehi\na{\ndbgehi,\na{\ndbgehi,c\na{\ndbgehi,c{\na{\ndbgehi,c{f\na{\ndbgehi,\nfc\ndbgehiafc\n上面过程画图，如下所示\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult(s):\n    idxs = []\n    stack = []\n\n    for i in range(len(s)):\n        c = s[i]\n\n        if c == '}':\n            idx = idxs.pop()  # 左括号索引\n            root = stack[idx - 1]  # 根\n\n            left, right = \"\", \"\"\n            tmp = \"\".join(stack[(idx + 1):]).split(\",\")\n            if len(tmp) == 1:  # 对应c{f}这种没有右子节点的情况\n                left = tmp[0]\n            else:\n                left, right = tmp\n\n            stack = stack[:idx - 1]\n            stack.append(left + root + right)\n            continue\n\n        if c == '{':\n            idxs.append(len(stack))\n\n        stack.append(c)\n\n    return stack[0]\n\n\n# 算法调用\nprint(getResult(s))"
+  },
+  "verified": false
+}

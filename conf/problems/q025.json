@@ -67,6 +67,8 @@
       "content": "存在区间之和可以整除k。\n2023.08.19 根据考友反馈，本题python代码输入获取逻辑存在问题，\n本题的输入是没有截止条件的，因此我这边默认将输入空行作为截止条件。\n但是考到这题的考友反馈，这题按这种逻辑处理输入是不行的，需要死循环获取输入，每获取到一组输入，就要立即输出对应解。\n核心代码逻辑没问题，可以100%。\nJS算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "def isExist(nums, m):\n    remain = set()\n    remain.add(0)\n\n    total = 0\n    for num in nums:\n        total += num\n        if total % m in remain:\n            return 1\n        else:\n            remain.add(total % m)\n\n    return 0\n\n\n# 输入获取\nwhile True:\n    try:\n        n, m = map(int, input().split())\n        nums = list(map(int, input().split()))\n        print(isExist(nums, m))\n    except ValueError:\n        break"
+  },
   "verified": false
 }

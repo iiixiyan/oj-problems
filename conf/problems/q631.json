@@ -1,0 +1,25 @@
+{
+  "id": "q631",
+  "title": "100分-空间占用计算(JavaPyCC++JsGo)",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "100\n分\n-\n空间占用计算\n员工\nA\n的磁盘空间经常被耗尽，他需要找到占用空间最大的目录或文件，然后决定如何清理文件释放空间。\n给定某一目录，请编写程序帮助他统计该目录内一级子目录和文件的占用空间，并返回目标目录一级子项（文件或子目录）中占用空间最大的项。\n规则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：\n目录占用空间为其内部所有文件\nSize\n的总和，目录本身\nSize\n为\n0\n。\n目录深度不高于\n7\n层，目录或文件名总长度不超过\n128\n字节。\n当存在多个子项占用空间均为最大时，多个子项采用字符升序排列。\n目标目录不在文件系统中时（输入路径前缀匹配不到任何路径），返回空列表。\n输入：\n参数\n1\n：要进行统计的目标目录。\n参数\n2\n：文件系统内的文件列表。\n参数\n3\n：文件\nSize\n列表，该列表中的数据和文件列表存在一一对应关系。\n示例\n1\n输入\n\"/dir1/dir2-1\", [\"/dir0/dir1-1/file1-1\",\n\"/dir1/dir1-1/file1-1\", \"/dir1/dir2-1/file3-1\",\n\"/dir1/dir2-1/file3-2\", \"/dir1/dir2-1/dir3-1/file4-1\"],\n[8192, 81920, 2048, 8192, 1024]\n输出\n[\"/dir1/dir2-1/file3-2\"]\n\n/dir1/dir2-1\n下共有三个一级子项\nfile3-1\n、\nfile3-2\n、\ndir3-1\n，它们的占用空间统计如下：\nfile3-1 : 2048\nfile3-2 : 8192\ndir3-1 : 1024\n，其内部所有文件的\nsize\n之和，由于内部只有一个文件\nfile4-1\n，因此和\nfile4-1\n的\nsize\n一致。\n其中\nfile3-2\n占用的空间最大，因此返回\n[\"/dir1/dir2-1/file3-2\"]\n示例\n2\n输入\n\"/dir1\", [\"/dir0/dir2-1/file3-1\",\n\"/dir1/dir2-1/file3-1\", \"/dir1/dir2-1/file3-2\",\n\"/dir1/dir2-2/file3-3\", \"/dir1/file2-3\"], [10240, 4096,\n8192, 10240, 8192]\n输出\n[\"/dir1/dir2-1\"]"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "思路：模拟\n通过输入文件列表，创建出文件树结构。其中文件设置\nsize\n为文件大小，文件夹\nsize\n全部设置为\n0\n在创建的文件树中找到 目标目录 子树。\n递归计算子树中子目录的大小。\n合并子目录和子文件，按照 大小降序，名字升序 自定排序。找出所有最大项名称，返回即可。\nC++\n#include<iostream>\n#include<vector>\n#include<string>\n#include <utility>\n#include <sstream>\n#include<algorithm>\n#include<cmath>\n#include<map>\nusing namespace std;\n//\n通用 切割函数 函数 将字符串\nstr\n根据\ndelimiter\n进行切割\nvector<string> split(const\nstring& str, const string& delimiter) {\nvector<string>\nresult;\nsize_t start = 0;\nsize_t end =\nstr.find(delimiter);\nwhile (end !=\nstring::npos) {\nresult.push_back(str.substr(start, end - start));\nstart = end + delimiter.length();\nend = str.find(delimiter, start);\n}\n//\n添加最后一个部分\nresult.push_back(str.substr(start));\nreturn result;\n}\n//\n通用 切割函数 函数 将字符串\nstr\n根据\ndelimiter\n进行切割\nvector<int> splitInt(const\nstring& str, const string& delimiter) {\nvector<int>\nresult;\nsize_t start = 0;\nsize_t end =\nstr.find(delimiter);\nwhile (end !=\nstring::npos) {\nresult.push_back(stoi(str.substr(start, end - start)));\nstart = end + delimiter.length();\nend = str.find(delimiter, start);\n}\n//\n添加最后一个部分\nresult.push_back(stoi(str.substr(start)));\nreturn result;\n}\nstruct Node {\nmap<string, Node*>\nchildrenDir;\nmap<string, Node*>\nchildrenFile;\nstring name;\nint size;\nNode() {\nsize = 0;\n}\n};\nint dfs(Node* root) {\nint sum = 0;\nif\n(!root->childrenDir.empty()) {\nfor (auto &p : root->childrenDir) {\nsum += dfs(p.second);\n}\n}\n//\n计算当前文件\nif\n(!root->childrenFile.empty()) {\nfor (auto &p: root->childrenFile) {\nsum += p.second->size;\n}\n}\n//\n更新当前目录总大小\nroot->size = sum;\nreturn sum;\n}\nbool cmp(Node* &a, Node* &b) {\nif (a->size ==\nb->size) {\nreturn a->name < b->name;\n}\nreturn a->size >\nb->size;\n}\nvector<string> total(string&\ndest, vector<string>& fileList, vector<int>& fileSizeList)\n{\nvector<string>\nres;\nNode* root = new Node();\n//\n构建目录树\nfor (int i = 0; i <\nfileList.size(); i++) {\nstring path = fileList[i];\nint size = fileSizeList[i];\nvector<string> part = split(path, \"/\");\nNode* tmp = root;\nfor (int j = 1; j < part.size(); j++) {\nstring name = part[j];\nbool isFile = (j == part."
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

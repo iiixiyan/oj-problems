@@ -1,0 +1,76 @@
+{
+  "id": "q198",
+  "title": "斗地主之顺子",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在斗地主扑克牌游戏中， 扑克牌由小到大的顺序为：3,4,5,6,7,8,9,10,J,Q,K,A,2，玩家可以出的扑克牌阵型有：单张、对子、顺子、飞机、炸弹等。\n其中顺子的出牌规则为：由至少5张由小到大连续递增的扑克牌组成，且不能包含2。\n例如：{3,4,5,6,7}、{3,4,5,6,7,8,9,10,J,Q,K,A}都是有效的顺子；而{J,Q,K,A,2}、 {2,3,4,5,6}、{3,4,5,6}、{3,4,5,6,8}等都不是顺子。\n给定一个包含13张牌的数组，如果有满足出牌规则的顺子，请输出顺子。\n如果存在多个顺子，请每行输出一个顺子，且需要按顺子的第一张牌的大小（必须从小到大）依次输出。\n如果没有满足出牌规则的顺子，请输出No。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "13张任意顺序的扑克牌，每张扑克牌数字用空格隔开，每张扑克牌的数字都是合法的，并且不包括大小王：2 9 J 2 3 4 K A 7 9 A 5 6\n不需要考虑输入为异常字符的情况"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "组成的顺子，每张扑克牌数字用空格隔开：3 4 5 6 7"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2 9 J 2 3 4 K A 7 9 A 5 6\n输出\n3 4 5 6 7",
+      "cases": [
+        {
+          "input": "2 9 J 2 3 4 K A 7 9 A 5 6",
+          "output": "3 4 5 6 7",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "13张牌中，可以组成的顺子只有1组：3 4 5 6 7。\n输入\n2 9 J 10 3 4 K A 7 Q A 5 6\n输出\n3 4 5 6 7\n9 10 J Q K A\n\n13张牌中，可以组成2组顺子，从小到大分别为：3 4 5 6 7 和 9 10 J Q K A\n输入\n2 9 9 9 3 4 K A 10 Q A 5 6\n输出\nNo\n\n13张牌中，无法组成顺子。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "先看一个例子：\n3 4 5 6 6 7 7 8 9 10\n这个例子该输出什么呢？\n如果是优先最长顺子的话，那么应该输出：\n3 4 5 6 7 8 9 10\n如果是优先最多顺子的话，那么应该输出：\n3 4 5 6 7\n6 7 8 9 10\n下面提供两种解法，分别实现优先最长顺子解法，和优先最多顺子解法。\n2023.07.10\n之前有考友在评论区反馈 优先最长顺子解法的通过率是80%，今天评论区又有一个考友提供了一个"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "：\n3 4 5 6 7 3 4 5 6 7 A A A\n之前，优先最长顺子解法是基于栈结构实现的，在测试该"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "时，产生死循环。因此我怀疑20%未通过的"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "就是类似于这个。\n现在我对优先最长顺子解法做了更新优化，已支持该类型"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "，大家考试时可以尝试使用优先最长顺子解法。\n优先最长顺子解法\n我的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "如下：\n首先定义一个mapToNum方法，即将字符串牌面 映射为 数值。具体映射关系可看代码中mapToNum方法的实现。\n然后，将输入的牌数组，按照mapToNum映射的数值，进行升序排序。\n之后，我创建多个顺子容器，外层遍历牌数组，内层遍历顺子容器：\n如果顺子容器是空的，则直接将当前牌加入该顺子容器\n如果顺子容器不是空的，则比较当前牌cur 和 顺子容器尾牌tail\n如果cur - tail = 1，则当前牌cur可以加入当前顺子尾部。\n如果cur - tail != 1，则当前牌cur不能加入当前顺子尾部，我们应该继续尝试将cur拼接到下一个顺子容器的尾部。\n按照上面逻辑，我们最后可以得到多个顺子容器，我们需要过滤掉其中长度小于5的顺子，如果过滤完后没有了，则打印输出“No”，如果过滤完后还有，则剩余顺子容器按照 第一张牌数值 从小到大排序后，依次打印。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ncards = input().split()\n\n\ndef mapToNum(card):\n    if card == \"J\":\n        return 11\n    elif card == \"Q\":\n        return 12\n    elif card == \"K\":\n        return 13\n    elif card == \"A\":\n        return 14\n    elif card == \"2\":\n        return 16\n    else:\n        return int(card)\n\n\n# 算法入口\ndef getResult():\n    cards.sort(key=lambda x: mapToNum(x))\n\n    straights = [[cards[0]]]\n\n    for i in range(1, len(cards)):\n        card = cards[i]\n\n        flag = True\n\n        for straight in straights:\n            if mapToNum(card) - mapToNum(straight[-1]) == 1:\n                straight.append(card)\n                flag = False\n                break\n\n        if flag:\n            straights.append([card])\n\n    straights = list(filter(lambda x: len(x) >= 5, straights))\n\n    if len(straights) == 0:\n        print(\"No\")\n        return\n\n    straights.sort(key=lambda x: mapToNum(x[0]))\n\n    for straight in straights:\n        print(\" \".join(straight))\n\n\n# 调用算法\ngetResult()"
+  },
+  "verified": false
+}

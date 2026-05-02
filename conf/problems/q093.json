@@ -1,0 +1,58 @@
+{
+  "id": "q093",
+  "title": "计算数组中心位置",
+  "score": 100,
+  "tags": [
+    "A卷",
+    "数组"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给你一个整数数组nums，请计算数组的中心位置，数组的中心位置是数组的一个下标，其左侧所有元素相乘的积等于右侧所有元素相乘的积。数组第一个元素的左侧积为1，最后一个元素的右侧积为1。\n如果数组有多个中心位置，应该返回最靠近左边的那一个，如果数组不存在中心位置，返回\n-1\n。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入只有一行，给出N个正整数用空格分隔：nums = 2 5 3 6 5 6\n1 <= nums.length <= 1024\n1 <= nums[i] <= 10"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出：3\n解释：中心位置是3"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2 5 3 6 5 6\n输出\n3",
+      "cases": [
+        {
+          "input": "2 5 3 6 5 6",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "很简单的单指针操作。\n应该是考察优化操作，即我们不应该每次都重新计算中心位置左边所有值和右边所有值的各自乘积，应该利用差异剔除的方式。\n比如中心位置右移一格到i位置后，左边所有值的乘积left 应该变为了 left *= arr[i-1]，右边所有值得乘积right 应该变为了 right /= arr[i]\nJavaScript算法源码\n感谢网友m0_71826536提出改进意见，本题中\n1 <= nums.length <= 1024\n1 <= nums[i] <= 10\n也就是说单边乘积最大可以是10^1024，这个值已经远远超过了int,long范围，因此这里我们应该使用大数来处理。\nJS可以使用BigInt来处理，需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是BigInt类型数值只能和BigInt类型数值进行计算，否则会报错。而我们可以使用BigInt函数将Number数值转为BigInt类型，或者在字面量后面加n，比如1n"
+    }
+  ],
+  "solutions": {
+    "JavaScript": "感谢网友m0_71826536提出改进意见，本题中\n1 <= nums.length <= 1024\n1 <= nums[i] <= 10\n也就是说单边乘积最大可以是10^1024，这个值已经远远超过了int,long范围，因此这里我们应该使用大数来处理。\nJS可以使用BigInt来处理，需要注意的是BigInt类型数值只能和BigInt类型数值进行计算，否则会报错。而我们可以使用BigInt函数将Number数值转为BigInt类型，或者在字面量后面加n，比如1n",
+    "Python": "# 输入获取\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(arr):\n    left = 1\n    right = 1\n\n    for i in arr[1:]:\n        right *= i\n\n    if left == right:\n        print(0)\n        return\n\n    for i in range(1, len(arr)):\n        left *= arr[i - 1]\n        right //= arr[i]\n\n        if left == right:\n            print(i)\n            return\n\n    print(-1)\n\n\n# 算法调用\ngetResult(arr)"
+  },
+  "verified": false
+}

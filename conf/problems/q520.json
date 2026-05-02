@@ -1,0 +1,37 @@
+{
+  "id": "q520",
+  "title": "找数字找等值元素",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n给一个\n二维数组\nnums，对于每一个元素 nums[i]，找出距离最近的且值相等的元素，\n输出横纵坐标差值的绝对值之和，如果没有等值元素，则输出-1。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入第一行为\n二维数组\n的行\n输入第二行为二维数组的列\n输入的数字以空格隔开。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "针对数组 nums[i][j]，满足 0 < i ≤ 100，0 < j ≤ 100\n对于每个数字，最多存在 100 个与其相等的数字"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "数组形式返回所有\n坐标值\n。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

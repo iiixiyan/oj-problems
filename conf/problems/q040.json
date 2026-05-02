@@ -44,6 +44,8 @@
       "content": "本题的难点在于如何计算s2选中子串是否能够覆盖住s1，即s2选中子串的中的对应字符个数都大于s1中每个字符个数。\n本题可以参考最小覆盖子串中统计覆盖子串字符个数的求解思路。\n请大家看：\nLeetCode - 76 最小覆盖子串_伏城之外的博客-CSDN博客\n华为机试 - 完美走位_伏城之外的博客-CSDN博客_完美走位华为\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\ns1 = input()\ns2 = input()\nk = int(input())\n\n\n# 算法入口\ndef getResult(s1, s2, k):\n    # 在s2中选一个子串,满足:该子串长度为 n1+k\n    n1 = len(s1)\n    n2 = len(s2)\n    if n2 < n1 + k:\n        return -1\n\n    # 统计s1中所有每个字符出现的次数到count中\n    count = {}\n    for c in s1:\n        if count.get(c) is None:\n            count[c] = 1\n        else:\n            count[c] += 1\n\n    # s1字符总数\n    total = n1\n\n    # 滑动窗口的左边界从0开始,最大maxI&#xff1b;滑动窗口长度len\n    maxI = n2 - n1 - k\n    n = n1 + k\n\n    # 统计s2的0~len范围内出现的s1中字符的次数\n    for j in range(n):\n        c = s2[j]\n        # 如果s2的0~len范围内的字符c,在count[c]存在,则说明c是s1内有的字符,此时我们需要count[c]--,如果自减之前,count[c] > 0,则自减时,total也应该--,否则total不--\n        if count.get(c) is not None:\n            if count[c] > 0:\n                total -= 1\n            count[c] -= 1\n\n        # 如果total为0了,则说明在s2的0~len范围内找到了所有s1中字符\n        if total == 0:\n            # 此时可以直接返回起始索引0\n            return 0\n\n    # 下面是从左边界1开始的滑动窗口,利用差异思想,避免重复部分求解\n    for i in range(1, maxI + 1):\n        # 滑动窗口右移一格后,失去了s2[i - 1],得到了s2[i - 1 + len],其余部分不变\n        remove = s2[i - 1]\n        add = s2[i - 1 + n]\n\n        if count.get(remove) is not None:\n            if count[remove] >= 0:\n                total += 1\n            count[remove] += 1\n\n        if count.get(add) is not None:\n            if count[add] > 0:\n                total -= 1\n            count[add] -= 1\n\n        if total == 0:\n            return i\n\n    return -1\n\n\n# 调用算法\nprint(getResult(s1, s2, k))"
+  },
   "verified": false
 }

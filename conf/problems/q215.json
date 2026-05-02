@@ -1,0 +1,57 @@
+{
+  "id": "q215",
+  "title": "矩阵元素的边界值",
+  "score": 100,
+  "tags": [
+    "B卷",
+    "矩阵"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个N*M矩阵，请先找出M个该矩阵中每列元素的最大值，然后输出这M个值中的最小值"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "无"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "无"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "N和M的取值范围均为：[0, 100]"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n[[1,2],[3,4]]\n输出\n3",
+      "cases": [
+        {
+          "input": "[[1,2],[3,4]]",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "第一列元素为：1和3，最大值为3；\n第二列元素为：2和4，最大值为4\n各列最大值3和4的最小值为3"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "经考友反馈，本题采用核心代码模式，非ACM模式，因此不需要我们处理输入输出。\n下面代码仍然以ACM模式实现，但是会将输入输出处理 和 核心代码 分离。考试时，只需要写出核心代码即可。\n本题非常简单，遍历矩阵，完成每列的最大值查找，然后再找出这些值中最小的输出。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nmatrix = eval(input())\n\n\n# 核心代码\ndef getResult(matrix):\n    # 本题N和M取值是[0,100],如果N或M取0的话,则本题没有结果,理论上应该不会出现这种情况,因为题目也没说\n    if len(matrix) == 0 or len(matrix[0]) == 0:\n        return -1\n\n    # 取矩阵第一行作为每列的基准值\n    col_max_value = matrix[0]\n\n    # 从矩阵第二行开始遍历\n    for i in range(1, len(matrix)):\n        for j in range(len(matrix[i])):\n            # 保留每列的最大值\n            col_max_value[j] = max(col_max_value[j], matrix[i][j])\n\n    # 取每列最大值中的最小值\n    return min(col_max_value)\n\n\n# 算法调用\nprint(getResult(matrix))"
+  },
+  "verified": false
+}

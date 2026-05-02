@@ -1,0 +1,54 @@
+{
+  "id": "q345",
+  "title": "文件缓存系统",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "请设计一个文件缓存系统，该文件缓存系统可以指定缓存的最大值（单位为字节）。\n文件缓存系统有两种操作：\n存储文件（put）\n读取文件（get）\n操作命令为：\nput fileName fileSize\nget fileName\n存储文件是把文件放入文件缓存系统中；\n读取文件是从文件缓存系统中访问已存在，如果文件不存在，则不作任何操作。\n当缓存空间不足以存放新的文件时，根据规则删除文件，直到剩余空间满足新的文件大小位置，再存放新文件。\n具体的删除规则为：\n文件访问过后，会更新文件的最近访问时间和总的访问次数，当缓存不够时，按照第一优先顺序为访问次数从少到多，第二顺序为时间从老到新的方式来删除文件。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为缓存最大值 m（整数，取值范围为 0 < m ≤ 52428800）\n第二行为文件操作序列个数 n（0 ≤ n ≤ 300000）\n从第三行起为文件操作序列，每个序列单独一行，文件操作定义为：\nop  file_name  file_size\nfile_name 是文件名，file_size 是文件大小"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出当前文件缓存中的文件名列表，文件名用英文逗号分隔，按字典顺序排序，如：\na,c\n如果文件缓存中没有文件，则输出NONE"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "如果新文件的文件名和文件缓存中已有的文件名相同，则不会放在缓存中\n新的文件第一次存入到文件缓存中时，文件的总访问次数不会变化，文件的最近访问时间会更新到最新时间\n每次文件访问后，总访问次数加1，最近访问时间更新到最新时间\n任何两个文件的最近访问时间不会重复\n文件名不会为空，均为小写字母，最大长度为10\n缓存空间不足时，不能存放新文件\n每个文件大小都是大于 0 的整数"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n50\n6\nput a 10\nput b 20\nget a\nget a\nget b\nput c 30\n输出\na,c",
+      "cases": [
+        {
+          "input": "50\n6\nput a 10\nput b 20\nget a\nget a\nget b\nput c 30",
+          "output": "a,c",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n50\n1\nget file\n输出\nNONE\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题其实就是让我们实现一个LFU缓存，关于LFU缓存的实现，大家可以先看下：\nLeetCode - 460 LFU缓存（Java & JS & Python）-CSDN博客\n只有看懂上面博客实现后，才能继续做本题。\n本题中的：\nfileName 相当于 key\nfileSize 相当于 val\n本题中的：\nget(key)操作：\n如果 key 不存在，不需要做任何操作\n如果 key 存在，则仅增加key的访问次数\nput(key, val)操作：\n如果 key 存在，不需要做任何操作\n如果 key 不存在，则进行新增操作，这里可以初始化访问次数为1\n本题还有一个变化点就是，put新增操作时，检查到LFU缓存的容量不足，LFUCache.capacity 小于 put的val值（文件大小），此时我们需要删除LFU缓存中最少，最远使用的key（文件名），此时可能需要进行多次删除，直到LFUCache.capacity >= put的val值。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 双向链表节点\nclass Node:\n    def __init__(self, key, val, freq):\n        \"\"\"\n        :param key: 记录本题的键\n        :param val: 记录本题的值\n        :param freq: 记录该键被访问的次数\n        \"\"\"\n        self.key = key\n        self.val = val\n        self.freq = freq\n        self.prev = None\n        self.next = None\n\n\n# 双向链表\nclass Link:\n    def __init__(self):\n        self.size = 0\n        self.head = None\n        self.tail = None\n\n    def addLast(self, node):\n        \"\"\"\n        尾插\n        :param node: 要被插入的节点\n        \"\"\"\n        if self.size == 0:\n            # 空链表,则node节点插入后,即为头、尾节点\n            self.head = node\n            self.tail = node\n        else:\n            # 非空链表,则node节点插入到tail节点后面\n            self.tail.next = node\n            node.prev = self.tail\n            self.tail = node\n\n        self.size += 1\n\n    def remove(self, node):\n        \"\"\"\n        删除指定节点\n        :param node: 要删除的节点\n        \"\"\"\n        if self.size == 0:\n            # 空链表没有节点,所以无法删除\n            return\n\n        if self.size == 1:\n            # 链表只有一个节点,则删除完后,变为空链表\n            self.head = None\n            self.tail = None\n        elif self.head == node:\n            # 如果要删除的节点是头节点\n            self.head = self.head.next\n            self.head.prev = None\n        elif self.tail == node:\n            # 如果要删除的节点是尾节点\n            self.tail = self.tail.prev\n            self.tail.next = None\n        else:\n            # 如果要删除的节点是中间节点\n            node.prev.next = node.next\n            node.next.prev = node.prev\n\n        self.size -= 1\n\n\n# LFU缓存\nclass LFUCache:\n    def __init__(self, capacity):\n        self.keyMap = {}  # keyMap用于记录key对应的node\n        self.freqMap = {}  # freqMap的key是访问次数,value是具有相同访问次数的key对应的node组成的链表,链表头是最远访问的,链表尾是最近访问的\n        self.capacity = capacity  # LFU缓存中能记录的最多key的数量\n        self.minFreq = 0  # LFU缓存中所有的key中最少的访问次数\n\n    def get(self, key):\n        # 如果文件不存在,则不作任何操作。\n        if key not in self.keyMap:\n            return\n\n        # 每次文件访问后,总访问次数加1,最近访问时间更新到最新时间\n        node = self.keyMap[key]\n        self.incNodeFreq(node)\n\n    def put(self, key, val):\n        # 如果新文件的文件名和文件缓存中已有的文件名相同,则不会放在缓存中\n        if key in self.keyMap:\n            return\n\n        # 当缓存空间不足以存放新的文件时,根据规则删除文件,直到剩余空间满足新的文件大小位置,再存放新文件。\n        while self.capacity < val:\n            if self.minFreq == 0:\n                # 文件系统空了,也放不下该文件,则不放入\n                return\n\n            # 找出最少访问次数对应的链表\n            minFreqLink = self.freqMap[self.minFreq]\n\n            # 链表头部节点是最少访问次数中,最远访问的文件,我们需要删除它\n            removeNode = minFreqLink.head\n            # 删除对应文件后,文件系统容量新增\n            self.capacity += removeNode.val\n\n            # 执行删除操作,freqMap和keyMap都要删除掉对应文件的记录\n            minFreqLink.remove(removeNode)\n            self.keyMap.pop(removeNode.key)\n\n            # 如果删除后,最少访问次数的链表空了,则需要找到下一个最少访问次数的链表\n            if minFreqLink.size == 0:\n                # 最少次数的链表空了,则删除对应最少次数的记录\n                del self.freqMap[self.minFreq]\n\n                # 更新最少次数\n                if len(self.freqMap.keys()) > 0:\n                    self.minFreq = min(self.freqMap.keys())\n                else:\n                    # 文件系统没有缓存文件了,则最少次数为0,表示文件系统空了\n                    self.minFreq = 0\n\n        # 新增文件,则文件系统容量减少\n        self.capacity -= val\n        # 新增文件的访问次数为1,因此最少访问次数变为了1\n        self.minFreq = 1\n        node = Node(key, val, self.minFreq)\n        # 执行新增操作,freqMap和keyMap都要新增对应文件的记录\n        self.freqMap.setdefault(self.minFreq, Link())\n        self.freqMap.get(self.minFreq).addLast(node)\n        self.keyMap[key] = node\n\n    def incNodeFreq(self, node):\n        \"\"\"\n        增加key的访问次数\n        :param node: key对应的node\n        \"\"\"\n        # 由于key的访问次数增加,因此要从原访问次数的链表中删除\n        self.freqMap[node.freq].remove(node)\n\n        # 如果原链表删除当前key对应的节点后为空,且原链表对应的访问次数就是最少访问次数\n        if self.freqMap[node.freq].size == 0:\n            # 最少次数的链表空了,则删除对应最少次数的记录\n            del self.freqMap[node.freq]\n\n            # 则最少访问次数对应的key没有了,因此最少访问次数++&#xff08;即当前key访问次数++后,当前key的访问次数还是最少访问次数&#xff09;\n            if node.freq == self.minFreq:\n                self.minFreq += 1\n\n        # 当前key访问次数++\n        node.freq += 1\n\n        # 将当前key对应的node转移到对应增加后的访问次数对应的链表尾部&#xff08;最近访问&#xff09;\n        self.freqMap.setdefault(node.freq, Link())\n        self.freqMap[node.freq].addLast(node)\n\n\n# 输入获取\nm = int(input())\n\nlfu = LFUCache(m)\n\nn = int(input())\n\nfor _ in range(n):\n    operation = input().split()\n\n    op = operation[0]\n    fileName = operation[1]\n\n    if \"put\" == op:\n        fileSize = int(operation[2])\n        lfu.put(fileName, fileSize)\n    else:\n        lfu.get(fileName)\n\nif lfu.capacity == m:\n    print(\"NONE\")\nelse:\n    ans = list(lfu.keyMap.keys())\n    ans.sort()\n    print(\",\".join(ans))"
+  },
+  "verified": false
+}

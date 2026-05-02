@@ -1,0 +1,66 @@
+{
+  "id": "q495",
+  "title": "贪吃蛇",
+  "score": 200,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "贪吃蛇是一个经典游戏，蛇的身体由若干方格连接而成，身体随蛇头移动。蛇头触碰到食物时，蛇的长度会增加一格。蛇头和身体的任一方格或者游戏版图边界碰撞时，游戏结束。\n下面让我们来完成贪吃蛇游戏的模拟。\n给定一个N*M的数组arr，代表N*M个方格组成的版图，贪吃蛇每次移动一个方格。\n若arr[i][j] == ‘H’，表示该方格为贪吃蛇的起始位置；\n若arr[i][j] == ‘F’，表示该方格为食物，\n若arr[i][j] == ‘E’，表示该方格为空格。\n贪吃蛇初始长度为1，初始移动方向为向左。\n为给定一系列贪吃蛇的移动操作，返回操作后蛇的长度，如果在操作执行完之前已经游戏结束，返回游戏结束时蛇的长度。\n贪吃蛇移动、吃食物和碰撞处理的细节见下面图示：\n图1：截取了贪吃蛇移动的一个中间状态，H表示蛇头，F表示食物，数字为蛇身体各节的编号，蛇为向左移动，此时蛇头和食物已经相邻\n图2：蛇头向左移动一格，蛇头和食物重叠，"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "此时食物的格子成为了新的蛇头，第1节身体移动到蛇头位置，第2节身体移动到第1节身体位置，以此类推，最后添加第4节身体到原来第3节身体的位置。\n图3：蛇头继续向左移动一格，身体的各节按上述规则移动，此时蛇头已经和边界相邻，但还未碰撞。\n图4：蛇头继续向左移动一格，此时蛇头已经超过边界，发生碰撞，游戏结束。\n图5和图6给出一个蛇头和身体碰撞的例子，蛇为向上移动。\n图5时蛇头和第7节身体相邻，但还未碰撞；\n图6蛇头向上移动一格，此时蛇头和第8节身体都移动到了原来第7节身体的位置，发生碰撞，游戏结束。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入第一行为空格分隔的字母，代表贪吃蛇的移动操作。\n字母取值为U、D、L、R和G，\nU、D、L、R分别表示贪吃蛇往上、下、左、右和转向，转向时贪吃蛇不移动 ，G表示贪吃蛇按当前的方向移动一格。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证输入的操作正确。\n第二行为空格分隔的两个数，指定N和M，为数组的行和列数。\n余下N行每行是空格分隔的M个字母。字母取值为H、F和E，H表示贪吃蛇的起始位置，F表示食物，E表示该方格为空。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证有且只有一个H，而F和E会有多个。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个数字，为蛇的长度。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nD G G\n3 3\nF F F\nF F H\nE F E\n输出\n1",
+      "cases": [
+        {
+          "input": "D G G\n3 3\nF F F\nF F H\nE F E",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "地图表示为：\n蛇头 H(Head)\n食物 F(Food)\nE表示该方格为空\n四个方向分别表示为：\n向上 U(up)\n向下 D(down)\n向左 L(Left)\n向右 R(Right)"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "纯逻辑题。\n本题难点在于当贪吃蛇移动后，更新贪吃蛇的位置，以及矩阵各坐标的信息的逻辑。\n首先，我使用一个数组snake来维护贪吃蛇的位置，蛇头就是snake[0]。\n当贪吃蛇移动时，如果蛇头去往的位置是空地，即matrix[i][j] = 'E'的话，则"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\noperates = input().split()\nn, m = map(int, input().split())\nmatrix = [input().split() for _ in range(n)]\n\n# 记录蛇各个部分位置\nsnake = []\n# 蛇头移动初始向左 [行偏移量,列偏移量],向左即列位置-1\noffset = [0, -1]\n\n\n# 坐标类\nclass Pos:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\n    def __eq__(self, other):\n        return self.x == other.x and self.y == other.y\n\n\n# 算法入口\ndef getResult():\n    # 找到初始蛇头位置,并使用snake[0]来维护蛇头位置\n    for i in range(n):\n        for j in range(m):\n            if \"H\" == matrix[i][j]:\n                snake.append(Pos(i, j))\n\n    for op in operates:\n        if op == \"U\":\n            offset[0] = -1\n            offset[1] = 0\n        elif op == \"D\":\n            offset[0] = 1\n            offset[1] = 0\n        elif op == \"L\":\n            offset[0] = 0\n            offset[1] = -1\n        elif op == \"R\":\n            offset[0] = 0\n            offset[1] = 1\n        elif op == \"G\":\n            head = snake[0]\n            head_next = Pos(head.x + offset[0], head.y + offset[1])\n\n            if head_next.x < 0 or head_next.x >= n or head_next.y < 0 or head_next.y >= m:\n                return len(snake)\n\n            tail = snake[-1]\n\n            cell = matrix[head_next.x][head_next.y]\n            if cell == \"E\":\n                # 如果蛇头去的地方是空地,则:\n                # 蛇身的每个位置都递进为前面一个位置,蛇尾巴位置恢复为空地\n                matrix[tail.x][tail.y] = \"E\"\n                snake.pop()\n                # 蛇头进入新位置\n                matrix[head_next.x][head_next.y] = \"H\"\n                snake.insert(0, head_next)\n            elif cell == \"F\":\n                # 如果蛇头去的地方是食物,则蛇身长度增加一,相当于蛇身各部分位置不变,蛇头变到当前去的位置\n                matrix[head_next.x][head_next.y] = \"H\"\n                snake.insert(0, head_next)\n            elif cell == \"H\":\n                # 如果蛇头去的地方是蛇尾,则由于递进关系,蛇头是吃不到蛇尾的\n                if head_next == tail:\n                    snake.insert(0, snake.pop())\n                else:\n                    # 如果蛇头去的地方是蛇身,则会吃到自己\n                    return len(snake)\n\n    return len(snake)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

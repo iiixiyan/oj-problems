@@ -1,0 +1,56 @@
+{
+  "id": "q397",
+  "title": "单词接龙",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "单词接龙的规则是：\n可用于接龙的单词首字母必须要前一个单词的尾字母相同；\n当存在多个首字母相同的单词时，取长度最长的单词，如果长度也相等，则取字典序最小的单词；已经参与接龙的单词不能重复使用。\n现给定一组全部由小写字母组成单词数组，并指定其中的一个单词作为起始单词，进行单词接龙，\n请输出最长的单词串，单词串是单词拼接而成，中间没有空格。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的第一行为一个非负整数，表示起始单词在数组中的索引K，0 <= K < N ；\n输入的第二行为一个非负整数，表示单词的个数N；\n接下来的N行，分别表示单词数组中的单词。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "：\n单词个数N的取值范围为[1, 20]；\n单个单词的长度的取值范围为[1, 30]；"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个字符串，表示最终拼接的单词串。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n0\n6\nword\ndd\nda\ndc\ndword\nd\n输出\nworddwordda",
+      "cases": [
+        {
+          "input": "0\n6\nword\ndd\nda\ndc\ndword\nd",
+          "output": "worddwordda",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "先确定起始单词word，再接以d开头的且长度最长的单词dword，剩余以d开头且长度最长的有dd、da、dc，则取字典序最小的da，所以最后输出worddwordda。\n输入\n4\n6\nword\ndd\nda\ndc\ndword\nd\n输出\ndwordda\n\n先确定起始单词dword，剩余以d开头且长度最长的有dd、da、dc，则取字典序最小的da，所以最后输出dwordda。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "逻辑题，主要考察数组操作，如数组元素删除，数组自定义排序。\n我的\n\n如下：\n先用splice方法，将起始单词从输入数组中删除，splice会将删除的元素形成一个新数组，我刚好将该数组作为收集接龙单词的链条数组chain。\n之后，遍历输入数组中剩下的单词，将它们根据首字母进行分类，同一个首字母的单词存放在一个数组中。存储容器选择对象prefix，首字母作为对象的属性，存放同首单词的数组为对象的属性值。\n当统计完后，对每个分类数组进行排序，即优先按照单词长度降序，如果单词长度相同，再按照字典序升序。\n之后，取出chain的尾巴元素，再取出尾巴元素单词的尾巴字符tail，如果存在prefix[tail]，则取出prefix[tail]数组的头部元素加入chain中，然后继续循环前面逻辑，如果不存在prefix[tail]，则结束循环，将chain.join('') 当成结果输出。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nk = int(input())\nn = int(input())\nwords = [input() for _ in range(n)]\n\n\n# 算法入口\ndef getResult():\n    chain = [words.pop(k)]\n\n    prefix = {}\n    for word in words:\n        w = word[0]\n        if prefix.get(w) is None:\n            prefix[w] = []\n        prefix[w].append(word)\n\n    for w in prefix.keys():\n        prefix[w].sort(key=lambda x: (-len(x), [ord(i) for i in x]))\n\n    while True:\n        tail = chain[-1][-1]\n\n        if prefix.get(tail):\n            chain.append(prefix[tail].pop(0))\n        else:\n            break\n\n    return \"\".join(chain)\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

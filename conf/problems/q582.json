@@ -1,0 +1,40 @@
+{
+  "id": "q582",
+  "title": "中文分词模拟器",
+  "score": 200,
+  "tags": [
+    "E卷",
+    "模拟"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n给定一个连续不包含空格的\n字符串\n，该\n字符串\n仅包含英文小写字母及英文标点符号（逗号、分号、句号），同时给定词库，对该字符串进行精确分词。"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：\n精确分词：字符串分词后，不会出现重叠。即\"ilovechina\"，不同词库可分割为\"i,love,china\"，“ilove,china”，不能分割出现重叠的\"i,ilove,china\"，i 出现重叠\n标点符号不成词，仅用于断句\n词库：根据外部知识库统计出来的常用词汇例：dictionary = [“i”, “love”, “china”, “lovechina”, “ilove”]\n分词原则：采用分词顺序优先且最长匹配原则\n“ilovechina”，假设分词结果 [i,ilove,lo,love,ch,china,lovechina]，则输出 [ilove,china]\n错误输出：[i,lovechina]，原因：“ilove” > 优先于 “lovechina” 成词\n错误输出：[i,love,china]，原因：“ilove” > \"i\"遵循最长匹配原则"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入待\n分词\n语句 “ilovechina”\n字符串长度限制：0 < length < 256\n第二行输入中文词库 “i,love,china,ch,na,ve,lo,this,is,this,word”\n词库长度限制：1 < length < 100000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "按顺序输出分词结果 “i,love,china”"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入"
+    }
+  ],
+  "solutions": {
+    "Python": "import re\n\n# 输入获取\nsentences = re.split(r\"[,.;]\", input())\nwords = re.split(r\"[,.;]\", input())\n\n\ndef getResult():\n    # wordSet 记录词库词汇\n    wordSet = set(words)\n    # ans记录最终分词结果\n    ans = []\n\n    while len(sentences) > 0:\n        # 待分词的句子\n        sentence = sentences.pop(0)\n\n        r = len(sentence)\n        while r > 0:\n            # 截取句子 [0,r) 范围子串词汇, 这样的就能实现优先最长匹配,并且由于是必须从0索引开始截取,因此满足了分词顺序优先\n            fragment = sentence[0:r]\n\n            # 若词库中是否存在该子串词汇\n            if fragment in wordSet:\n                # 则将对应子串词汇纳入结果\n                ans.append(fragment)\n                wordSet.remove(fragment)  # 我理解词库中每个词汇只能使用一次,因此这里将词库中使用过的词汇移除\n\n                # 若子串词汇只是句子部分,则句子剩余部分还要继续去词库中查找\n                if r < len(sentence):\n                    sentences.insert(0, sentence[r:])\n\n                break\n\n            r -= 1\n\n        # 没有在词库中找到对应子串词汇,则输出单个字母\n        if r == 0:\n            # 注意,这里只放一个字母到结果中,句子剩余部分继续去词库中查找\n            ans.append(sentence[0])\n\n            if len(sentence) > 1:\n                sentences.insert(0, sentence[1:])\n\n    return \",\".join(ans)\n\n\nprint(getResult())"
+  },
+  "verified": false
+}

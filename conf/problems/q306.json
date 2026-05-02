@@ -1,0 +1,59 @@
+{
+  "id": "q306",
+  "title": "最多购买宝石数目",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "橱窗里有一排宝石，不同的宝石对应不同的价格，宝石的价格标记为 gems[i]\n0 ≤ i < n\nn = gems.length\n宝石可同时出售0个或多个，如果同时出售多个，则要求出售的宝石编号连续；\n例如客户最大购买宝石个数为m，购买的宝石编号必须为：gems[i]，gems[i+1]，...，gems[i+m-1]\n0 ≤ i < n\nm ≤ n\n假设你当前拥有总面值为 value 的钱，请问最多能购买到多少个宝石，如无法购买宝石，则返回0。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入n，参数类型为int，取值范围：[0,10^6]，表示橱窗中宝石的总数量。\n之后 n 行分别表示从第0个到第n-1个宝石的价格，即 gems[0] 到 gems[n-1] 的价格，类型为int，取值范围：(0,1000]。\n之后一行输入v，类型为int，取值范围：[0,10^9]，表示你拥有的钱。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出int类型的返回值，表示最大可购买的宝石数量。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n7\n8\n4\n6\n3\n1\n6\n7\n10\n输出\n3",
+      "cases": [
+        {
+          "input": "7\n8\n4\n6\n3\n1\n6\n7\n10",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "gems = [8,4,6,3,1,6,7], value = 10\n最多购买的宝石为gems[2]至gems[4]或者gems[3]至gems[5]\n输入\n0\n1\n输出\n0\n\ngems = [], value = 1\n因为没有宝石，所以返回0\n输入\n9\n6\n1\n3\n1\n8\n9\n3\n2\n4\n15\n输出\n4\n\ngems = [6, 1, 3, 1, 8, 9, 3, 2, 4], value = 15\n最多购买的宝石为gems[0]至gems[3]\n输入\n9\n1\n1\n1\n1\n1\n1\n1\n1\n1\n10\n输出\n9\n\ngems = [1, 1, 1, 1, 1, 1, 1, 1, 1], value = 10\n最多购买的宝石为gems[0]至gems[8]，即全部购买"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用双指针解题。\n我们以"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1为例：蓝色为L指针，橙色为R指针\n以上就是双指针的运行逻辑。\n其中需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是，如果内部和超过了v，那么此时我们需要不停右移L指针，来减少内部和，直到内部和<=v时，结束L指针右移。然后才能开始R指针右移。\n还有一种特殊情况比如：\ngems = [1,2,3,100,4,5,6]，v = 10\n更多实现细节，请结合代码注释理解。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())  # 橱窗中宝石的总数量\n\ngems = []  # n个宝石的价格\nfor _ in range(n):\n    gems.append(int(input()))\n\nv = int(input())  # 你拥有的钱\n\n\n# 算法入口\ndef getResult():\n    # 记录题解\n    ans = 0\n\n    # 双指针\n    l = 0\n    r = 0\n\n    # 双指针范围内的和\n    window_sum = 0\n\n    while r < n:\n        # 加入r指针指向的元素\n        window_sum += gems[r]\n\n        if window_sum <= v:\n            # 如果总和不超过拥有的钱,则继续加入后面的\n            r += 1\n        else:\n            # 如果总和超过了拥有的钱,则 [l, r-1] 范围的宝石是能够买下的,记录此时的宝石数量 r-1 - l + 1\n            ans = max(ans, r - l)\n\n            flag = False\n\n            while l < r:\n                # 由于纳入r位置宝石后,总和超过了拥有的钱,因此我们尝试丢弃l指针宝石,即l++\n                window_sum -= gems[l]\n                l += 1\n\n                if window_sum <= v:\n                    # 如果丢弃l宝石后,总和不超过拥有的钱,则继续纳入r后面的宝石\n                    r += 1\n                    flag = True\n                    break\n\n            if flag:\n                continue\n\n            # 如果把 l ~ r - 1 范围宝石都丢弃了,总和任然超过拥有的钱,那么就r宝石的价值就超过了手中的钱,此时双指针范围内不能包含r位置\n            # 此时可以将l,r全部移动到r+1位置\n            r += 1\n            l = r\n            window_sum = 0\n\n    # 收尾操作\n    if window_sum <= v:\n        ans = max(ans, r - l)\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

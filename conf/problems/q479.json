@@ -1,0 +1,86 @@
+{
+  "id": "q479",
+  "title": "连续字母长度",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个字符串，只包含大写字母，求在包含同一字母的子串中，长度第 k 长的子串的长度，相同字母只取最长的那个子串。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行有一个子串(1<长度<=100)，只包含大写字母。\n第二行为 k的值"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出连续出现次数\n第k多\n的字母的次数。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nAAAAHHHBBCDHHHH\n3\n输出\n2",
+      "cases": [
+        {
+          "input": "AAAAHHHBBCDHHHH\n3",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "同一字母连续出现的最多的是A和H，四次；\n第二多的是H，3次，但是H已经存在4个连续的，故不考虑；\n下个最长子串是BB，所以最终答案应该输出2。\n输入\nAABAAA\n2\n输出\n1\n\n同一字母连续出现的最多的是A，三次；\n第二多的还是A，两次，但A已经存在最大连续次数三次，故不考虑；\n下个最长子串是B，所以输出1。\n输入\nABC\n4\n输出\n-1\n\n只含有3个包含同一字母的子串，小于k，输出-1\n输入\nABC\n2\n输出\n1\n\n三个子串长度均为1，所以此时k = 1，k=2，k=3这三种情况均输出1。特此\n\n，避免歧义。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题第一个"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "感觉也有歧义。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1，要求“AAAAHHHBBCDHHHH”中  重复度第3大的子串。其中：\n重复度第1大子串是：AAAA和HHHH\n重复度第2大子串是：HHH，由于字母H已经有了更大的重复度，因此HHH子串不计入比较\n接下来是，实际上的第3大，名义上的第2大子串：BB\n而"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1输出的第k=3大重复度的子串的长度是2，那就肯定是指BB子串。即要求“实际”第k大？而不是“名义”第k大？\n但是"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2，要求“AABAAA”中，重复度第2大的子串。其中：\n重复度第1大子串是：AAA\n重复度第2大子串是：AA，由于字母A已经有了更大的重复度，因此HHH子串不计入比较\n接下来是，实际上的第3大，名义上的第2大子串：B\n而"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1输出的第k=2大重复度的子串的长度是1，这里又是取名义上第k大了？\n或者本题还有另一种思路，那就是第k大，就是单纯按重复度降序后的第k个。\n比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1： A:4，H:4，B:2，C:1，D:1\n这里第k=3大，那就是B，子串长度为2\n比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2：A:3，B:1\n这里第k=2大，那就是B，子串长度为1\n下面代码就是按照这个思路实现的。\n2023.06.19\n增加处理下 k <= 0的情况，此时直接返回-1\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\nk = int(input())\n\n\n# 算法入口\ndef getResult():\n    global s\n    global k\n\n    if k <= 0:\n        return -1\n\n    s += \"0\"\n\n    count = {}\n\n    b = s[0]\n    long = 1\n\n    for i in range(1, len(s)):\n        c = s[i]\n\n        if b == c:\n            long += 1\n        else:\n            if count.get(b) is None or count[b] < long:\n                count[b] = long\n            long = 1\n            b = c\n\n    arr = list(count.values())\n\n    if k > len(arr):\n        return -1\n    else:\n        arr.sort(reverse=True)\n        return arr[k - 1]\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

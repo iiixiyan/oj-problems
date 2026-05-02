@@ -50,7 +50,8 @@
     }
   ],
   "solutions": {
-    "JavaScript": "JS没有内置的优先队列实现，考试时若时间不够可以考虑使用有序数组代码。\n优先队列实现，请看：\nLeetCode - 1705 吃苹果的最大数目_伏城之外的博客-CSDN博客"
+    "JavaScript": "JS没有内置的优先队列实现，考试时若时间不够可以考虑使用有序数组代码。\n优先队列实现，请看：\nLeetCode - 1705 吃苹果的最大数目_伏城之外的博客-CSDN博客",
+    "Python": "import queue\n\n# 输入获取\nn = int(input())\nseq = [input().split() for _ in range(n)]\n\n\n# 定义一个客户类,实现自定义优先级\nclass Customer:\n    def __init__(self, num, x, index):\n        \"\"\"\n        :param num: 客户编号\n        :param x: 客户优先级\n        :param index: 客户先来后到顺序\n        \"\"\"\n        self.num = num\n        self.x = x\n        self.index = index\n\n    def __lt__(self, other):\n        if self.x != other.x:\n            return self.x < other.x\n        else:\n            return self.index < other.index\n\n\n# 算法入口\ndef getResult(n, seq):\n    pq = queue.PriorityQueue()\n\n    for i in range(n):\n        tmp = seq[i]\n\n        if tmp[0] == 'a':\n            num = int(tmp[1])\n            x = int(tmp[2])\n            pq.put(Customer(num, x, i))\n        elif tmp[0] == 'p':\n            if pq.qsize() > 0:\n                customer = pq.get()\n                print(customer.num)\n            else:\n                print(\"\")\n\n\n# 算法调用\ngetResult(n, seq)"
   },
   "verified": false
 }

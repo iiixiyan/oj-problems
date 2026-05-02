@@ -1,0 +1,52 @@
+{
+  "id": "q449",
+  "title": "求满足条件的最长子串的长度",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个字符串，只包含字母和数字，按要求找出字符串中的最长（连续）子串的长度，字符串本身是其最长的子串，子串要求：\n1、 只包含1个字母(a~z, A~Z)，其余必须是数字；\n2、 字母可以在子串中的任意位置；\n如果找不到满足要求的子串，如全是字母或全是数字，则返回-1。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "字符串(只包含字母和数字)"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "子串的长度"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nabC124ACb\n输出\n4",
+      "cases": [
+        {
+          "input": "abC124ACb",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "满足条件的最长子串是C124或者124A，长度都是4\n输入\na5\n输出\n2\n\n字符串自身就是满足条件的子串，长度为2\n输入\naBB9\n输出\n2\n\n满足条件的子串为B9，长度为2\n输入\nabcdef\n输出\n-1\n\n没有满足要求的子串，返回-1"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "此题可以用滑动窗口求解。\n滑动窗口的左指针开始指向索引0，右指针也是从索引0开始不断向右移动，当右指针遇到字母时，则滑动窗口内部含字母量+1。\n当滑动窗口内部含有两个字母时，存在如下情况：\n此时，我们需要移动left指针来达到减少一个字母的目的，但是单纯的left++就能减少一个字母吗？\n我们可以看看上面第三个圈的情况，当left指针指向的是数字，如果left++，则滑动窗口内的字母并不会减少。\n因此，我们需要判断left指针当前指向的元素是否为字母，如果为字母，则left++才能起到减少一个字母的作用，否则不能。\n那么当left指针当前指向的是数字，则left指针应该如何跳转呢？\n如上面第三个圈内所示，貌似是直接 left = right，但是真是这样吗？请看下面例子\n从上面例子可以看出，当left指针指向数字，但是滑动窗口内已经有两个字母时，left应该移动到第一个字母的后面一个位置target。target位置只有两种数据：字母或数字，如果是字母则target位置就是滑动窗口内第二字母的位置，如果是数字，则避免了长度损失。\n而为了能够准确跳转到滑动窗口内第一个字母后面一个位置，我们在right指针扫描过程中，就需要记录字母所在的索引。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult():\n    maxLen = -1\n\n    l = 0\n    r = 0\n    letterIdx = []\n    hasLetter = False\n\n    while r < len(s):\n        if s[r].isalpha():\n            hasLetter = True\n            letterIdx.append(r)\n\n            if len(letterIdx) > 1:\n                l = letterIdx.pop(0) + 1\n\n            if r == l:\n                r += 1\n                continue\n\n        maxLen = max(maxLen, r - l + 1)\n        r += 1\n\n    if not hasLetter:\n        return -1\n    return maxLen\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

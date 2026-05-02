@@ -1,0 +1,29 @@
+{
+  "id": "q135",
+  "title": "最大化控制资源成本",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "公司创新实验室正在研究如何最小化资源成本，最大化资源利用率，请你设计算法帮他们解决一个任务混部问题：\n有taskNum项任务，每个任务有开始时间（startTime），结束时间（endTime），并行度（parallelism）三个属性，\n并行度是指这个任务运行时将会占用的服务器数量，一个服务器在每个时刻可以被任意任务使用但最多被一个任务占用，任务运行完成立即释放（结束时刻不占用）。\n任务混部问题是指给定一批任务，让这批任务由同一批服务器承载运行，\n请你计算完成这批任务混部最少需要多少服务器，从而最大化控制资源成本。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为taskNum，表示有taskNum项任务\n接下来taskNum行，每行三个整数，表示每个任务的\n开始时间（startTime ），结束时间（endTime ），并行度（parallelism）"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "一个整数，表示最少需要的服务器数量"
+    }
+  ],
+  "solutions": {
+    "Python": "import queue\n\n# 输入获取\ntaskNum = int(input())\nranges = [list(map(int, input().split())) for i in range(taskNum)]\n\n\n# 算法入口\ndef getResult(ranges):\n    ranges.sort(key=lambda x: x[0])\n    end = queue.PriorityQueue()\n    maxV = 0\n    sum = 0\n\n    for ran in ranges:\n        s, e, p = ran\n\n        while end.qsize() > 0:\n            top = end.queue[0]\n\n            if top[0] <= s:\n                poll = end.get()\n                sum -= poll[1]\n            else:\n                break\n\n        end.put((e, p))\n        sum += p\n\n        if sum > maxV:\n            maxV = sum\n\n    return maxV\n\n\n# 算法调用\nprint(getResult(ranges))"
+  },
+  "verified": false
+}

@@ -1,0 +1,34 @@
+{
+  "id": "q547",
+  "title": "考勤信息",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n公司用一个\n字符串\n来表示员工的出勤信息\nabsent：缺勤\nlate：迟到\nleaveearly：早退\npresent：正常上班\n现需根据员工出勤信息，判断本次是否能获得出勤奖，能获得出勤奖的条件如下：\n缺勤不超过一次；\n没有连续的迟到/早退；\n任意连续7次考勤，缺勤/迟到/早退不超过3次。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "用户的考勤数据字符串\n记录条数 >= 1；\n输入字符串长度 < 10000；\n不存在非法输入；\n如：\n2\npresent\npresent absent present present leaveearly present absent"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "根据考勤数据字符串，如果能得到考勤奖，输出”true”；否则输出”false”，\n对于输入示例的结果应为：\ntrue false"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nrecords = [input().split() for _ in range(n)]\n\n\ndef isAward(record):\n    # 总缺勤次数\n    absent = 0\n\n    #  滑窗内正常上班的次数\n    present = 0\n\n    late_leaveearly = (\"late\", \"leaveearly\")\n\n    # 前一次的考勤记录\n    preRecord = \"\"\n\n    for i in range(len(record)):\n        # 滑窗长度最大为7,如果超过7,则滑窗的左边界需要右移, 滑窗失去的部分record[i - 7]\n        # 如果失去部分是present,则更新滑窗内present次数\n        if i >= 7:\n            if \"present\" == record[i-7]:\n                present -= 1\n\n        # 当前的考勤记录\n        curRecord = record[i]\n\n        if \"absent\" == curRecord:\n            absent += 1\n            # 缺勤超过1次,则拿不到全勤奖\n            if absent > 1:\n                return \"false\"\n        elif curRecord in late_leaveearly and preRecord in late_leaveearly:\n            # 连续的迟到/早退,则拿不到全勤奖\n            return \"false\"\n        elif \"present\" == curRecord:\n            present += 1\n\n        preRecord = curRecord\n\n        # 任意连续7次考勤,缺勤/迟到/早退不超过3次, 相当于判断&#xff1a; 滑窗长度 - present次数 <= 3\n        window_len = min(i+1, 7)  # 滑窗长度\n        if window_len - present > 3:\n            return \"false\"\n\n    return \"true\"\n\n\n# 算法入口\ndef getResult():\n    for record in records:\n        print(isAward(record))\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

@@ -1,0 +1,72 @@
+{
+  "id": "q444",
+  "title": "检查是否存在满足条件的数字组合",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "数学"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个正整数数组，检查数组中是否存在满足规则的数字组合\n规则：\nA = B + 2C"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输出数组的元素个数。\n接下来一行输出所有数组元素，用空格隔开。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "如果存在满足要求的数，在同一行里依次输出规则里A/B/C的取值，用空格隔开。\n如果不存在，输出0。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "数组长度在3-100之间。\n数组成员为0-65535，数组成员可以重复，但每个成员只能在结果算式中使用一次。如：数组成员为[0, 0, 1, 5]，0出现2次是允许的，但结果0 = 0 + 2 * 0是不允许的，因为算式中使用了3个0。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证每组数字里最多只有一组符合要求的解。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\n2 7 3 0\n输出\n7 3 2",
+      "cases": [
+        {
+          "input": "4\n2 7 3 0",
+          "output": "7 3 2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "7 = 3 + 2 * 2\n输入\n3\n1 1 1\n输出\n0\n\n找不到满足条件的组合"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题数组长度不大，只有3~100，因此三重for暴力破解，也不会超时。\n我们可以先将数组降序，则第一层for选择的数必然是最大的，可以作为A，第二层和第三层是较小数，可以作为B和C，或者C和B。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "中还\n\n了"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证每组数字里最多只有一组符合要求的解。\n因此，我们一旦找到符合要求的解，就可以直接return\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    arr.sort(reverse=True)\n\n    for i in range(n):\n        for j in range(i + 1, n):\n            for k in range(j + 1, n):\n                if arr[i] == arr[j] + 2 * arr[k]:\n                    return f\"{arr[i]} {arr[j]} {arr[k]}\"\n\n                if arr[i] == arr[k] + 2 * arr[j]:\n                    return f\"{arr[i]} {arr[k]} {arr[j]}\"\n\n    return \"0\"\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -49,6 +49,8 @@
       "content": "该空位左边的友好度为friendShip，记录下来，然后将friendShip重置为0\n遇到“2”，则直接将friendShip重置为0\n这样每个空位的左边的友好度就统计出来了。\n接着，将friendShip重置为0，\n然后对输入数组进行反向遍历（从右到左）：\n遇到“1”，则friendShip++\n遇到“0”，则\n\n该空位右边的友好度为friendShip，累加下来，然后将friendShip重置为0\n遇到“2”，则直接将friendShip重置为0\n这样每个空位的整体友好度就统计出来了，取最大值返回。\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\narr = input().split()\n\n\n# 算法入口\ndef getResult(arr):\n    # 记录空位的友好度\n    ep = {}\n\n    friendShip = 0\n    # 从左向右遍历,记录每个空位左边的友好度\n    for i in range(len(arr)):\n        if arr[i] == \"0\":\n            ep[i] = friendShip\n            friendShip = 0\n        elif arr[i] == \"1\":\n            friendShip += 1\n        else:\n            friendShip = 0\n\n    friendShip = 0\n    ans = 0\n    # 从右向左遍历,累加每个空位右边的友好度,这样就得到了每个空位的友好度,取最大值即可\n    for i in range(len(arr) - 1, -1, -1):\n        if arr[i] == \"0\":\n            ans = max(ans, ep[i] + friendShip)\n            friendShip = 0\n        elif arr[i] == \"1\":\n            friendShip += 1\n        else:\n            friendShip = 0\n\n    return ans\n\n\n# 算法调用\nprint(getResult(arr))"
+  },
   "verified": false
 }

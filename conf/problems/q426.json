@@ -1,0 +1,51 @@
+{
+  "id": "q426",
+  "title": "括号匹配",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个字符串，里边可能包含“()”、“[]”、“{}”三种括号，请编写程序检查该字符串中的括号是否成对出现，且嵌套关系正确。\n若括号成对出现且嵌套关系正确，或该字符串中无括号字符，输出：true；\n若未正确使用括号字符，输出：false。\n实现时，无需考虑非法输入。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "无"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n(1+2)/(0.5+1)\n输出\ntrue",
+      "cases": [
+        {
+          "input": "(1+2)/(0.5+1)",
+          "output": "true",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "华为机试 - 表达式括号匹配_伏城之外的博客-CSDN博客\n的变种题，\n\n相同。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import re\n\n# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult(s):\n    # 去除非括号字符\n    s = re.sub(r\"[^\\(\\)\\[\\]\\{\\}]\", \"\", s)\n\n    map = {\n        \")\": \"(\",\n        \"]\": \"[\",\n        \"}\": \"{\"\n    }\n\n    stack = []\n\n    for i in range(len(s)):\n        c = s[i]\n\n        if len(stack) > 0 and map.get(c) is not None:\n            if stack[-1] == map[c]:\n                stack.pop()\n                continue\n            else:\n                return False\n\n        stack.append(c)\n\n    return len(stack) == 0\n\n\n# 算法调用\nprint(str(getResult(s)).lower())"
+  },
+  "verified": false
+}

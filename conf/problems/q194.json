@@ -1,0 +1,53 @@
+{
+  "id": "q194",
+  "title": "数组去重和排序",
+  "score": 100,
+  "tags": [
+    "B卷",
+    "数组",
+    "排序"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个乱序的数组，删除所有的重复元素，使得每个元素只出现一次，并且按照出现的次数从高到低进行排序，相同出现次数按照第一次出现顺序进行先后排序。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一个数组"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "去重排序后的数组"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1,3,3,3,2,4,4,4,5\n输出\n3,4,1,2,5",
+      "cases": [
+        {
+          "input": "1,3,3,3,2,4,4,4,5",
+          "output": "3,4,1,2,5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "数组大小不超过100 数组元素值大小不超过100。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "简单的排序问题。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = input().split(\",\")\n\n\n# 算法入口\ndef getResult(arr):\n    count = {}\n    first = {}\n\n    for i in range(len(arr)):\n        s = arr[i]\n\n        if count.get(s) is None:\n            count[s] = 0\n        count[s] += 1\n\n        if first.get(s) is None:\n            first[s] = i\n\n    tmp = list(first.keys())\n    tmp.sort(key=lambda x: (-count[x], first[x]))\n    return \",\".join(tmp)\n\n\n# 算法调用\nprint(getResult(arr))"
+  },
+  "verified": false
+}

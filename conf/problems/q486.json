@@ -1,0 +1,66 @@
+{
+  "id": "q486",
+  "title": "反射计数",
+  "score": 200,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个包含 0 和 1 的二维矩阵。\n给定一个初始位置和速度，一个物体从给定的初始位置出发，在给定的速度下进行移动，遇到矩阵的边缘则发生镜面发射。\n无论物体经过 0 还是 1，都不影响其速度。\n请计算并给出经过 t 时间单位后，物体经过 1 点的次数。\n矩阵以左上角位置为 [0, 0]（列(x)，行(y)），例如下面A点坐标为 [2, 1]（第二列，第一行）"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：\n如果初始位置的点是 1，也计算在内\n时间的最小单位为 1，不考虑小于 1 个时间单位内经过的点"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为初始信息\n<w><h><x><y><sx><sy><t>\n第二行开始一共 h 行，为二维矩阵信息\n其中：\nw，h 为矩阵的宽和高\nx，y 为起始位置\nsx，sy 为初始速度\nt 为经过的时间\n所有输入都是有效的，数据范围如下：\n0 < w < 100\n0 < h < 100\n0 ≤ x < w\n0 ≤ y < h\n-1 ≤ sx ≤ 1\n-1 ≤ sy ≤ 1\n0 ≤ t ＜100"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "经过 1 的个数"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "初始位置也要计算在内"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n12 7 2 1 1 -1 13\n001000010000\n001000010000\n001000010000\n001000010000\n001000010000\n001000010000\n001000010000\n输出\n3",
+      "cases": [
+        {
+          "input": "12 7 2 1 1 -1 13\n001000010000\n001000010000\n001000010000\n001000010000\n001000010000\n001000010000\n001000010000",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "初始位置为（2,1），速度为（1,-1），那么13个时间单位后，经过点1的个数为3"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "题目运动示意图如下：\n如果当前位置 x,y 按照速度 sx,sy 运动后，新位置越界的话，比如新位置x,y：\nx < 0"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "-1 ≤ sx, sy ≤ 1，因此 x < 0 越界时必然 x = -1,\n则经过反射，x = 1\nx >= w\n\n-1 ≤ sx, sy ≤ 1，因此 x >= w 越界时必然 x = w,\n则经过反射，x = w - 2\ny < 0\n\n-1 ≤ sx, sy ≤ 1，因此 y < 0 越界时必然 y = -1\n，则经过反射，y = 1\ny >= h​​​​​​​\n\n-1 ≤ sx, sy ≤ 1，因此 y >= h 越界时必然 y = h\n，则经过反射，y = h - 2\n还需要\n\n的是，反射不仅会影响位置，而且会影响和后续的速度方向：\n一旦新位置x越界，则后续速度 sx = -sx\n一旦新位置y越界，则后续速度 sy = -sy\n我们只要记录运动路径中遇到的元素1的个数即可。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nw, h, x, y, sx, sy, t = map(int, input().split())\nmatrix = [input() for _ in range(h)]\n\n\n# 算法入口\ndef getResult():\n    global x, y, sx, sy, t\n    ans = 0\n\n    while t >= 0:\n        # 注意本题横纵坐标是反的,因此y其实是行号,x是列号\n        if matrix[y][x] == '1':\n            ans += 1\n\n        y += sy\n        x += sx\n\n        if x < 0:\n            x = 1\n            sx = -sx\n        elif x >= w:  # 注意本题横纵坐标是反的,因此x是列号,w是矩阵列数\n            x = w - 2\n            sx = -sx\n\n        if y < 0:\n            y = 1\n            sy = -sy\n        elif y >= h:  # 注意本题横纵坐标是反的,因此y是行号,h是矩阵行数\n            y = h - 2\n            sy = -sy\n\n        t -= 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

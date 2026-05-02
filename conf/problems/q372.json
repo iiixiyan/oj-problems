@@ -1,0 +1,49 @@
+{
+  "id": "q372",
+  "title": "跳马",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "马是象棋（包括中国象棋和国际象棋）中的棋子，走法是每步直一格再斜一格，即先横着或者直者走一格，然后再斜着走一个对角线，可进可退，可越过河界，俗称\"马走日\"字。\n给定 m 行 n 列的棋盘（网格图），棋盘上只有棋子象棋中的棋子“马”，并且每个棋子有等级之分，等级为 k 的马可以跳 1~k 步（走的方式与象棋中“马”的规则一样，不可以超出棋盘位置），问是否能将所有马跳到同一位置，如果存在，输出最少需要的总步数（每匹马的步数相加），不存在则输出-1。\n注：允许不同的马在跳的过程中跳到同一位置，坐标为（x,y）的马跳一次可以跳到的坐标为：(x+1, y+2)，(x+1, y-2)，(x+2, y+1)，(x+2, y-1)，(x-1, y+2)，(x-1, y-2)，(x-2, y+1)，(x-2, y-1)，的格点上，但是不可以超出棋盘范围。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入m，n，代表 m 行 n 列的网格图棋盘（1 ≤ m, n ≤ 25）\n接下来输入 m 行 n 列的网格图棋盘，如果第 i 行，第 j 列的元素为 \".\" ，代表此格点没有棋子，如果为数字 k（1 ≤ k ≤ 9），代表此格点存在等级为 k 的“马”"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出最少需要的总步数（每匹马的步数相加），不存在则输出-1。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 2\n..\n2.\n..\n输出\n0",
+      "cases": [
+        {
+          "input": "3 2\n..\n2.\n..",
+          "output": "0",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "只有一匹马，不需要跳动\n输入\n3 5\n47.48\n4744.\n7....\n输出\n17\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题需要我们找到一个位置：\n所有马都能跳到该位置\n所有马跳到该位置的步数之和最小\n返回该位置的最小步数和。\n另外，每个马还有等级K，决定了该马能跳的步数。\n因此，我们只需要遍历每一匹马，并基于BFS策略，让该马跳K步，在跳的过程中，我们记录下该马跳过的位置，马第一次跳到某位置，即为该马到达该位置的最小步数，后续该马再次跳到该位置，则非到达该位置的最小步数。\n具体解题时，我们可以定义：\nstepMap：一个m行n列整型矩阵，矩阵每个元素初始值为0，stepMap[i][j]表示所有能跳到(i, j)位置的马所花费的最小步数之和\nreach：一个Set集合，用于记录所有马都能跳到的公共位置，初始时该集合记录棋盘所有位置，即认为所有马可以跳到所有位置，所有位置都是公共位置\n然后，基于每一匹马进行BFS，在BFS前定义：\n一个Set集合vis，用于记录当前马能跳到的位置\n马的位置信息 [x, y, step]，表示马到达棋盘（x,y）位置，花费了step步，初始时，(x,y)即为马所在位置，step=0\n之后从初始位置开始按层BFS跳到新位置(newX, newY)，如果新位置：\n越界\n已经跳过（新位置在vis集合中）\n则新位置不可进入，其余情况可以进入新位置，进入新位置后，意味着新位置需要花费step+1步，此时该马到达新位置的最小步数即为step+1，之后：\nstepMap[newX][newY] += step + 1\nvis.add(newX * n + newY)\n对马进行按层BFS，主要是为了记步，即走了几步，每一层都代表一步，因此当BFS进行了K层后，该马走了K步。\n当马走完所有步数后，我们对 reach 和 vis 两个集合取交集（位置），将交集重新赋值给reach，这样就能保证reach记录的位置是所有马都能到达的公共位置。\n如果最后reach集合的元素个数为0，则代表没有公共位置，此时返回-1。\n否则，遍历reach中记录的公共位置，结合stepMap找到所有公共位置中的最小步数和。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nm, n = map(int, input().split())  # 棋盘行数, 棋盘列数\ngrid = [input() for _ in range(m)]  # 棋盘矩阵\nstepGrid = [[0] * n for _ in range(m)]  # 最小步数和矩阵,stepMap[i][j]记录各个马走到棋盘(i,j)位置的最小步数之和\n\n# 记录所有马都可达的公共位置坐标\nreach = set()\nfor i in range(m):\n    for j in range(n):\n        reach.add(i * n + j)\n\n# 马走日的偏移量\noffsets = ((1, 2), (1, -2), (2, 1), (2, -1), (-1, 2), (-1, -2), (-2, 1), (-2, -1))\n\n\n# 广搜\ndef bfs(sx, sy, k):\n    global reach\n\n    # 广搜队列\n    # (sx,sy)为马所在初始位置,马到达初始位置需要0步\n    queue = [(sx, sy, 0)]\n\n    # 记录该马可以访问(sx,sy)位置\n    vis = set()\n    vis.add(sx * n + sy)  # 二维坐标一维化\n\n    # k记录该马剩余可走步数\n    while len(queue) > 0 and k > 0:\n        # newQueue记录该马花费相同步数的可达的位置&#xff08;即BFS按层遍历的层&#xff09;\n        newQueue = []\n\n        # 按层BFS\n        for x, y, step in queue:\n            for offsetX, offsetY in offsets:\n                # 马走日到达的新位置\n                newX = x + offsetX\n                newY = y + offsetY\n\n                pos = newX * n + newY\n\n                # 如果新位置越界或者已访问过,则不能访问\n                if newX < 0 or newX >= m or newY < 0 or newY >= n or (pos in vis):\n                    continue\n\n                # 将新位置加入新层\n                newQueue.append((newX, newY, step + 1))\n\n                # 该马到达(newX, newY)位置最小步数为step+1, 由于该马首次到达(newX, newY)位置,因此step+1就是最小步数\n                stepGrid[newX][newY] += step + 1\n\n                # 记录该马访问过该位置,后续如果该马再次访问该位置,则不是最小步数\n                vis.add(pos)\n\n        queue = newQueue\n        k -= 1  # 剩余步数减1\n\n    # BFS完后,将公共可达位置reach和当前马可达位置vis取交集,交集部分就是新的公共可达位置\n    reach &= vis\n\n\n# 算法入口\ndef getResult():\n    # 遍历棋盘\n    for i in range(m):\n        for j in range(n):\n            # 如果棋盘(i,j)位置是马\n            if grid[i][j] != '.':\n                # 马的等级\n                k = int(grid[i][j])\n                # 对该马进行BFS走日\n                bfs(i, j, k)\n\n    # 如果所有马走完,发现没有公共可达位置\n    if len(reach) == 0:\n        return -1\n\n    # 记录所有马都可达位置的最小步数和\n    minStep = sys.maxsize\n\n    for pos in reach:\n        x = pos // n\n        y = pos % n\n        # (x,y)是所有马都可达的位置,stepMap[x][y]记录所有马到达此位置的步数和\n        minStep = min(minStep, stepGrid[x][y])\n\n    return minStep\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

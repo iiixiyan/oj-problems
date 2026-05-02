@@ -1,0 +1,66 @@
+{
+  "id": "q125",
+  "title": "快速开租建站",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "当前IT部门支撑了子公司颗粒化业务，该部门需要实现为子公司快速开租建站的能力，建站是指在一个全新的环境部署一套IT服务。\n每个站点开站会由一系列部署任务项构成，每个任务项部署完成时间都是固定和相等的，设为1。\n部署任务项之间可能存在依赖，假如任务2依赖任务1，那么等任务1部署完，任务2才能部署。\n任务有多个依赖任务则需要等所有依赖任务都部署完该任务才能部署。\n没有依赖的任务可以并行部署，优秀的员工们会做到完全并行无等待的部署。\n给定一个站点部署任务项和它们之间的依赖关系，请给出一个站点的最短开站时间。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行是任务数taskNum,第二行是任务的依赖关系数relationsNum\n接下来 relationsNum 行，每行包含两个id，描述一个依赖关系，格式为：IDi IDj，表示部署任务i部署完成了，部署任务j才能部署，IDi 和 IDj 值的范围为：[0, taskNum)\n注：输入保证部署任务之间的依赖不会存在环。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "一个整数，表示一个站点的最短开站时间。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1 ＜ taskNum ≤ 100\n1 ≤ relationsNum ≤ 5000"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n5\n0 4\n1 2\n1 3\n2 3\n2 4\n输出\n3",
+      "cases": [
+        {
+          "input": "5\n5\n0 4\n1 2\n1 3\n2 3\n2 4",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "有5个部署任务项，5个依赖关系，如下图所示。\n我们可以先同时部署任务项0和任务项1，然后部署任务项2，最后同时部署任务型3和任务型4.最短开战时间为3。\n输入\n5\n3\n0 3\n0 4\n1 3\n输出\n2\n\n有5个部署任务项，3个依赖关系，如下图所示。\n我们可以先同时部署任务型0，任务型1，任务项2。然后再同时部署任务型4.最短开站时间为2。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是经典的拓扑排序问题。因为题目种各任务之间有较为明显的前后依赖关系。\n对于拓扑排序，我们可以看下面博客的解析：\nLeetCode - 207 课程表_伏城之外的博客-CSDN博客\n华为OD机试 - 跳格子游戏_伏城之外的博客-CSDN博客_跳格子 华为机试\n本题要求的并非是让我们判断拓扑结构中是否有环结构，因为题目已经"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "了\n输入保证部署任务之间的依赖不会存在环\n本题是要我们求解最短开战时间，这里最短开战时间其实就是剥离入度0点的次数，如下图所示："
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1中各顶点的入度值已用红色值标出\n我们可以不断地剥离入度为0地顶点，因为题目说：\n没有依赖的任务可以并行部署，优秀的员工们会做到完全并行无等待的部署。\n可以只需要剥离三次，而这也是最短建站时间。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "taskNum = int(input())\nrelationsNum = int(input())\n\nrelations = []\nfor i in range(relationsNum):\n    relations.append(list(map(int, input().split())))\n\nnext = {}\ninDegree = [0 for i in range(taskNum)]\n\nfor relation in relations:\n    a, b = relation\n    # a的下一个顶点有b\n    if next.get(a) is None:\n        next[a] = [b]\n    else:\n        next[a].append(b)\n    # b顶点的入度++\n    inDegree[b] += 1\n\nqueue = []\n\nt = 1\nfor i in range(taskNum):\n    if inDegree[i] == 0:\n        queue.append((i, t))  # i含义是入度为0的顶点,t含义是该顶点所处建站时间\n\nwhile len(queue) > 0:\n    task, time = queue.pop(0)  # 注意这里为了维持t,一定要使用队列先进先出,出队代表删除某顶点\n\n    if next.get(task) is not None and len(next[task]) > 0:\n        for nxt in next[task]:\n            # 该顶点被删除,则其后继点的入度值--,若--后入度为0,则将成为新的出队点\n            inDegree[nxt] -= 1\n            if inDegree[nxt] == 0:\n                t = time + 1  # 此时建站时间+1\n                queue.append((nxt, t))\n\nprint(t)"
+  },
+  "verified": false
+}

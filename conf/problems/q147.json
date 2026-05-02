@@ -1,0 +1,56 @@
+{
+  "id": "q147",
+  "title": "羊、狼、农夫过河",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "羊、狼、农夫都在岸边，当羊的数量小于狼的数量时，狼会攻击羊，农夫则会损失羊。农夫有一艘容量固定的船，能够承载固定数量的动物。\n要求求出不损失羊情况下将全部羊和狼运到对岸需要的最小次数。\n只计算农夫去对岸的次数，回程时农夫不会运送羊和狼。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "：农夫在或农夫离开后羊的数量大于狼的数量时狼不会攻击羊。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为M，N，X， 分别代表羊的数量，狼的数量，小船的容量。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出不损失羊情况下将全部羊和狼运到对岸需要的最小次数（若无法满足条件则输出0）。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5 3 3\n输出\n3",
+      "cases": [
+        {
+          "input": "5 3 3",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "第一次运2只狼\n第二次运3只羊\n第三次运2只羊和1只狼\n输入\n5 4 1\n输出\n0\n\n如果找不到不损失羊的运送方案，输出0"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题求不损失羊的前提下，将羊和狼全部运到对岸的最小次数。\n首先，要搞清楚，如何保证不损失羊？\n农夫在或农夫离开后羊的数量大于狼的数量时狼不会攻击羊。\n这里有个文字断句陷阱，到底是这样断句\n农夫在时，狼不会攻击羊\n农夫离开后羊的数量大于狼的数量时，狼不会攻击羊\n还是这样断句\n农夫在，羊的数量大于狼的数量时，狼不会攻击羊\n农夫离开后，羊的数量大于狼的数量时，狼不会攻击羊\n经过一位网友的真实机考反馈，上面画删除线的断句理解是错误的。\n那么”农夫在时，狼不会攻击羊“，这句话到底会有什么影响呢？\n只计算农夫去对岸的次数，回程时农夫不会运送羊和狼。\n通过上面这句话，我们可以理解，农夫回程不会带动物。因此可以认定：\n农夫如果在本岸带走的动物后，如果本岸羊 <= 狼了，在农夫离开后，羊就会被攻击\n农夫如果在对岸离开后，对岸的羊 <= 狼，羊就会被攻击\n因此，”农夫在时，狼不会攻击羊“，这句话只会影响：船上，羊和狼的关系，即农夫在船上时，如果羊数量 <= 狼数量，此时因为农夫在，因此狼不会攻击羊。\n本题没有什么好的\n\n，只能通过暴力枚举所有羊、狼数量情况，只需要满足下面三个条件：\n农夫离开后，本岸羊 > 本岸狼\n农夫离开后，对岸羊 > 对岸狼\n船上由于农夫始终在，因此羊、狼什么数量都可以，只要不超过船载量\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import math\n\n# 输入获取\nm, n, x = map(int, input().split())\n\n\n# 算法入口\ndef getResult(sheep, wolf, boat):\n    ans = []\n    dfs(sheep, wolf, boat, 0, 0, 0, ans)\n\n    if len(ans) > 0:\n        return min(ans)\n    else:\n        return 0\n\n\ndef dfs(sheep, wolf, boat, oppo_sheep, oppo_wolf, count, ans):\n    if sheep == 0 and wolf == 0:\n        ans.append(count)\n        return\n\n    if sheep + wolf <= boat:\n        ans.append(count + 1)\n        return\n\n    # i 代表船上羊数量,最多Math.min(boat, sheep)\n    for i in range(min(boat, sheep) + 1):\n        # j 代表船上狼数量,最多Math.min(boat, wolf)\n        for j in range(min(boat, wolf) + 1):\n            # 空运\n            if i + j == 0:\n                continue\n\n            # 超载\n            if i + j > boat:\n                break\n\n            # 本岸羊 <= 本岸狼,说明狼运少了\n            if sheep - i <= wolf - j and sheep - i != 0:\n                continue\n\n            # 对岸羊 <= 对岸狼,说明狼运多了\n            if oppo_sheep + i <= oppo_wolf + j and oppo_sheep + i != 0:\n                break\n\n            # 对岸没羊,但是对岸狼已经超过船载量,即下次即使整船都运羊,也无法保证对岸羊 > 对岸狼\n            if oppo_sheep + i == 0 and oppo_wolf + j >= boat:\n                break\n\n            dfs(sheep - i, wolf - j, boat, oppo_sheep + i, oppo_wolf + j, count + 1, ans)\n\n\n# 算法调用\nprint(getResult(m, n, x))"
+  },
+  "verified": false
+}

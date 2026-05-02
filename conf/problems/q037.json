@@ -44,6 +44,8 @@
       "content": "本题其实就是求解最大重叠区间个数的变种题。\n即，我们只要找到具有最大重叠部分的区间的起点就是本题\n\n。\n关于最大重叠区间个数求解，请看\n年年岁岁都容易挂的算法高频面试题，一线大厂经典面试题之堆和最大线段重合问题_哔哩哔哩_bilibili\n上面视频的核心思想其实就是：\n首先，将所有区间按开始位置升序\n然后，遍历排序后区间，并将小顶堆中小于遍历区间起始位置的区间弹出（小顶堆实际存储区间结束位置），此操作后，小顶堆中剩余的区间个数，就是和当前遍历区间重叠数。\n我们只需要在求解最大重叠数时，保留遍历的区间的起始位置即可。\n对于JS而言，没有原生堆结构（即优先队列），因此我们需要手写小顶堆代码，关于优先队列，大家可以参考：\nLeetCode - 1705 吃苹果的最大数目_伏城之外的博客-CSDN博客\n但是本题是100分值的，可能不会存在大数量级，因此大家可以先尝试用有序数组代替小顶堆，如果不行，再实现小顶堆。\n另外，本题和\n华为OD机试 - 最大化控制资源成本_伏城之外的博客-CSDN博客\n很像，大家可以继续尝试做下上面这题。\n2023.2.1根据网友指正，本题小火车是有可能走回程的，比如，坐车区间 为 [3,2]，即从站点3 -> 站点4 -> 站点1 -> 站点2。\n对于这种情况，就会破坏上面对于区间的排序。因此，我们需要将：该情况的坐车区间拆分为 [3, 4]和[1, 2]\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "import queue\n\n# 输入获取\nn = int(input())\nranges = [list(map(int, input().split())) for i in range(n)]\n\n\n# 算法入口\ndef getResult(ranges):\n    # 由于题目并未说有几个站点,因此需要计算出最后一个站点\n    last = max(map(lambda x: max(x[0], x[1]), ranges))\n\n    # 如果存在 [3,2] 这种坐车区间,即从站点3 -> 站点4 -> 站点1 -> 站点2,则此时将该坐车区间拆分为 [3, 4]和[1, 2]\n    tmp = []\n    for ran in ranges:\n        s, e = ran\n\n        if s > e:\n            tmp.append([s, last])\n            tmp.append([1, e])\n        else:\n            tmp.append(ran)\n    ranges = tmp\n\n    # 最大重叠区间个数求解\n    ranges.sort(key=lambda x: x[0])\n    end = queue.PriorityQueue()\n    maxV = 0\n    ans = ranges[0][0]\n\n    for ran in ranges:\n        s, e = ran\n\n        while end.qsize() > 0:\n            top = end.queue[0]\n\n            if top < s:\n                end.get()\n            else:\n                break\n\n        end.put(e)\n\n        if end.qsize() > maxV:\n            maxV = end.qsize()\n            ans = s\n\n    return ans\n\n\nprint(getResult(ranges))"
+  },
   "verified": false
 }

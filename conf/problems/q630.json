@@ -1,0 +1,86 @@
+{
+  "id": "q630",
+  "title": "100分-文章特征提取",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "100\n分\n-\n文章特征提取\n\n一篇文档由多个文本片段组成。这里假定每个片段只由小写英文字母组成，不包含其他内容。现在需要对这些文本片段进行特征提取，规则如下：\n先找出所有片段中都包含的字母，也就是该字母在每个片段中都至少出现过一次。\n如果某个字母在多个片段中都出现过，则取它在所有片段中出现次数的最小值。\n若最小值为\n1\n，则结果中包含\n1\n个该字母\n若最小值为\n2\n，则结果中包含\n2\n个该字母\n以此类推\n最终输出满足条件的所有字母组成的字符串，并按字母从小到大排序。\n如果没有任何字母满足条件，则结果为空字符串。\n补充"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "输入中的字符串（即片段）总数小于\n1000"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为若干文本片段，片段之间用空格分割。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出特征提取结果。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入\npaper parent parade\n输出\naepr",
+      "cases": [
+        {
+          "input": "paper parent parade",
+          "output": "aepr",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "p\n、\na\n、\ne\n、\nr\n在每个字符串中都至少出现一次，且每个字母在各字符串中的最小出现次数都是\n1\n，所以结果为\naepr\n。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2\n输入\nhello hollow halloween\n输出\nhllo",
+      "cases": [
+        {
+          "input": "hello hollow halloween",
+          "output": "hllo",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "h\n在三个字符串中的出现次数最小值为\n1\nl\n在三个字符串中的出现次数最小值为\n2\no\n在三个字符串中的出现次数最小值为\n1\n所以结果为\nhllo\n。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "3\n输入\nabc def ghi\n输出",
+      "cases": [
+        {
+          "input": "abc def ghi\n输出",
+          "output": "",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "没有字母在所有三个字符串中都出现。"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "思路：模拟\n/\n计数\n统计每个文本片段中\n26\n个字母的出现次数。\n对每个字母，取它在所有片段中的出现次数最小值。\n如果最小值大于\n0\n，就把该字母加入答案对应次数。\n按字母从小到大拼接输出结果。\nC++\n#include<iostream>\n#include<vector>\n#include<string>\n#include <utility>\n#include <sstream>\n#include<algorithm>\n#include<cmath>\n#include<map>\n#include<climits>\nusing namespace std;\n//\n通用 切割函数 函数 将字符串\nstr\n根据\ndelimiter\n进行切割\nvector<string> split(const\nstring& str, const string& delimiter) {\nvector<string>\nresult;\nsize_t start = 0;\nsize_t end =\nstr.find(delimiter);\nwhile (end !=\nstring::npos) {\nresult.push_back(str.substr(start, end - start));\nstart = end + delimiter.length();\nend = str.find(delimiter, start);\n}\n//\n添加最后一个部分\nresult.push_back(str.substr(start));\nreturn result;\n}\nstring\nfeatureExtraction(vector<string>& docs) {\nvector<int>\nminCount(26, INT_MAX);\nfor (int i = 0; i <\ndocs.size(); i++) {\nvector<int> curCount(26, 0);\n//\n统计出现次数\nfor (auto& c : docs[i]) {\ncurCount[c - 'a']++;\n}\n//\n更新全局最小值\nfor (int j = 0; j < 26; j++) {\nminCount[j] = min(minCount[j], curCount[j]);\n}\n}\n//\n构建结果\nstring res;\nfor (int i = 0; i <\n26; i++) {\nres.append(minCount[i], char('a' + i));\n}\nreturn res;\n}\nint main() {\nstring input;\ngetline(cin, input);\nvector<string>\ndocs = split(input, \" \");\nstring res =\nfeatureExtraction(docs);\ncout << res;\nreturn 0;\n}\nJAVA\nimport java.util.*;\npublic class Main {\npublic static String\nfeatureExtraction(String[] docs) {\nint[] minCount = new int[26];\nArrays.fill(minCount, Integer.MAX_VALUE);\nfor (String doc : docs) {\nint[] curCount = new int[26];\n//\n统计当前字符串字符出现次数\nfor (char c : doc.toCharArray()) {\ncurCount[c - 'a']++;\n}\n//\n更新全局最小值\nfor (int i = 0; i < 26; i++) {\nminCount[i] = Math.min(minCount[i], curCount[i]);\n}\n}\n//\n构建结果\nStringBuilder res = new StringBuilder();\nfor (int i = 0; i < 26; i++) {\nfor (int j = 0; j < minCount[i]; j++) {\nres.append((char) ('a' + i));\n}\n}\nreturn res.toString();\n}\npublic static void\nmain(String[] args) {\nScanner sc = new Scanner(System.in);\nString input = sc.nextLine();\nString[] docs = input.split(\" \");\nString res = featureExtraction(docs);\nSystem.out.print(res);\n}\n}\nPython\nimport sys\ndef featureExtraction(docs):\nminCount =\n[float('inf')] * 26\nfor doc in docs:\ncurCount = [0] * 26\n#\n统计当前字符串字符出现次数\nfor c in doc:\ncurCount[ord(c) - ord('a')] += 1\n#\n更新全局最小值\nfor i in range(26):\nminCount[i] = min(minCount[i], curCount[i])\n#\n构建结果\nres = []\nfor i in range(26):\nres.append(chr(ord('a') + i) * int(minCount[i]))\nreturn\n\"\".join(res)\ninput_line"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

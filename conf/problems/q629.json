@@ -1,0 +1,64 @@
+{
+  "id": "q629",
+  "title": "100分-失灵的键盘",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "100\n分\n-\n失灵的键盘\n(C/C++/Py/Java/Js/Go)\n\n有一个键盘有\n2\n个按键失灵了，按下这些键时会连续输出其他键对应的字符两次。具体如下：\n按下\nj\n键一次，屏幕上显示\nuu\n（两个连续的\nu\n）\n按下\nb\n键一次，屏幕上显示\ntt\n（两个连续的\nt\n）\nu\n键和\nt\n键是好的，按下\nu\n键一次时，屏幕只会显示一次\nu\n；按下\nt\n键一次时，屏幕只会显示一次\nt\n假定屏幕上连续显示两个\nt\n，一定是按了一次\nb\n键，而不是两次\nt\n键；并且假定按键\nt\n之后不会紧接着按键\nb\n，即\ntttt\n转义为两个\nb\n，而不可能是\ntbt\nu\n和\nj\n也按同样规则处理\n其它按键也都正常工作\n为了方便维修，给定一串屏幕上输出的字符串，维修师傅要求按实际按键次数降序输出；次数相同的按键，按对应字符升序排序。\n其中失灵按键按原本对应的字符排序，只统计按键次数大于\n0\n的按键。\n同时输出时需要做一次转义（字符映射）：\n按键\n0 ~ 9\n，直接输出数字\n0\n     ~ 9\n按键\na ~ z\n，输出为\n10 ~\n     35"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一个字符串\ns\n，只包含小写字母和数字，长度不超过\n500\n，且\ns\n中不包含\nb\n和\nj\n。\n补充\n按键范围只包括：数字\n0 ~ 9\n和小写字母\na ~ z\n，且不包含\nb\n和\nj\n。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出按键转义后的值与按键次数构成的结果对，所有按键结果对按照按键次数降序排列。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入\nt\n输出\n29:1",
+      "cases": [
+        {
+          "input": "t",
+          "output": "29:1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "单个字符表示按了\nt\n键，\nt\n键转义为\n29\n。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2\n输入\nuuuua\n输出\n19:2 10:1",
+      "cases": [
+        {
+          "input": "uuuua",
+          "output": "19:2 10:1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "uuuu\n匹配为两个\nj\n，\na\n一个。"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "思路：模拟\n+\n自定义排序\n按题意将连续出现的\nuu\n和\ntt\n分别看作\nj\n和\nb\n处理。\n遍历字符串，统计每个按键实际出现次数。\n将字符按映射规则转成数字：\n0~9\n保持不变\na~z\n映射为\n10~35\n最后按\n“\n次数降序、字符升序\n”\n排序输出。\nC++\n#include<iostream>\n#include<vector>\n#include<string>\n#include <utility>\n#include <sstream>\n#include<algorithm>\n#include<cmath>\n#include<map>\nusing namespace std;\nint getKeyNum(char c) {\nif ('0' <=c\n&& c <= '9') {\nreturn c - '0';\n}\nreturn c - 'a' + 10;\n}\nvector<vector<int>>\ncount(string s) {\nmap<char, int>\ncharCount;\nint index = 0, n =\ns.size();\nwhile (index < n) {\n// u\n匹配规则\nif (s[index] == 'u' && index + 1 < n && s[index + 1] == 'u')\n{\ncharCount['j']++;\nindex +=2;\n} else if (s[index] == 't' && index + 1 < n && s[index + 1]\n== 't') {\ncharCount['b']++;\nindex += 2;\n} else {\ncharCount[s[index]]++;\nindex++;\n}\n}\nvector<vector<int>> res;\nfor(auto &p :\ncharCount) {\nres.push_back({getKeyNum(p.first), p.second});\n}\n//\n自定义排序\nsort(res.begin(),\nres.end(), [](vector<int> &a, vector<int> &b) {\nreturn a[1] > b[1];\n});\nreturn res;\n}\nint main() {\nstring s;\ncin >> s;\nvector<vector<int>> res = count(s);\n//\n输出结果\nint n = res.size();\nfor (int i = 0; i <\nn; i++) {\ncout << res[i][0] << \":\" << res[i][1];\nif (i!=n-1) {\ncout << \" \";\n}\n}\nreturn 0;\n}\nJava\nimport java.util.*;\npublic class Main {\nstatic int\ngetKeyNum(char c) {\nif (c >= '0' && c <= '9') return c - '0';\nreturn c - 'a' + 10;\n}\nstatic List<int[]>\ncount(String s) {\nMap<Character, Integer> charCount = new HashMap<>();\nint index = 0, n = s.length();\nwhile (index < n) {\n// u\n匹配规则\nif (s.charAt(index) == 'u' && index + 1 < n &&\ns.charAt(index + 1) == 'u') {\ncharCount.put('j', charCount.getOrDefault('j', 0) + 1);\nindex += 2;\n}\n// b\n匹配规则\nelse if (s.charAt(index) == 't' && index + 1 < n &&\ns.charAt(index + 1) == 't') {\ncharCount.put('b', charCount.getOrDefault('b', 0) + 1);\nindex += 2;\n}\nelse {\nchar c = s.charAt(index);\ncharCount.put(c, charCount.getOrDefault(c, 0) + 1);\nindex++;\n}\n}\nList<int[]> res = new ArrayList<>();\nfor (Map.Entry<Character, Integer> e : charCount.entrySet()) {\nres.add(new int[]{getKeyNum(e.getKey()), e.getValue()});\n}\n//\n排序：次数降序\n+ key\n升序\nres.sort((a, b) -> {\nif (a[1] == b[1]) return a[0] - b[0];\nreturn b[1] - a[1];\n});\nreturn res;\n}\npublic static void\nmain(String[] args) {\nScanner sc = new Scanner(System.in);\nString s = sc.next();\nList<int[]> res = count(s);\nfor (in"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

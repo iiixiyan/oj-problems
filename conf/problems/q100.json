@@ -1,0 +1,66 @@
+{
+  "id": "q100",
+  "title": "上班之路",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "Jungle\n生活在美丽的蓝鲸城，大马路都是方方正正，但是每天马路的封闭情况都不一样。\n地图由以下元素组成：\n1）”.” — 空地，可以达到;\n2）”*” — 路障，不可达到;\n3）”S” — Jungle的家;\n4）”T” — 公司.\n其中我们会限制\nJungle\n拐弯的次数，同时\nJungle\n可以清除给定个数的路障，现在你的任务是计算\nJungle\n是否可以从家里出发到达公司。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的第一行为两个整数t,c（0 ≤ t,c ≤ 100）,t代表可以拐弯的次数，c代表可以清除的路障个数。\n输入的第二行为两个整数n,m（1 ≤ n,m ≤ 100）,代表地图的大小。\n接下来是n行包含m个字符的地图。n和m可能不一样大。\n我们保证地图里有S和T。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出是否可以从家里出发到达公司，是则输出YES，不能则输出NO。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2 0\n5 5\n..S..\n****.\nT....\n****.\n.....\n输出\nYES",
+      "cases": [
+        {
+          "input": "2 0\n5 5\n..S..\n****.\nT....\n****.\n.....",
+          "output": "YES",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n1 2\n5 5\n.*S*.\n*****\n..*..\n*****\nT....\n输出\nNO\n\n该"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "中，至少需要拐弯1次，清除3个路障，所以无法到达"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1图示"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2图示\n本题和迷宫问题很像，都可以使用深度优先搜索来做，相较于其他迷宫问题，本题对找终点的运动路径做了如下限制：\n1、最多只能变更t次数运动方向\n2、支持破壁，即清除障碍，但是最多只能破壁c次数。\n因此，我们在深度优先搜索之前，需要定义两个变量：\nut：已变更了几次运动方向\nuc：已破壁几次\n如果深度优先搜索的下一步的代价是ut > t，或者uc > c，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "下一步无法继续走了。\nJavaScript算法源码\n可以debug看下path中运动位置变化帮助理解"
+    }
+  ],
+  "solutions": {
+    "Python": "t, c = map(int, input().split())\nn, m = map(int, input().split())\nmatrix = []\nfor i in range(n):\n    matrix.append(input())\n\noffsets = ((-1, 0, \"up\"), (1, 0, \"down\"), (0, -1, \"left\"), (0, 1, \"right\"))\n\n\ndef dfs(si, sj, ut, uc, lastDirect, path):\n    \"\"\"\n    :param si: 当前位置横坐标\n    :param sj: 当前位置纵坐标\n    :param ut: 已拐弯次数\n    :param uc: 已破壁次数\n    :param lastDirect: 上一次运动方向,初始为undefined,表示第一次运动不会造成拐弯\n    :param path: 行动路径,用于记录走过的位置,避免走老路\n    :return:\n    \"\"\"\n\n    # 如果当前位置就是目的地,则返回true\n    if matrix[si][sj] == \"T\":\n        return True\n\n    # 有四个方向选择走下一步\n    for offset in offsets:\n        offsetX, offsetY, direct = offset\n        newI = si + offsetX\n        newJ = sj + offsetY\n\n        # flag1记录是否拐弯\n        flag1 = False\n        # flag2记录是否破壁\n        flag2 = False\n\n        # 如果下一步位置没有越界,则进一步检查\n        if 0 <= newI < n and 0 <= newJ < m:\n            # 如果下一步位置已经走过了,则是老路,可以不走\n            pos = f'{newI}-{newJ}'\n\n            if pos in path:\n                continue\n\n            # 如果下一步位置需要拐弯\n            if lastDirect is not None and lastDirect != direct:\n                # 如果拐弯次数用完了,则不走\n                if ut + 1 > t:\n                    continue\n                # 否则就走\n                flag1 = True\n\n            # 如果下一步位置需要破壁\n            if matrix[newI][newJ] == \"*\":\n                # 如果破壁次数用完了,则不走\n                if uc + 1 > c:\n                    continue\n                # 否则就走\n                flag2 = True\n\n            # 记录已走过的位置\n            path.add(pos)\n\n            # 继续下一步递归\n            # 如果拐弯了,则已使用的拐弯次数ut++\n            # 如果破壁了,则已使用的破壁次数uc++\n            res = dfs(newI, newJ, ut + (1 if flag1 else 0), uc + (1 if flag2 else 0), direct, path)\n\n            # 如果某路径可以在给定的t,c下,到达目的地T,则返回true\n            if res:\n                return True\n\n            # 否则,回溯\n            path.remove(pos)\n\n    return False\n\n\ndef getResult():\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] == \"S\":\n                return \"YES\" if dfs(i, j, 0, 0, None, {f'{i}-{j}'}) else \"NO\"\n\n\nprint(getResult())"
+  },
+  "verified": false
+}

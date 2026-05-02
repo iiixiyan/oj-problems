@@ -1,0 +1,54 @@
+{
+  "id": "q376",
+  "title": "项目排期",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在线OJ刷题\n题目详情 - 项目排期 - Hydro\n\n项目组共有 N 个开发人员，项目经理接到了 M 个独立的需求，每个需求的工作量不同，且每个需求只能由一个开发人员独立完成，不能多人合作。\n假定各个需求直接无任何先后依赖关系，请设计算法帮助项目经理进行工作安排，使整个项目能用最少的时间交付。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为 M 个需求的工作量，单位为天，用逗号隔开。\n例如：\nX1 X2 X3 ... Xm\n表示共有 M 个需求，每个需求的工作量分别为X1天，X2天，...，Xm天。其中：\n0 < M < 30\n0 < Xm < 200\n第二行输入为项目组人员数量N\n例如：\n5\n表示共有5名员工，其中 0 < N < 10"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最快完成所有工作的天数\n例如：\n25\n表示最短需要25天完成所有工作"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n6 2 7 7 9 3 2 1 3 11 4\n2\n输出\n28",
+      "cases": [
+        {
+          "input": "6 2 7 7 9 3 2 1 3 11 4\n2",
+          "output": "28",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "共有两位员工，其中一位分配需求 6 2 7 7 3 2 1 共需要28天完成，另一位分配需求 9 3 11 4 共需要27天完成，故完成所有工作至少需要28天。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以换个说法理解：\nM个独立需求 →  M个球\nN个开发人员  →  N个桶\n现在要将M个球装入N个桶中，问桶的最小容量是多少？\n我们可以利用二分法来求桶的容量，首先确定桶容量的范围：\n如果桶非常多，满足一个球一个桶，那么此时桶容量至少应该是max(X1, X2, ... , Xm)\n如果桶非常少，比如只有一个桶，那么此时所有球都需要装入该桶，则桶容量至多是 sum(X1, X2, ..., Xm)\n因此，我们可以在上面范围内二分取中间值mid作为可能的最小桶容量去尝试：N个桶装M个球\n关于N个桶装M个球是否可以装下，本题N,M数量级较小，可以使用回溯算法，暴力尝试所有球装桶情况，只要发现一种可以装完的策略，则可以返回TRUE，即在对应mid容量下可以实现N个桶装M个球。\n具体实现请看：\nLeetCode - 698 划分为k个相等的子集_一堆元素 求k个和相等的子集怎么弄-CSDN博客\n如果mid可以实现实现N个桶装M个球，则二分中间值mid就是一个可能解，但不一定是最优解，我们应该尝试更小的容量，此时只需要缩小二分的右边界为mid-1，然后再次二分取中间值即可。\n如果mid不可以实现N个桶装M个球，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "mid容量取小了，因此我们应该尝试更大的容量，此时只需要扩大二分的左边界为mid+1，然后再次二分取中间值即可。\n更多关于二分法，请看：\n算法设计 - 二分法和三分法，洛谷P3382_二分法与三分法-CSDN博客\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nballs = list(map(int, input().split()))\nn = int(input())\n\n\ndef check(index, buckets, limit):\n    \"\"\"\n    :param index: 要被装入球的&#xff08;balls&#xff09;索引\n    :param buckets: 桶数组,buckets[i]记录第i个桶的已经使用的容量\n    :param limit: 每个桶的最大容量,即限制\n    :return: k个桶&#xff08;每个桶容量limit&#xff09;是否可以装下所有balls\n    \"\"\"\n    if index == len(balls):\n        # 如果balls已经取完,则说明k个limit容量的桶,可以装完所有balls\n        return True\n\n    # select是当前要装的球\n    selected = balls[index]\n\n    # 遍历桶\n    for i in range(len(buckets)):\n        # 剪枝优化\n        if i > 0 and buckets[i] == buckets[i - 1]:\n            continue\n\n        # 如果当前桶装了当前选择的球后不超过容量限制,则可以装入\n        if selected + buckets[i] <= limit:\n            buckets[i] += selected\n            # 递归装下一个球\n            if check(index + 1, buckets, limit):\n                return True\n            # 如果这种策略无法装完所有球,则回溯\n            buckets[i] -= selected\n\n    return False\n\n\n# 算法入口\ndef getResult():\n    # 这里对balls降序,有利于降低后面回溯操作的复杂度\n    balls.sort(reverse=True)\n\n    # 分范围&#xff1a;即每个桶的容量最小,最大值\n    low = balls[0]  # 桶至少要有max(balls)的容量\n    high = sum(balls)  # 当只有一个桶时,此时该桶容量要装下所有balls\n\n    # 记录题解\n    ans = high\n\n    # 二分找中间值作为桶容量\n    while low <= high:\n        mid = (low + high) >> 1\n\n        if check(0, [0] * n, mid):\n            # 如果k个mid容量的桶,可以装完所有balls,那么mid容量就是一个可能解,但不一定是最优解,我们应该尝试更小的桶容量\n            ans = mid\n            high = mid - 1\n        else:\n            # 如果k个mid容量的桶,无法装完所有balls,那么说明桶容量取小了,我们应该尝试更大的桶容量\n            low = mid + 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

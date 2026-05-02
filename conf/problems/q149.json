@@ -1,0 +1,56 @@
+{
+  "id": "q149",
+  "title": "计算快递主站点",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "快递业务范围有N个站点，A站点与B站点可以中转快递，则认为A-B站可达，如果A-B可达，B-C可达，则A-C可达。\n现在给N个站点编号0、1、…n-1，用s[i][j]表示i-j是否可达，s[i][j]=1表示i-j可达，s[i][j]=0表示i-j不可达。\n现用二维数组给定N个站点的可达关系，请计算至少选择从几个主站点出发，才能可达所有站点（覆盖所有站点业务）。"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：s[i][j]与s[j][i]取值相同。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为N（1 < N < 10000），N表示站点个数。\n之后N行表示站点之间的可达关系，第i行第j个数值表示编号为i和j之间是否可达。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出站点个数，表示至少需要多少个主站点。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\n1 1 1 1\n1 1 1 0\n1 1 1 0\n1 0 0 1\n输出\n1",
+      "cases": [
+        {
+          "input": "4\n1 1 1 1\n1 1 1 0\n1 1 1 0\n1 0 0 1",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "选择0号站点作为主站点，0站点可达其他所有站点，\n所以至少选择1个站点作为主站才能覆盖所有站点业务。\n输入\n4\n1 1 0 0\n1 1 0 0\n0 0 1 0\n0 0 0 1\n输出\n3\n\n选择0号站点可以覆盖0、1站点，\n选择2号站点可以覆盖2号站点，\n选择3号站点可以覆盖3号站点，\n所以至少选择3个站点作为主站才能覆盖所有站点业务"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题其实就是求解图中连通分量个数。可以使用并查集求解。\n关于并查集知识，可以看\n华为机试 - 发广播_伏城之外的博客-CSDN博客_服务器广播 华为机试\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 并查集\nclass UnionFindSet:\n    def __init__(self, n):\n        self.fa = [idx for idx in range(n)]\n        self.count = n\n\n    def find(self, x):\n        if x != self.fa[x]:\n            self.fa[x] = self.find(self.fa[x])\n            return self.fa[x]\n        return x\n\n    def union(self, x, y):\n        x_fa = self.find(x)\n        y_fa = self.find(y)\n\n        if x_fa != y_fa:\n            self.fa[y_fa] = x_fa\n            self.count -= 1\n\n\nn = int(input())\n\nmatrix = []\nfor i in range(n):\n    matrix.append(list(map(int, input().split())))\n\nufs = UnionFindSet(n)\n\nfor i in range(n):\n    for j in range(i + 1, n):  # 这里j从i+1开始,是因为矩阵是对称的\n        if matrix[i][j] == 1:\n            ufs.union(i, j)\n\nprint(ufs.count)"
+  },
+  "verified": false
+}

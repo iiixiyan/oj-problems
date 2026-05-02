@@ -1,0 +1,61 @@
+{
+  "id": "q265",
+  "title": "数据最节约的备份方法",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有若干个文件，使用刻录光盘的方式进行备份，假设每张光盘的容量是500MB，求使用光盘最少的文件分布方式\n所有文件的大小都是整数的MB，且不超过500MB；文件不能分割、分卷打包"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一组文件大小的数据"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "使用光盘的数量"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "不用考虑输入数据不合法的情况；假设最多100个输入文件。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n100,500,300,200,400\n输出\n3",
+      "cases": [
+        {
+          "input": "100,500,300,200,400",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "(100,400),(200,300),(500) 3张光盘即可。\n输入和输出内容都不含空格。\n输入\n1,100,200,300\n输出\n2\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以分为两步求解：\n求光盘数量\n检查给定光盘数量（每个光盘500M）是否可以放下所有文件\n其中，第一步可以使用二分法求解\n要装入所有文件的至少光盘数量为1，即所有文件之和小于等于500M\n要装入所有文件的至多光盘数量为文件数量，即每个文件都是500M\n我们只需要二分找中间值mid作为可能的解去带入第二步检查即可。\n如果第二步，检查mid个光盘可以装入所有文件，那么mid就是一个可能解，我们需要记录它，然后尝试更小更优解，即继续二分，二分右边界max = mid - 1\n如果第二步，检查mid个光盘无法装入所有文件，那么"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "mid个光盘不够，我们需要尝试更多光盘，即下次二分是，左边界min = mid + 1\n关于第二步的实现，可以参考下面桶装球问题：\nLeetCode - 698 划分为k个相等的子集_leetcode - 698 划分为k个相等的 集_伏城之外的博客_伏城之外的博客-CSDN博客\n本题中的mid就相当于上面题目的k，而本题中光盘的500M相当于上题的子集和。\n同时本题要比上面题更简单一点，因为本题不需要装满桶，只需要保证所有球都能放入桶即可。\n因此第二步逻辑解析情况上面博客。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nnums = list(map(int, input().split(\",\")))\n\n\ndef partition(buckets, nums, index):\n    if index == len(nums):\n        return True\n\n    select = nums[index]\n    for i in range(len(buckets)):\n        if i > 0 and buckets[i] == buckets[i - 1]:  # 此处判断会极大优化性能\n            continue\n\n        if buckets[i] + select <= 500:\n            buckets[i] += select\n            if partition(buckets, nums, index + 1):\n                return True\n            buckets[i] -= select\n\n    return False\n\n\ndef check(count, nums):\n    # nums数组中的数是否可以分为count组,每组之和<=500\n    # 这个问题可以使用回溯算法,将count组想象成count个桶,每个桶容量500,nums数组元素就是小球,我们需要将所有小球放到count个桶中,保证每个桶容量不超\n    buckets = [0] * count\n    return partition(buckets, nums, 0)\n\n\n# 算法入口\ndef getResult():\n    # 将文件大小降序\n    nums.sort(reverse=True)\n\n    # 至少分组\n    low = 1\n    # 至多分组\n    high = len(nums)\n\n    # 记录题解\n    ans = high\n\n    # 二分\n    while low <= high:\n        mid = (low + high) >> 1\n\n        # 看nums是否可以分为mid组,每组之和小于等于500\n        if check(mid, nums):\n            # 可以分成功,则mid就是一个可能解\n            ans = mid\n            # 继续尝试更小解\n            high = mid - 1\n        else:\n            # 不可以分成功,则mid取消了,即分组少了,下次应该尝试更大分组数\n            low = mid + 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,56 @@
+{
+  "id": "q332",
+  "title": "字符串比较",
+  "score": 200,
+  "tags": [
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定字符串A、B和正整数V，A的长度与B的长度相等， 请计算A中满足如下条件的最大连续子串的长度：\n该连续子串在A和B中的位置和长度均相同。\n该连续子串|A[i] – B[i]|之和小于等于V。其中|A[i] – B[i]|表示两个字母\nASCII码之差的绝对值\n。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为三行：\n第一行为字符串A，仅包含小写字符，1 <= A.length <=1000。\n第二行为字符串B，仅包含小写字符，1 <= B.length <=1000。\n第三行为正整数V，0<= V <= 10000。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "字符串最大连续子串的长度，要求该子串|A[i] – B[i]|之和小于等于V。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nxxcdefg\ncdefghi\n5\n输出\n2",
+      "cases": [
+        {
+          "input": "xxcdefg\ncdefghi\n5",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "字符串A为xxcdefg，字符串B为cdefghi，V=5。\n它的最大连续子串可以是cd->ef,de->fg,ef->gh,fg->hi，所以最大连续子串是2。\n在线OJ\n题目详情 - 字符串比较 - HydroOJ"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题其实可以转化为求解：和不超过v的最长连续子序列问题。\n原始数组就是上面的ascii码差值绝对值数组diff：[21, 20, 2, 2, 2, 2, 2]\n本题数量级不大，diff数组的长度最大1000，因此我们只要求出区间和<=v的所有区间，取其中最长的即可。这里任意区间的区间和求解可以通过前缀和完成，具体可以看下面博客：\n算法设计 - 前缀和 & 差分数列_伏城之外的博客-CSDN博客\n或者我们可以利用滑动窗口来求解：和不超过v的最长连续子序列问题。\n我们可以定义两个指针L,R，分别代表滑窗的左右边界，初始化时，L，R都为0，\n然后再定义一个滑窗内部和sum，初始为diff[r]\n接下来，判断sum和v的大小：\n如果 sum < v，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "滑窗内部和过小，我们应该将滑窗的右边界R++，来扩大滑窗，滑窗内部和sum += diff[R]，需要\n\n的是，这里我们需要\n\nR越界问题，需要先判断R++是否越界，如果未越界，才能sum += diff[R]\n如果 sum == v，则\n\n滑窗内部和刚刚好，我们应该记录此时滑窗对应的连续子序列长度：R - L + 1 作为一个可能解，接下来就是滑窗左右边界的移动问题：\n按照以往滑窗运动经验，此时应该L++，R++，但是这里我们只应该做R++，而不应该做L++，原因是后续的diff[i]可能都是0，即不会增加sum，只会增加连续子序列的长度，因此如果这种情况做了L++的话，我们会得不到最优解。\n同样地，这里做R++，也需要\n\nR越界问题，只有R++后不越界，我们才能sum += diff[R]\n如果 sum > v，我们应该让滑窗左边界L++，来减少sum，即sum -= diff[L]，但是在做滑窗左边界L++之前，我们应该确认一下，上一个状态的滑窗，即范围是[L, R-1]的滑窗是否是满足sum <= v的滑窗，如果是，则我们需要记录上一个滑窗的长度R - L\n需要\n\n的是，当前滑窗做滑窗左边界L++后，L是有可能超过R的，因此我们需要保证L超过R后，R的位置要更新到等于L的地方，此时又相当于给滑窗sum += diff[R]\n同样地，需要\n\nR更新位置的越界问题，即只有R=L后不越界，才能sum += diff[R]\n前缀和解法\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\na = input()\nb = input()\nv = int(input())\n\n\n# 算法入口\ndef getResult():\n    n = len(a)\n\n    # a,b字符串的各位字符的ascii绝对值差距数组\n    preSum = [0] * (n+1)\n    for i in range(1, n+1):\n        preSum[i] = preSum[i-1] + abs(ord(a[i-1]) - ord(b[i-1]))\n\n    # 记录题解\n    ans = 0\n\n    for l in range(n):\n        for r in range(l+1, n+1):\n            # 区间 [l+1, r]的和 = preSum[r] - preSum[l]\n            if preSum[r] - preSum[l] <= v:\n                ans = max(ans, r-l)\n\n    return ans\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

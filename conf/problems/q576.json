@@ -1,0 +1,34 @@
+{
+  "id": "q576",
+  "title": "爱吃蟠桃的孙悟空",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n孙悟空爱吃蟠桃，有一天趁着蟠桃园守卫不在来偷吃。已知蟠桃园有 N 棵桃树，每颗树上都有桃子，守卫将在 H 小时后回来。\n孙悟空可以决定他吃蟠桃的速度K（个/小时），每个小时选一颗桃树，并从树上吃掉 K 个，如果树上的桃子少于 K 个，则全部吃掉，并且这一小时剩余的时间里不再吃桃。\n孙悟空喜欢慢慢吃，但又想在守卫回来前吃完桃子。\n请返回孙悟空可以在 H 小时内吃掉所有桃子的最小速度 K（K为整数）。如果以任何速度都吃不完所有桃子，则返回0。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一行输入为 N 个数字，N 表示桃树的数量，这 N 个\n数字表示\n每颗桃树上蟠桃的数量。\n第二行输入为一个数字，表示守卫离开的时间 H。\n其中数字通过空格分割，N、H为正整数，每颗树上都有蟠桃，且 0 < N < 10000，0 < H < 10000。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "吃掉所有蟠桃的最小速度 K，无解或输入异常时输出 0。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "import math\n\n# 输入获取\ncnts = list(map(int, input().split()))\nh = int(input())\n\n\ndef check(speed):\n    # 已花费时间\n    cost = 0\n\n    for cnt in cnts:\n        # 以speed速度吃完一颗桃树需要的时间,累加进cost\n        cost += math.ceil(cnt / speed)\n\n        # 如果已花费时间超过了limit限制,那么说明无法以speed速度在limit时间内吃完所有桃树,此时可以直接返回false\n        if cost > h:\n            return False\n\n    # 可以以speed速度,在limit小时内吃完所有cnts桃树\n    return True\n\n\ndef getResult():\n    n = len(cnts)\n\n    # 每个小时只能选一颗桃树,因此 h 小时最多只能选 h 棵树,如果桃树数量cnts.length > h,那么h小时肯定吃不完\n    if n > h:\n        return 0\n\n    # 拥有最多桃子的那颗桃树上的桃子数量\n    maxSpeed = max(cnts)\n\n    # 如果桃树数量就是h棵,那么只能一小时吃完一颗树,才能保证h小时内吃完。此时,吃桃速度至少是max\n    if n == h:\n        return maxSpeed\n\n    # 如果只有1棵桃树,且这颗树上只有1个桃,那么吃桃速度可以是1\n    minSpeed = 1\n\n    # 当桃树数量少于h棵时,以max速度吃桃肯定可以吃完,但是不一定是最优解\n    ans = maxSpeed\n\n    # 二分法\n    while minSpeed <= maxSpeed:\n        # 取中间值作为吃桃速度进行尝试\n        mid = (minSpeed + maxSpeed) >> 1\n\n        # 如果以mid速度,可以在h小时内吃完cnts所有桃,那么mid就是一个可能解\n        if check(mid):\n            ans = mid\n            # 继续尝试更小的速度\n            maxSpeed = mid - 1\n        else:\n            # 以mid速度无法在h小时内吃完cnts所有桃,那么mid就取小了,下次应该取更大的吃桃速度\n            minSpeed = mid + 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,56 @@
+{
+  "id": "q084",
+  "title": "积木最远距离",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小华和小薇一起通过玩积木游戏学习数学。\n他们有很多积木，每个积木块上都有一个数字，积木块上的数字可能相同。\n小华随机拿一些积木挨着排成一排，请小薇找到这排积木中数字相同且所处位置最远的2块积木块，计算他们的距离，小薇请你帮忙替她解决这个问题。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为N，表示小华排成一排的积木总数。\n接下来N行每行一个数字，表示小华排成一排的积木上数字。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "相同数字的积木的位置最远距离；如果所有积木数字都不相同，请返回-1。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "0<=积木上的数字<10^9\n1<=积木长度<=10^5"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n1\n2\n3\n1\n4\n输出\n3",
+      "cases": [
+        {
+          "input": "5\n1\n2\n3\n1\n4",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "共有5个积木，第1个积木和第4个积木数字相同，其距离为3。\n输入\n2\n1\n2\n输出\n-1\n\n一共有两个积木，没有积木数字相同，返回-1。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "这题第一眼看上去好像是要用双指针做，但是实操起来却不行。\n这题的数组长度会达到10^5，因此时间复杂度要至少控制在O(n)。\n我的\n\n如下：\n定义一个idx对象，用于存放每个num出现的索引位置，num作为idx对象属性，num出现的索引位置作为idx[num]的数组的元素。\n然后遍历nums数组（即从第二行开始输入的数的集合），开始录入num的索引位置到idx对象中。\n统计完后，开始遍历idx对象属性，即每个num，然后先判断idx[num]的数组长度是否大于1，若不大于，则不考虑，若大于，则用idx[num]数组的最后一个索引位置 减去 idx[num]数组的第一个索引位置。按照上面逻辑，计算出最大的索引差作为\n\n。\n若没有符合要求的，则返回-1。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\narr = []\nfor i in range(n):\n    arr.append(int(input()))\n\n\n# 算法入口\ndef getResult(arr, n):\n    idx = {}\n\n    for i in range(n):\n        num = arr[i]\n        if idx.get(num) is None:\n            idx[num] = [i]\n        else:\n            idx[num].append(i)\n\n    ans = -1\n    for k in idx.keys():\n        if len(idx[k]) > 1:\n            ans = max(ans, idx[k][-1] - idx[k][0])\n\n    return ans\n\n\n# 算法调用\nprint(getResult(arr, n))"
+  },
+  "verified": false
+}

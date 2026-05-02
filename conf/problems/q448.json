@@ -1,0 +1,61 @@
+{
+  "id": "q448",
+  "title": "求最多可以派出多少支团队",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "用数组代表每个人的能力，一个比赛活动要求参赛团队的最低能力值为N，每个团队可以由1人或者2人组成，且1个人只能参加1个团队，计算出最多可以派出多少只符合要求的团队。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行代表总人数，范围1-500000\n第二行数组代表每个人的能力\n数组大小，范围1-500000\n元素取值，范围1-500000\n第三行数值为团队要求的最低能力值，范围1-500000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最多可以派出的团队数量"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n3 1 5 7 9\n8\n输出\n3",
+      "cases": [
+        {
+          "input": "5\n3 1 5 7 9\n8",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "3、5组成一队   1、7一队  9自己一队  输出3\n输入\n7\n3 1 5 7 9 2 6\n8\n输出\n4\n\n3、5组成一队，1、7一队，9自己一队，2、6一队，输出4\n输入\n3\n1 1 9\n8\n输出\n1\n\n9自己一队，输出1"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题要求最多的组队，而组队要求是：\n可以1人组队，也可以2人组队\n团队的能力值之和需要大于等于最低能力minCap要求\n因此，为了组更多队伍，我们应该尽量让单人组队，即：\n需要将能力值大于等于minCap的筛选出来，单人组队\n然后剩余的人，按照能力值升序排序，定义L,R指针，初始时L=0，R=k-1，k是剩余人总数\n接着尝试L，R进行组队：\n如果L，R两人的能力之和大于等于minCap，则组队成功，L++，R--\n否则，"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "L无法和任何人组队，因为R已经是当前最高能力的人，L无法和R组队，则也意味着无法和能力值比R低的人组队，因此L++\n在上面过程中，计算出组队个数作为"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\ncapacities = list(map(int, input().split()))\nminCap = int(input())\n\n\n# 算法入口\ndef getResult():\n    # 升序\n    capacities.sort()\n\n    l = 0\n    r = n - 1\n\n    # 记录题解\n    ans = 0\n\n    # 单人组队\n    while r >= l and capacities[r] >= minCap:\n        ans += 1\n        r -= 1\n\n    # 双人组队\n    while l < r:\n        total = capacities[l] + capacities[r]\n\n        # 如果两个人的能力值之和>=minCap,则组队\n        if total >= minCap:\n            ans += 1\n            l += 1\n            r -= 1\n        else:\n            # 否则将能力低的人剔除,换下一个能力更高的人\n            l += 1\n\n    return ans\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

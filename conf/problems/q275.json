@@ -1,0 +1,51 @@
+{
+  "id": "q275",
+  "title": "查字典",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "输入一个单词前缀和一个字典，输出包含该前缀的单词"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "单词前缀+字典长度+字典\n字典是一个有序单词数组\n输入输出都是小写"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "所有包含该前缀的单词，多个单词换行输出\n若没有则返回-1"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nb 3 a b c\n输出\nb",
+      "cases": [
+        {
+          "input": "b 3 a b c",
+          "output": "b",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nabc 4 a ab abc abcd\n输出\nabc\nabcd\n\n无\n输入\na 3 b c d\n输出\n-1\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "这题200分的，但是感觉很简单，难道有坑？\n我感觉这题就是考察字符串的基本操作，一个startsWith方法。\nJava解法中，考虑大数量级，输入处理不使用next，nextInt获取，而是用nextLine整行获取。\n2023.07.29\n仅仅用startsWith方法通过率只有80%，\n有考友反馈是没有判断word和prefix的长度关系，即当word.length < prefix.length，则不需要进行startsWith判断。\n但是startsWith底层其实是优先做了这个判断的，比如Java源码中：\n因此，判断如果使用了startsWith，则判断word.length < prefix.length是冗余的。\n本题的问题应该是，我将输入获取的内容存储起来，然后传入了核心代码getResult中，因此可能超出了内存限制。\n这题我们应该边获取输入，边判断，这样才是内存最优的。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ntmp = input().split()\n\nprefix = tmp[0]\nn = int(tmp[1])\n\nfind = False\nfor i in range(n):\n    word = tmp[i+2]\n\n    if word.startswith(prefix):\n        find = True\n        print(word)\n\nif not find:\n    print(-1)"
+  },
+  "verified": false
+}

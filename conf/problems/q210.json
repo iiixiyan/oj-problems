@@ -1,0 +1,34 @@
+{
+  "id": "q210",
+  "title": "热点网站统计",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "企业路由器的统计页面，有一个功能需要动态统计公司访问最多的网页URL top N。请设计一个算法，可以高效动态统计Top N的页面。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "每一行都是一个URL或一个数字，如果是URL，代表一段时间内的网页访问；\n如果是一个数字N，代表本次需要输出的Top N个URL。\n输入约束：\n1、总访问网页数量小于5000个，单网页访问次数小于65535次；\n2、网页URL仅由字母，数字和点分隔符组成，且长度小于等于127字节；\n3、数字是正整数，小于等于10且小于当前总访问网页数；"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "每行输入要对应一行输出，输出按访问次数排序的前N个URL，用逗号分隔。\n输出要求：\n1、每次输出要统计之前所有输入，不仅是本次输入；\n2、如果有访问次数相等的URL，按URL的字符串字典序升序排列，输出排序靠前的URL；"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ncache = {}  # 记录每个url出现的次数\nans = []  # 记录题解\n\n\ndef sortURL(n):\n    urlCount = list(cache.items())\n    urlCount.sort(key=lambda x: (-x[1], x[0]))\n\n    return \",\".join(map(lambda x: x[0], urlCount[:n]))\n\n\nwhile True:\n    tmp = input()\n\n    if tmp.isnumeric():  # 如果输入的是数字,则需要对前面输入的url进行排序统计\n        print(sortURL(int(tmp)))\n    else:\n        if cache.get(tmp) is None:\n            cache[tmp] = 1\n        else:\n            cache[tmp] += 1"
+  },
+  "verified": false
+}

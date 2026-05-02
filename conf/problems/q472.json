@@ -1,0 +1,61 @@
+{
+  "id": "q472",
+  "title": "虚拟理财游戏",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在一款虚拟游戏中生活，你必须进行投资以增强在虚拟游戏中的资产以免被淘汰出局。\n现有一家Bank，它提供有若干理财产品 m 个，风险及投资回报不同，你有 N（元）进行投资，能接收的总风险值为X。\n你要在可接受范围内选择最优的投资方式获得最大回报。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "：\n在虚拟游戏中，每项投资风险值相加为总风险值；\n在虚拟游戏中，最多只能投资2个理财产品；\n在虚拟游戏中，最小单位为整数，不能拆分为小数；\n投资额*回报率=投资回报"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行：\n产品数（取值范围[1,20]）\n总投资额（整数，取值范围[1, 10000]）\n可接受的总风险（整数，取值范围[1,200]）\n第二行：产品投资回报率序列，输入为整数，取值范围[1,60]\n第三行：产品风险值序列，输入为整数，取值范围[1, 100]\n第四行：最大投资额度序列，输入为整数，取值范围[1, 10000]"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "每个产品的投资额序列"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5 100 10\n10 20 30 40 50\n3 4 5 6 10\n20 30 20 40 30\n输出\n0 30 0 40 0",
+      "cases": [
+        {
+          "input": "5 100 10\n10 20 30 40 50\n3 4 5 6 10\n20 30 20 40 30",
+          "output": "0 30 0 40 0",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "投资第二项30个单位，第四项40个单位，总的投资风险为两项相加为4+6=10"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "第一眼看这题有点像二维费用背包，但是本题"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "中有一个关键限制：\n在虚拟游戏中，最多只能投资2个理财产品；\n那么本题其实就变成了：m个理财产品中选1个或2个，所选产品风险值之和 ≤ x，投资额之和 ≤ n，并且最终所选产品的投资回报之和最大。\n由于 m 的数量级不大，取值范围[1,20]，因此可以考虑暴力破解。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, n, x = map(int, input().split())  # 产品数, 总投资, 总风险\n\n# 产品回报率序列\nback = list(map(int, input().split()))\n# 产品风险值序列\nrisk = list(map(int, input().split()))\n# 产品投资额序列\ninvest = list(map(int, input().split()))\n\n# 记录所选产品的最大投资回报\nmax_invest_back = 0\n# 记录所选产品的序号\nselect = {}\n\n# 选两个产品时\nfor i in range(m):\n    # 如果单个产品的投资风险未超过总风险,则投资单个产品\n    if risk[i] <= x:\n        # 产品I的投资额不能超过该产品的最大投资额,以及总投资\n        investI = min(invest[i], n)\n        # 产品投资回报\n        invest_back = investI * back[i]\n\n        # 如果投资回报高于其他产品组合,那么选择该产品\n        if invest_back > max_invest_back:\n            max_invest_back = invest_back\n            select.clear()\n            select[i] = investI\n    else:\n        continue\n\n    for j in range(i + 1, m):\n        # 如果两个产品的风险和不超过了总风险,那么两个产品都选\n        if risk[i] + risk[j] <= x:\n            investI = 0  # 产品I的投资额\n            investJ = 0  # 产品J的投资额\n\n            # 其中优先投资回报率大的\n            if back[i] > back[j]:\n                # 产品I回报率高,则能投多少投多少,最多不能超过min(总投资, 产品I的最多投资额)\n                investI = min(n, invest[i])\n                # 留给产品J的剩余钱未 n - investI, 而产品J最多投资invest[j],因此取二者较小值\n                investJ = min(n - investI, invest[j])\n            else:\n                investJ = min(n, invest[j])\n                investI = min(n - investJ, invest[i])\n\n            # 总投资回报\n            invest_back = investI * back[i] + investJ * back[j]\n\n            # 如果当前产品组合的总回报更大,则选当前组合产品\n            if invest_back > max_invest_back:\n                max_invest_back = invest_back\n                select.clear()\n                # select的key记录产品的ID,val记录产品的投资额\n                if investI > 0:\n                    select[i] = investI\n                if investJ > 0:\n                    select[j] = investJ\n\nres = []\nfor i in range(m):\n    if i in select:\n        res.append(select[i])\n    else:\n        res.append(0)\n\nprint(\" \".join(map(str, res)))"
+  },
+  "verified": false
+}

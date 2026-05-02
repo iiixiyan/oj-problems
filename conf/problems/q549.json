@@ -1,0 +1,35 @@
+{
+  "id": "q549",
+  "title": "螺旋数字矩阵",
+  "score": 100,
+  "tags": [
+    "E卷",
+    "矩阵"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n疫情期间，小明隔离在家，百无聊赖，在纸上写数字玩。他发明了一种写法：\n给出数字个数n和行数m（0 < n ≤ 999，0 < m ≤ 999），从左上角的1开始，按照顺时针螺旋向内写方式，依次写出2,3…n，最终形成一个m行矩阵。\n小明对这个矩阵有些要求：\n每行数字的个数一样多\n列的数量尽可能少\n填充数字时优先填充外部\n数字不够时，使用单个*号占位"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一行，两个整数，空格隔开，依次表示n、m"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "符合要求的唯一矩阵"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入："
+    }
+  ],
+  "solutions": {
+    "Python": "import math\n\n# 输入获取\n# n 表示需要在螺旋矩阵中填入 1 ~ n 数字\n# m 表示螺旋矩阵行数\nn, m = map(int, input().split())\n\n\n# 算法入口\ndef getResult():\n    # k是螺旋矩阵列数\n    k = int(math.ceil(n / m))\n\n    # 螺旋矩阵\n    matrix = [['*'] * k for _ in range(m)]  # 未填值位置默认初始化为*\n\n    # 当前要填入的值\n    step = 1\n\n    # 当前要填入的值的位置\n    x = 0\n    y = 0\n\n    # 如果填入的值 > n,则停止填值,否则继续填\n    while step <= n:\n        # 正序填入第x行,即&#xff1a;行号不变,列号增加,注意&#xff1a;添值过程不能发生覆盖,也不能填入超过n的值\n        while y < k and matrix[x][y] == '*' and step <= n:\n            matrix[x][y] = str(step)\n            step += 1\n            y += 1\n\n        # 正序填完第x行后,y处于末尾越界位置,因此y需要退一步\n        y -= 1\n        # 正序填完第x行来到第x行的末尾,即第y列,按照螺旋矩阵顺序,应该从第x+1行开始正序填值第y列\n        x += 1\n\n        # 正序填入第y列,即&#xff1a;列号不变,行号增加,注意&#xff1a;添值过程不能发生覆盖,也不能填入超过n的值\n        while x < m and matrix[x][y] == '*' and step <= n:\n            matrix[x][y] = str(step)\n            step += 1\n            x += 1\n\n        x -= 1\n        y -= 1\n\n        # 倒序填入第x行,即&#xff1a;行号不变,列号减少,注意&#xff1a;添值过程不能发生覆盖,也不能填入超过n的值\n        while y >= 0 and matrix[x][y] == '*' and step <= n:\n            matrix[x][y] = str(step)\n            step += 1\n            y -= 1\n\n        y += 1\n        x -= 1\n\n        # 倒序填入第y列,即&#xff1a;列号不变,行号减少,注意&#xff1a;添值过程不能发生覆盖,也不能填入超过n的值\n        while x >= 0 and matrix[x][y] == '*' and step <= n:\n            matrix[x][y] = str(step)\n            step += 1\n            x -= 1\n\n        x += 1\n        y += 1\n\n    # 打印螺旋矩阵字符串\n    for i in range(m):\n        print(\" \".join(matrix[i]))\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

@@ -1,0 +1,56 @@
+{
+  "id": "q470",
+  "title": "考勤信息",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "公司用一个字符串来表示员工的出勤信息\nabsent：缺勤\nlate：迟到\nleaveearly：早退\npresent：正常上班\n现需根据员工出勤信息，判断本次是否能获得出勤奖，能获得出勤奖的条件如下：\n缺勤不超过一次；\n没有连续的迟到/早退；\n任意连续7次考勤，缺勤/迟到/早退不超过3次。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "用户的考勤数据字符串\n记录条数 >= 1；\n输入字符串长度 < 10000；\n不存在非法输入；\n如：\n2\npresent\npresent absent present present leaveearly present absent"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "根据考勤数据字符串，如果能得到考勤奖，输出”true”；否则输出”false”，\n对于输入示例的结果应为：\ntrue false"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2\npresent\npresent present\n输出\ntrue\ntrue",
+      "cases": [
+        {
+          "input": "2\npresent\npresent present",
+          "output": "true\ntrue",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n2\npresent\npresent absent present present leaveearly present absent\n输出\ntrue\nfalse\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "下\n没有连续的迟到/早退；\n根据考友反馈，连续的迟到/早退，应该指：本次是迟到或早退，上次也是迟到或早退。\n比如，本次是迟到，上次是早退，则也算是：连续的迟到/早退\n本题主要难点在于如果统计”任意连续7次考勤“中的缺勤/迟到/早退次数。\n这里我们可以使用滑动窗口，且滑窗窗口的长度最大为7\n当滑窗右边界索引R < 7 时，则滑窗长度 = R + 1\n当滑窗右边界索引R >= 7时，则滑窗长度 = 7，同时能推导出滑窗左边界索引L为 = R - 6\n如下图所示\n我们只要计算出滑窗内部 present 次数，即可通过：\n滑窗长度  - present次数 = 任意连续7次考勤中的缺勤/迟到/早退次数\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nrecords = [input().split() for _ in range(n)]\n\n\ndef isAward(record):\n    # 总缺勤次数\n    absent = 0\n\n    #  滑窗内正常上班的次数\n    present = 0\n\n    late_leaveearly = (\"late\", \"leaveearly\")\n\n    # 前一次的考勤记录\n    preRecord = \"\"\n\n    for i in range(len(record)):\n        # 滑窗长度最大为7,如果超过7,则滑窗的左边界需要右移, 滑窗失去的部分record[i - 7]\n        # 如果失去部分是present,则更新滑窗内present次数\n        if i >= 7:\n            if \"present\" == record[i-7]:\n                present -= 1\n\n        # 当前的考勤记录\n        curRecord = record[i]\n\n        if \"absent\" == curRecord:\n            absent += 1\n            # 缺勤超过1次,则拿不到全勤奖\n            if absent > 1:\n                return \"false\"\n        elif curRecord in late_leaveearly and preRecord in late_leaveearly:\n            # 连续的迟到/早退,则拿不到全勤奖\n            return \"false\"\n        elif \"present\" == curRecord:\n            present += 1\n\n        preRecord = curRecord\n\n        # 任意连续7次考勤,缺勤/迟到/早退不超过3次, 相当于判断&#xff1a; 滑窗长度 - present次数 <= 3\n        window_len = min(i+1, 7)  # 滑窗长度\n        if window_len - present > 3:\n            return \"false\"\n\n    return \"true\"\n\n\n# 算法入口\ndef getResult():\n    for record in records:\n        print(isAward(record))\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

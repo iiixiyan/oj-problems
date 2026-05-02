@@ -1,0 +1,71 @@
+{
+  "id": "q457",
+  "title": "火星文计算",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "已知火星人使用的运算符为#、$，其与地球人的等价公式如下：\nx#y = 2*x+3*y+4\nx$y = 3*x+y+2\n其中x、y是无符号整数\n地球人公式按C语言规则计算\n火星人公式中，$的优先级高于#，相同的运算符，按从左到右的顺序计算\n现有一段火星人的字符串报文，请你来翻译并计算结果。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "火星人字符串表达式（结尾不带回车换行）\n输入的字符串"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：字符串为仅由无符号整数和操作符（#、$）组成的计算表达式。\n例如：123#4$5#67$78。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证字符串中，操作数与操作符之间没有任何分隔符。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证操作数取值范围为32位无符号整数。\n保证输入以及计算结果不会出现整型溢出。\n保证输入的字符串为合法的求值报文，例如：123#4$5#67$78\n保证不会出现非法的求值报文，例如类似这样字符串：\n#4$5 //缺少操作数\n4$5# //缺少操作数\n4#$5 //缺少操作数\n4 $5 //有空格\n3+4-5*6/7 //有其它操作符\n12345678987654321$54321 //32位整数计算溢出"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "根据输入的火星人字符串输出计算结果（结尾不带回车换行）。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n7#6$5#12\n输出\n226",
+      "cases": [
+        {
+          "input": "7#6$5#12",
+          "output": "226",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "7#6$5#12\n=7#(3*6+5+2)#12\n=7#25#12\n=(2*7+3*25+4)#12\n=93#12\n=2*93+3*12+4\n=226"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "这个题目保证不会出现非法的求值报文，因此输入字符串是严格的“数字+操作符+数字”这种格式，因此，很适合使用正则去匹配。\n首先，我先用正则匹配出\"操作数$操作数\"，然后将其替换为计算后的值，然后字符串中就只剩#了，因此再将字符串按照#分割，从左到右，两两操作计算。\n最终就得到了\n\n。\n2023.07.19\n本题需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是，当替换\"操作数$操作数\"，为其结果值时，只能进行首次匹配替换，不能多次匹配替换。\n比如\"4$3$4$3\"，首先计算出4$3的值为17，这里替换只能将第一次出现的4$3替换为17，而不能将所有4$3替换为17，因为这两种替换的结果可能会不同，比如\n只替换第一次匹配：17$4$3\n全部匹配替换：17$17\n的结果是不同的，而本题中$必须是从左到右计算。\n这里不同语言的字符串首次匹配替换的API功能各有差异：\nJS\nreplace\nString.prototype.replace() - JavaScript | MDN (mozilla.org)\nJava\nreplaceFirst\nString (Java Platform SE 8 ) (oracle.com)\nPython\nreplace\nPython replace()方法 | 菜鸟教程 (runoob.com)\n其中\nJS字符串的replace只替换第一次匹配，符合要求。\nJava的replce方法是替换所有匹配，而replaceFirst方法是替换第一次匹配，但是需要\n\n的是replaceFirst方法的第一个参数匹配串，将被用作正则表达式的内容，而$又是正则表达式的元字符，因此我们需要对$进行转义，当成普通字符使用。\nPython的replace方法是替换所有匹配，但是我们可以通过replace第三个参数来控制最大替换次数。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import re\n\n# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult(s):\n    p = re.compile(\"(\\\\d+)#(\\\\d+)\")\n\n    while True:\n        m = p.search(s)\n        if m:\n            subS = m.group()\n            x = int(m.group(1))\n            y = int(m.group(2))\n            # 注意这里replace只能进行替换第一次出现的,不能替换多次,因此replace方法第三个参数为1,表示只替换首次匹配\n            s = s.replace(subS, str(4 * x + 3 * y + 2), 1)\n        else:\n            break\n\n    arr = list(map(int, s.split(\"$\")))\n\n    x = arr[0]\n    for y in arr[1:]:\n        x = 2 * x + y + 3\n\n    return x\n\n\n# 算法调用\nprint(getResult(s))"
+  },
+  "verified": false
+}

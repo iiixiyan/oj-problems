@@ -1,0 +1,56 @@
+{
+  "id": "q481",
+  "title": "靠谱的车",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "程序员小明打了一辆出租车去上班。出于职业敏感，他"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "到这辆出租车的计费表有点问题，总是偏大。\n出租车司机解释说他不喜欢数字4，所以改装了计费表，任何数字位置遇到数字4就直接跳过，其余功能都正常。\n比如：\n23再多一块钱就变为25；\n39再多一块钱变为50；\n399再多一块钱变为500；\n小明识破了司机的伎俩，准备利用自己的学识打败司机的阴谋。\n给出计费表的表面读数，返回实际产生的费用。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "只有一行，数字N，表示里程表的读数。\n(1<=N<=888888888)。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "一个数字，表示实际产生的费用。以回车结束。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n输出\n4",
+      "cases": [
+        {
+          "input": "5",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "5表示计费表的表面读数。\n4表示实际产生的费用其实只有4块钱。\n输入\n17\n输出\n15\n\n17表示计费表的表面读数。\n15表示实际产生的费用其实只有15块钱。\n输入\n100\n输出\n81\n\n100表示计费表的表面读数。\n81表示实际产生的费用其实只有81块钱。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "看到题目提示输入数字N的取值范围1<=N<=888888888，我陷入了沉思，这是要我们设计一个O(1)时间复杂度的算法呀，因为就算是O(n)也遭不住9个8的数量级啊。\n原型题应该是：\n算法 - 里程表故障_某辆车的里程表出现了故障:它总是跳过数字3和数字8。也就是说,当前显示已走过两公-CSDN博客\n本题的\n\n类似，但是不是八进制，而是九进制\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = list(map(int, list(input())))\n\n\n# 算法入口\ndef getResult():\n    correct = 0\n    for i in range(len(arr)):\n        fault = arr[i]\n        if fault > 4:\n            fault -= 1\n\n        for j in range(len(arr) - i - 1, 0, -1):\n            fault *= 9\n\n        correct += fault\n    return correct\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

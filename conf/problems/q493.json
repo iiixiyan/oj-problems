@@ -1,0 +1,96 @@
+{
+  "id": "q493",
+  "title": "查找一个有向网络的头节点和尾节点",
+  "score": 200,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个有向图，图中可能包含有环，图使用二维矩阵表示，每一行的第一列表示起始节点，第二列表示终止节点，如 [0, 1] 表示从 0 到 1 的路径。\n每个节点用正整数表示。\n求这个数据的首节点与尾节点，题目给的"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "会是一个首节点，但可能存在多个尾节点。同时图中可能含有环。如果图中含有环，返回 [-1]。"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：入度为0是首节点，出度为0是尾节点。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为后续输入的键值对数量N（N ≥ 0）\n第二行为2N个数字。每两个为一个起点，一个终点，如："
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一行头节点和尾节点。如果有多个尾节点，按从大到小的顺序输出。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "如果图有环，输出为 -1\n所有输入均合法，不会出现不配对的数据"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\n0 1 0 2 1 2 2 3\n输出\n0 3",
+      "cases": [
+        {
+          "input": "4\n0 1 0 2 1 2 2 3",
+          "output": "0 3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n2\n0 1 0 2\n输出\n0 1 2\n\n无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1图示"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2图示\n本题可以通过拓扑排序解题。\n关于拓扑排序的知识，大家如果不知道的话，可以先看下：\nLeetCode - 207 课程表（Java & JS & Python & C）_leetcode207课程表-CSDN博客\n了解拓扑排序后，我们就可以按照拓扑排序的思路不停剥离图中入度为0的点，每当剥离一个入度为0的点A，我们都需要做如下判断：\nA点如果没有后继点，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "A点的出度为0，因此A点为尾节点\nA点如果有后继点，则A点的所有后继点的入度-1，如果后继点中-1后出现新的入度为0的节点，则加入度0点的队列，等待下次剥离\n在上面过程中，我们需要统计被剥离点的个数，使用count表示，如果图中节点总数为total，那么当拓扑排序完成后，count < total 的话，则\n\n图中存在环。\n本题的"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "要求多个尾节点降序输出\n如果有多个尾节点，按从大到小的顺序输出。\n而题目"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2输出的尾节点是升序输出的\n0\n1 2\n这里互相矛盾，这里以"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输出为准来，即如果有多个尾节点，则升序输出。实际考试"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "下。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\ntmp = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    # 记录每个点的入度\n    inDegree = {}\n    # 记录每个点的后继点集合\n    nxt = {}\n\n    # 记录图中点\n    points = set()\n\n    for i in range(0, 2 * n, 2):\n        # 从 a 到 b 的路径\n        a = tmp[i]\n        b = tmp[i + 1]\n\n        # 收集图中所有节点\n        points.add(a)\n        points.add(b)\n\n        # b点入度+1\n        inDegree.setdefault(b, 0)\n        inDegree[b] += 1\n\n        # a点的后继点集合纳入b\n        nxt.setdefault(a, [])\n        nxt[a].append(b)\n\n    # 图中总共total个节点\n    total = len(points)\n\n    # head记录图的头节点\n    head = 0\n    # 队列记录入度为0的点\n    queue = []\n\n    for p in points:\n        # 题目描述中说图中只有一个首节点,首节点是入度为0的节点,因此如果某节点p没有入度,则为头节点\n        if p not in inDegree:\n            head = p\n            queue.append(p)\n            break\n\n    # tails记录所有尾节点\n    tails = []\n\n    # count记录已被剥去的点个数,如果图中存在环,则必然最终count < total\n    count = 0\n\n    while len(queue) > 0:\n        # 剥离入度为0的点\n        fa = queue.pop(0)\n        count += 1\n\n        # 如果fa没有后继点,即fa没有出度,则fa是尾节点\n        if fa not in nxt:\n            tails.append(fa)\n            continue\n\n        # 如果fa有后继点,则其所有后继点入度-1\n        for ch in nxt[fa]:\n            inDegree[ch] -= 1\n\n            # 如果ch点入度变为0,则加入队列\n            if inDegree[ch] == 0:\n                queue.append(ch)\n\n    if count != total:\n        # 如果存在环,则必然count < total\n        print(-1)\n    else:\n        # 如果不存在环,则打印头节点和尾节点\n        # 注意本题描述存在冲突&#xff08;用例2输出的尾节点是从小到大排序的,而题目输出描述是要求尾节点从大到小排序&#xff09;,这里以用例为准\n        tails.sort()\n        print(head, \" \".join(map(str, tails)))\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

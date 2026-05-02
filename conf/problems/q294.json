@@ -1,0 +1,106 @@
+{
+  "id": "q294",
+  "title": "采样过滤",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在做物理实验时，为了计算物体移动的速率，通过相机等工具周期性的采样物体移动距离。\n由于工具故障，采样数据存在误差甚至错误的情况。\n需要通过一个算法过滤掉不正确的采样值。\n不同工具的故障模式存在差异，算法的各类门限会根据工具类型做相应的调整。\n请实现一个算法，计算出给定一组采样值中正常值的最长连续周期。\n判断第 i 个周期的采样数据 S[i] 是否正确的规则如下（假定物体移动速率不超过10个单元，前一个采样周期 S[i-1] )：\nS[i] <= 0，即为错误值\nS[i] < S[i-1]，即为错误值\nS[i] - S[i-1] >= 10，即为错误值\n其它情况为正常值\n判断工具是否故障的规则如下：\n在M个周期内，采样数据为错误值的次数为T（次数可以不连续），则工具故障。\n判断故障恢复的条件如下：\n产生故障后的P个周期内，采样数据一直为正常值，则故障恢复。\n错误采样数据的处理方式：\n检测到故障后，丢弃从故障开始到故障恢复的采样数据。\n在检测到工具故障之前，错误的采样数据，则由最近一个正常值代替；如果前面没有正常的采样值，则丢弃此采样数据。\n给定一段周期的采样数据列表S，计算正常值的最长连续周期。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "故障确认周期数和故障次数门限分别为M和T，故障恢复周期数为P。\n第 i 个周期，检测点的状态为Si\n输入为两行，格式如下：\nM T P\nS1 S2 S3 ...\nM、T和P的取值范围为[1, 100000]\nSi取值范围为[0, 100000]，i 从0开始编号"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "一行输出正常值的最长连续周期"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n10 6 3\n-1 1 2 3 100 10 13 9 10\n输出\n8",
+      "cases": [
+        {
+          "input": "10 6 3\n-1 1 2 3 100 10 13 9 10",
+          "output": "8",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "S[0]，S[4]，S[7]，S[8]为错误值。S[0]之前没有正常的采样数据，丢弃S[0]。S[4]和S[7]不满足故障条件，此值分别由S[3]和S[6]代替，即S[4]为3，S[7]为13。替换后，S[8]小于S[7]，也是错误值。\n输入\n5 3 3\n0 1 2 -1 4 3 6 7 6 6 10 11 12\n输出\n9\n\nS[3]，S[5]，S[8]，S[9]为错误值。从S[3]到S[7]的5个周期内只有两个错误值S[3]和S[5]。从S[5]到S[9]的5个周期内有三个错误值S[5]、S[8]和S[9]，工具故障。丢弃S[9]到S[12]的值。\n输入\n5 3 3\n1 2 -1 -2 -3 6 7 8 9 10 11 12\n输出\n5\n\nS[2]，S[3]，S[4]为错误值。从S[2]到S[6]的5个周期内有三个错误值，工具故障。丢弃S[4]到S[6]的值。有两段正常连续周期，S[0]到S[3]（周期数为4）和S[7]到S[11]（周期数为5）。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1图示（图示按照"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "设计）\nM = 10，T = 6，P = 3\nS[0]，S[4]，S[7]，S[8]为错误值。\nS[0]之前没有正常的采样数据，丢弃S[0]。\nS[4]和S[7]不满足故障条件，此值分别由S[3]和S[6]代替，即S[4]为3，S[7]为13。\n替换后，S[8]小于S[7]，也是错误值。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2图示（图示按照"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "设计）\nM = 5，T = 3，P = 3\nS[3]，S[5]，S[8]，S[9]为错误值。\n从S[3]到S[7]的5个周期内只有两个错误值S[3]和S[5]。\n从S[5]到S[9]的5个周期内有三个错误值S[5]、S[8]和S[9]，工具故障。丢弃S[9]到S[12]的值。\n个人疑惑：\ns[0]  ≤ 0，我理解应该记作错误值吧？因为题目说：S[i] <= 0，即为错误值。\n按照题目意思，s[0]前面没有其他值，因此s[0]应该被丢弃，那么该"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "的最长连续周期应该是1~8，长度为8。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "3图示（图示按照"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "设计）\nM = 5，T = 3，P = 3\nS[2]，S[3]，S[4]为错误值。\n从S[2]到S[6]的5个周期内有三个错误值，工具故障。丢弃S[4]到S[6]的值。有两段正常连续周期，S[0]到S[3]（周期数为4）和S[7]到S[11]（周期数为5）。\n个人疑惑：\ns[4]是故障开始点，而当前"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "P=3，那么s[5]~s[7]应该是故障恢复检查时期，\n按照题目意思：检测到故障后，丢弃从故障开始到故障恢复的采样数据。\n那应该丢弃的是s[4]~s[7]吧？但是"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "是：丢弃S[4]到S[6]的值。为什么s[7]不丢弃呢？\n如果按照题目意思，应该要丢弃S[4]到S[7]，因此该"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "的最长连续周期应该是4。\n经过上面分析，这题的"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "和"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "简直就是自相矛盾......\n我这里按照\n\n来实现。具体逻辑请看代码注释（主要是文字描述太复杂了）\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, t, p = map(int, input().split())  # 故障确认周期数m, 故障次数门限t, 故障恢复周期数p\ns = list(map(int, input().split()))  # 一段周期的采样数据列表\n\n# 全局变量\nNORMAL = 1  # 正常数据的状态\nFAULT = 2  # 错误数据的状态\nABORT = 3  # 丢弃的状态\nRECOVERY_NORMAL = 4  # 故障恢复检查期间的正常数据的状态\nRECOVERY_FAULT = 5  # 故障恢复检查期间的错误数据的状态\n\n# 记录每个采样数据的状态\nstatus = [0] * (len(s))\n\n\n# 正常期间检查\ndef check_normal(i):\n    if s[i] <= 0:\n        return False\n\n    # 和前面采样数据比较的前提条件是&#xff1a;前面的采样数据必须是正常状态,或者正常期错误状态\n    if i >= 1 and (status[i-1] == NORMAL or status[i-1] == FAULT):\n        if s[i] < s[i-1]:\n            return False\n        if s[i] - s[i-1] >= 10:\n            return False\n\n    return True\n\n\n# 故障恢复期间检查\ndef check_recovery(i):\n    if s[i] <= 0:\n        return False\n\n    # 和前面采样数据比较的前提条件是&#xff1a;前面的采样数据不能时丢弃状态,以及恢复期错误状态\n    if i >= 1 and status[i-1] != ABORT and status[i-1] != RECOVERY_FAULT:\n        if s[i] < s[i - 1]:\n            return False\n        if s[i] - s[i - 1] >= 10:\n            return False\n\n    return True\n\n\n# 算法入口\ndef getResult():\n    # M个周期可以当成滑窗,l是滑窗的左边界, r是滑窗的右边界\n    l, r = 0, 0\n\n    # 滑窗内错误数据的个数\n    window_fault_count = 0\n\n    # 滑窗右边界纳入新数据\n    while r < len(s):\n        # 如果滑窗长度超过了m,那么滑窗的左边界需要右移\n        if r - l + 1 > m:\n            # 如果右移前的,滑窗左边界对于的数据状态是FAULT,则右移后的滑窗内错误数据个数-1\n            if status[l] == FAULT:\n                window_fault_count -= 1\n            l += 1\n\n        # 检查数据状态\n        if check_normal(r):\n            # 如果数据正常,则标记status[r]为正常状态\n            status[r] = NORMAL\n        else:\n            # 如果数据异常,则需要检查当前数据前面一个数据的状态\n            if r < 1 or status[r-1] == ABORT:\n                # 如果当前数据前面一个数据的状态是丢弃的,则当前数据没有代替值,也需要被丢弃\n                status[r] = ABORT\n                # 一旦出现丢弃数据,则滑窗中断,此时需要重置滑窗\n                window_fault_count = 0\n                l = r + 1\n            else:\n                # 如果当前数据前面一个数据的状态不是丢弃状态,那么滑窗内错误数据个数+1\n                window_fault_count += 1\n\n                if window_fault_count < t:\n                    # 如果滑窗内错误数据个数没有超过阈值t,那么可以用前面一个数据代替\n                    status[r] = FAULT\n                    s[r] = s[r-1]\n                else:\n                    # 如果滑窗内错误数据个数超过了阈值t,那么 r 位置就是故障开始的位置\n                    # 此时 r 位置数据需要被丢弃,此时滑窗中断,需要重置滑窗\n                    status[r] = ABORT\n                    window_fault_count = 0\n\n                    # i 位置就是 故障恢复检查期开始位置\n                    i = r + 1\n\n                    # 故障恢复检查期内连续正确数据个数\n                    recovery_correct_count = 0\n\n                    while i < len(s):\n                        if check_recovery(i):\n                            recovery_correct_count += 1\n                            status[i] = RECOVERY_NORMAL\n\n                            # 当故障恢复期间,连续正确数据个数达到p,则故障解除\n                            if recovery_correct_count == p:\n                                break\n                        else:\n                            recovery_correct_count = 0\n                            status[i] = RECOVERY_FAULT\n\n                        i += 1\n\n                    # i 位置是故障解除的位置,则下一次,我们应该从 i+1 位置开始重新判断,即滑窗的左、右边界都要更新为i+1\n                    if i < len(s):\n                        l = i + 1\n                        r = i  # 这里r没有等于 i+1,是后面有while循环的r+=1\n\n        r += 1\n\n    # 最后只需要找到 status 数组中最长的连续NORMAL和FAULT即可\n    maxLength = 0\n    length = 0\n\n    for sta in status:\n        if sta == NORMAL or sta == FAULT:\n            length += 1\n        else:\n            maxLength = max(maxLength, length)\n            length = 0\n\n    return max(maxLength, length)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

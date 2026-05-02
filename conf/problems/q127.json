@@ -1,0 +1,66 @@
+{
+  "id": "q127",
+  "title": "数字加减游戏",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小明在玩一个数字加减游戏，只使用加法或者减法，将一个数字s变成数字t。\n每个回合，小明可以用当前的数字加上或减去一个数字。\n现在有两种数字可以用来加减，分别为a,b(a!=b)，其中b没有使用次数限制。\n请问小明最少可以用多少次a，才能将数字s变成数字t。\n题目保证数字s一定能变成数字t。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的唯一一行包含四个正整数s,t,a,b(1<=s,t,a,b<=105)，并且a!=b。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出的唯一一行包含一个整数，表示最少需要使用多少次a才能将数字s变成数字t。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1 10 5 2\n输出\n1",
+      "cases": [
+        {
+          "input": "1 10 5 2",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "初始值1加一次a变成6，然后加两次b变成10，因此a的使用次数为1\n输入\n11 33 4 10\n输出\n2\n\n11减两次a变成3，然后加三次b变成33，因此a的使用次数为2次"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题有点像数学问题\n比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1其实就是求解：\n满足 5 * x + 2 * y = 9  的所有解中绝对值最小的x\n比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2其实就是求解：\n满足 4 * x + 10 * y = 22 的所有解中绝对值最小的x\n因此，我们可以让x从0开始尝试，然后尝试1，-1，然后尝试2，-2，直到找到一个x能够让（比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1）(9 - 5*x) / 2 为一个整数。\n由于本题1<=s,t,a,b<=105，数量级较小，因此上面逻辑可行。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns, t, a, b = map(int, input().split())\n\n\n# 算法入口\ndef getResult(s, t, a, b):\n    x = 0\n    diff = t - s\n    while True:\n        if str((diff - a * x) / b).endswith(\".0\") or str((diff + a * x) / b).endswith(\".0\"):\n            return abs(x)\n        x += 1\n\n\n# 算法调用\nprint(getResult(s, t, a, b))"
+  },
+  "verified": false
+}

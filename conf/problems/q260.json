@@ -1,0 +1,52 @@
+{
+  "id": "q260",
+  "title": "找出两个整数数组中同时出现的整数",
+  "score": 200,
+  "tags": [
+    "B卷",
+    "数组"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "现有两个整数数组，需要你找出两个数组中同时出现的整数，并按照如下要求输出:\n有同时出现的整数时，先按照同时出现次数（整数在两个数组中都出现并目出现次数较少的那个）进行归类，然后按照出现次数从小到大依次按行输出。\n没有同时出现的整数时，输出NULL。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为第一个整数数组，第二行为第二个整数数组，每行数中整数与整数之间以英文号分，整数的取值范用为[-200, 200]，数组长度的范用为[1, 10000]之间的整数。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "按照出现次数从小到大依次按行输出，每行输出的格式为：\n出现次数:该出现次数下的整数升序排序的结果\n格式中的\":\"为英文冒号，整数间以英文逗号分隔。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5,3,6,-8,0,11\n2,8,8,8,-1,15\n输出\nNULL",
+      "cases": [
+        {
+          "input": "5,3,6,-8,0,11\n2,8,8,8,-1,15",
+          "output": "NULL",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "两个整数数组没有同时出现的整数，输出NULL。\n输入\n5,8,11,3,6,8,8,-1,11,2,11,11\n11,2,11,8,6,8,8,-1,8,15,3,-9,11\n输出\n1:-1,2,3,6\n3:8,11\n\n两整数数组中同时出现的整数为-12、3、6、8、11,其中同时出现次数为1的整数为-1,2,3,6(升序排序),同时出现次数为3的整数为8,11(升序排序),先升序输出出现次数为1的整数，再升序输出出现次数为3的整数。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题应该只是考察逻辑处理，以及集合，字典的使用。\n具体逻辑请看代码注释。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr1 = list(map(int, input().split(\",\")))\narr2 = list(map(int, input().split(\",\")))\n\n\n# 算法入口\ndef getResult():\n    # 统计arr1中各数字出现次数\n    count1 = {}\n    for num in arr1:\n        count1[num] = count1.get(num, 0) + 1\n\n    # 统计arr2中各数字出现次数\n    count2 = {}\n    for num in arr2:\n        count2[num] = count2.get(num, 0) + 1\n\n    # arr1和arr2是否存在相同的数字,假设不存在,即noSameNum = true\n    noSameNum = True\n\n    # 统计arr1和arr2的相同的数字,并记录对于数字出现的次数,注意sameCountKeys中次数是键,相同数字是值\n    sameCountNums = {}\n\n    for num in count1.keys():\n        if num in count2.keys():\n            # 如果数字key在arr1和arr2中都有,则说明存在相同数字,此时noSameNum = false\n            noSameNum = False\n            # 整数在两个数组中都出现并目出现次数较少的那个\n            count = min(count1[num], count2[num])\n\n            # sameCountKeys中次数是键,相同数字是值\n            if sameCountNums.get(count) is None:\n                sameCountNums[count] = []\n            sameCountNums[count].append(num)\n\n    # 如果两个数组之间没有相同数字,则输出\"NULL\"\n    if noSameNum:\n        print(\"NULL\")\n        return\n\n    # 否则,按照相同数字的出现次数升序,来打印对应次数下的相同数字列表\n    tmp = list(sameCountNums.keys())\n    tmp.sort()\n\n    for count in tmp:\n        # 注意相同数字列表也要升序\n        sameCountNums[count].sort()\n        print(f\"{count}:{','.join(map(str, sameCountNums[count]))}\")\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

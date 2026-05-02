@@ -1,0 +1,35 @@
+{
+  "id": "q584",
+  "title": "二叉树计算",
+  "score": 200,
+  "tags": [
+    "E卷",
+    "树"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n给出一个\n二叉树\n如下图所示：\n请由该二叉树生成一个新的二叉树，它满足其树中的每个节点将包含原始树中的左子树和右子树的和。\n左子树表示该节点左侧叶子节点为\n根节点\n的一颗新树；右子树表示该节点右侧叶子节点为根节点的一颗新树。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "2行整数，第1行表示二叉树的中序遍历，第2行表示二叉树的前序遍历，以空格分割。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "1行整数，表示求和树的中序遍历，以空格分割"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "class TreeNode:\n    def __init__(self, num):\n        self.num = num\n        self.childSum = 0\n        self.leftChild = None\n        self.rightChild = None\n\n\n# 输入获取\nmidOrder = list(map(int, input().split()))  # 中序遍历序列\npreOrder = list(map(int, input().split()))  # 前序遍历序列\n\nn = len(midOrder)\n\n# 记录中序遍历序列中,序列元素值所在位置,本题中可能存在重复元素,因此某个序列元素值可能有多个位置\nmidIndexMap = {}\nfor j in range(n):\n    num = midOrder[j]\n    midIndexMap.setdefault(num, [])\n    midIndexMap[num].append(j)\n\n\ndef notEquals(midL, preL, size):\n    \"\"\"\n    判断两个子数组是否相同&#xff08;元素相同,顺序可以不同&#xff09;\n    :param midL: 子数组1的左边界\n    :param preL: 子数组2的左边界\n    :param size: 子数组的长度\n    :return: 子数组1和子数组2是否相同\n    \"\"\"\n    arr1 = sorted(midOrder[midL:midL+size])\n    arr2 = sorted(preOrder[preL:preL+size])\n\n    for i in range(size):\n        if arr1[i] != arr2[i]:\n            return True\n\n    return False\n\n\ndef buildTree(midL, midR, preL, preR):\n    \"\"\"\n    根据中序遍历序列、前序遍历序列还原树结构\n    :param midL: 中序遍历子序列的左边界\n    :param midR: 中序遍历子序列的右边界\n    :param preL: 前序遍历子序列的左边界\n    :param preR: 前序遍历子序列的右边界\n    :return: 树结构的根节点\n    \"\"\"\n\n    # 某个节点&#xff08;子树&#xff09;对应一段子序列,如果对应子序列范围不存在,则子树也不存在\n    if preL > preR:\n        return None\n\n    # 先根据前序遍历序列得到根节点,前序序列的首元素就是根节点\n    rootNum = preOrder[preL]\n    root = TreeNode(rootNum)\n\n    # 在中序遍历序列中,找到对应根值的位置,这个位置可能有多个,但是只有一个是正确的\n    for idx in midIndexMap[rootNum]:\n        # 如果对应根值位置越界,则不是正确的\n        if idx < midL or idx > midR:\n            continue\n\n        # 如果中序的左子树,和前序的左子树不同,则对应根值位置不正确\n        leftLen = idx - midL\n        if notEquals(midL, preL + 1, leftLen):\n            continue\n\n        # 如果中序的右子树,和前序的右子树不同,则对应根值位置不正确\n        rightLen = midR - idx\n        if notEquals(idx + 1, preR - rightLen + 1, rightLen):\n            continue\n\n        # 找到正确根值位置后,开始分治递归处理左子树和右子树\n        root.leftChild = buildTree(midL, idx - 1, preL + 1, preL + leftLen)\n        root.rightChild = buildTree(idx + 1, midR, preR - rightLen + 1, preR)\n\n        leftChildSum = 0 if root.leftChild is None else (root.leftChild.num + root.leftChild.childSum)\n        rightChildSUm = 0 if root.rightChild is None else (root.rightChild.num + root.rightChild.childSum)\n\n        # 记录该节点&#xff1a;左子树+右子树的和&#xff08;本题新二叉树节点的值&#xff09;\n        root.childSum = leftChildSum + rightChildSUm\n\n        break\n\n    return root\n\n\n# 二叉树中序遍历\ndef getMidOrder(root, res):\n    if root is None:\n        return\n\n    # 先遍历左子树\n    leftChild = root.leftChild\n    if leftChild is not None:\n        getMidOrder(leftChild, res)\n\n    # 再遍历根\n    res.append(root.childSum)\n\n    # 最后遍历右子树\n    rightChild = root.rightChild\n    if rightChild is not None:\n        getMidOrder(rightChild, res)\n\n\ndef getResult():\n    # 根据中序序列和前序序列还原树结构\n    root = buildTree(0, n - 1, 0, n - 1)\n\n    # 记录新的二叉树的的中序遍历序列\n    res = []\n    getMidOrder(root, res)\n\n    return \" \".join(map(str, res))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

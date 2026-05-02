@@ -1,0 +1,51 @@
+{
+  "id": "q224",
+  "title": "补种未成活胡杨",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "近些年来，我国防沙治沙取得显著成果。某沙漠新种植N棵胡杨（编号1-N），排成一排。\n一个月后，有M棵胡杨未能成活。\n现可补种胡杨K棵，请问如何补种（只能补种，不能新种），可以得到最多的连续胡杨树？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "N 总种植数量，1 <= N <= 100000\nM 未成活胡杨数量，M 个空格分隔的数，按编号从小到大排列，1 <= M <= N\nK 最多可以补种的数量，0 <= K <= M"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最多的连续胡杨棵树"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n2\n2 4\n1\n输出\n3",
+      "cases": [
+        {
+          "input": "5\n2\n2 4\n1",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "补种到2或4结果一样，最多的连续胡杨棵树都是3。\n输入\n10\n3\n2 4 7\n1\n输出\n6\n\n补种第7棵树，最多连续胡杨树棵数位6（5，6，7，8，9，10）\n双指针解法\n这题感觉还是比较难的，按照"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "意思，种了5棵树，我们用1代表活树，则：\n1，1，1，1，1\n然后死了2两棵树，分别是第2棵树、第4棵树，我们用0代表死树，则：\n1，0，1，0，1\n现在我们可以在死树位置，补种一颗活树，即可以将某个0替换为1，问，此时连续活树的最大长度？\n转换一下问题，其实就是：\n在1,0,1,0,1数列中，求包含一个0的最长子序列?\n这其实是一个典型的滑动窗口问题，而滑动窗口的实现依赖于双指针，即两个指针之间的序列就是滑动窗口，我们只要保证滑动窗口内部只含1个0即可\n我们在举一个例子，数列：1，0，0，0，1，可以补种2棵树\n我们可以通过这两个例子发现，比较难的实现是left指针的移动，我们需要记录right指针每次扫描到0的索引，当滑动窗口内0超过制定数量时，我们可以抛弃记录的滑动窗口内部的第一个0及之前部分，因此即让left指针移动到记录的第一个0的右边。\n下面源码实现中，我使用的occur来记录滑动窗口中0出现的索引位置，当0超标时，就occur.shift()弹出第一个0的索引位置index，然后让left = index + 1，即能起到帮助滑动窗口去除1个0的效果。\n下面源码中，还有一个地方的实现可能会让大家产生疑问，那就是maxLen，即最长子序列长度的计算，我用了两种公式：\nmaxLen = Math.max(maxLen, right - left);\nmaxLen = Math.max(maxLen, right - left + 1);\n第一个公式是当0超标时，最长子序列的长度计算，如下图\nright = 3，left=0，此时滑动窗口长度为 right - left\n第二个公式是0不超标时，最长子序列的长度计算，如下图\nright = 2, left = 0，此时滑动窗口长度为 right - left + 1\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nm = int(input())\n\ndeadIdx = list(map(int, input().split()))\narr = [1]*n\nfor i in range(m):\n    arr[deadIdx[i]-1] = 0\n\nk = int(input())\n\n\n# 算法入口\ndef getResult(arr, n, m, k):\n    left = 0\n    occur = []\n    maxLen = 0\n\n    for right in range(n):\n        if arr[right] == 0:\n            occur.append(right)\n\n            if len(occur) > k:\n                maxLen = max(maxLen, right - left)\n                left = occur.pop(0) + 1\n                continue\n\n        maxLen = max(maxLen, right - left + 1)\n\n    return maxLen\n\n\n# 算法调用\nprint(getResult(arr, n, m, k))"
+  },
+  "verified": false
+}

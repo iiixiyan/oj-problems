@@ -1,0 +1,51 @@
+{
+  "id": "q423",
+  "title": "找朋友",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在学校中，N个小朋友站成一队， 第i个小朋友的身高为height[i]，\n第i个小朋友可以看到的第一个比自己身高更高的小朋友j，那么j是i的好朋友(要求j > i)。\n请重新生成一个列表，对应位置的输出是每个小朋友的好朋友位置，如果没有看到好朋友，请在该位置用0代替。\n小朋友人数范围是 [0, 40000]。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入N，N表示有N个小朋友\n第二行输入N个小朋友的身高height[i]，都是整数"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出N个小朋友的好朋友的位置"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2\n100 95\n输出\n0 0",
+      "cases": [
+        {
+          "input": "2\n100 95",
+          "output": "0 0",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "第一个小朋友身高100，站在队尾位置，向队首看，没有比他身高高的小朋友，所以输出第一个值为0。\n第二个小朋友站在队首，前面也没有比他身高高的小朋友，所以输出第二个值为0。\n输入\n8\n123 124 125 121 119 122 126 123\n输出\n1 2 6 5 5 6 0 0\n\n123的好朋友是1位置上的124\n124的好朋友是2位置上的125\n125的好朋友是6位置上的126\n以此类推"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "感觉很简单，直接双重for，逻辑如下"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    stack = []\n\n    res = [0]*(len(arr))\n\n    for i in range(len(arr)):\n        ele = arr[i]\n\n        while True:\n            if len(stack) == 0:\n                stack.append([ele, i])\n                break\n\n            peekEle, peekIndex = stack[-1]\n\n            if ele > peekEle:\n                res[peekIndex] = i\n                stack.pop()\n            else:\n                stack.append([ele, i])\n                break\n\n    return \" \".join(map(str, res))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,71 @@
+{
+  "id": "q114",
+  "title": "区间交叠问题",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定坐标轴上的一组线段，线段的起点和终点均为整数并且长度不小于1，请你从中找到最少数量的线段，这些线段可以覆盖柱所有线段。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为所有线段的数量，不超过10000，后面每行表示一条线段，格式为\"x,y\"，x和y分别表示起点和终点，取值范围是[-10^5，10^5]。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最少线段数量，为正整数"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n1,4\n2,5\n3,6\n输出\n2",
+      "cases": [
+        {
+          "input": "3\n1,4\n2,5\n3,6",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1图示如下\n可以发现，只要选择[]1,4[和[3,6]就可以覆盖住所有给定线段。\n我的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "如下：\n首先，将所有区间ranges按照开始位置升序。\n然后，创建一个辅助的栈stack，初始时将排序后的第一个区间压入栈中。\n然后，遍历出1~ranges.length范围内的每一个区间ranges[i]，将遍历到ranges[i]和stack栈顶区间对比：\n如果stack栈顶区间可以包含ranges[i]区间，则range[i]不压入栈顶\n如果stack栈顶区间被ranges[i]区间包含，则弹出stack栈顶元素，继续比较ranges[i]和stack新的栈顶元素\n如果stack栈顶区间和ranges[i]无法互相包含，只有部分交集，则将ranges[i]区间去除交集部分后，剩余部分区间压入stack\n如果stack栈顶区间和ranges[i]区间没有交集，那么直接将ranges[i]压入栈顶\n这样的话，最终stack中有多少个区间，就代表至少需要多少个区间才能覆盖所有线段。\n比如，"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1的运行流程如下：\n2,5 和 1,4 存在重叠区间，我们只保留2,5区间的非重叠部分4,5\n比较4,5区间和3,6区间，发现3,6完全涵盖2,5,因此2,5区间不再需要，可以从stack中弹栈删掉，即原始的2,5区间被删除了。\n继续比较1,4和3,6区间，发现无法互相涵盖，因此都需要保留，但是3,6有部分区间和1,4重叠，因此只保留3,6不重叠部分4,6。\n最终只需要两个区间，对应1,4、3,6，即可涵盖所有线段\n自测"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "：\n8\n0,4\n1,2\n1,4\n3,7\n6,8\n10,12\n11,13\n12,14\n输出5，即至少需要上面标红的五个区间才能覆盖所有线段。\n2023.01.27\n根据网友指正，上面逻辑缺失一个场景，比如：\n3\n1,10\n5,12\n8,11\n按找前面逻辑，首先对所有区间按开始位置升序，然后将1,10入栈\n然后尝试将5,12入栈，发现和栈顶区间有交集，因此去除交集部分后，5,12变为10,12，入栈\n然后尝试将8,11入栈，但是此时出现一个尴尬的情况，那就是栈顶区间10,12不能完全包含8,11，因此8,11区间还需要和栈顶前一个区间1,10继续比较，这就背离了我们一开始将所有区间按开始位置升序的初衷了。。。\n而导致这个问题的根本原因是，栈顶区间10,12是被裁剪过的，因此导致它的起始位置落后了，即可能无法包含住升序后下一个区间的起始位置了，但是转念一想，先入栈的区间的起始位置肯定是要小于等于后入栈的区间的，因此栈顶区间被裁剪，"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "栈顶区间和前一个区间必然是严密结合的，因此8,11的起始位置超出了栈顶区间，其实还是会被栈顶前一个区间包含进去。因此这里8,11不入栈。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nrans = [list(map(int, input().split(\",\"))) for i in range(n)]\n\n\n# 算法入口\ndef getResult(rans, n):\n    rans.sort(key=lambda x: x[0])\n    stack = [rans[0]]\n\n    for i in range(1, n):\n        ran = rans[i]\n\n        while True:\n            if len(stack) == 0:\n                stack.append(ran)\n                break\n\n            s0, e0 = stack[-1]\n            s1, e1 = ran\n\n            if s1 <= s0:\n                if e1 <= s0:\n                    break\n                elif e1 < e0:\n                    break\n                else:\n                    stack.pop()\n            elif s1 < e0:\n                if e1 <= e0:\n                    break\n                else:\n                    stack.append([e0, e1])\n                    break\n            else:\n                stack.append(ran)\n                break\n\n    return len(stack)\n\n\n# 算法调用\nprint(getResult(rans, n))"
+  },
+  "verified": false
+}

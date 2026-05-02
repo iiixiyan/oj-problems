@@ -1,0 +1,46 @@
+{
+  "id": "q168",
+  "title": "分糖果",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小明从糖果盒中随意抓一把糖果，每次小明会取出一半的糖果分给同学们。\n当糖果不能平均分配时，小明可以选择从糖果盒中（假设盒中糖果足够）取出一个糖果或放回一个糖果。\n小明最少需要多少次（取出、放回和平均分配均记一次），能将手中糖果分至只剩一颗。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "抓取的糖果数（<10000000000）：15"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最少分至一颗糖果的次数：5"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n15\n输出\n5",
+      "cases": [
+        {
+          "input": "15",
+          "output": "5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "15+1=16;\n16/2=8;\n8/2=4;\n4/2=2;\n2/2=1;\n题目分析\n本题由于是每次折半，因此本题数量级即便很大，也不怕超时。\n没有了超时的后顾之忧，本题，直接可以暴力逻辑求解，假设输入的是num，分配次数count初始为0，那么：\n如果num % 2 == 0，则可以直接折半，此时分配次数count++， num /= 2\n如果num % 2 !=0，则不可以直接折半，此时需要开两个分支：\n取出一个糖，即num += 1，然后分配次数count++，之后继续前面折半逻辑\n放回一个糖，即num -= 1，然后分配次数count++，之后继续前面折半逻辑\n最终我们只需要在众多分支中，取最少的count即可。\n上面逻辑可以基于递归实现。具体实现请看代码。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nnum = int(input())\n\n\ndef recursive(num, count, ans):\n    if num == 1:\n        ans[0] = min(ans[0], count)\n        return\n\n    if num % 2 == 0:\n        recursive(num // 2, count + 1, ans)\n    else:\n        recursive(num + 1, count + 1, ans)\n        recursive(num - 1, count + 1, ans)\n\n\n# 算法入口\ndef getResult():\n    ans = [sys.maxsize]\n    recursive(num, 0, ans)\n    return ans[0]\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

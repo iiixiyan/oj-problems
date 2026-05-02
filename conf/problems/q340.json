@@ -1,0 +1,49 @@
+{
+  "id": "q340",
+  "title": "找单词",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给一个字符串和一个二维字符数组，如果该字符串存在于该数组中，则按字符串的字符顺序输出字符串每个字符所在单元格的位置下标字符串，如果找不到返回字符串“N”。\n1.需要按照字符串的字符组成顺序搜索，且搜索到的位置必须是相邻单元格，其中“相邻单元格”是指那些水平相邻或垂直相邻的单元格。\n2.同一个单元格内的字母不允许被重复使用。\n3.假定在数组中最多只存在一个可能的匹配。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第1行为一个数字N指示二维数组在后续输入所占的行数。\n第2行到第N+1行输入为一个二维大写字符数组，每行字符用半角,分割。\n第N+2行为待查找的字符串，由大写字符组成。\n二维数组的大小为N*N，0<N<=100。\n单词长度K，0<K<1000。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个位置下标字符串，拼接格式为：第1个字符行下标+”,”+第1个字符列下标+”,”+第2个字符行下标+”,”+第2个字符列下标… +”,”+第N个字符行下标+”,”+第N个字符列下标。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\nA,C,C,F\nC,D,E,D\nB,E,S,S\nF,E,C,A\nACCESS\n输出\n0,0,0,1,0,2,1,2,2,2,2,3",
+      "cases": [
+        {
+          "input": "4\nA,C,C,F\nC,D,E,D\nB,E,S,S\nF,E,C,A\nACCESS",
+          "output": "0,0,0,1,0,2,1,2,2,2,2,3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "ACCESS分别对应二维数组的[0,0] [0,1] [0,2] [1,2] [2,2] [2,3]下标位置。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题和\n华为机试 - 单词搜索_伏城之外的博客-CSDN博客\n很像。只是本题在上面这题的基础上，要求保存路径坐标。\n题目假定在数组中最多只存在一个可能的匹配。因此我们只要找到即返回。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nmatrix = [input().split(\",\") for _ in range(n)]\ntar = input()\n\n\ndef dfs(i, j, k, path):\n    if i < 0 or i >= n or j < 0 or j >= n or matrix[i][j] != tar[k]:\n        return False\n\n    path.append([i, j])\n    if len(path) == len(tar):\n        return True\n\n    tmp = matrix[i][j]\n    matrix[i][j] = \"\"\n\n    res = dfs(i - 1, j, k + 1, path) or dfs(i + 1, j, k + 1, path) or dfs(i, j - 1, k + 1, path) or dfs(i, j + 1, k + 1, path)\n\n    if not res:\n        matrix[i][j] = tmp\n        path.pop()\n\n    return res\n\n\n# 算法入口\ndef getReuslt():\n    for i in range(n):\n        for j in range(n):\n            path = []\n            if dfs(i, j, 0, path):\n                return \",\".join(map(lambda x: \",\".join(map(str, x)), path))\n\n    return \"N\"\n\n\n# 算法调用\nprint(getReuslt())"
+  },
+  "verified": false
+}

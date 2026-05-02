@@ -79,6 +79,8 @@
       "content": "可知，该字符串机试转为小写升序后的abcd和依旧不能密码abc完全匹配，因此题目的完全匹配意思应该是和密码要完全相同。\n但是如果箱子字符串是aabbcc这种，能否和密码abc完全匹配呢？\n看了满分答案后，这种情况也是不能完全匹配，即不能对箱子字符串做去重处理。\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nkey = input()\nboxes = input().split()\n\n\n# 算法入口\ndef getResult(key, boxes):\n    for i in range(len(boxes)):\n        box = boxes[i]\n        tmp = list(\"\".join(list(filter(lambda c: 'a' <= c <= 'z' or 'A' <= c <= 'Z', list(box)))).lower())\n        tmp.sort()\n\n        if key == \"\".join(tmp):\n            return i+1\n\n    return -1\n\n\n# 算法调用\nprint(getResult(key, boxes))"
+  },
   "verified": false
 }

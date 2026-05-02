@@ -1,0 +1,61 @@
+{
+  "id": "q200",
+  "title": "最少交换次数",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "目录"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "算法源码"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给出数字K,请输出所有结果小于K的整数组合到一起的最少交换次数。\n组合一起是指满足条件的数字相邻，不要求相邻后在数组中的位置。\n数据范围：\n-100 <= K <= 100\n-100 <= 数组中数值 <= 100"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入数组：1 3 1 4 0\n第二行输入K数值：2"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "第一行输出最少交换次数：1"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1 3 1 4 0\n2\n输出\n1",
+      "cases": [
+        {
+          "input": "1 3 1 4 0\n2",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "小于2的表达式是1 1 0, 共三种可能将所有符合要求数字组合一起，最少交换1次。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "这题是\n1151. 最少交换次数来组合所有的 1 - 力扣（LeetCode）\n的变种题。解题可以使用滑动窗口。\n我们首先需要统计 输入字符串"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = list(map(int, input().split()))\nk = int(input())\n\n\n# 算法入口\ndef getResult():\n    # 统计小于k的数组元素个数\n    count = 0\n    for num in arr:\n        if num < k:\n            count += 1\n\n    # 如果只有1个小于k的元素,则不需要交换就能使小于k的元素组合在一起\n    if count == 1:\n        return 0\n\n    # 先统计起点在0位置&#xff08;即left=0&#xff09;的滑动窗口的交换次数,得到一个minSwapCount初始值\n    minSwapCount = 0\n    for i in range(count):\n        if arr[i] >= k:\n            minSwapCount += 1\n\n    # 然后统计起点&#xff08;left&#xff09;在1~arr.length-count位置的滑动窗口的交换次数\n    # 可以转化为求解终点&#xff08;right&#xff09;在count~arr.length位置的滑动窗口的交换次数\n    tmpSwapCount = minSwapCount\n    for j in range(count, len(arr)):\n        # 上一轮的left,即滑窗失去的元素的索引\n        preLeft = j - count\n        # j 为本轮滑窗新增的元素的索引\n        if arr[preLeft] >= k > arr[j]:\n            tmpSwapCount -= 1\n        elif arr[preLeft] < k <= arr[j]:\n            tmpSwapCount += 1\n        minSwapCount = min(minSwapCount, tmpSwapCount)\n\n    return minSwapCount\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,44 @@
+{
+  "id": "q607",
+  "title": "跳房子I",
+  "score": 200,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n跳房子，也叫跳飞机，是一种世界性的儿童游戏。\n游戏参与者需要分多个回合按顺序跳到第1格直到房子的最后一格。\n跳房子的过程中，可以向前跳，也可以向后跳。\n假设房子的总格数是count，小红每回合可能连续跳的步教都放在数组steps中，请问数组中是否有一种步数的组合，可以让小红两个回合跳到量后一格?\n如果有，请输出索引和最小的步数组合。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：\n数组中的步数可以重复，但数组中的元素不能重复使用。\n提供的数据保证存在满足题目要求的组合，且索引和最小的步数组合是唯一的。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为每回合可能连续跳的步数，它是int整数数组类型。\n第二行输入为房子总格数count，它是int\n整数类型\n。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "count ≤ 1000\n0 ≤ steps.length ≤ 5000\n-100000000 ≤ steps ≤ 100000000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "返回索引和最小的满足要求的步数组合（顺序保持steps中原有顺序）"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nsteps = list(map(int, input()[1:-1].split(\",\")))\ncount = int(input())\n\n\nclass Step:\n    def __init__(self, val, idx):\n        self.val = val\n        self.idx = idx\n\n\n# 算法入口\ndef getResult():\n    n = len(steps)\n\n    newSteps = [Step(steps[i], i) for i in range(n)]\n\n    newSteps.sort(key=lambda x: (x.val, x.idx))\n\n    minStepIdxSum = sys.maxsize\n    ans = \"\"\n\n    for i in range(n):\n        # 剪枝优化\n        if newSteps[i].val > 0 and 0 < count < newSteps[i].val:\n            break\n\n        # 剪枝优化\n        if i > 0 and newSteps[i].val == newSteps[i - 1].val:\n            continue\n\n        l = i + 1\n        r = n - 1\n\n        while l < r:\n            # 剪枝优化,L,R指针指向值的目标和为count - i指针指向的值,而L指针指向的值 必然小于等于 R指针指向的值,\n            # 因此L指针指向的值必然 <= 目标和/2,而R指针指向的值必然 >= 目标和/2\n            threshold = (count - newSteps[i].val) / 2\n            if newSteps[l].val > threshold or newSteps[r].val < threshold:\n                break\n\n            stepValSum = newSteps[i].val + newSteps[l].val + newSteps[r].val\n\n            if stepValSum < count:\n                l += 1\n            elif stepValSum > count:\n                r -= 1\n            else:\n                # 剪枝优化\n                while l < r - 1 and newSteps[r].val == newSteps[r - 1].val:\n                    r -= 1\n\n                stepIdxSum = newSteps[i].idx + newSteps[l].idx + newSteps[r].idx\n                if stepIdxSum < minStepIdxSum:\n                    minStepIdxSum = stepIdxSum\n\n                    arr = [newSteps[i], newSteps[l], newSteps[r]]\n                    arr.sort(key=lambda x: x.idx)\n\n                    ans = \"[\" + \",\".join(map(lambda x: str(x.val), arr)) + \"]\"\n\n                # 剪枝优化\n                while l + 1 < r and newSteps[l].val == newSteps[l + 1].val:\n                    l += 1\n\n                l += 1\n                r -= 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

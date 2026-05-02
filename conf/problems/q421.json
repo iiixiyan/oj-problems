@@ -1,0 +1,96 @@
+{
+  "id": "q421",
+  "title": "找出经过特定点的路径长度",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "无"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一个字符串，都是以大写字母组成，每个相邻的距离是 1，\n第二行输入一个字符串，表示必过的点。"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "每个点可过多次。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "经过这些必过点的最小距离是多少"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nANTSEDXQOKPUVGIFWHJLYMCRZB\nABC\n输出\n28",
+      "cases": [
+        {
+          "input": "ANTSEDXQOKPUVGIFWHJLYMCRZB\nABC",
+          "output": "28",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "感觉本题"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "太简略了，缺少很多关键信息。\n第一行输入的字符串中是否有重复字母？\n第二行输入的字符串中是否有重复字母？\n运动起点在哪？一定是第一行第一个字母吗？（给出的"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "无法解答该问题）\n运动方向变更逻辑是啥？随意变更，还是必须到达终点后折返？（给出的"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "无法解答该问题）\n每个点可过多次，那么是否可以原地走？\n因为题目没有这些关键信息，因此这道题目的难度就不确定了。\n我是这样考虑的：\n第一行和第二行都可能出现重复字母\n运动起点必须从第一行输入的第一个字母开始\n运动方向可以随意变更\n允许原地走\n这样的话，经过必过点的路径才能多样化，才有最小距离概念。"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "如下，首先统计第二行输入的必过点在第一行字符串中的索引位置，需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是必过点可能在第一行中出现多次，我们都要统计到。\n下面算法中，我们用points保存必过点信息，idxs保存必过点的索引信息。\n接下来，通过dfs求解经过必过点的所有的可能路径。\n之后计算这些路径的距离，即相邻两点求差绝对值，然后相加，需要\n\n的时，我们需要将从起点走到第一个必过点的距离也加入为路径距离。\n然后，对所有路径距离进行排序，最小的就是"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "。\n自测"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "：\nANTSEDXQOKPUVGIFWHJLYMCRZB\nGUYA\n最小距离44（"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "，该最小距离是，必须从第一行输入的首字母出发的最小距离）\nANTSEDXQOKPUVGIFWHUJLYMCRZ\nGUYA\n发现有两条路径\n绿色路径更短，最小距离42（\n\n，该最小距离是，必须从第一行输入的首字母出发的最小距离）\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nall = input()\nmust = input()\n\n\ndef dfs(index, must, mustCharIdx, path, ans):\n    if len(path) == len(must):\n        dis = path[0]  # 运动起点必须从第一行输入all的第一个字母开始\n        # dis = 0  # 运动起点从all中must第一个字母位置开始\n\n        for i in range(1, len(path)):\n            dis += abs(path[i] - path[i - 1])\n\n        ans[0] = min(ans[0], dis)\n        return\n\n    for idx in mustCharIdx[must[index]]:\n        path.append(idx)\n        dfs(index + 1, must, mustCharIdx, path, ans)\n        path.pop()\n\n\ndef getResult(all, must):\n    mustCharIdx = {}\n\n    mustChar = set(must)\n\n    for i in range(len(all)):\n        c = all[i]\n\n        if c in mustChar:\n            if mustCharIdx.get(c) is None:\n                mustCharIdx[c] = []\n            mustCharIdx[c].append(i)\n\n    ans = [sys.maxsize]\n    dfs(0, must, mustCharIdx, [], ans)\n    return ans[0]\n\n\nprint(getResult(all, must))"
+  },
+  "verified": false
+}

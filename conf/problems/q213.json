@@ -1,0 +1,51 @@
+{
+  "id": "q213",
+  "title": "相对开音节",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "相对开音节构成的结构为：辅音 + 元音（aeiou）+ 辅音(r除外) + e。\n常见的单词有bike、cake等。\n给定一个字符串，以空格为分隔符，反转每个单词中的字母，若单词中包含如数字等其他非字母时不进行反转。\n反转后计算其中含有相对开音节结构的子串个数（连续的子串中部分字符可以重复）。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "字符串，以空格分割的多个单词，字符串长度<10000，字母只考虑小写"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "含有相对开音节结构的子串个数，注：个数<10000"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nekam a ekac\n输出\n2",
+      "cases": [
+        {
+          "input": "ekam a ekac",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "反转后为 make a cake 其中make、cake为相对开音节子串，返回2。\n输入\n!ekam a ekekac\n输出\n2\n\n反转后为!ekam a cakeke 因!ekam含非英文字符所以未反转，其中 cake、keke为相对开音节子串，返回2。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题主要是两部分逻辑：\n反转操作：如果单词中包含非小写字母，则不反转，否则反转\n反转操作后：每个单词含有多个相对开音节子串\n其中，反转操作很简单，遍历一遍单词字符，或者用正则表达式 [^a-z] 去匹配单词，看有没有非小写字母，没有的话，就反转单词。\n之后，要求解每个单词中含有多少个相对开音节子串，根据题目对应相对开音节结构定义，这个子串长度固定为4，因此我们可以用滑窗去尺取子串，接下来就是判断子串是否为相对开音节结构，这个最好的方式是基于正则表达式，如下："
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nimport re\n\nwords = input().split()\n\n\n# 算法入口\ndef getResult():\n    count = 0\n\n    nonLetter = re.compile(r\"[^a-z]\")\n    reg1 = re.compile(r\"[^aeiou][aeiou][^aeiour]e\")\n    reg2 = re.compile(r\"e[^aeiour][aeiou][^aeiou]\")\n\n    for word in words:\n        reg = reg1 if nonLetter.search(word) else reg2\n\n        for i in range(len(word) - 3):\n            seg = word[i:i + 4]\n\n            if nonLetter.search(seg):\n                continue\n\n            if reg.match(seg):\n                count += 1\n\n    return count\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

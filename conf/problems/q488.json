@@ -1,0 +1,56 @@
+{
+  "id": "q488",
+  "title": "叠积木",
+  "score": 200,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有一堆长方体积木，它们的宽度和高度都相同，但长度不一。\n小橙想把这堆积木叠成一面墙，墙的每层可以放一个积木，也可以将两个积木拼接起来，要求每层的长度相同。\n若必须用完这些积木，叠成的墙最多为多少层？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为一行，为各个积木的长度，数字为正整数，并由空格分隔。积木的数量和长度都不超过5000。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个数字，为墙的最大层数，如果无法按要求叠成每层长度一致的墙，则输出-1。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 6 6 3\n输出\n3",
+      "cases": [
+        {
+          "input": "3 6 6 3",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "可以每层都是长度3和6的积木拼接起来，这样每层的长度为9，层数为2；也可以其中两层直接用长度6的积木，两个长度3的积木拼接为一层，这样层数为3，故输出3。\n输入\n1 4 2 3 6\n输出\n-1\n\n无法用这些积木叠成每层长度一致的墙，故输出-1。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题限制了一层最多只能有两个积木，最少有一个积木。\n如果没有这个上面限制条件，那么本题需要换另一种解法：\n华为OD机试 - 叠积木Ⅱ（Java & JS & Python）_华为od叠积木_伏城之外的博客-CSDN博客\n有了这个限制，本题的难度就降低很多了，我的\n\n如下：\n如果只有一个积木，那么最大高度就是1\n如果只有两个积木，那么\n两个积木长度相同时，最大高度为2\n两个积木长度不同时，最大高度为1\n如果有三个及以上积木，我的思路如下，假设输入的积木长度数组为nums：\n将所有积木按照长度降序\n求出一层长度的取值范围，一层长度至少为nums[0]，至多为nums[0] + nums[1]，由于nums已经降序，因此nums[0]就是最长的积木，nums[1]就是第二长的积木\n遍历nums[0] ~ nums[0] + nums[1]的值length作为一层长度去尝试：\n定义两个指针L，R，初始时L=0，R=nums.length-1\n如果nums[L] == length，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "L积木可以独立一层，层高+1，然后L++，如此循环，直到nums[L] < length\n接着，计算nums[L] + nums[R]的和sum，\n如果sum != length，则有两种可能：\n假设nums[l] + nums[r] > length，则必然nums[l] + nums[r-1] > length，因为nums已降序，nums[r-1] >= nums[r]，即必然l积木无法和其他积木组成一层\n假设nums[l] + nums[r] < length，则必然nums[l+1] + nums[r] < length，因为nums已降序，nums[l+1] <= nums[l]，即必然r积木无法和其他积木组成一层\n如果sum == length，则L，R积木组成一层，层高+1，然后继续尝试L++，R--\n本题要求最大的高度，那么一层的长度就要尽量小，而上面的length是从nums[0] ~ nums[0] + nums[1]，因此一旦发现了遍历的length，可以让所有的积木搭建起来，那么该length就是最优的，即能够形成最大高度的。\n2023.10.13\n上面逻辑分析时：\n假设nums已经降序，则一层长度范围是： nums[0] ~ nums[0] + nums[1]，nums.length > 1\n这里对于一层的长度最大值 nums[0] + nums[1] 是有冗余的\n因为，一旦一层长度定义为 nums[0] + nums[1]，\n则可以确定的是任意两个积木长度之和：\nnums[i] + nums[j] 必然小于 nums[0] + nums[1] ，其中 1 < i,j < nums.length，且所有积木不都相等。\n此时后续遍历一层长度范围是： nums[0] ~ nums[0] + nums[1]时，会产生冗余判断。\n更优的策略是，将一层长度最大值定义为 nums[0] + nums[-1]，即单个积木最大长度 + 单个积木最小长度，此时才能保证 nums[i] + nums[j] 不是必然小于 nums[0] + nums[1]的。\n比如积木长度降序列表为：5 4 3 3 2 1\n如果一层两个积木取5+4=9，则必然没有任意其他两个积木和=9的\n但是如果一层两个积木取5+1=6，则有4+2，3+3可以组成相同长度的一层\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nnums = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    # 如果只有一个积木,那么只能是一层高度\n    if len(nums) == 1:\n        return 1\n\n    # 如果有两个积木\n    if len(nums) == 2:\n        # 如果两个积木长度相同,则最大高度为2\n        # 如果两个积木长度不同,则最大高度为1\n        return 1 if nums[0] != nums[1] else 2\n\n    # 积木按长度降序\n    nums.sort(reverse=True)\n\n    # 一层的最小长度,即最长的积木的长度\n    minLen = nums[0]\n    # 一层的最大长度\n    maxLen = nums[0] + nums[-1]\n\n    # 尝试minLen和maxLen中每一个值作为一层长度\n    for length in range(minLen, maxLen + 1):\n        # 对应一层长度限制下的最大高度\n        height = 0\n\n        # 通过l,r指针去选择组成一层的一个或两个积木\n        # l指针指向最大长度的积木\n        l = 0\n        # r指针指向最小长度的积木\n        r = len(nums) - 1\n\n        # 如果最大长度的积木,可以独立一层,则l++,height++\n        while l < len(nums) and nums[l] == length:\n            l += 1\n            height += 1\n\n        while l < r:\n            # 如果 l,r积木无法组成一层\n            # 假设nums[l] + nums[r] > length,则必然nums[l] + nums[r-1] > length,因为nums已降序,nums[r-1] >= nums[r],即必然l积木无法和其他积木组成一层\n            # 假设nums[l] + nums[r] < length,则必然nums[l+1] + nums[r] < length,因为nums已降序,nums[l+1] <= nums[l],即必然r积木无法和其他积木组成一层\n            if nums[l] + nums[r] != length:\n                break\n            else:\n                l += 1\n                r -= 1\n                height += 1\n\n        # 如果正常结束,则必然l > r,否则就是异常结束\n        if l <= r:\n            continue\n\n        return height\n\n    return -1\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,36 @@
+{
+  "id": "q551",
+  "title": "计算三叉搜索树的高度",
+  "score": 100,
+  "tags": [
+    "E卷",
+    "树",
+    "搜索"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n定义构造三叉搜索树规则如下：\n每个节点都存有一个数，当插入一个新的数时，从根节点向下寻找，直到找到一个合适的空节点插入。查找的规则是：\n如果数小于节点的数减去500，则将数插入节点的左子树\n如果数大于节点的数加上500，则将数插入节点的右子树\n否则，将数插入节点的中子树\n给你一系列数，请按以上规则，按顺序将数插入树中，构建出一棵三叉搜索树，最后输出树的高度。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为一个数 N，表示有 N 个数，1 ≤ N ≤ 10000\n第二行为 N 个空格分隔的整数，每个数的范围为[1,10000]"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出树的高度（根节点的高度为1）"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "class TreeNode:\n    def __init__(self, val):\n        self.val = val  # 节点值\n        self.height = None  # 节点所在高度\n        self.left = None  # 左子树\n        self.mid = None  # 中子树\n        self.right = None   # 右子树\n\n\nclass Tree:\n    def __init__(self):\n        self.root = None  # 树的根节点\n        self.height = 0  # 树的高度\n\n    def add(self, val):\n        node = TreeNode(val)\n\n        if self.root is None:\n            # 如果树是空的,则当前创建的节点将作为根节点\n            node.height = 1  # 根节点的高度为1\n            self.root = node\n            self.height = 1\n        else:\n            # 如果树不是空的,则从根节点开始比较\n            cur = self.root\n\n            while True:\n                # 假设创建的节点node是当前节点cur的子节点,则node节点高度值=cur节点高度值+1\n                node.height = cur.height + 1\n                # 如果创建的node进入新层,则更新树的高度\n                self.height = max(node.height, self.height)\n\n                if val < cur.val - 500:\n                    # 如果数小于节点的数减去500,则将数插入cur节点的左子树\n                    if cur.left is None:\n                        # 如果cur节点没有左子树,则node作为cur节点的左子树\n                        cur.left = node\n                        # 停止探索\n                        break\n                    else:\n                        # 否则继续探索\n                        cur = cur.left\n                elif val > cur.val + 500:\n                    # 如果数大于节点的数加上500,则将数插入节点的右子树\n                    if cur.right is None:\n                        cur.right = node\n                        break\n                    else:\n                        cur = cur.right\n                else:\n                    # 如果数大于节点的数加上500,则将数插入节点的右子树\n                    if cur.mid is None:\n                        cur.mid = node\n                        break\n                    else:\n                        cur = cur.mid\n\n\ndef getResult():\n    n = int(input())\n    nums = list(map(int, input().split()))\n\n    tree = Tree()\n    for num in nums:\n        tree.add(num)\n\n    return tree.height\n\n\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,54 @@
+{
+  "id": "q330",
+  "title": "园区参观路径",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "园区某部门举办了Family Day，邀请员工及其家属参加；\n将公司园区视为一个矩形，起始园区设置在左上角，终点园区设置在右下角；\n家属参观园区时，只能向右和向下园区前进，求从起始园区到终点园区会有多少条不同的参观路径。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为园区的长和宽；\n后面每一行表示该园区是否可以参观，0表示可以参观，1表示不能参观"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出为不同的路径数量"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 3\n0 0 0\n0 1 0\n0 0 0\n输出\n2",
+      "cases": [
+        {
+          "input": "3 3\n0 0 0\n0 1 0\n0 0 0",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用深度优先搜索解题。\n因为深度优先搜索DFS的每一条递归分支都对应一条路径，如果某个递归分支可以走到终点位置，那么"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "该递归分支对应的路径可达终点。\n本题递归进入下一个位置的条件是：\n下一个位置在上一个位置的下边或右边\n下一个位置不越界\n下一个位置可以参观（矩阵元素值为0）\n并且，本题限定只能从当前位置，向下或者向右进入下一个位置，因此不用担心走回头路的问题，即不用建立visited表记录走过的位置。\n\n：本题没有数量级信息，因此如果存在大数量级的话，基于递归实现的深搜可能会发生StackOverFlow异常，\n因此更推荐使用基于栈结构实现的深搜\n。\n本题如果地图矩阵数量级过大的话，深搜解题会超时。因此，更优解法是利用动态规划，我们可以定义一个dp二维数组，dp[i][j]的含义是：从坐标(0,0)到达坐标(i, j)的路径数\n而本题说只能向下或者向右运动，因此到达一个坐标点，可能来自其上方，亦可能来自其左方\n因此 dp[i][j] = dp[i-1][j] + dp[i][j-1]\n即：\n如果到达(i-1,j)的路径有dp[i-1][j]条，那么到达(i,j)的路径也有dp[i-1][j]条\n同理到达(i, j-1)的路径有dp[i][j-1]，那么到达(i,j)的路径也有dp[i][j-1]条\n因此：dp[i][j] = dp[i-1][j] + dp[i][j-1]\n需要\n\n的是，dp[0][0] 初始化时，需要\n\n(0,0)坐标位置是否可以参观，如果不可以参观，则道道(0,0)的路径为0条，否则为1条。\n其他点套用公式时，\n\n索引越界问题，具体请看代码实现。\nJS算法源码\n动态规划"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn, m = map(int, input().split())  # // 长n -> 行数, 宽m -> 列数\nmatrix = [list(map(int, input().split())) for _ in range(n)]  # 地图矩阵\n\n\n# 算法入口\ndef getResult():\n    # 如果起点和终点不能参观,则没有路径\n    if matrix[0][0] == 1 or matrix[n - 1][m - 1] == 1:\n        return 0\n\n    dp = [[0 for _ in range(m)] for _ in range(n)]\n    dp[0][0] = 1\n\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] == 1:\n                continue\n\n            if i > 0:\n                dp[i][j] += dp[i - 1][j]\n\n            if j > 0:\n                dp[i][j] += dp[i][j - 1]\n\n    return dp[n - 1][m - 1]\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

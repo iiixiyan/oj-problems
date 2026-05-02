@@ -1,0 +1,57 @@
+{
+  "id": "q420",
+  "title": "找出符合要求的字符串子串",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定两个字符串，从字符串2中找出字符串1中的所有字符，去重并按照ASCII值从小到大排序。\n输入字符串1：长度不超过1024\n输入字符串2：长度不超过1000000\n字符范围满足ASCII编码要求，按照ASCII的值由小到大排序"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "bach\nbbaaccedfg"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "abc"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "输入字符串1 为给定字符串bach，输入字符串2 bbaaccedfg\n从字符串2中找出字符串1的字符，去除重复的字符，并且按照ASCII值从小到大排序，得到输出的结果为abc。\n字符串1中的字符h在字符串2中找不到不输出。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nfach\nbbaaccedfg\n输出\nacf",
+      "cases": [
+        {
+          "input": "fach\nbbaaccedfg",
+          "output": "acf",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "求交集问题。主要考察Set的使用，以及数组的常用操作。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns1 = input()\ns2 = input()\n\n\n# 算法入口\ndef getResult():\n    set1 = set(s1)\n    set2 = set(s2)\n\n    set3 = set1.intersection(set2)\n\n    ans = list(set3)\n    ans.sort()\n\n    return \"\".join(ans)\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

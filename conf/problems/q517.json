@@ -1,0 +1,34 @@
+{
+  "id": "q517",
+  "title": "恢复数字序列",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n对于一个连续正整数组成的序列，可以将其拼接成一个字符串，再将字符串里的部分字符打乱顺序。如序列8 9 10 11 12，拼接成的字符串为89101112，打乱一部分字符后得到90811211，原来的正整数10就被拆成了0和1。\n现给定一个按如上规则得到的打乱字符的字符串，请将其还原成连续正整数序列，并输出序列中最小的数字。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一行，为打乱字符的字符串和正整数序列的长度，两者间用空格分隔，\n字符串长度\n不超过200，正整数不超过1000，保证输入可以还原成唯一序列。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个数字，为序列中最小的数字。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns, k = input().split()\nk = int(k)\n\n\ndef cmp(base, count):\n    for c in base:\n        if count.get(c) is None or count[c] != base[c]:\n            return False\n    return True\n\n\ndef countNumChar(num, count, isAdd):\n    for c in num:\n        count[c] = count.get(c, 0) + (1 if isAdd else -1)\n\n\n# 算法入口\ndef getResult():\n    # base&#xff1a;统计打乱字符的字符串中 各字符的数量\n    base = {}\n    for c in s:\n        base[c] = base.get(c, 0) + 1\n\n    # 初始滑窗&#xff08;长度k&#xff09;中各字符的数量\n    count = {}\n    for i in range(1, k + 1):\n        countNumChar(str(i), count, True)\n\n    # 比较滑窗各字符数量,和base统计的各字符数量是否一致,若一致,则说明初始滑窗就是一个符合要求的连续整数数列,该数列的最小值为1\n    if cmp(base, count):\n        return 1\n\n    # 否则继续尝试后续滑窗,注意题目说正整数不超过1000,因此我们可以尝试连续正整数序列取值范围就是1~1000\n    for i in range(2, 1000 - k + 2):\n        # 相较于上一个滑窗失去的数字\n        remove = str(i - 1)\n        countNumChar(remove, count, False)\n\n        # 相较于上一个滑窗新增的数字\n        add = str(i + k - 1)\n        countNumChar(add, count, True)\n\n        # 比较\n        if cmp(base, count):\n            return i\n\n    # 题目说存在唯一的序列满足条件,因此这里返回语句是走不到的\n    return -1\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

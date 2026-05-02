@@ -1,0 +1,56 @@
+{
+  "id": "q197",
+  "title": "文件目录大小",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一个文件目录的数据格式为：目录id，本目录中文件大小，(子目录id列表）。\n其中目录id全局唯一，取值范围[1, 200]，本目录中文件大小范围[1, 1000]，子目录id列表个数[0,10]例如 : 1 20 (2,3) 表示目录1中文件总大小是20，有两个子目录，id分别是2和3\n现在输入一个文件系统中所有目录信息，以及待查询的目录 id ，返回这个目录和及该目录所有子目录的大小之和。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为两个数字M，N，分别表示目录的个数和待查询的目录id,\n1 ≤ M ≤ 100\n1 ≤ N ≤ 200\n接下来M行，每行为1个目录的数据：\n目录id 本目录中文件大小 (子目录id列表)\n子目录列表中的子目录id以逗号分隔。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "待查询目录及其子目录的大小之和"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 1\n3 15 ()\n1 20 (2)\n2 10 (3)\n输出\n45",
+      "cases": [
+        {
+          "input": "3 1\n3 15 ()\n1 20 (2)\n2 10 (3)",
+          "output": "45",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "目录1大小为20，包含一个子目录2 (大小为10)，子目录2包含一个子目录3(大小为15)，总的大小为20+10+15=45\n输入\n4 2\n4 20 ()\n5 30 ()\n2 10 (4,5)\n1 40 ()\n输出\n60\n\n目录2包含2个子目录4和5，总的大小为10+20+30 = 60"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1图示："
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2图示：\n本题的目录与子目录的关系，可以看出是一棵树，而计算某个目录及其子目录的文件大小总和，其实就是遍历某个节点下所有分支。\n因此，本题可以使用深度优先搜索dfs来解决。下面代码中深度优先搜索，是基于栈实现的，而不是基于递归。基于栈实现dfs的好处是，可以避免较深递归产生的执行栈溢出。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, n = map(int, input().split())\n\nchildren = {}\ncap = {}\n\nfor _ in range(m):\n    fa_id, fa_cap, ch_str = input().split()\n    children[fa_id] = []\n    cap[fa_id] = int(fa_cap)\n\n    if len(ch_str) > 2:\n        children[fa_id].extend(ch_str[1:-1].split(\",\"))\n\n\n# 算法入口\ndef getResult(target):\n    ans = 0\n\n    stack = [target]\n\n    while len(stack) > 0:\n        id = stack.pop()\n        if cap.get(id) is None:\n            continue\n        ans += cap[id]\n        stack.extend(children[id])\n\n    return ans\n\n\n# 算法调用\nprint(getResult(str(n)))"
+  },
+  "verified": false
+}

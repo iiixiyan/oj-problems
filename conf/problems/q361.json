@@ -1,0 +1,69 @@
+{
+  "id": "q361",
+  "title": "电脑病毒感染",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一个局域网内有很多台电脑，分别标注为 0 ~ N-1 的数字。相连接的电脑距离不一样，所以感染时间不一样，感染时间用 t 表示。\n其中网络内一台电脑被病毒感染，求其感染网络内所有的电脑最少需要多长时间。如果最后有电脑不会感染，则返回-1。\n给定一个数组 times 表示一台电脑把相邻电脑感染所用的时间。\n如图：path[i] = {i, j, t} 表示：电脑 i->j，电脑 i 上的病毒感染 j，需要时间 t。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "4\n3\n2 1 1\n2 3 1\n3 4 1\n2"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "2"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\n3\n2 1 1\n2 3 1\n3 4 1\n2\n输出\n2",
+      "cases": [
+        {
+          "input": "4\n3\n2 1 1\n2 3 1\n3 4 1\n2",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "第一个参数：局域网内电脑个数N，1 ≤ N ≤ 200；\n第二个参数：总共多少条网络连接\n第三个 2 1 1 表示2->1时间为1\n第六行：表示病毒最开始所在电脑号2"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "图示如下\n病毒源头是2，其中：\n2->1需要时间1\n2->3需要时间1，3->4需要时间1\n因此最少需要时间2才能感染所有电脑。\n本题考察的是单源最短路径求解，解析可以参考：\n【精选】LeetCode - 743 网络延迟时间_leetcode 网络延迟时间_伏城之外的博客-CSDN博客\n另外，本题"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "和"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "不符。因为题目说：\n一个局域网内有很多台电脑，分别标注为\n0 ~ N-1\n的数字。\n但是题目"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "，第一行给出N=4，但是第五行出现了电脑编号也是4的情况。\n这影响到了下面代码中dist、visited数组长度的定义。当前代码实现以"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "数据为准，即认为电脑编号是 1~N。\n具体考试时需要随机应变。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nn = int(input())\n\n# 邻接表\ngraph = {}\n\nm = int(input())\nfor i in range(m):\n    # 出发点, 目标点, 出发点到达目标点的耗时\n    u, v, w = map(int, input().split())\n    graph.setdefault(u, [])\n    graph[u].append([v, w])\n\n# 记录源点到其他各点的最短耗时\n# 初始时,假设源点不可达其他剩余点,即源点到达其他点的耗时无限大\ndist = [sys.maxsize] * (n+1)\n\n# 源点\nsrc = int(input())\n# 源点到达源点的耗时为0\ndist[src] = 0\n\n# needCheck中记录的其实是&#xff1a;已被探索过的路径的终点&#xff08;路径指的是源点->终点&#xff09;\n# 排序规则是,路径终点的权重&#xff08;即源点->终点的耗时&#xff09;越小越靠后\n# 初始被探索过的路径只有源点本身\nneedCheck = [src]\n\n# 记录对应点是否在needCheck中\nvisited = [False] * (n+1)\nvisited[src] = True\n\nwhile len(needCheck) > 0:\n    # 取出最优路径的终点&#xff08;耗时最少的路径&#xff09;作为新的起点\n    cur = needCheck.pop()\n    visited[cur] = False\n\n    # 如果cur有可达的其他点\n    if graph.get(cur) is not None:\n        # v是可达的其他店,w是cur->v的耗时\n        for v, w in graph[cur]:\n            # 那么如果从源点到cur点的耗时是dist[cur],那么源点到v点的耗时就是dist[cur] + w\n            newDist = dist[cur] + w\n\n            # 而源点到v的耗时之前是dist[v],因此如果newDist < dist[v],则找到更少耗时的路径\n            if dist[v] > newDist:\n                # 更新源点到v的路径,即更新v点权重\n                dist[v] = newDist\n                # 如果v点不在needCheck中,则加入,因为v作为终点的路径需要加入到下一次最优路径的评比中\n                if not visited[v]:\n                    visited[v] = True\n                    needCheck.append(v)\n                    needCheck.sort(key=lambda x: -dist[x])\n\nans = max(dist[1:])\n\nprint(-1 if ans == sys.maxsize else ans)"
+  },
+  "verified": false
+}

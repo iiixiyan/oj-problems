@@ -1,0 +1,51 @@
+{
+  "id": "q407",
+  "title": "密钥格式化",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个非空字符串 S，其被 N 个’-‘分隔成 N+1 的子串，给定正整数 K，要求除第一个子串外，其余的串每 K 个用’-‘分隔，并将小写字母转换为大写。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "正整数 K 和‘-’分割的字符串，如：\n2\n25G3C-abc-d"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "转换后的字符串"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\n5F3Z-2e-9-w\n输出\n5F3Z-2E9W",
+      "cases": [
+        {
+          "input": "4\n5F3Z-2e-9-w",
+          "output": "5F3Z-2E9W",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "字符串 S 被分成了两个部分，每部分 4 个字符；\n\n，两个额外的破折号需要删掉。\n输入\n2\n2-5g-3-J\n输出\n2-5G-3J\n\n字符串 S 被分成了 3 个部分，按照前面的规则描述，第一部分的字符可以少于给定的数量，其余部分皆为 2 个字符。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "简单的字符串操作\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nk = int(input())\ns = input()\n\n\n# 算法入口\ndef getResult():\n    sArr = s.split(\"-\")\n\n    first = sArr[0]\n\n    if len(sArr) == 1:\n        return first\n\n    tmp = list(\"\".join(sArr[1:]).upper())\n    for i in range(len(tmp)):\n        if i % k == 0:\n            tmp[i] = \"-\" + tmp[i]\n\n    return first + \"\".join(tmp)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

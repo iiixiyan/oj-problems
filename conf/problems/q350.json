@@ -1,0 +1,56 @@
+{
+  "id": "q350",
+  "title": "最小矩阵宽度",
+  "score": 200,
+  "tags": [
+    "矩阵"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个矩阵，包含 N * M 个整数，和一个包含 K 个整数的数组。\n现在要求在这个矩阵中找一个宽度最小的子矩阵，要求子矩阵包含数组中所有的整数。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入两个正整数 N，M，表示矩阵大小。\n接下来 N 行 M 列表示矩阵内容。\n下一行包含一个正整数 K。\n下一行包含 K 个整数，表示所需包含的数组，K 个整数可能存在重复数字。\n所有输入数据小于1000。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出包含一个整数，表示满足要求子矩阵的最小宽度，若找不到，输出-1。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2 5\n1 2 2 3 1\n2 3 2 3 2\n3\n1 2 3\n输出\n2",
+      "cases": [
+        {
+          "input": "2 5\n1 2 2 3 1\n2 3 2 3 2\n3\n1 2 3",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "矩阵第0、3列包含了1，2，3，矩阵第3，4列包含了1，2，3\n输入\n2 5\n1 2 2 3 1\n1 3 2 3 4\n3\n1 1 4\n输出\n5\n\n矩阵第1、2、3、4、5列包含了1、1、4"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题其实就是“最小覆盖子串”问题的变形。关于最小覆盖子串问题，大家可以先看下：\nLeetCode - 76 最小覆盖子串_76最小覆盖子串-CSDN博客\n当了解了最小覆盖子串问题后，本题中各个关键词可以类比到最小覆盖子串问题中的关键词：\n当前题目\n最小覆盖子串问题\n矩阵matrix\n主串s\n矩阵matrix的每一列col列数组\n主串s的每个字符c\nK个元素目标数组nums\n目标串t\n求含有nums数组所有元素的最小宽度子矩阵\n求含有目标串t所有字符的最小覆盖子串\n因此，本题可以使用\n尺取法\n高效地求出满足要求地子矩阵地最小宽度。\n尺取法在上面外链博客中，我做了详细"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "，如果还不能够理解地话，可以继续看下这个博客：\n华为OD机试 - 关联子串（Java & JS & Python & C）_华为od算法关联子串-CSDN博客\n本题代码已添加详细注释\n\n，有疑问可以私信我。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nn, m = map(int, input().split())  # 矩阵 [行数, 列数]\nmatrix = [list(map(int, input().split())) for _ in range(n)]  # 矩阵\nk = int(input())  # 目标数组长度\nnums = list(map(int, input().split()))  # 目标数组\n\n# cnts[num] 记录的是 目标数组中num元素的个数\ncnts = [0] * 1000\nfor num in nums:\n    cnts[num] += 1\n\n\n# 算法入口\ndef getResult():\n    # 未完成匹配的元素的个数\n    total = k\n\n    # 记录最小子矩阵的宽度\n    minLen = sys.maxsize\n\n    l = 0  # 当前子矩阵的左边界&#xff08;列号&#xff09;\n    r = 0  # 当前子矩阵的右边界&#xff08;列号&#xff09;\n\n    # 如果右边界未越界,则可以继续尝试找最小子矩阵\n    while r < m:\n        # 将第r列所有元素纳入子矩阵\n        for i in range(n):\n            #  第r列的元素numR\n            numR = matrix[i][r]\n\n            # cnts[numR] 记录的是 目标数组中numR元素的个数,也可以理解为&#xff1a;目标数组中numR元素剩余未匹配的个数\n            # 如果numR不是目标数组元素,则cnts[numR]初始时必然为0,对于非目标数组元素numR, 即使进行了 cnts[numR]--, 也不影响总的未匹配数量 total\n            # 如果numR是目标数组元素,则cnts[numR]初始时必然大于0,且随着子矩阵扩大范围,如果子矩阵中包含numR元素个数超过了初始cnts[numR]数量,则超出部分起不到匹配效果,即不能影响总的未匹配数量\n            if cnts[numR] > 0:\n                total -= 1\n            cnts[numR] -= 1\n\n        # 纳入r列后,看看总的未匹配元素数量total还有几个,如果total为0,则说明当前子矩阵匹配到了所有目标数组元素\n        while total == 0:\n            # 若此时子矩阵宽度 r - l + 1 更小,则更新最小子矩阵宽度\n            minLen = min(minLen, r - l + 1)\n\n            # 由于当前子矩阵已经匹配到所有目标数组元素,因此下一步应该将 l 右移,尝试更小宽度的子矩阵\n            for i in range(n):\n                # l 右移,相当于当前子矩阵移除了第 l 列所有元素,被移除的元素numL如果是目标数组元素,则对应的未匹配数量应该被恢复\n                numL = matrix[i][l]\n\n                # 如果当前numL不是目标数组元素,或者当前numL是目标数组元素,但是属于超出部分&#xff08;这两种情况必然cnts[numL] < 0&#xff09;,则对应numL元素的恢复,不能影响到整体未匹配数量total,\n                # 如果当前numL是目标数组元素,且不是超出部分&#xff08;此时必然cnts[numL] >= 0&#xff09;,则对应numL元素的恢复,会影响到整体未匹配数量total\n                if cnts[numL] >= 0:\n                    total += 1\n                cnts[numL] += 1\n\n            # l右移,且下一轮要继续检查l右移后的子矩阵是否依旧能覆盖目标数组所有元素\n            l += 1\n\n        # r右移\n        r += 1\n\n    if minLen == sys.maxsize:\n        return -1\n    else:\n        return minLen\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

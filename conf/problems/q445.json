@@ -1,0 +1,51 @@
+{
+  "id": "q445",
+  "title": "水仙花数",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "所谓水仙花数，是指一个n位的正整数，其各位数字的n次方和等于该数本身。\n例如153是水仙花数，153是一个3位数，并且153 = 1^3 + 5^3 + 3^3。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入一个整数n，表示一个n位的正整数。n在3到7之间，包含3和7。\n第二行输入一个整数m，表示需要返回第m个水仙花数。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "返回长度是n的第m个水仙花数。个数从0开始编号。\n若m大于水仙花数的个数，返回最后一个水仙花数和m的乘积。\n若输入不合法，返回-1。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n0\n输出\n153",
+      "cases": [
+        {
+          "input": "3\n0",
+          "output": "153",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "153是第一个水仙花数\n输入\n9\n1\n输出\n-1\n\n9超出范围"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "这道题实现逻辑并不难，大家可以看下面算法源码。\n但是本题的水仙花数最长可以有7位，也就是百万级别的，虽然下面算法差不多是O(n)的，但是估计也Hold不住。\n暂时还没想到更好的办法。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import math\n\n# 输入获取\nn = int(input())\nm = int(input())\n\n\n# 算法入口\ndef getResult():\n    # 若输入不合法,返回-1\n    if n < 3 or n > 7 or m < 0:\n        return -1\n\n    # 提前计算好0~9的N次方, 避免后续进行重复计算\n    powN = {}\n    for i in range(10):\n        powN[str(i)] = int(math.pow(i, n))\n\n    # 最小的N位数\n    minV = int(math.pow(10, n-1))\n    # 最大的N位数\n    maxV = int(math.pow(10, n))\n\n    # 记录当前水仙花数\n    ans = 0\n    \n    # 记录当前水仙花数是第几个\n    idx = 0\n\n    for num in range(minV, maxV):\n        # 记录num各位数字的N次方之和\n        sumV = 0\n    \n        # 遍历num的每一位数字\n        for c in str(num):\n            sumV += powN[c]\n\n        # 判断num是否为水仙花数\n        if sumV == num:\n            ans = num\n            \n            # 如果num刚好是N位数的第m个水仙花数,则直接返回,否则继续查找\n            if idx == m:\n                return ans\n            \n            idx += 1\n\n    # 若m大于水仙花数的个数,返回最后一个水仙花数和m的乘积\n    return ans * m\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

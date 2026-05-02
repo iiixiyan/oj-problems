@@ -50,7 +50,8 @@
     }
   ],
   "solutions": {
-    "JavaScript": "根据网友20221207的优化补充，下面代码中25~27行会将代码正确率从40%提高到70%"
+    "JavaScript": "根据网友20221207的优化补充，下面代码中25~27行会将代码正确率从40%提高到70%",
+    "Python": "# 输入获取\nnumber = int(input())\ndays = int(input())\nitem = list(map(int, input().split()))\nprices = [list(map(int, input().split())) for i in range(number)]\n\n\n# 如果当前解法通过率较低,可以尝试将第5行的prices的初始化,改为下面这种,通过率应该会有所上升\n# prices = []\n# for i in range(number):\n#     prices.append(list(map(int, input().split())))\n#     print(0)\n\n# 算法入口\ndef getResult(number, days, item, prices):\n    \"\"\"\n    :param number: 几种商品\n    :param days: 几天\n    :param item: 每种商品的最大囤货数量\n    :param prices: 每种商品的在days天内的价格变动情况\n    :return: 最大利润\n    \"\"\"\n    ans = 0\n    for i in range(number):\n        price = prices[i]\n        for j in range(days - 1):\n            if price[j] < price[j + 1]:\n                ans += (price[j + 1] - price[j]) * item[i]\n    return ans\n\n\n# 算法调用\nprint(getResult(number, days, item, prices))"
   },
   "verified": false
 }

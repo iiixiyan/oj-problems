@@ -1,0 +1,34 @@
+{
+  "id": "q562",
+  "title": "分苹果",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\nA、B两个人把苹果分为两堆，A希望按照他的计算规则等分苹果，他的计算规则是按照二进制加法计算，并且不计算进位\n12+5=9（1100 + 0101 = 9），B的计算规则是十进制加法，包括正常进位，B希望在满足A的情况下获取苹果重量最多。\n输入苹果的数量和每个苹果重量，输出满足A的情况下B获取的苹果总重量。\n如果无法满足A的要求，输出-1。\n数据范围\n1 <= 总苹果数量 <= 20000\n1 <= 每个苹果重量 <= 10000"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入第一行是苹果数量：3\n输入第二行是每个苹果重量：3 5 6"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出第一行是B获取的苹果总重量：11"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    arr.sort()\n    fault = correct = minV = arr[0]\n\n    for i in range(1, len(arr)):\n        w = arr[i]\n        fault ^= w\n        correct += w\n\n    if fault == 0:\n        return correct - minV\n    else:\n        return -1\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

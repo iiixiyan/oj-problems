@@ -1,0 +1,56 @@
+{
+  "id": "q227",
+  "title": "路灯照明问题",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在一条笔直的公路上安装了N个路灯，从位置0开始安装，路灯之间间距固定为100米。\n每个路灯都有自己的照明半径，请计算第一个路灯和最后一个路灯之间，无法照明的区间的长度和。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为一个数N，表示路灯个数，1<=N<=100000\n第二行为N个空格分隔的数，表示路灯的照明半径，1<=照明半径<=100000*100"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "第一个路灯和最后一个路灯之间，无法照明的区间的长度和"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2\n50 50\n输出\n0",
+      "cases": [
+        {
+          "input": "2\n50 50",
+          "output": "0",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "路灯1覆盖0-50，路灯2覆盖50-100，路灯1和路灯2之间(0米-100米)无未覆盖的区间。\n输入\n4\n50 70 20 70\n输入\n解释\n路灯1 覆盖0-50\n路灯2 覆盖30-170\n路灯3 覆盖180-220\n路灯4 覆盖230-370\n输出\n20\n\n[170,180],[220,230]，两个未覆盖的区间，总里程为20"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以转化为区间问题。\n每个路灯的位置都是确定，假设路灯的索引为 i，那么其位置就是 i * 100。\n根据第二行输入的路灯的照明半径数组arr，我们可以基于路灯的位置，求得路灯的照明范围区间\n假设center = i * 100，r = arr[i]，那么照明范围区间即为：[center - r, center + r]\n这样的话，我们就得到了一组区间。\n接下来，我们就需要将这些区间进行合并，合并后，求剩余没有交集的区间的间隙之和就是\n\n。\n这里区间合并是有技巧的，我们一般：\n先将区间按照起始位置进行升序\n如果起始位置相同，则再按照结束位置降序\n这样排序的好处是，所有区间都按照起始位置升序排序了，比如第一个ran[0]和第二个区间ran[1]，我们可以确定：ran[0].start <= ran[1].start\n由于这两个区间的起始位置关系已经确定了，判断这两个区间是否有交集，只要看ran[0].end和ran[1].start即可，如果ran[0].end > ran[1].start，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "这两个区间有交集，可以合并。\n另外，如果ran[0]和ran[1]的起始位置相同的话，则上面排序还会按照结束位置进行降序，即必然ran[0].end >= ran[1].end。\n这样排序的好处是，后面区间的结束位置小于前面区间的结束位置时，可以直接放心并入前面区间，而不需要再进行起始位置相同的两个区间的结束位置比较。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    rans = []\n\n    for i in range(n):\n        center = i * 100\n        rans.append([center - arr[i], center + arr[i]])\n\n    # 按起始位置升序,起始位置相同,则继续按结束位置降序\n    rans.sort(key=lambda ran: (ran[0], -ran[1]))\n\n    ans = 0\n\n    t = rans[0][1]  # 上一个区间的结束位置\n    for i in range(1, n):\n        s, e = rans[i]  # 当前区间的【开始位置,结束位置】\n\n        # 有交集\n        if t >= s:\n            # 合并后的新区间将变为下一轮的上一个区间,t为新区间的结束位置\n            t = max(e, t)\n        else:\n            # 没有交集,则统计区间间隙 s - t\n            ans += s - t\n            #  当前区间变为下一轮的上一个区间,更新t\n            t = e\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,51 @@
+{
+  "id": "q411",
+  "title": "小明找位置",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小朋友出操，按学号从小到大排成一列；\n小明来迟了，请你给小明出个主意，让他尽快找到他应该排的位置。\n算法复杂度要求不高于nLog(n)；学号为整数类型，队列规模 ≤ 10000；"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行：输入已排成队列的小朋友的学号（正整数），以\",\"隔开；例如：\n93,95,97,100,102,123,155\n第二行：小明学号，如：\n110"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个数字，代表队列位置（从1开始）。例如：\n6"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n93,95,97,100,102,123,155\n110\n输出\n6",
+      "cases": [
+        {
+          "input": "93,95,97,100,102,123,155\n110",
+          "output": "6",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题应该不会存在重复学号问题，因此本题其实就是在一个有序数组中寻找目标值的有序插入位置，可以使用二分法。\n关于二分法在有序数组中查找目标值有序插入位置的实现，可以参考：\n算法设计 - 二分法和三分法，洛谷P3382_二分法与三分法_伏城之外的博客-CSDN博客\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nnums = list(map(int, input().split(\",\")))\ntarget = int(input())\n\n\n# 算法入口\ndef binarySearch():\n    # 参照Java的Arrays.binarySearch实现\n    low = 0\n    high = len(nums) - 1\n\n    while low <= high:\n        mid = (low + high) >> 1\n        midVal = nums[mid]\n\n        if midVal > target:\n            high = mid - 1\n        elif midVal < target:\n            low = mid + 1\n        else:\n            return mid  # 如果nums中存在target,则返回target的位置\n\n    return -low - 1  # 如果nums中不存在target,则low就是target在nums中的有序插入位置,为了避免冲突,这里设计为负数返回\n\n\n# 算法调用\nidx = binarySearch()\n\nif idx < 0:\n    idx = -idx - 1\n\n# 队列位置&#xff08;从1开始&#xff09;,因此索引+1\nprint(idx + 1)"
+  },
+  "verified": false
+}

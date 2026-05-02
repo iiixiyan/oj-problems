@@ -1,0 +1,51 @@
+{
+  "id": "q390",
+  "title": "冠亚军排名，奖牌榜排名",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "2012伦敦奥运会即将到来，大家都非常关注奖牌榜的情况，现在我们假设奖牌榜的排名规则如下:\n首先gold medal数量多的排在前面\n其次silver medal数量多的排在前面\n然后bronze medal数量多的排在前面\n若以上三个条件仍无法区分名次，则以国家名称的字典顺序排定。\n我们假设国家名称不超过二十个字符，各类奖牌数不超过100，且大于0."
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入一个整数N（0<N<21），代表国家数量，\n然后接下来的N行，每行包含：\n一个字符串Name表示各个国家的名称和三个整数Gi,Si,Bi表示每个获得的gold medal,silver medal,bronze medal的数量，以空格隔开，如(China 51 20 21),\n具体见样例输入。\n5\nChina 32 28 34\nEngland 12 34 22\nFrance 23 33 2\nJapan 12 34 25\nRusia 23 43 0"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出奖牌榜的依次顺序，只输出国家名称，各占一行，具体见样例输出。\nChina\nRusia\nFrance\nJapan\nEngland"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\nChina 32 28 34\nEngland 12 34 22\nFrance 23 33 2\nJapan 12 34 25\nRusia 23 43 0\n输出\nChina\nRusia\nFrance\nJapan\nEngland",
+      "cases": [
+        {
+          "input": "5\nChina 32 28 34\nEngland 12 34 22\nFrance 23 33 2\nJapan 12 34 25\nRusia 23 43 0",
+          "output": "China\nRusia\nFrance\nJapan\nEngland",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "主要考察数组排序（也可以集合排序）\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\ncountries = []\n\nfor i in range(n):\n    name, gold, silver, bronze = input().split()\n    countries.append([int(gold), int(silver), int(bronze), name])\n\n\n# 算法入口\ndef getResult():\n    countries.sort(key=lambda x: (-x[0], -x[1], -x[2], x[3]))\n\n    for c in countries:\n        print(c[3])\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

@@ -1,0 +1,57 @@
+{
+  "id": "q394",
+  "title": "判断字符串子序列",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定字符串 target和 source，判断 target是否为 source 的子序列。\n你可以认为target和 source 中仅包含英文小写字母。\n字符串 source 可能会很长（长度~=500,000），而 target是个短字符串（长度<=100)。\n字符串的一个子序列是原始字符串删除一些（也可以不删除）字符而不改变剩余字符相对位置形成的新字符串。\n（例如，”abc”是”aebycd”的一个子序列，而”ayb”不是）。\n请找出最后一个子序列的起始位置。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为target，短字符串（长度 <=100）\n第二行为source，长字符串（长度 ~= 500,000）"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最后一个子序列的起始位置，即最后一个子序列首字母的下标"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "若在source中找不到target，则输出-1。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nabc\nabcaybec\n输出\n3",
+      "cases": [
+        {
+          "input": "abc\nabcaybec",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "这里有两个abc的子序列满足，取下标较大的，故返回3。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "此题是\n华为机试 - 字符串序列判定_伏城之外的博客-CSDN博客\n的进阶题。\n此题不再好用正则来投机取巧了，因为source串中可能存在多个target子串，此时使用/a.*b.*c.*/正则就无法正确匹配了，因为此正则会直接匹配出\nab\ncaybe\nc\n整个字符串，而不是某个子串。而想要构造一个只匹配子串，而不匹配整串的正则非常难，不适合机试。\n因此，本题我们还可以使用指针来做。\n创建一个指针cursor，来指向target的尾部target.length-1位置，而不是指向target的0位置\n因为题目要求\n最后一个子序列\n首字母的下标，因此我们反向遍历target串，以及source串，这样的话，匹配到的第一个序列就是符合要求的。\n反向遍历source字符串的每一个字符，与当前cursor指针指向的taget串的字符比较，若相同，则cursor--，若不同，则cursor不变。\n当cursor指向0位置时，此时若有source[i]的字符与target[cursor]相同，则i就是\n\n。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ntarget = input()\nsource = input()\n\n\n# 算法入口\ndef getResult():\n    cursor = len(target) - 1\n    for i in range(len(source)-1, -1, -1):\n        if source[i] == target[cursor]:\n            cursor -= 1\n            if cursor < 0:\n                return i\n\n    return -1\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

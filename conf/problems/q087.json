@@ -1,0 +1,52 @@
+{
+  "id": "q087",
+  "title": "等和子数组最小和",
+  "score": 100,
+  "tags": [
+    "A卷",
+    "数组"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个数组nums，将元素分为若干个组，使得每组和相等，求出满足条件的所有分组中，组内元素和的最小值。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入 m\n接着输入m个数，表示此数组nums\n数据范围：1<=m<=50, 1<=nums[i]<=50"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最小拆分数组和"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n7\n4 3 2 3 5 2 1\n输出\n5",
+      "cases": [
+        {
+          "input": "7\n4 3 2 3 5 2 1",
+          "output": "5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "可以等分的情况有：\n4 个子集（5），（1,4），（2,3），（2,3）\n2 个子集（5, 1, 4），（2,3, 2,3）\n但最小的为5。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题算是\nLeetCode - 698 划分为k个相等的子集_伏城之外的博客-CSDN博客\n的变种题，本题同样是要将数组划分为k个和相等的子集。\n本题要我们求解：最小拆分数组和，其实就是求解：最小子集和，其实就是求解，最大k值。因为k值越大，则对应的子集的和越小。\n这里k的求解很简单，首先，我们可以猜想下k的上限是多少？\n比如数组所有元素都相等，则k === m，即每个元素都能作为一个子集，因此我们可以让k从m开始尝试，如果不行，则k--，直到k=1。\n而验证nums是否可以划分为k层，其实就是判断nums是否可以划分为k个和相等的子集，这个判断逻辑可以复用\nLeetCode - 698 划分为k个相等的子集_伏城之外的博客-CSDN博客\n中的逻辑。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm = int(input())\nlink = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(link, m):\n    link.sort(reverse=True)\n\n    sumV = 0\n    for ele in link:\n        sumV += ele\n\n    while m > 0:\n        if canPartitionMSubsets(link[:], sumV, m):\n            return int(sumV / m)\n        m -= 1\n\n    return sumV\n\n\ndef canPartitionMSubsets(link, sumV, m):\n    if sumV % m != 0:\n        return False\n\n    subSum = sumV / m\n\n    if subSum < link[0]:\n        return False\n\n    while len(link) > 0 and link[0] == subSum:\n        link.pop(0)\n        m -= 1\n\n    buckets = [0] * m\n\n    return partition(link, 0, buckets, subSum)\n\n\ndef partition(link, index, buckets, subSum):\n    if index == len(link):\n        return True\n\n    select = link[index]\n\n    for i in range(len(buckets)):\n        if i > 0 and buckets[i] == buckets[i - 1]:\n            continue\n\n        if select + buckets[i] <= subSum:\n            buckets[i] += select\n            if partition(link, index + 1, buckets, subSum):\n                return True\n            buckets[i] -= select\n\n    return False\n\n\n# 算法调用\nprint(getResult(link, m))"
+  },
+  "verified": false
+}

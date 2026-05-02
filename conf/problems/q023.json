@@ -52,6 +52,8 @@
       "content": "中SUM=14，bucketBallNums.length=7，则每个桶中球数量的最理想值是14/7=2。\n我们可以将此时最理想值作为maxCapacity的起始值。然后向后查找。\n但是上面这种算法在应对较大数量级，可能会超时，因此改进策略是使用二分查找，具体逻辑请看\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nsumV, n = map(int, input().split())\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(sumV, arr, n):\n    total = sum(arr)\n\n    if total <= sumV:\n        return \"[]\"\n\n    max_maxCapacity = max(arr)\n    min_maxCapacity = int(sumV / n)\n\n    # ans保存题解,初始题解为min_maxCapacity对应的题解\n    ans = list(map(lambda count: count - min_maxCapacity if count > min_maxCapacity else 0, arr))\n\n    while max_maxCapacity - min_maxCapacity > 1:\n        maxCapacity = int((max_maxCapacity + min_maxCapacity) / 2)\n\n        # tmp数组保存的是每个桶移除的球的数量\n        tmp = list(map(lambda count: count - maxCapacity if count > maxCapacity else 0, arr))\n\n        remain = total - sum(tmp)\n        if remain > sumV:\n            max_maxCapacity = maxCapacity\n        elif remain < sumV:\n            min_maxCapacity = maxCapacity\n            ans = tmp\n        else:\n            ans = tmp\n            break\n\n    return \"[\" + \",\".join(map(str, ans)) + \"]\"\n\n\n# 调用算法\nprint(getResult(sumV, arr, n))"
+  },
   "verified": false
 }

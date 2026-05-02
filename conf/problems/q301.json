@@ -1,0 +1,66 @@
+{
+  "id": "q301",
+  "title": "字符统计及重排",
+  "score": 100,
+  "tags": [
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给出一个仅包含字母的字符串，不包含空格，统计字符串中各个字母（区分大小写）出现的次数，\n并按照字母出现次数从大到小的顺序。输出各个字母及其出现次数。\n如果次数相同，按照自然顺序进行排序，且小写字母在大写字母之前。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一行，为一个仅包含字母的字符串。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "按照字母出现次数从大到小的顺序输出各个字母和字母次数，用英文分号分隔，"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "末尾的分号；\n字母和次数间用英文冒号分隔。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nxyxyXX\n输出\nx:2;y:2;X:2;",
+      "cases": [
+        {
+          "input": "xyxyXX",
+          "output": "x:2;y:2;X:2;",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "每个字符出现的个数都是2，故x排在y之前，而小写字母x在X之前\n输入\nabababb\n输出\nb:4;a:3;\n\nb的出现个数比a多，故b排在a之前"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是，题目要求：\n如果次数相同，按照自然顺序进行排序，且小写字母在大写字母之前。\n自然顺序排序，看"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1，应该就是ASCII升序。而后面又要求，小写字母在大写字母之前，小写字母的ASCII码值是大于大小字母的，因此这里又相当于ASCII降序。\n因此排序时，如果遇到次数相同的，则需要判断比较的两个字母是否 都为大写 或者 都为小写，若是，则此时按照ASCII码值升序，若不是，则小写字母排在前面，大写字母排在后面。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nimport functools\n\ns = input()\n\n\ndef cmp(a, b):\n    if a[1] != b[1]:\n        return b[1] - a[1]\n\n    if (a[0].islower() and b[0].islower()) or (a[0].isupper() and b[0].isupper()):\n        return 1 if a[0] > b[0] else -1\n    else:\n        if a[0].isupper():\n            return 1\n        else:\n            return -1\n\n\n# 算法入口\ndef getResult():\n    letter = {}\n\n    for c in s:\n        letter[c] = letter.get(c, 0) + 1\n\n    letterList = list(letter.items())\n\n    letterList.sort(key=functools.cmp_to_key(cmp))\n\n    return \"\".join(list(map(lambda x: f\"{x[0]}:{x[1]};\", letterList)))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,57 @@
+{
+  "id": "q188",
+  "title": "支持优先级的队列",
+  "score": 100,
+  "tags": [
+    "B卷",
+    "队列"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "实现一个支持优先级的队列，高优先级先出队列；同优先级时先进先出。\n如果两个输入数据和优先级都相同，则后一个数据不入队列被丢弃。\n队列存储的数据内容是一个整数。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一组待存入队列的数据 (包含内容和优先级)"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "队列的数据内容(优先级信息输出时不再体现)"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "不用考虑输入数据不合法的情况，测试数据不超过100个"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n(10,1),(20,1),(30,2),(40,3)\n输出\n40,30,10,20",
+      "cases": [
+        {
+          "input": "(10,1),(20,1),(30,2),(40,3)",
+          "output": "40,30,10,20",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "输入样例中，向队列写入了4个数据，每个数据由数据内容和优先级组成。\n输入和输出内容都不含空格。\n数据40的优先级最高，所以最先输出，其次是30;\n10和20优先级相同，所以按输入顺序输出。\n输入\n(10,1),(10,1),(30,2),(40,3)\n输出\n40,30,10\n\n输入样例中，向队列写入了4个数据，每个数据由数据内容和优先级组成。\n输入和输出内容都不含空格。\n数据40的优先级最高，所以最先输出，其次是30;\n两个10和10构成重复数据，被丢弃一个。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题看上去是让我们使用优先队列，但是实际上不是。\n本题在维护优先级的同时，也要维护去重特性。其中较难的功能点是：\n对于相同优先级的，且不重复的任务，维持插入顺序。\n这个功能其实就是让我们实现一个：维护了插入顺序的Set集合。\n对于JS而言，其Set本身就是一个维护了插入顺序的去重集合，因此可以直接复用。\n对于Java而言，我们可以复用LinkedHashSet。\n对于Python而言，其set不维护元素插入顺序，因此我们不能复用。为了避免自己实现OrderedSet，我们可以复用Python的object能力，因此Python的object的keys列是维护了插入顺序的去重集合。\n我的\n\n如下：\n定义一个字典，用于收集相同优先级的数据，即字典的key是优先级，value是一个维护了插入顺序的Set集合。\n收集完后，我们可以取出字典的key列进行降序排序（高优先级优先），然后遍历降序后的key列，逐个打印字典对应key下的value内容。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nline = input()\n\ntasks = list(map(lambda s: list(map(int, s.split(\",\"))), line[1:len(line)-1].split(\"),(\")))\n\n\n# 核心代码\ndef getResult():\n    dic = {}\n\n    for num, priority in tasks:\n        dic.setdefault(priority, {})\n        dic[priority].setdefault(num, None)\n\n    order = list(dic.keys())\n    order.sort(reverse=True)\n\n    ans = []\n    for p in order:\n        ans.extend(list(dic[p].keys()))\n\n    return \",\".join(map(str, ans))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

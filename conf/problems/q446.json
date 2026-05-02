@@ -1,0 +1,67 @@
+{
+  "id": "q446",
+  "title": "求字符串中所有整数的最小和",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "输入字符串s，输出s中包含所有整数的最小和。"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：\n字符串s，只包含 a-z A-Z ± ；\n合法的整数包括\n1） 正整数 一个或者多个0-9组成，如 0 2 3 002 102\n2）负整数 负号 – 开头，数字部分由一个或者多个0-9组成，如 -0 -012 -23 -00023"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "包含数字的字符串"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "所有整数的最小和"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nbb1234aa\n输出\n10",
+      "cases": [
+        {
+          "input": "bb1234aa",
+          "output": "10",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nbb12-34aa\n输出\n-31\n\n1+2+（-34） = -31"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题看上去很难，其实想清楚三点那就很简单\n正数字符串的最小值如何计算？比如1234的最小值是多少，那肯定是1+2+3+4，即每位都是一个独立数，且都是一个小于10的数，它们之和就是最小的。\n负数字符串的最小值如何计算？比如-34，那肯定是整体当成一个负数时，最小。\n正数负数混合字符串最小值如何计算？比如12-34，那肯定是正数部分12每位单独计算，负数部分当成整体\n我的\n\n如下：\n定义一个容器negative，用于存储负数的数字字符\n定义一个标识isNegative，用来记录是否遇到负数，初始化为false，标识一开始没有遇到负数\n遍历输入字符串s的每一个字符c\n如果 c == '-'，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "负数要开始了，因此更新isNegative = true\n如果 c 是数字字符，则此时需要分情况讨论：\nisNegative == false，则此时直接将c字符转成对应的数值合入结果，ans += parseInt(c)\nisNegative == true，则\n\nc是负数的字符，此时应该将c加入缓存容器negative中\n如果 c 是字母字母，若isNegative == true，则需要将negative容器中内容拼接，然后转化为负数合入结果，ans -= parseInt(negative.join(\"\"))，完成后，将isNeagtive = false，并且清空negative容器。\n需要\n\n的是，当c == '-'，也需要\n\n出现 “-34-40” 这种情况，即 c == '-'，也需要先判断isNegative == true，则需要将negative容器中内容拼接，然后转化为负数合入结果，ans -= parseInt(negative.join(\"\"))，完成后，将isNeagtive = false，并且清空negative容器。\n2023.06.01\n本题没有\n\n数字长度，因此Java和JS需要使用大数处理。\n2023.12.08\n修复一个问题，比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "bb12\n-\na\n-34aa\n可能会出现不完整负数情况，即只有一个符号的情况，此时我们应该过滤掉这种不完整负数场景\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult():\n    isNegative = False\n    negative = []\n\n    ans = 0\n    for c in s:\n        if '0' <= c <= '9':\n            if isNegative:\n                negative.append(c)\n            else:\n                ans += int(c)\n        else:\n            if isNegative and len(negative) > 0:\n                ans -= int(\"\".join(negative))\n                negative.clear()\n            isNegative = c == '-'\n\n    if len(negative) > 0:\n        ans -= int(\"\".join(negative))\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

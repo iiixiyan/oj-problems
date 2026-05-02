@@ -1,0 +1,72 @@
+{
+  "id": "q353",
+  "title": "模拟目录管理功能",
+  "score": 200,
+  "tags": [
+    "模拟"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "目录"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "算法源码\nJavaScript算法源码\nJava算法源码\nPython算法源码\nC算法源码"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "实现一个模拟目录管理功能的软件，输入一个命令序列，输出最后一条命令运行结果。\n支持命令：\n创建目录命令：\nmkdir 目录名称\n，如\nmkdir abc\n为在当前目录创建abc目录，如果已存在同名目录则不执行任何操作。此命令无输出。\n进入目录命令：\ncd 目录名称\n，如\ncd abc\n为进入abc目录，特别地，\ncd ..\n为返回上级目录，如果目录不存在则不执行任何操作。此命令无输出。\n查看当前所在路径命令：\npwd\n，输出当前路径字符串。\n约束：\n目录名称仅支持小写字母；mkdir 和 cd 命令的参数仅支持单个目录，如：mkdir abc 和 cd abc；不支持嵌套路径和绝对路径，如 mkdir abc/efg，cd abc/efg，mkdir /abc/efg，cd /abc/efg 是不支持的。\n目录符号为/，根目录/作为初始目录。\n任何不符合上述定义的无效命令不做任何处理并且无输出。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入 N 行字符串，每一行字符串是一条命令。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出最后一条命令运行结果字符串。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "命令行数限制100行以内，目录名称限制10个字符以内。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nmkdir abc\ncd abc\npwd\n输出\n/abc/",
+      "cases": [
+        {
+          "input": "mkdir abc\ncd abc\npwd",
+          "output": "/abc/",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "在根目录创建一个abc的目录并进入abc目录中查看当前目录路径，输出当前路径/abc/。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题感觉主要是考察树形结构定义，以及逻辑模拟。\n目录结构，其实就是一个树形结构。一个父目录下面可以有多个直接子目录，而一个子目录只能有一个父目录。因此，本题需要定义出一个多叉树结构。\n关于树节点定义如下：\nclass TreeNode {\nString dicName; // 当前目录的名字\nTreeNode father; // 当前目录的父目录\nList<TreeNode> children; // 当前目录的子目录\n}\n接下来，就是实现目录管理能力：\nmkdir\ncd\npwd\n实现这三个能力前，我们需要定义出树结构：\nclass Tree {\nTreeNode root; // 树的根目录\nTreeNode cur; // 当前所在目录\n}\n其中，tree.cur 用于指向当前所在目录，初始时 tree.cur = tree.root。\nmkdir，其实就是在 tree.cur 目录下创建一个子目录，但是前提是 tree.cur 下面不存在对应子目录名，否则不操作。mkdir操作不改变 tree.cur 指向。\ncd，有两种情况：\ncd ..\ncd .. 是返回上级目录（父目录），但是前提是 tree.cur.father 存在，否则不操作。如果 tree.cur.father 存在，则cd .. 会改变 tree.cur = tree.cur.father。\ncd 目录名\ncd 目录名 是进入子目录，但是前提是 tree.cur 包含对应目录名的子目录，否则不操作。如果 存在对应子目录，则 cd操作会改变 tree.cur = 对应子目录\npwd 是输出当前目录的路径字符串，我们可以不停进行 tree.cur = tree.cur.father 的倒序遍历，获取遍历过程中目录名tree.cur.dicName，直到 tree.cur == NULL。最后拼接时"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "反转。\n上面是目录管理功能的三个能力大致实现思路，具体实现根据不同语言有不同改进，比如 cd 目录名 功能，我们需要遍历 tree.cur.children 来确认对应目录名是否存在，这里Java，JS，Py定义 tree.cur.children 时可以使用 字典Map 来定义（key是目录名，val是对应目录名的TreeNode），从而实现快速查找对应目录。\n另外，本题需要对mkdir, cd, pwd的命令参数做约束：\nmkdir, cd 的参数只能是1个，如果超过1个，就不进行操作\npwd 不需要参数，如果有参数，就不进行操作\nmkdir，cd的参数（目录名）只能由小写字母组成，否则不操作\nmkdir，cd的参数（目录名）不能是嵌套路径，或者绝对路径\n算法源码\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Java": "Python算法源码\nC算法源码\n题目描述\n实现一个模拟目录管理功能的软件，输入一个命令序列，输出最后一条命令运行结果。\n支持命令：\n创建目录命令：\nmkdir 目录名称\n，如\nmkdir abc\n为在当前目录创建abc目录，如果已存在同名目录则不执行任何操作。此命令无输出。\n进入目录命令：\ncd 目录名称\n，如\ncd abc\n为进入abc目录，特别地，\ncd ..\n为返回上级目录，如果目录不存在则不执行任何操作。此命令无输出。\n查看当前所在路径命令：\npwd\n，输出当前路径字符串。\n约束：\n目录名称仅支持小写字母；mkdir 和 cd 命令的参数仅支持单个目录，如：mkdir abc 和 cd abc；不支持嵌套路径和绝对路径，如 mkdir abc/efg，cd abc/efg，mkdir /abc/efg，cd /abc/efg 是不支持的。\n目录符号为/，根目录/作为初始目录。\n任何不符合上述定义的无效命令不做任何处理并且无输出。\n输入描述\n输入 N 行字符串，每一行字符串是一条命令。\n输出描述\n输出最后一条命令运行结果字符串。\n备注\n命令行数限制100行以内，目录名称限制10个字符以内。\n用例\n输入\nmkdir abc\ncd abc\npwd\n输出\n/abc/\n说明\n在根目录创建一个abc的目录并进入abc目录中查看当前目录路径，输出当前路径/abc/。\n题目解析\n本题感觉主要是考察树形结构定义，以及逻辑模拟。\n目录结构，其实就是一个树形结构。一个父目录下面可以有多个直接子目录，而一个子目录只能有一个父目录。因此，本题需要定义出一个多叉树结构。\n关于树节点定义如下：\nclass TreeNode {\nString dicName; // 当前目录的名字\nTreeNode father; // 当前目录的父目录\nList children; // 当前目录的子目录\n}\n接下来，就是实现目录管理能力：\nmkdir\ncd\npwd\n实现这三个能力前，我们需要定义出树结构：\nclass Tree {\nTreeNode root; // 树的根目录\nTreeNode cur; // 当前所在目录\n}\n其中，tree.cur 用于指向当前所在目录，初始时 tree.cur = tree.root。\nmkdir，其实就是在 tree.cur 目录下创建一个子目录，但是前提是 tree.cur 下面不存在对应子目录名，否则不操作。mkdir操作不改变 tree.cur 指向。\ncd，有两种情况：\ncd ..\ncd .. 是返回上级目录（父目录），但是前提是 tree.cur.father 存在，否则不操作。如果 tree.cur.father 存在，则cd .. 会改变 tree.cur = tree.cur.father。\ncd 目录名\ncd 目录名 是进入子目录，但是前提是 tree.cur 包含对应目录名的子目录，否则不操作。如果 存在对应子目录，则 cd操作会改变 tree.cur = 对应子目录\npwd 是输出当前目录的路径字符串，我们可以不停进行 tree.cur = tree.cur.father 的倒序遍历，获取遍历过程中目录名tree.cur.dicName，直到 tree.cur == NULL。最后拼接时注意反转。\n上面是目录管理功能的三个能力大致实现思路，具体实现根据不同语言有不同改进，比如 cd 目录名 功能，我们需要遍历 tree.cur.children 来确认对应目录名是否存在，这里Java，JS，Py定义 tree.cur.children 时可以使用 字典Map 来定义（key是目录名，val是对应目录名的TreeNode），从而实现快速查找对应目录。\n另外，本题需要对mkdir, cd, pwd的命令参数做约束：\nmkdir, cd 的参数只能是1个，如果超过1个，就不进行操作\npwd 不需要参数，如果有参数，就不进行操作\nmkdir，cd的参数（目录名）只能由小写字母组成，否则不操作\nmkdir，cd的参数（目录名）不能是嵌套路径，或者绝对路径\n算法源码",
+    "Python": "class TreeNode:\n    def __init__(self, curDicName, father):\n        self.curDicName = curDicName\n        self.father = father\n        self.children = {}\n\n\nclass Tree:\n    def __init__(self):\n        # root是根目录,根目录 / 作为初始目录\n        self.root = TreeNode(\"/\", None)\n        # cur用于指向当前正在操作的目录\n        self.cur = self.root\n\n    def mkdir(self, dicName):\n        # mkdir 目录名称,如 mkdir abc 为在当前目录创建abc目录,如果已存在同名目录则不执行任何操作\n        self.cur.children.setdefault(dicName, TreeNode(dicName + \"/\", self.cur))  # 目录符号为 /\n\n    def cd(self, dicName):\n        if dicName == \"..\":\n            # cd .. 为返回上级目录,如果目录不存在则不执行任何操作\n            if self.cur.father is not None:\n                # cur 变更指向上级目录\n                self.cur = self.cur.father\n        else:\n            # cd 目录名称,如 cd abc 为进入abc目录,如果目录不存在则不执行任何操作\n            if self.cur.children.get(dicName) is not None:\n                # cur 变更指向下级目录\n                self.cur = self.cur.children[dicName]\n\n    def pwd(self):\n        # 输出当前路径字符串\n        lst = []\n\n        # 倒序路径,即不停向上找父目录\n        cur = self.cur\n        while cur is not None:\n            lst.append(cur.curDicName)\n            cur = cur.father\n\n        # 反转后拼接\n        lst.reverse()\n\n        return \"\".join(lst)\n\n\n# 算法逻辑\n# 初始化目录结构\ntree = Tree()\n\n# 记录最后一条命令的输出\nlastCommandOutput = \"\"\n\nwhile True:\n    try:\n        line = input()\n\n        # 本地测试解开此行\n        # if line == \"\":\n        #     break\n\n        tmp = line.split()\n        cmd_key = tmp[0]\n\n        if cmd_key == \"pwd\":\n            # pwd 命令不需要参数\n            if len(tmp) != 1:\n                continue\n            lastCommandOutput = tree.pwd()\n        elif cmd_key == \"mkdir\" or cmd_key == \"cd\":\n            # 约束&#xff1a;mkdir 和 cd 命令的参数仅支持单个目录,如&#xff1a;mkdir abc 和 cd abc\n            if len(tmp) != 2:\n                continue\n\n            # 目录名\n            cmd_val = tmp[1]\n\n            # 目录名约束校验\n            # 约束&#xff1a;目录名称仅支持小写字母\n            # 约束&#xff1a;不支持嵌套路径和绝对路径,如 mkdir abc/efg,cd abc/efg,mkdir /abc/efg,cd /abc/efg 是不支持的。\n            # 关于嵌套路径和绝对路径,我简单理解就是cmd_val含有'/'字符,可以被小写字母判断涵盖住\n            if not (cmd_val.isalpha() and cmd_val.islower()) and not (cmd_key == 'cd' and cmd_val == '..'):\n                continue\n\n            if cmd_key == \"mkdir\":\n                tree.mkdir(cmd_val)\n                # 题目进要求输出最后一个命令的运行结果,因此,对于无输出的命令,我认为需要覆盖掉前面的命令的输出结果\n                lastCommandOutput = \"\"\n            else:\n                tree.cd(cmd_val)\n                # 题目进要求输出最后一个命令的运行结果,因此,对于无输出的命令,我认为需要覆盖掉前面的命令的输出结果\n                lastCommandOutput = \"\"\n    except:\n        break\n\nprint(lastCommandOutput)"
+  },
+  "verified": false
+}

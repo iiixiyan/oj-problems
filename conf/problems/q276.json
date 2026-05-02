@@ -1,0 +1,57 @@
+{
+  "id": "q276",
+  "title": "树状结构查询",
+  "score": 200,
+  "tags": [
+    "B卷",
+    "树"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "通常使用多行的节点、父节点表示一棵树，比如\n西安 陕西\n陕西 中国\n江西 中国\n中国 亚洲\n泰国 亚洲\n输入一个节点之后，请打印出来树中他的所有下层节点"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入行数，下面是多行数据，每行以空格区分节点和父节点\n接着是查询节点"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出查询节点的所有下层节点。以字典序排序"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "树中的节点是唯一的，不会出现两个节点，是同一个名字"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\nb a\nc a\nd c\ne c\nf d\nc\n输出\nd\ne\nf",
+      "cases": [
+        {
+          "input": "5\nb a\nc a\nd c\ne c\nf d\nc",
+          "output": "d\ne\nf",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "图示如下\n需要打印c下面的所有子节点，即d,e,f节点，按照字典序输出后是d,e,f。\n本题其实就是让我们遍历树结构，可以使用深搜或者广搜。下面代码使用广搜。\n关于本题树结构，可以使用Map结构实现，即key为父节点，value为子节点集合。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\n\ntree = {}\nfor _ in range(n):\n    ch, fa = input().split()\n    tree.setdefault(fa, set())\n    tree[fa].add(ch)\n\ntarget = input()\n\n\n# 算法入口\ndef getResult():\n    if tree.get(target) is None:\n        print(\"\")\n        return\n\n    queue = list(tree[target])\n    ans = []\n\n    while len(queue) > 0:\n        node = queue.pop(0)\n        ans.append(node)\n\n        if tree.get(node) is not None:\n            queue.extend(list(tree[node]))\n\n    ans.sort()\n    for v in ans:\n        print(v)\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

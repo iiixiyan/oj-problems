@@ -1,0 +1,51 @@
+{
+  "id": "q078",
+  "title": "查找重复代码",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小明负责维护项目下的代码，需要查找出重复代码，用以支撑后续的代码优化，请你帮助小明找出重复的代码。\n重复代码查找方法：以字符串形式给定两行代码（字符串长度 1 < length <= 100，由英文字母、数字和空格组成），找出两行代码中的最长公共子串。\n注：如果不存在公共子串，返回空字符串"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的参数text1, text2分别表示两行代码"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出任一最长公共子串"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nhello123world\nhello123abc4\n输出\nhello123",
+      "cases": [
+        {
+          "input": "hello123world\nhello123abc4",
+          "output": "hello123",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nprivate_void_method\npublic_void_method\n输出\n_void_method\n\n无\n输入\nhiworld\nhiweb\n输出\nhiw\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用动态规划求解，下面解释下本题动态规划\n\n。\n动态规划，一般是将大问题分解为规模更小的相同的子问题，如果子问题依旧很难求解，则继续分解，直到规模小到子问题可以被轻松求解。\n比如上面求两个字符串的最长公共子串，如果两个字符串很长，那么我们将很难一下子发现最长公共子串，那么我们可以只看两个字符串的部分范围，比如字符串str1，只看0~i范围，字符串str2，只看0~j范围，然后求解str1的0~i范围和str2的0~j范围的最长公共子串，最简单就是str1的0~0范围，即空串，和任意str2范围的最长公共子串都是空串，接着我们可以慢慢扩大str1的范围。\n可能上面说的还比较抽象，我们可以用一个二维数组dp来描述上面逻辑。\ndp[i][j] 表示的是，str1的0~i范围  和  str2的0~j范围   的公共子串的长度\n初始时，我们可以得出如下二维矩阵\n即str1取0~0，即空串时，和任意str2范围的公共子串的长度都是0。\n同理，str2取0~0，即空串时，和任意str1范围的公共子串的长度都是0。\n接下来， str1取0~1范围（即h），和str2取0~1范围（即h），的公共子串其实就是h，因此长度为1。如下图所示\n但是上面公共子串长度求解，也可以看成是，str1扩大范围新增的h，和str2扩大范围新增的h相同，因此出现了公共子串，那么就相当于在str1未扩大范围前（即空串时），和str2未扩大范围前（即空串时），的公共子串长度的基础上+1。\n即：dp[1][1] = dp[0][0] + 1\n进一步分析，其实可得出状态转移方程：\nif(str1[i] === str2[j])  dp[i][j] = dp[i-1][j-1] + 1\n再接下来， str1还是取0~1范围（即h），和str2取0~2范围（即he）,\n此时str1还是相当于新增h，而str2相当于新增e，新增部分不相同，所以此处没有增长前面基础上得到的公共子串的长度。\n那么此时相当于 if(str1[i] !== str2[j])  dp[i][j] = dp[i-1][j-1] + 0，\n但是这种思路是错误的，因为当str1,str2新增范围字符不同时，意味着公共子串的中断，我们应该将此时的dp[i][j]置为0，这样才能防止dp[i+1][j+1]对应的字符相同时，继承前面的公共子串长度。\n请看下面错误例子\n正确例子应该是\n因此正确的动态规划状态转移方程是：\ndp[i][0] = 0\ndp[0][j] = 0\nif(str1[i] === str2[j])\ndp[i][j] = dp[i-1][j-1] + 1\nelse dp[i][j] =\n0\n但是此题并不是让我们求解最长的公共子串的长度，而是求出任一最长公共子串。因此我们可以在遍历求解上面二维矩阵每一个元素时，记录下公共子串最大的长度值，比如下面例子中，求解到黄色元素dp[2][2]时，得到了目前最大的公共子串长度2，\n因此我们可以从任一维度来获取这个公共子串，比如从列维度，相当于 str2.slice( j - maxLen, j)，其中j对应dp[i][j]中的j。maxLen=dp[i][j]。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nstr1 = input()\nstr2 = input()\n\n\n# 算法入口\ndef getResult(str1, str2):\n    n = len(str1)\n    m = len(str2)\n\n    dp = [[0 for i in range(m + 1)] for j in range(n + 1)]\n\n    maxV = 0\n    ans = \"\"\n\n    for i in range(1, n + 1):\n        for j in range(1, m + 1):\n            if str1[i - 1] == str2[j - 1]:\n                dp[i][j] = dp[i - 1][j - 1] + 1\n\n                if dp[i][j] > maxV:\n                    maxV = dp[i][j]\n                    ans = str1[(i - maxV):i]\n            else:\n                dp[i][j] = 0\n\n    return ans\n\n\n# 算法调用\nprint(getResult(str1, str2))"
+  },
+  "verified": false
+}

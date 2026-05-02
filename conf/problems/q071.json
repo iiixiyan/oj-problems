@@ -1,0 +1,51 @@
+{
+  "id": "q071",
+  "title": "最大报酬",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小明每周上班都会拿到自己的工作清单，工作清单内包含 n 项工作，每项工作都有对应的耗时时间（单位 h）和报酬，工作的总报酬为所有已完成工作的报酬之和，那么请你帮小明安排一下工作，保证小明在指定的工作时间内工作收入最大化。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的第一行为两个正整数 T，n。\nT 代表工作时长（单位 h， 0 < T < 1000000），\nn 代表工作数量（ 1 < n ≤ 3000）。\n接下来是 n 行，每行包含两个整数 t，w。\nt 代表该工作消耗的时长（单位 h， t > 0），w 代表该项工作的报酬。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出小明指定工作时长内工作可获得的最大报酬。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n40 3\n20 10\n20 20\n20 5\n输出\n30",
+      "cases": [
+        {
+          "input": "40 3\n20 10\n20 20\n20 5",
+          "output": "30",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是01背包问题。可以使用动态规划求解。关于01背包问题请先看下面这个博客\n算法设计 - 01背包问题_伏城之外的博客-CSDN博客\n本题中\n工作时长T相当于背包承重\n每一项工作相当于每件物品\n工作消耗的时长相当于物品重量\n工作的报酬相当于物品的价值\n01背包二维数组解法（100%）\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nt, n = map(int, input().split())\ntws = [list(map(int, input().split())) for i in range(n)]\n\n\n# 算法入口\ndef getResult(t, tws):\n    \"\"\"\n    :param t: 工作时长\n    :param tws: 列表,元素是tw,也是列表,含义为[该工作消耗的时长, 该项工作的报酬]\n    :return: 最大报酬\n    \"\"\"\n    maxI = len(tws) + 1\n    maxJ = t + 1\n\n    # 默认将dp二维列表元素全部初始化为0\n    dp = [[0 for j in range(maxJ)] for i in range(maxI)]\n\n    for i in range(maxI):\n        for j in range(maxJ):\n            if i == 0 or j == 0:\n                continue  # 第0行或第0列最大报酬保持0\n\n            t, w = tws[i - 1]  # 要选择的工作的[权重,价值]\n\n            if t > j:\n                # 如果要选择的工作的权重 > 当前背包权重,则无法放入背包,最大价值继承自上一行该列值\n                dp[i][j] = dp[i - 1][j]\n            else:\n                # 如果要选择的工作的权重 <= 当前背包权重\n                # 则我们有两种选择\n                # 1、不进行该工作,则最大价值继承自上一行该列值\n                # 2、进行该工作,则纳入该工作的价值w,加上 + 剩余权重,在不进行该工作的范围内,可得的最大价值dp[i - 1][j - t]\n                # 比较两种选择下的最大价值,取最大的\n                dp[i][j] = max(dp[i - 1][j], w + dp[i - 1][j - t])\n\n    return dp[-1][-1]  # 取二维列表最右下角元素作为题解\n\n\n# 算法调用\nprint(getResult(t, tws))"
+  },
+  "verified": false
+}

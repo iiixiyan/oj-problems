@@ -1,0 +1,13 @@
+{
+  "id": "q623",
+  "title": "跳马",
+  "score": 200,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nm, n = map(int, input().split())  # 棋盘行数, 棋盘列数\ngrid = [input() for _ in range(m)]  # 棋盘矩阵\nstepGrid = [[0] * n for _ in range(m)]  # 最小步数和矩阵,stepMap[i][j]记录各个马走到棋盘(i,j)位置的最小步数之和\n\n# 记录所有马都可达的公共位置坐标\nreach = set()\nfor i in range(m):\n    for j in range(n):\n        reach.add(i * n + j)\n\n# 马走日的偏移量\noffsets = ((1, 2), (1, -2), (2, 1), (2, -1), (-1, 2), (-1, -2), (-2, 1), (-2, -1))\n\n\n# 广搜\ndef bfs(sx, sy, k):\n    global reach\n\n    # 广搜队列\n    # (sx,sy)为马所在初始位置,马到达初始位置需要0步\n    queue = [(sx, sy, 0)]\n\n    # 记录该马可以访问(sx,sy)位置\n    vis = set()\n    vis.add(sx * n + sy)  # 二维坐标一维化\n\n    # k记录该马剩余可走步数\n    while len(queue) > 0 and k > 0:\n        # newQueue记录该马花费相同步数的可达的位置&#xff08;即BFS按层遍历的层&#xff09;\n        newQueue = []\n\n        # 按层BFS\n        for x, y, step in queue:\n            for offsetX, offsetY in offsets:\n                # 马走日到达的新位置\n                newX = x + offsetX\n                newY = y + offsetY\n\n                pos = newX * n + newY\n\n                # 如果新位置越界或者已访问过,则不能访问\n                if newX < 0 or newX >= m or newY < 0 or newY >= n or (pos in vis):\n                    continue\n\n                # 将新位置加入新层\n                newQueue.append((newX, newY, step + 1))\n\n                # 该马到达(newX, newY)位置最小步数为step+1, 由于该马首次到达(newX, newY)位置,因此step+1就是最小步数\n                stepGrid[newX][newY] += step + 1\n\n                # 记录该马访问过该位置,后续如果该马再次访问该位置,则不是最小步数\n                vis.add(pos)\n\n        queue = newQueue\n        k -= 1  # 剩余步数减1\n\n    # BFS完后,将公共可达位置reach和当前马可达位置vis取交集,交集部分就是新的公共可达位置\n    reach &= vis\n\n\n# 算法入口\ndef getResult():\n    # 遍历棋盘\n    for i in range(m):\n        for j in range(n):\n            # 如果棋盘(i,j)位置是马\n            if grid[i][j] != '.':\n                # 马的等级\n                k = int(grid[i][j])\n                # 对该马进行BFS走日\n                bfs(i, j, k)\n\n    # 如果所有马走完,发现没有公共可达位置\n    if len(reach) == 0:\n        return -1\n\n    # 记录所有马都可达位置的最小步数和\n    minStep = sys.maxsize\n\n    for pos in reach:\n        x = pos // n\n        y = pos % n\n        # (x,y)是所有马都可达的位置,stepMap[x][y]记录所有马到达此位置的步数和\n        minStep = min(minStep, stepGrid[x][y])\n\n    return minStep\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

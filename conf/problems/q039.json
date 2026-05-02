@@ -49,6 +49,8 @@
       "content": "的是，排序要素需要记录每个员工第一次打卡日期，作为第二优先级排序。\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\ndayCount = list(map(int, input().split()))\n\ndayIds = []\nfor i in range(30):\n    dayIds.append(list(map(int, input().split())))\n\n\n# 算法入口\ndef getResult(dayIds):\n    employees = {}\n\n    for i in range(len(dayIds)):\n        ids = dayIds[i]\n        for id in ids:\n            if employees.get(id) is not None:\n                employees[id][\"count\"] += 1\n            else:\n                employees[id] = {\n                    'count': 1,\n                    'firstDay': i\n                }\n\n    arr = []\n    for id in employees.keys():\n        arr.append((id, employees[id][\"count\"], employees[id][\"firstDay\"]))\n\n    arr.sort(key=lambda x: (-x[1], x[2], x[0]))\n\n    return \" \".join(list(map(lambda x: str(x[0]), arr[:5])))\n\n\nprint(getResult(dayIds))"
+  },
   "verified": false
 }

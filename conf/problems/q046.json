@@ -45,6 +45,8 @@
       "content": "本题由两块逻辑组成：\n1、根据提供的数字字符串，得到字母组合字符串。这块其实就是求组合问题，可以使用回溯算法，逻辑可以参考：\nLeetCode - 17 电话号码的字母组合_伏城之外的博客-CSDN博客\n2、排除包含屏蔽字符串的字母组合字符串，而本题中判断一个字符串是否包含另一个字符串的逻辑是：屏蔽字符串中的所有字母不能同时在输出的字符串中出现\n数字字符串中的数字不允许重复\n屏蔽字符串中字符不会重复\nJS算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nnumsStr = input()\nfilterStr = input()\n\ndic = [\"abc\", \"def\", \"ghi\", \"jkl\", \"mno\", \"pqr\", \"st\", \"uv\", \"wx\", \"yz\"]\nresult = []\n\n\n# 算法入口\ndef getResult():\n    # 回溯算法求组合\n    dfs(0, [])\n    # 拼接结果字符串\n    return \",\".join(result) + \",\"\n\n\ndef dfs(level, path):\n    \"\"\"\n    回溯算法求组合\n    :param level: 组合的层级\n    :param path: 记录组合字符串\n    \"\"\"\n    if level == len(numsStr):  # 组合层数到达要求时,当前组合字符串完成\n        pathSet = set(path)\n\n        for c in filterStr:\n            if c not in pathSet:\n                result.append(\"\".join(path))\n                return\n\n        return\n\n    # 当前层级的数字\n    num = ord(numsStr[level]) - ord('0')\n    # 该数字关联的多个字母\n    letters = dic[num]\n\n    # 遍历当前层级可选的字母\n    for letter in letters:\n        # 选择字母加入当前组合\n        path.append(letter)\n        # 继续组合下一个层级的字母选择\n        dfs(level + 1, path)\n        path.pop()\n\n\n# 算法调用\nprint(getResult())"
+  },
   "verified": false
 }

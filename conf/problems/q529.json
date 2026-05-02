@@ -1,0 +1,34 @@
+{
+  "id": "q529",
+  "title": "智能成绩表",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n小明来到学校当老师，需要将学生按考试总分或单科分数进行排名，你能帮帮他吗？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第 1 行输入两个整数，学生人数 n 和科目数量 m。\n0 < n < 100\n0 < m < 10\n第 2 行输入 m 个科目名称，彼此之间用空格隔开。\n科目名称只由英文字母构成，单个长度不超过10个字符。\n科目的出现顺序和后续输入的学生成绩一一对应。\n不会出现重复的科目名称。\n第 3 行开始的 n 行，每行包含一个学生的姓名和该生 m 个科目的成绩（空格隔开）\n学生不会重名。\n学生姓名只由英文字母构成，长度不超过10个字符。\n成绩是0~100的整数，依次对应第2行种输入的科目。\n第n+2行，输入用作排名的科目名称。若科目不存在，则按总分进行排序。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一行，按\n成绩排序\n后的学生名字，空格隔开。成绩相同的按照学生姓名字典顺序排序。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "class Student:\n    def __init__(self, name, rank):\n        self.name = name\n        self.rank = rank\n\n\n# 学生人数, 科目数量\nn, m = map(int, input().split())\n\n# key是科目名称,val是科目出现顺序的序号\nsubject_rankIdx = {}\n\n# 输入的m个科目\nsubjects = input().split()\n\nfor i in range(m):\n    subject_rankIdx[subjects[i]] = i\n\nstudents = []\nfor i in range(n):\n    tmp = input().split()\n\n    # 学生姓名\n    name = tmp[0]\n    # 学生给定科目的分数&#xff08;m个&#xff09;\n    scores = list(map(int, tmp[1:]))\n\n    # 排名要素,0~m-1索引上的是给定科目成绩,m索引上的是总分\n    rank = []\n    rank.extend(scores)\n    rank.append(sum(scores))\n\n    students.append(Student(name, rank))\n\n# 用作排名的科目名称\nsubject = input()\n\n#  用作排名的科目名称的排名要素序号, 如果用作排名的科目名称不存在,则按总分排名,对应序号是m\nrankIdx = subject_rankIdx.get(subject, m)\n\n# 按照排名要素排名,如果排名要素值相同,则按照学生姓名字典序排序\nstudents.sort(key=lambda x: (-x.rank[rankIdx], x.name))\n\nprint(\" \".join(map(lambda x: x.name, students)))"
+  },
+  "verified": false
+}

@@ -1,0 +1,56 @@
+{
+  "id": "q219",
+  "title": "符合要求的元组的个数",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个整数数组 nums、一个数字k，一个整数目标值 target，请问nums中是否存在k个元素使得其相加结果为target，请输出所有符合条件且不重复的k元组的个数\n数据范围\n2 ≤ nums.length ≤ 200\n-10^9 ≤ nums[i] ≤ 10^9\n-10^9 ≤ target ≤ 10^9\n2 ≤ k ≤ 100"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行是nums取值：2 7 11 15\n第二行是k的取值：2\n第三行是target取值：9"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出第一行是符合要求的元组个数：1\n补充"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：[2,7]满足，输出个数是1"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n-1 0 1 2 -1 -4\n3\n0\n输出\n2",
+      "cases": [
+        {
+          "input": "-1 0 1 2 -1 -4\n3\n0",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "[-1,0,1]，[-1,-1,2]满足条件\n输入\n2 7 11 15\n2\n9\n输出\n1\n\n[2,7]符合条件"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "（分治递归+双指针）\n本题其实就是要求K数之和。\n本题的K数之和，和\nLintCode - 89 K数之和_伏城之外的博客-CSDN博客\n是存在区别的，\n本题的要求的K元组是从整数数组中选取的，这里的整数数组，既可能包含正数，也可能包含负数，也可能包含0，另外最终求得的符合要求的K元组，还要进行去重。\n因此，本题无法参考：\nLintCode - 89 K数之和_伏城之外的博客-CSDN博客\n本题其实需要参考：\nLeetCode - 15 三数之和_伏城之外的博客-CSDN博客\nLeetCode - 18 四数之和_伏城之外的博客-CSDN博客\n这两题。如果你对这两题不熟悉，请做本题前，先做完前面这两题，这两题是基础。否则下面代码会看不懂。\n其中三数之和，是需要固定三元组中的最小的一个值，然后通过双指针找到剩余两个数。\n其中四数之和，是需要固定四元组中的最小的两个值，然后通过双指针找到剩余两个数。\n而K数之和，其实需要固定K元组中最小的K-2个值，然后通过双指针找到剩余两个数。\n因此，下面代码实现中分为了两部分：\nK-2重for循环完成 K元组中最小的K-2个值的确定\n通过双指针完成剩余两个值的确定\n而实际上K的值是不确定的，因此第1部分的K-2重for循环需要通过递归完成。\n具体请看下面代码实现。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nnums = list(map(int, input().split()))\nk = int(input())\ntarget = int(input())\n\n\n# 两数之和\ndef twoSum(nums, target, start, count, preTotal):\n    l = start\n    r = len(nums) - 1\n\n    while l < r:\n        total = preTotal + nums[l] + nums[r]\n\n        if target < total:\n            r -= 1\n        elif target > total:\n            l += 1\n        else:\n            count += 1\n            # 去重\n            while l + 1 < r and nums[l] == nums[l + 1]:\n                l += 1\n            # 去重\n            while r - 1 > l and nums[r] == nums[r - 1]:\n                r -= 1\n            l += 1\n            r -= 1\n\n    return count\n\n\n# k数之和\ndef kSum(nums, k, target, start, count, total):\n    if k < 2:\n        return count\n\n    if k == 2:\n        return twoSum(nums, target, start, count, total)\n\n    for i in range(start, len(nums) - k + 1):\n        # 剪枝\n        if nums[i] > 0 and total + nums[i] > target:\n            break\n\n        # 去重\n        if i > start and nums[i] == nums[i - 1]:\n            continue\n        count = kSum(nums, k - 1, target, i + 1, count, total + nums[i])\n\n    return count\n\n\n# 算法入口\ndef getResult():\n    if k > len(nums):\n        return 0\n\n    nums.sort()\n    return kSum(nums, k, target, 0, 0, 0)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

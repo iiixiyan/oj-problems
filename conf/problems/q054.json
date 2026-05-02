@@ -59,6 +59,8 @@
       "content": "也无法验证。我理解是需要的，\n需要的。\n另外，本题还有一个关键点就是：异常的打卡记录需要（按输入顺序输出）。\n因此，我们在保存异常打卡记录时，还需要附加其输入时的索引，已方便按照输入索引输出。\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nclockRecords = [input().split(\",\") for i in range(n)]\n\n\n# 算法入口\ndef getResult(clockRecords):\n    employees = {}\n    ans = set()\n\n    for i in range(len(clockRecords)):\n        id, time, dis, act_device, reg_device = clockRecords[i]\n\n        # 实际设备号与注册设备号不一样,则认为打卡异常\n        if act_device != reg_device:\n            ans.add(i)\n\n        # 由于异常打卡记录需要按输入顺序输出,因此这里追加一个输入索引i到打卡记录中\n        clockRecord = [id, time, dis, act_device, reg_device, i]\n        if employees.get(id) is None:\n            employees[id] = []\n        employees[id].append(clockRecord)\n\n    for id in employees.keys():\n        # 某id员工的所有打卡记录\n        records = employees[id]\n        n = len(records)\n\n        # 将该员工打卡记录按照打卡时间升序\n        records.sort(key=lambda x: int(x[1]))\n\n        for i in range(n):\n            time1 = int(records[i][1])\n            dis1 = int(records[i][2])\n\n            for j in range(i + 1, n):\n                time2 = int(records[j][1])\n                dis2 = int(records[j][2])\n\n                # 如果两次打卡时间超过60分治,则不计入异常,由于已按打卡时间升序,因此后面的都不用检查了\n                if time2 - time1 >= 60:\n                    break\n                else:\n                    # 如果两次打开时间小于60MIN,且打卡距离超过5KM,则这两次打卡记录算作异常\n                    if abs(dis2 - dis1) > 5:\n                        # 如果打卡记录已经加入异常列表ans,则无需再次加入,否则需要加入\n                        ans.add(records[i][5])\n                        ans.add(records[j][5])\n\n    if len(ans) > 0:\n        tmp = list(ans)\n        tmp.sort()\n        return \";\".join(list(map(lambda i: \",\".join(clockRecords[i]), tmp)))\n    else:\n        return \"null\"\n\n\n# 调用算法\nprint(getResult(clockRecords))"
+  },
   "verified": false
 }

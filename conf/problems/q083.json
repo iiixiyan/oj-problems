@@ -1,0 +1,24 @@
+{
+  "id": "q083",
+  "title": "租车骑绿岛",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "部门组织绿岛骑行团建活动。租用公共双人自行车，每辆自行车最多坐两人，最大载重M。\n给出部门每个人的体重，请问最多需要租用多少双人自行车。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行两个数字m、n，分别代表自行车限重，部门总人数。\n第二行，n个数字，代表每个人的体重，体重都小于等于自行车限重m。"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, n = map(int, input().split())\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(arr, m, n):\n    arr.sort()\n\n    count = 0\n\n    i = 0\n    j = n - 1\n\n    while i < j:\n        if arr[i] + arr[j] <= m:\n            i += 1\n        j -= 1\n        count += 1\n\n    if i == j:\n        count += 1\n\n    return count\n\n\n# 算法调用\nprint(getResult(arr, m, n))"
+  },
+  "verified": false
+}

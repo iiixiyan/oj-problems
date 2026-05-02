@@ -1,0 +1,51 @@
+{
+  "id": "q398",
+  "title": "单词重量",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "每个句子由多个单词组成，句子中的每个单词的长度都可能不一样，我们假设每个单词的长度Ni为该单词的重量，你需要做的就是给出整个句子的平均重量V。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "无"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nWho Love Solo\n输出\n3.67",
+      "cases": [
+        {
+          "input": "Who Love Solo",
+          "output": "3.67",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题应该是考察如何保留2位小数并四舍五入。\n在JS中，可以使用Number.prototype.toFixed(保留几位)\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = input().split()\n\nsumV = 0\nfor i in range(len(arr)):\n    sumV += len(arr[i])\n\nprint(round(sumV / len(arr), 2))"
+  },
+  "verified": false
+}

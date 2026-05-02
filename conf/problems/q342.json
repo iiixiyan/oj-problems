@@ -1,0 +1,54 @@
+{
+  "id": "q342",
+  "title": "找数字",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小扇和小船今天又玩起来了数字游戏，\n小船给小扇一个正整数 n（1 ≤ n ≤ 1e9），小扇需要找到一个比 n 大的数字 m，使得 m 和 n 对应的二进制中 1 的个数要相同，如：\n4对应二进制100\n8对应二进制1000\n其中1的个数都为1个\n现在求 m 的最小值。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一个正整数 n（1 ≤ n ≤ 1e9）"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个正整数 m"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2\n输出\n4",
+      "cases": [
+        {
+          "input": "2",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "2的二进制10，\n4的二进制位100，\n1的个数相同，且4是满足条件的最小数\n输入\n7\n输出\n11\n\n7的二进制111，\n11的二进制位1011，\n1的个数相同，且11是满足条件的最小数"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "我们可以举几个例子来"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "此题的解法：\nn： 1001\n01\n00\nm：1001\n10\n00\nn： 111010\n01\nm：111010\n10\nn： 11100\n01\n0\nm：11100\n10\n0\n可以发现，想要找到符合要求的m，其实只需要将 n 二进制串中从右往左找到的第一组 \"01\" 子串 变为 \"10\" 即可。\n这样就能在不新增二进制'1'的情况下，且差距最小的情况下，找到比n大的最小的m的二进制串\n那么对于：\nn = 111111\nn = 10000\n这种找不到 \"01\" 子串的情况，该怎么处理呢？\n很简单，给n的二进制串最前面拼接一个0即可，即上面两个n的二进制串变为\nn = 0111111  => m = 1011111\nn = 010000  => m = 100000\n此时前面方法依旧适用。\n但是上面方法依旧是存在问题的，什么问题，因为我们将\"01\"变为\"10\"的过程中实际上对于该子串后面的部分也会产生影响。\n比如\nn =  1000\n01\n11100\n如果我们将 01 子串变为 10，则m的二进制串为\nm = 1000\n10\n11100\n此时m虽然比n大，但是并不是最小的m，此时由于红色部分发生了进位操作，因此红色部分后面的子串还有变小的可能，比如更优的m二进制串应该为：\nm = 1000\n10\n00\n111\n因此，我们还需要将红色子串后面的部分的'1'全部集中放到尾部。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nm = int(input())\nmatrix = [list(map(int, input().split())) for i in range(n)]\n\n\n# 算法入口\ndef getResult(matrix, n, m):\n    nums = {}\n\n    # 统计输入矩阵中,相同数字的位置\n    for i in range(n):\n        for j in range(m):\n            num = matrix[i][j]\n            if nums.get(num) is None:\n                nums[num] = [[i, j]]\n            else:\n                nums[num].append([i, j])\n\n    # 遍历矩阵每一个元素,和其他相同数字的位置求距离,取最小距离\n    for i in range(n):\n        for j in range(m):\n            num = matrix[i][j]\n\n            minDis = None\n            for i1, j1 in nums[num]:\n                if i1 != i or j1 != j:\n                    dis = abs(i1 - i) + abs(j1 - j)\n                    if minDis is None:\n                        minDis = dis\n                    else:\n                        minDis = min(minDis, dis)\n\n            matrix[i][j] = -1 if minDis is None else minDis\n\n    return matrix\n\n\n# 调用算法\nprint(getResult(matrix, n, m))"
+  },
+  "verified": false
+}

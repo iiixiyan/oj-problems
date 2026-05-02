@@ -1,0 +1,61 @@
+{
+  "id": "q261",
+  "title": "报文解压缩",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "为了提升数据传输的效率，会对传输的报文进行压缩处理。\n输入一个压缩后的报文，请返回它解压后的原始报文。\n压缩规则：n[str]，表示方括号内部的 str 正好重复 n 次。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "n 为正整数（0 < n <= 100），str只包含小写英文字母，不考虑异常情况。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入压缩后的报文：\n1）不考虑无效的输入，报文没有额外的空格，方括号总是符合格式要求的；\n2）原始报文不包含数字，所有的数字只表示重复的次数 n ，例如不会出现像 5b 或 3[8] 的输入；"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "解压后的原始报文\n注：原始报文长度不会超过1000，不考虑异常的情况"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3[k]2[mn]\n输出\nkkkmnmn",
+      "cases": [
+        {
+          "input": "3[k]2[mn]",
+          "output": "kkkmnmn",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "k 重复3次，mn 重复2次，最终得到 kkkmnmn\n输入\n3[m2[c]]\n输出\nmccmccmcc\n\nm2[c] 解压缩后为 mcc，重复三次为 mccmccmcc"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用栈结构解题。思路也比较简单明了。\n我们只需要统计出如下几个关键信息即可：\n要被重复的子串（可以分解记录子串两边的'['，']'的位置）\n要被重复的子串的重复次数\n定义一个栈stack，然后开始遍历输入字符串str的每一个字符c：\n如果 c == '['，则可以统计到两个信息：\n要被重复的子串的起始位置\n根据"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "，'['的前面必然是重复次数，因此'['可以作为重复次数结束统计的标志\n如果 c == ']'，则可以得到要被重复的子串的结束位置，此时我们可以进行生成解压串，来替换掉对应范围的压缩串\n如果 c 是数字，则必然是重复次数的组成，此时可以记录下来，当遇到’[‘时，可以得到一个重复次数\n如果 c 是其他字符，则压入栈中。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult(s):\n    stack = []\n\n    # idxs记录要被重复的子串的起始位置\n    idxs = []\n    # nums记录要被重复的子串的重复次数,和idxs对应\n    nums = []\n\n    # tmpRepeatCount记录重复次数的的字符组成\n    tmpRepeatCount = []\n\n    # 遍历输入的字符串,c是当前正在遍历的字符\n    for c in s:\n        if c == '[':\n            # 此时tmpRepeatCount已记录完当前重复子串对应的重复次数的所有字符\n            repeatCount = int(\"\".join(tmpRepeatCount))\n            nums.append(repeatCount)\n            tmpRepeatCount = []\n\n            # 记录要被重复的子串的起始位置\n            idxs.append(len(stack))\n        elif c == ']':\n            # 需要被重复的子串在栈中的起始位置\n            start = idxs.pop()\n            # 需要被重复的次数\n            repeatCount = nums.pop()\n            # 需要被重复的子串\n            repeatStr = \"\".join(stack[start:])\n\n            # 先删除要被替换的子串,然后加入新串&#xff08;即重复对应次数的子串&#xff09;\n            stack = stack[:start]\n            stack.append(\"\".join([repeatStr] * repeatCount))\n        elif '0' <= c <= '9':\n            tmpRepeatCount.append(c)\n        else:\n            stack.append(c)\n\n    return \"\".join(stack)\n\n\n# 算法调用\nprint(getResult(s))"
+  },
+  "verified": false
+}

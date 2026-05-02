@@ -1,0 +1,51 @@
+{
+  "id": "q379",
+  "title": "ABR 车路协同场景",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "数轴×有两个点的序列 A={A1， A2, …, Am}和 B={B1, B2, ..., Bn}， Ai 和 Bj 均为正整数， A、 B 已经从小到大排好序， A、 B 均肯定不为空，\n给定一个距离 R（正整数），列出同时满足如下条件的所有（Ai， Bj）数对\n条件：\nAi <= Bj\nAi,Bj 距离小于等于 R，但如果 Ai 找不到 R 范围内的 Bj，则列出距它最近的 1 个 Bj，当然此种情况仍然要满足 1，\n但如果仍然找不到，就丢弃 Ai。\n原型：\n车路协同场景，一条路上发生了有很多事件（ A），要通过很多路测设备（ B）广播给路上的车，需要给每个事件找到一个合适的路测设备去发送广播消息。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "按照\n人易读\n的格式输入一行数据，参见输入样例，其中“ ABR={， }”中的每个字符都是关键分割符，输入中无空格，其他均为任意正整数，\n输入 A 和 B 已经排好序， A 和 B 的大小不超过 50，正整数范围不会超过 65535。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "z\n（ Ai,Bj）数对序列，排列顺序满足序列中前面的 Ax<=后面的 Ay，前面的 Bx<=后面的 By，\n因为输入 A 和 B 已经排好序，所以实际上输出结果不用特意排序，排序不是考察点。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nA={1,3,5},B={2,4,6},R=1\n输出\n(1,2)(3,4)(5,6)",
+      "cases": [
+        {
+          "input": "A={1,3,5},B={2,4,6},R=1",
+          "output": "(1,2)(3,4)(5,6)",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "首先，输入中有效数据的获取，我使用了正则\nconst regExp = /A\\=\\{\n(.+)\n\\}\\,B\\=\\{\n(.+)\n\\}\\,R\\=\n(.+)\n/;\n其中有三个捕获组，分别捕获出1,3,5和2,4,6以及1\n然后我们就可以通过一些简单的字符串操作得到A,B,R数据了。\n得到A、B、R后，我们只要双重for，外层遍历A，内层遍历B，然后找满足A[i] + R = B[j]的数据，当然在找的过程中，需要记录第一个比A[i]大的B[j1]，因为要防止找不到满足A[i] + R = B[j]的数据时，可以输出一个和A[i]最近的B[j1]\nAi,Bj 距离小于等于 R，但如果 Ai 找不到 R 范围内的 Bj，则列出\n距它最近的 1 个 Bj\n，当然此种情况仍然要满足 1，\n2023.06.22\n根据考友提示，本题要返回的  (Ai,Bj)  数对需要满足下面条件\nAi <= Bj\nAi,Bj 距离小于等于 R，但如果 Ai 找不到 R 范围内的 Bj，则列出距它最近的 1 个 Bj，当然此种情况仍然要满足 1\n关于其中第2个条件\n如果对于Ai，存在多个Bj，使其满足Ai <= Bj 且 Bj - Ai <= R，则应该全部输出。\n如果对于Ai，不存在Bj 满足Ai <= Bj 且 Bj - Ai <= R，则应该进一步检查是否存在Bj > Ai，如果存在，则输出这些Bj中最小的那个和Ai组成的数对。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import re\n\n# 输入获取\ns = input()\ntmp = re.compile(r\"A=\\{(.+)},B=\\{(.+)},R=(.+)\").search(s)\nA = list(map(int, tmp.group(1).split(\",\")))\nB = list(map(int, tmp.group(2).split(\",\")))\nR = int(tmp.group(3))\n\n\n# 算法入口\ndef getResult():\n    ans = []\n\n    for a in A:\n        cnt = 0\n        for b in B:\n            if b < a:\n                continue\n\n            if b - a <= R or cnt == 0:\n                ans.append(f\"({a},{b})\")\n                cnt += 1\n            else:\n                break\n\n    return \"\".join(ans)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

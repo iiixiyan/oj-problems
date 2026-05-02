@@ -1,0 +1,56 @@
+{
+  "id": "q406",
+  "title": "密码输入检测",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定用户密码输入流 input，输入流中字符 '<' 表示退格，可以清除前一个输入的字符，请你编写程序，输出最终得到的密码字符，并判断密码是否满足如下的密码安全要求。\n密码安全要求如下：\n密码长度 ≥ 8；\n密码至少需要包含 1 个大写字母；\n密码至少需要包含 1 个小写字母；\n密码至少需要包含 1 个数字；\n密码至少需要包含 1 个字母和数字以外的非空白特殊字符；"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "空串退格后仍然为空串，且用户输入的字符串不包含 '<' 字符和空白字符。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "用一行字符串表示输入的用户数据，输入的字符串中 '<' 字符标识退格，用户输入的字符串不包含空白字符，例如：\nABC<c89%000<"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出经过程序处理后，输出的实际密码字符串，并输出改密码字符串是否满足密码安全要求。两者间由 ',' 分隔， 例如：\nABc89%00,true"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nABC<c89%000<\n输出\nABc89%00,true",
+      "cases": [
+        {
+          "input": "ABC<c89%000<",
+          "output": "ABc89%00,true",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "多余的C和0由于退格被去除,最终用户输入的密码为ABc89%00，且满足密码安全要求，输出true"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以利用栈的压栈来模拟用户输入字符，弹栈来模拟'<'退格操作。\n最后统计栈中：所有字符数量>=8 && 小写字母数量 >= 1 && 大写字母数量 >= 1 && 数字数量 >= 1 && 非字母数字空白字符数量 >= 1\n若满足，则将栈中字符拼接为字符串后再追加“true”，否则追加“false”\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult():\n    stack = []\n\n    for c in s:\n        if c == '<':\n            if len(stack) > 0:\n                stack.pop()\n        else:\n            stack.append(c)\n\n    upper = 0\n    lower = 0\n    number = 0\n    non_letter_number = 0\n\n    password = []\n    for c in stack:\n        password.append(c)\n\n        if 'z' >= c >= 'a':\n            lower += 1\n        elif 'Z' >= c >= 'A':\n            upper += 1\n        elif '9' >= c >= '0':\n            number += 1\n        else:\n            non_letter_number += 1\n\n    if len(password) >= 8 and lower >= 1 and upper >= 1 and number >= 1 and non_letter_number >= 1:\n        password.append(\",true\")\n    else:\n        password.append(\",false\")\n\n    return \"\".join(password)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,39 @@
+{
+  "id": "q594",
+  "title": "智能驾驶",
+  "score": 200,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n有一辆汽车需要从 m * n 的地图左上角（起点）开往地图的右下角（终点），去往每一个地区都需要消耗一定的油量，加油站可进行加油。\n请你计算汽车确保从从起点到达终点时所需的最少初始油量。"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：\n智能汽车可以上下左右四个方向移动\n地图上的数字取值是 0 或 -1 或 正整数：\n-1 ：表示加油站，可以加满油，汽车的油箱容量最大为100；\n0 ：表示这个地区是障碍物，汽车不能通过\n正整数：表示汽车走过这个地区的耗油量\n如果汽车无论如何都无法到达终点，则返回 -1"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为两个数字，M，N，表示地图的大小为 M * N\n0 < M,N ≤ 200\n后面一个 M * N 的矩阵，其中的值是 0 或 -1 或正整数，加油站的总数不超过 200 个"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "如果汽车无论如何都无法到达终点，则返回 -1\n如果汽车可以到达终点，则返回最少的初始油量"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nm, n = map(int, input().split(\",\"))\nmatrix = [list(map(int, input().split(\",\"))) for _ in range(m)]\n\n# 上下左右四个方向对应的偏移量\noffsets = ((-1, 0), (1, 0), (0, -1), (0, 1))\n\n\n# 记录路径中位置的几个状态\nclass Node:\n    def __init__(self, x, y):\n        self.x = x  # 位置横坐标\n        self.y = y  # 位置纵坐标\n        self.init = 0  # 到达此位置所需的最少初始油量\n        self.remain = 0  # 到达此位置时剩余可用油量\n        self.flag = False  # 到达此位置前有没有加过油\n\n\n# 算法入口\ndef bfs():\n    # 如果左上角和右下角不可达,则直接返回-1\n    if matrix[0][0] == 0 or matrix[m - 1][n - 1] == 0:\n        return -1\n\n    # 广搜队列\n    queue = []\n\n    # 起始位置\n    src = Node(0, 0)\n\n    if matrix[0][0] == -1:\n        # 如果起始位置就是加油站,则到达(0,0)位置所需初始油量为0,且剩余可用油量为100,且需要标记已加油\n        src.init = 0\n        src.remain = 100\n        src.flag = True\n    else:\n        # 如果起始位置不是加油站,则到达(0,0)位置所需的初始油量至少为matrix[0][0], 剩余可用油量为0,未加油状态\n        src.init = matrix[0][0]\n        src.remain = 0\n        src.flag = False\n\n    queue.append(src)\n\n    # dist_init[x][y] 用于记录起点 (0, 0) 到达 (x, y) 的所有可达路径中最优路径&#xff08;即初始油量需求最少的路径&#xff09;的初始油量\n    # 由于需要记录每个位置的最少需要的初始油量,因此每个位置所需的初始油量初始化为一个较大值\n    dist_init = [[sys.maxsize] * n for _ in range(m)]\n\n    # dist_remain 用于记录起点 (0,0) 到达 (x,y) 的所有可达路径中最优路径&#xff08;即初始油量需求最少的路径&#xff09;的最大剩余可用油量\n    # 即如果存在多条最优路径,我们应该选这些路径中到达此位置剩余油量最多的\n    dist_remain = [[0] * n for _ in range(m)]\n\n    # 起点&#xff08;0,0&#xff09;到达自身位置&#xff08;0,0&#xff09;所需的最少初始油量和最多剩余油量\n    dist_init[0][0] = src.init\n    dist_remain[0][0] = src.remain\n\n    # 广搜\n    while len(queue) > 0:\n        cur = queue.pop(0)\n\n        # 从当前位置cur开始向上下左右四个方向探路\n        for offsetX, offsetY in offsets:\n            # 新位置\n            newX = cur.x + offsetX\n            newY = cur.y + offsetY\n\n            # 新位置越界 或者 新位置是障碍,则新位置不可达,继续探索其他方向\n            if newX < 0 or newX >= m or newY < 0 or newY >= n or matrix[newX][newY] == 0:\n                continue\n\n            # 如果新位置可达,则计算到达新位置的三个状态数据\n            init = cur.init  # 到达新位置所需的最少初始油量\n            remain = cur.remain  # 到达新位置时还剩余的最多可用油量\n            flag = cur.flag  # 是否加油了\n\n            if matrix[newX][newY] == -1:\n                # 如果新位置是加油站,则加满油\n                remain = 100\n                # 标记加过油了\n                flag = True\n            else:\n                # 如果新位置不是加油站,则需要消耗matrix[newX][newY]个油\n                remain -= matrix[newX][newY]\n\n            # 如果到达新位置后,剩余油量为负数\n            if remain < 0:\n                if flag:\n                    # 如果之前已经加过油了,则说明到达此路径前是满油状态,因此我们无法从初始油量里面\"借\"油\n                    continue\n                else:\n                    # 如果之前没有加过油,则超出的油量&#xff08;-remain&#xff09;,可以从初始油量里面\"借\",即需要初始油量 init + (-remain) 才能到达新位置\n                    init -= remain\n                    # 由于初始油量 init + (-remain) 刚好只能支持汽车到达新位置,因此汽车到达新位置后剩余可用油量为0\n                    remain = 0\n\n            # 如果到达新位置所需的初始油量超过了满油100,则无法到达新位置\n            if init > 100:\n                continue\n\n            # 如果可达新位置,则继续检查当前路径策略到达新位置(newX, newY)所需的初始油量init是否比其他路径策略更少\n            if init > dist_init[newX][newY]:\n                # 如果不是,则无需探索新位置(newX, newY)\n                continue\n\n            # 当前路径策略到达新位置(newX,newY)所需初始油量init更少,或者,init和前面路径策略相同,但是当前路径策略剩余可用油量remain更多\n            if init < dist_init[newX][newY] or remain > dist_remain[newX][newY]:\n                # 则当前路径策略更优,记录更优路径的状态\n                dist_init[newX][newY] = init\n                dist_remain[newX][newY] = remain\n\n                # 将当前新位置加入BFS队列\n                nxt = Node(newX, newY)\n                nxt.init = init\n                nxt.remain = remain\n                nxt.flag = flag\n\n                queue.append(nxt)\n\n    # dist_init[m - 1][n - 1] 记录的是到达右下角终点位置所需的最少初始油量\n    if dist_init[m - 1][n - 1] == sys.maxsize:\n        return -1\n    else:\n        return dist_init[m - 1][n - 1]\n\n\n# 算法调用\nprint(bfs())"
+  },
+  "verified": false
+}

@@ -1,0 +1,101 @@
+{
+  "id": "q109",
+  "title": "农场施肥",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "某农场主管理了一大片果园，fields[i]表示不同果林的面积，单位：m^2，现在要为所有的果林施肥且必须在n天之内完成，否则影响收成。小布是果林的工作人员，他每次选择一片果林进行施肥，且一片果林施肥完后当天不再进行施肥作业。\n假设施肥机的能效为k，单位：m^2/day，请问至少租赁能效 k 为多少的施肥机才能确保不影响收成？如果无法完成施肥任务，则返回-1。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为m和n，m表示fields中的元素个数，n表示施肥任务必须在n天内（含n天）完成；\n第二行输入为fields，fields[i]表示果林 i 的面积，单位：m^2"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "对于每组数据，输出最小施肥机的能效 k ，无多余空格。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1 ≤ fields.length ≤ 10^4\n1 ≤ n ≤ 10^9\n1 ≤ fields[i] ≤ 10^9"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5 7\n5 7 9 15 10\n输出\n9",
+      "cases": [
+        {
+          "input": "5 7\n5 7 9 15 10",
+          "output": "9",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "当能效k为9时，fields[0]需要1天，fields[1]需要1天，fields[2]需要1天，fields[3]需要2天，fields[4]需要2天，共需要7天，不会影响收成。\n输入\n3 1\n2 3 4\n输出\n-1\n\n由于一天最多完成一片果林的施肥，无论k为多少都至少需要3天才能完成施肥，因此返回-1。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题中能效k其实和果林面积fields[i]是强相关的，比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1中fields = [5,7,9,15,10]：\n能效k取5的话，则面积5的果林只需要1天，其他大于面积5的果林需要Math.ceil(fields[i] / k)\n能效k取7的话，则面积5、7的果林只需要1天，其他大于面积7的果林需要Math.ceil(fields[i] / k)\n因此，k的取值范围其实就是果林最小面积min ~ 最大面积max之间，我们完全可以遍历min~max之间的所有可能给k，然后求出能效k施肥完所有果林需要的天数spend，然后求出spend===n的所有情况中最小的k作为"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "。\n但是，本题min~max之间有1 ≤ fields[i] ≤ 10^9，并且求解每种k对应的spend都需要遍历1 ≤ fields.length ≤ 10^4次，因此上面算法的时间复杂度是10^9 * 10^4 = 10^13，这是必然超时的。\n因此，我们可以采用二分查找的方式来找k，即每次取min、max的中间值作为k，如果k能效需要的spend时间和指定天数n时间的关系：\nspend > n："
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "k能效太低了，花费的时间超过了n，因此要提高k，即min = k，这样下次二分查找的值就会增大k\nspend < n：\n\nk能效太高了，花费的时间少于n，因此要降低k，即max = k，这样下次二分查找的值就会减小k\nspend === n：\n\nk能效刚刚好，花费的时间等于n，但是此时可能并非最优解，我们还需继续找更小的k，即max = k\n2023.02.07 经网友指正，"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "中说：施肥任务必须在n天内（含n天），即施肥任务可以少于n天时间完成，因此spend < n时的k也是符合要求的k。因此spend < n和spend == n的情况可以合并处理，即当 spend <= n时，"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "k能效足够了，花费的时间小于等于n，但是此时可能并非最优解，我们还需继续找更小的k，即max = k\n此时，算法时间复杂度为 log(10^9) * 10^4 = 9 * 10^4，大大的优化了。\n关于本题K的取小数还是取整数的思考，请大家先看下面的"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "：\n3 5\n1 1 10\n如果取小数的话，上面"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "K的最小取值是无穷小数3.33333....\n因此，K值如果取小数的话，必然要"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "精度，但是本题没有。\n因此，个人认为本题K应该取整数。\n当然考试的时候，还是要灵活应对。\n补充一个"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "，关于初始二分时，左边界的取值\n1 10\n9\n即只有一个果林，面积为9，现在要求10天完成施肥，此时最低能效K应该为1。\n因此，前面逻辑中，二分查找能效K时，应该从1~max中二分，而不是min~max，即能效K的最低值可能为1。\n另外，本题已经找到原型题\n875. 爱吃香蕉的珂珂 - 力扣（LeetCode）\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import math\n\nm, n = map(int, input().split())\nfields = list(map(int, input().split()))\n\nminK = 1  # 最小果林面积,即最小能效k\nmaxK = max(fields)  # 最大果林面积,即最大能效k\n\nans = -1\n\n\n# k效率施肥完fields所有果林需要的spend天数,和指定天数n的差距\ndef check(k, n, fields):\n    spend = 0\n    for field in fields:\n        if k >= field:\n            spend += 1  # k效率比field果林面积大,则field果林只需要一天\n        else:\n            spend += math.ceil(field / k)  # k效率比field果林面积小,则需要Math.ceil(field / k)天\n    return spend - n\n\n\n# 我们需要找minK,maxK中间值作为k效率,如果minK,maxK间距小于1,则没有中间值,循环结束\nwhile minK <= maxK:\n    k = math.ceil((minK + maxK) / 2)\n    res = check(k, n, fields)\n\n    if res > 0:\n        minK = k + 1  # k的效率太低,导致花费的时间超过了n天,因此要提高k效率\n    # 2023.02.07 网友指正&#xff1a;施肥任务必须在n天内&#xff08;含n天&#xff09;,表示不需要一定是n天完成,可以少于n天完成,因此res < 0 时的k也是符合要求的k\n    # elif res < 0:\n    #     maxK = k  # k的效率太高,导致花费的时间少于n天,因此要降低k效率\n    else:\n        ans = k  # k的效率刚好,花费的时间就是n天,则此时k效率就是一个题解,但可能不是最优解\n        maxK = k - 1  # 继续尝试找更小的k\n\nprint(int(ans))"
+  },
+  "verified": false
+}

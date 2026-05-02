@@ -1,0 +1,61 @@
+{
+  "id": "q271",
+  "title": "最长广播响应",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "某通信网络中有N个网络结点，用1到N进行标识。\n网络中的结点互联互通，且结点之间的消息传递有时延，相连结点的时延均为一个时间单位。\n现给定网络结点的连接关系link[i]={u，v}，其中u和v表示网络结点。\n当指定一个结点向其他结点进行广播，所有被广播结点收到消息后都会在原路径上回复一条响应消息，请计算发送结点至少需要等待几个时间单位才能收到所有被广播结点的响应消息。\n注：\nN的取值范围为[1，100];\n连接关系link的长度不超过3000，且1 <= u,v <= N;\n网络中任意结点间均是可达的;"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的第一行为两个正整数，分别表示网络结点的个数N，以及时延列表的长度T；\n接下来的T行输入，表示结点间的连接关系列表；\n最后一行的输入为一个正整数，表示指定的广播结点序号；"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个整数，表示发送结点接收到所有响应消息至少需要等待的时长。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5 7\n1 4\n2 1\n2 3\n2 4\n3 4\n3 5\n4 5\n2\n输出\n4",
+      "cases": [
+        {
+          "input": "5 7\n1 4\n2 1\n2 3\n2 4\n3 4\n3 5\n4 5\n2",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "结点2到5的最小时延为2，到剩余结点的最小时延均为1，所以至少要等待2*2=4s。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "题目"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "的连接图如下\n本题其实就是求解单源最短路径，可以使用dijkstra算法。\n关于dijkstra算法可以参考\nLeetCode - 743 网络延迟时间_伏城之外的博客-CSDN博客\n2023.06.06\n本题是无向图，即点与点之间都是双向连接，因此构建邻接表时，需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "双向性。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nimport queue\nimport sys\n\nn, t = map(int, input().split())\nrelations = [list(map(int, input().split())) for _ in range(t)]\nsrc = int(input())\n\n\n# 算法入口\ndef getResult(n, src, relations):\n    graph = {}\n\n    for u, v in relations:\n        if graph.get(u) is None:\n            graph[u] = []\n        graph[u].append(v)\n\n        if graph.get(v) is None:\n            graph[v] = []\n        graph[v].append(u)\n\n    dist = [sys.maxsize] * (n + 1)\n\n    dist[src] = 0\n\n    pq = queue.PriorityQueue()\n\n    while True:\n        if graph.get(src) is not None:\n            for v in graph[src]:\n                newDist = dist[src] + 1\n                if newDist < dist[v]:\n                    dist[v] = newDist\n                    pq.put([newDist, v])\n\n        if pq.qsize() == 0:\n            break\n\n        src = pq.get()[1]\n\n    dist.pop(0)\n\n    return max(dist) * 2\n\n\n# 算法调用\nprint(getResult(n, src, relations))"
+  },
+  "verified": false
+}

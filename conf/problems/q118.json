@@ -1,0 +1,51 @@
+{
+  "id": "q118",
+  "title": "士兵过河",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一支N个士兵的军队正在趁夜色逃亡，途中遇到一条湍急的大河。\n敌军在T的时长后到达河面，没到过对岸的士兵都会被消灭。\n现在军队只找到了1只小船，这船最多能同时坐上2个士兵。\n当1个士兵划船过河，用时为 a[i]；0 <= i < N\n当2个士兵坐船同时划船过河时，用时为max(a[j],a[i])两士兵中用时最长的。\n当2个士兵坐船1个士兵划船时，用时为 a[i]*10；a[i]为划船士兵用时。\n如果士兵下河游泳，则会被湍急水流直接带走，算作死亡。\n请帮忙给出一种解决方案，保证存活的士兵最多，且过河用时最短。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行：N 表示士兵数(0<N<1,000,000)\n第二行：T 表示敌军到达时长(0 < T < 100,000,000)\n第三行：a[0] a[1] … a[i]… a[N- 1]\na[i]表示每个士兵的过河时长。\n(10 < a[i]< 100; 0<= i< N）"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "第一行：”最多存活士兵数” “最短用时”"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1）两个士兵的同时划船时，如果划速不同则会导致船原地转圈圈；所以为保持两个士兵划速相同，则需要向划的慢的士兵看齐。\n2）两个士兵坐船时，重量增加吃水加深，水的阻力增大；同样的力量划船速度会变慢；\n3）由于河水湍急大量的力用来抵消水流的阻力，所以2）中过河用时不是a[i] *2，\n而是a[i] * 10。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n43\n12 13 15 20 50\n输出\n3 40",
+      "cases": [
+        {
+          "input": "5\n43\n12 13 15 20 50",
+          "output": "3 40",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "可以达到或小于43的一种方案：\n第一步：a[0] a[1] 过河用时：13\n第二步：a[0] 返回用时：12\n第三步：a[0] a[2] 过河用时：15\n输入\n5\n130\n50 12 13 15 20\n输出\n5 128\n\n可以达到或小于130的一种方案：\n第一步：a[1] a[2] 过河用时：13\n第二步：a[1] 返回用时：12\n第三步：a[0] a[4] 过河用时：50\n第四步：a[2] 返回用时：13\n第五步：a[1] a[2] 过河用时：13\n第六步：a[1] 返回用时：12\n第七步：a[1] a[3] 过河用时：15\n所以输出为："
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nt = int(input())\ntimes = list(map(int, input().split()))\n\n\n# 计算n个人运到河对岸所需要花费的最少时间\ndef getMinCrossRiverTime(n, t):\n    cost = 0\n\n    while n > 0:\n        if n == 1:\n            cost += t[0]\n            break\n        elif n == 2:\n            cost += t[1]\n            break\n        elif n == 3:\n            cost += t[1] + t[0] + t[2]\n            break\n        else:\n            cost += min(t[n - 1] + t[0] + t[n - 2] + t[0], t[1] + t[0] + t[n - 1] + t[1])\n            n -= 2\n\n    return cost\n\n\n# 算法入口\ndef getResult(n, limit, times):\n    \"\"\"\n    :param n: 士兵数\n    :param limit: 过河时间上限\n    :param times: 数组,元素表示每个士兵的过河时长\n    :return: ”最多存活士兵数” “最短用时”\n    \"\"\"\n    times.sort()\n\n    # 最少成功过河人数\n    low = 0\n    # 最多成功过河人数\n    high = n\n\n    # 记录题解\n    ans = \"\"\n\n    # 二分法取可能成功的过河人数\n    while low <= high:\n        # mid是过河人数\n        mid = (low + high) // 2\n        # 计算mid个人过河所需的最短时间need\n        need = getMinCrossRiverTime(mid, times[:mid])\n\n        # 如果need超过了过河时间上限limit,那么说明能成功过河的人没这么多\n        if need > limit:\n            high = mid - 1\n        elif need < limit:\n            # 如果need小于过河时间上限limit,那么说明mid个最快的人可以在limit时间内成功过河\n            ans = f\"{mid} {need}\"\n            # 但是可能还可以过更多人\n            low = mid + 1\n        else:\n            # 如果need == limit,那么说明过河人数刚好可以在limit时间内成功过河,此时可以直接返回\n            ans = f\"{mid} {need}\"\n            break\n\n    return ans\n\n\n# 算法调用\nprint(getResult(n, t, times))"
+  },
+  "verified": false
+}

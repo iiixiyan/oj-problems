@@ -54,6 +54,8 @@
       "content": "。\n另外，在这些逻辑之前，我们可以先对records求和sum，如果sum <= total，则不需要做上面逻辑。\n上面算法的时间复杂度为 O(log(total) * N)\n1<=N<=10^5\n1 <= total <= 10^9\n因此性能还算比较优异。\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nrecords = list(map(int, input().split()))\ntotal = int(input())\n\n\n# 算法入口\ndef getResult(n, records, total):\n    \"\"\"\n    :param n: 系统某一天运行的单位时间数N\n    :param records: 这一天每单位时间产生的日志数量的数组\n    :param total: 系统一天可以保存的总日志条数total\n    :return: 每单位时间内最大可保存的日志条数limit,如果不需要启动限流机制,返回-1\n    \"\"\"\n    sumV = sum(records)\n\n    # 如果一天产生的日志条数总和小于等于total,则不需要启动限流机制&#xff0e;result为-1\n    if sumV <= total:\n        return -1\n\n    # records.sort()\n\n    # max_limit = records[-1]\n    max_limit = max(records)\n    min_limit = int(total / n)\n\n    ans = min_limit\n    while max_limit - min_limit > 1:\n        limit = int((max_limit + min_limit) / 2)\n\n        tmp = 0\n        for record in records:\n            tmp += min(record, limit)\n\n        if tmp > total:\n            max_limit = limit\n        elif tmp < total:\n            min_limit = limit\n            ans = limit\n        else:\n            return limit\n\n    return ans\n\n\n# 调用算法\nprint(getResult(n, records, total))"
+  },
   "verified": false
 }

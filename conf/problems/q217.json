@@ -1,0 +1,72 @@
+{
+  "id": "q217",
+  "title": "矩阵稀疏扫描",
+  "score": 100,
+  "tags": [
+    "B卷",
+    "矩阵"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "如果矩阵中的许多系数都为零，那么该矩阵就是稀疏的。对稀疏现象有兴趣是因为它的开发可以带来巨大的计算节省，并且在许多大的实践中都会出现矩阵稀疏的问题。\n给定一个矩阵，现在需要逐行和逐列地扫描矩阵，如果某一行或者某一列内，存在连续出现的0的个数超过了行宽或者列宽的一半 [W /2] (整除) ，则认为该行或者该列是稀疏的。\n扫描给定的矩阵，输出稀疏的行数和列数。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为M和N，表示矩阵的大小M*N，0 ＜ M ≤ 100，0 ＜ N ≤ 100\n接下来M行输入为矩阵的成员，每行N个成员，矩阵成员都是有符号整数，范围-32,768到32,767"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出两行，第一行表示稀疏行的个数，第二行表示稀疏列的个数"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 3\n1 0 0\n0 1 0\n0 0 1\n输出\n3\n3",
+      "cases": [
+        {
+          "input": "3 3\n1 0 0\n0 1 0\n0 0 1",
+          "output": "3\n3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "给定的3*3矩阵里，每一行和每一列内都存在2个0，行宽3，列宽3，[3/2] = 1，因此稀疏行有3个，稀疏列有3个。\n输入\n5 3\n-1 0 1\n0 0 0\n-1 0 0\n0 -1 0\n0 0 0\n输出\n5\n3\n\n给定的5*3矩阵，每行里面0的个数大于等于1表示稀疏行，每列里面0的个数大于等于2表示稀疏行，所以有5个稀疏行,3个稀疏列。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题题目中说：\n如果某一行或者某一列内，存在\n连续出现的0\n的个数超过了行宽或者列宽的一半 [W /2] (整除) ，则认为该行或者该列是稀疏的。\n而"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "里面对于稀疏行和稀疏列的确认，却不是根据连续0的个数，而是以0的个数（即不连续也可以）。\n以"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "为准（不以连续0为判断标准）（可得100%通过率）\n我的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "是定义两个数组：\nrowZeroCount数组，长度为m，rowZeroCount[i] 代表第 i 行中含0个数\ncolZeroCount数组，长度为n，colZeroCount[j] 代表第 j 列中含0个数\n这样的话，只要遍历输入的矩阵matrix的每一个元素matrix[i][j]，\n如果matrix[i][j]==0，那么"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "在第 i 行找到一个0，此时rowZeroCount[i]++，以及在第 j 列找到一个0，此时colZeroCount[j]++。\n最后，只要分别统计rowZeroCount中有多少个大于 n / 2，\n\n一行有n个元素，以及colZeroCount中有多个大于 m / 2，\n\n一列有m个元素。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, n = map(int, input().split())\nmatrix = [list(map(int, input().split())) for _ in range(m)]\n\n\n# 算法入口\ndef getResult():\n    rowZeroCount = [0] * m\n    colZeroCount = [0] * n\n\n    for i in range(m):\n        for j in range(n):\n            if matrix[i][j] == 0:\n                rowZeroCount[i] += 1\n                colZeroCount[j] += 1\n\n    print(len(list(filter(lambda val: val >= n // 2, rowZeroCount))))\n    print(len(list(filter(lambda val: val >= m // 2, colZeroCount))))\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

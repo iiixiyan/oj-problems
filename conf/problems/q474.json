@@ -1,0 +1,56 @@
+{
+  "id": "q474",
+  "title": "表达式括号匹配",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "(1+(2+3)*(3+(8+0))+1-2)这是一个简单的数学表达式,今天不是计算它的值,而是比较它的括号匹配是否正确。\n前面这个式子可以简化为(()(()))这样的括号我们认为它是匹配正确的,\n而((())这样的我们就说他是错误的。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "括号里面的表达式可能是错的,也可能有多个空格，对于这些我们是不用去管的，\n我们只关心括号是否使用正确。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "给出一行表达式(长度不超过 100)。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "如果匹配正确输出括号的对数，否则输出-1。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n(1+(2+3)*(3+(8+0))+1-2)\n输出\n4",
+      "cases": [
+        {
+          "input": "(1+(2+3)*(3+(8+0))+1-2)",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题就是括号匹配的变种题，只是加入了一些干扰字符，我们可以用正则去掉非()的字符，然后利用栈结构校验括号是否成对，可以参考\nLeetCode - 20 有效的括号_伏城之外的博客-CSDN博客\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult(s):\n    count = 0\n\n    stack = []\n    for c in s:\n        if c != '(' and c != ')':\n            continue\n        \n        if len(stack) > 0 and c == ')':\n            if stack[-1] == '(':\n                stack.pop()\n                count += 1\n                continue\n            return -1\n\n        stack.append(c)\n\n    if len(stack) > 0:\n        return -1\n\n    return count\n\n\n# 算法调用\nprint(getResult(s))"
+  },
+  "verified": false
+}

@@ -1,0 +1,39 @@
+{
+  "id": "q714",
+  "title": "【华为OD-E卷 -68 玩牌高手 100分】",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "【华为OD-E卷 -68 玩牌高手 100分（python、java、c++、js、c）】"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：点此 链接 其他算法题目详细解法\n投稿、交流、错误反馈 +V：\n【华为OD-E卷 - 玩牌高手 100分（python、java、c++、js、c）】\n题目"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "一：\n输入：\n输出：\npython解法\njava解法\nC++解法\nC解法\nJS解法",
+      "cases": [
+        {
+          "input": "",
+          "output": "python解法\njava解法\nC++解法\nC解法\nJS解法",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：\n\n：点此 链接 其他算法题目详细解法\n投稿、交流、错误反馈 +V："
+    }
+  ],
+  "solutions": {
+    "JavaScript": "注意：\n注意：点此 链接 其他算法题目详细解法\n投稿、交流、错误反馈 +V："
+  },
+  "verified": false
+}

@@ -1,0 +1,56 @@
+{
+  "id": "q270",
+  "title": "最少面试官数",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "某公司组织一场公开招聘活动，假设由于人数和场地的限制，每人每次面试的时长不等，并已经安排给定，用(S1,E1)、 (S2,E2)、 (Sj,Ej)…(Si < Ei，均为非负整数)表示每场面试的开始和结束时间。\n面试采用一对一的方式，即一名面试官同时只能面试一名应试者，一名面试官完成一次面试后可以立即进行下一场面试，且每个面试官的面试人次不超过 m。\n为了支撑招聘活动高效顺利进行，请你计算至少需要多少名面试官。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的第一行为面试官的最多面试人次 m，第二行为当天总的面试场次 n，\n接下来的 n 行为每场面试的起始时间和结束时间，起始时间和结束时间用空格分隔。\n其中， 1 <= n, m <= 500"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个整数，表示至少需要的面试官数量。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2\n5\n1 2\n2 3\n3 4\n4 5\n5 6\n输出\n3",
+      "cases": [
+        {
+          "input": "2\n5\n1 2\n2 3\n3 4\n4 5\n5 6",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "总共有 5 场面试，且面试时间都不重叠，但每个面试官最多只能面试 2 人次，所以需要 3 名面试官。\n输入\n3\n3\n1 2\n2 3\n3 4\n输出\n1\n\n总共有3场面试，面试时间不重叠，每个面试官最多能面试3人次，所以只需要一名面试官\n输入\n3\n3\n8 35\n5 10\n1 3\n输出\n2\n\n总共有3场面试，[5,10]和[8,35]有重叠，所以至少需要2名面试官"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题要想面试官人数最少，则需要每个面试官面试尽量多的人。\n我们将每个面试官想象成一个桶，每个面试者想象成一个球。\n首先，我们需要对面试者的面试时间段，按照结束时间进行升序。\n求解最大不相交区间数，需要将区间按结束位置升序：\n华为OD机试 - 最多等和不相交连续子序列（Java & JS & Python）_华为机试_伏城之外的博客-CSDN博客\n由于不知道面试官个数，因此初始化时，有几个面试者就预定几个面试官，比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "中有5个面试者，那就是初始化预定5个面试官。\n接着，就是球放桶的问题了。\n第一个球，放第一个桶。\n第二个球，先尝试放第一个桶，首先检查桶中球个数是否已达到m，若已达到，则不能放入，继续尝试放入下一个桶，若未达到，则将球和桶最上面的球比较，即看面试时间是否有交集，如果有交集，则不能放入，继续尝试放入下一个桶，如果没有交集，则可以放入。\n按照上面逻辑，放入所有球。\n然后把空桶排除掉，剩下还有几个桶，就需要几个面试官。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm = int(input())\nn = int(input())\nareas = [list(map(int, input().split())) for _ in range(n)]\n\n\n# 算法入口\ndef getResult():\n    # 求解最大不相交区间时,需要将所有区间按照右边界升序\n    areas.sort(key=lambda x: x[1])\n\n    buckets = [[] for _ in range(n)]\n\n    for s, e in areas:\n        for bucket in buckets:\n            # 每个面试官最多面试m次\n            if len(bucket) < m and (len(bucket) == 0 or bucket[-1] <= s):\n                bucket.append(e)\n                break\n\n    return len(list(filter(lambda b: len(b) > 0, buckets)))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

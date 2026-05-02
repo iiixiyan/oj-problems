@@ -27,6 +27,8 @@
       "content": "输入"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(arr):\n    n = len(arr)\n\n    # dp[i]表示&#xff1a;第i时刻可得的正向分\n    dp = [0] * n\n    # delay[i]表示&#xff1a;第i时刻被扣除的负向分\n    delay = [0] * n\n    # score[i]表示&#xff1a;第i时刻最终得分\n    score = [0] * n\n\n    dp[0] = arr[0]\n    score[0] = arr[0]\n\n    for i in range(1, n):\n        dp[i] = min(100, dp[i - 1] + arr[i])  # 最多上报100条\n        delay[i] = delay[i - 1] + dp[i - 1]\n        score[i] = dp[i] - delay[i]\n\n        # 达到100条时必须上报,此时完成首次上报,结束循环\n        if dp[i] >= 100:\n            break\n\n    print(max(score))\n\n\n# 调用算法\ngetResult(arr)"
+  },
   "verified": false
 }

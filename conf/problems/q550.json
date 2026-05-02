@@ -1,0 +1,34 @@
+{
+  "id": "q550",
+  "title": "补种未成活胡杨",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n近些年来，我国防沙治沙取得显著成果。某沙漠新种植N棵胡杨（编号1-N），排成一排。\n一个月后，有M棵胡杨未能成活。\n现可补种胡杨K棵，请问如何补种（只能补种，不能新种），可以得到最多的连续胡杨树？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "N 总种植数量，1 <= N <= 100000\nM 未成活胡杨数量，M 个空格分隔的数，按编号从小到大排列，1 <= M <= N\nK 最多可以补种的数量，0 <= K <= M"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最多的连续胡杨棵树"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nm = int(input())\n\ndeadIdx = list(map(int, input().split()))\narr = [1]*n\nfor i in range(m):\n    arr[deadIdx[i]-1] = 0\n\nk = int(input())\n\n\n# 算法入口\ndef getResult(arr, n, m, k):\n    left = 0\n    occur = []\n    maxLen = 0\n\n    for right in range(n):\n        if arr[right] == 0:\n            occur.append(right)\n\n            if len(occur) > k:\n                maxLen = max(maxLen, right - left)\n                left = occur.pop(0) + 1\n                continue\n\n        maxLen = max(maxLen, right - left + 1)\n\n    return maxLen\n\n\n# 算法调用\nprint(getResult(arr, n, m, k))"
+  },
+  "verified": false
+}

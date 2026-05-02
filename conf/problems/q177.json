@@ -1,0 +1,57 @@
+{
+  "id": "q177",
+  "title": "字符串加密",
+  "score": 100,
+  "tags": [
+    "B卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给你一串未加密的字符串str，通过对字符串的每一个字母进行改变来实现加密，加密方式是在每一个字母str[i]偏移特定数组元素a[i]的量，数组a前三位已经赋值：a[0]=1,a[1]=2,a[2]=4。\n当i>=3时，数组元素a[i]=a[i-1]+a[i-2]+a[i-3]。\n例如：原文 abcde 加密后 bdgkr，其中偏移量分别是1,2,4,7,13。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为一个整数n（1<=n<=1000），表示有n组测试数据，每组数据包含一行，原文str（只含有小写字母，0<长度<=50）。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "每组测试数据输出一行，表示字符串的密文。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1\nxy\n输出\nya",
+      "cases": [
+        {
+          "input": "1\nxy",
+          "output": "ya",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "第一个字符x偏移量是1，即为y，第二个字符y偏移量是2，即为a。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "首先是偏移量a[i]的计算，这里直接使用动态规划记忆化，具体实现看下面代码（这里有的人会用分治递归实时计算，也可以，看考虑内存还是时间了）\n然后是字母的加密，这里字母加密其实就是s[i]的ASCII码 + a[i]，但是需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是a[i]偏移量会超过26，即加密后就不是字母了，题目也没说怎么处理，我猜测加密后的字符串也应该都是小写字母组成，因此越界后需要环形处理，即z 偏移一位后变为 a，这里处理公式为：\n(s[i] + ar[i] - 97) % 26 + 97\n另外，本题还需要\n\n下，第50个字符的偏移量会达到10562230626642\n这个值是超过int类型的，因此Java代码定义a数组时需要使用long[]类型。\n而JS的整型安全值范围可以包含住10562230626642，Python则是天生支持大数（不进行除法的话），因此无需考虑整型溢出问题。\n2023.08.06\n优化:\n本题的偏移量a[i]不应该让其无限制增大，虽然本题的字符串最长是50，但是如果可以更长的话，肯定会继续发生整型溢出。\n由于每位字母偏移超过26就会回头，因此a[i]偏移量超过26意义不大，因此我们可以对a[i] %= 26，这样a[i]的大小就被限制在了26以内，且不会影响最终结果。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nlines = [input() for _ in range(n)]\n\n# 初始化a数组\na = [0] * 50\na[0] = 1\na[1] = 2\na[2] = 4\nfor i in range(3, 50):\n    a[i] = (a[i - 1] + a[i - 2] + a[i - 3]) % 26\n\n\n# 算法入口\ndef getResult(s):\n    ans = []\n\n    # 为字符串的每一位字符添加a[i]偏移量\n    for i in range(len(s)):\n        ans.append((a[i] + (ord(s[i]) - 97)) % 26 + 97)\n\n    return \"\".join(map(chr, ans))\n\n\n# 算法调用\nfor i in range(n):\n    print(getResult(lines[i]))"
+  },
+  "verified": false
+}

@@ -1,0 +1,57 @@
+{
+  "id": "q438",
+  "title": "最长子字符串的长度（一）",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给你一个字符串 s，首尾相连成一个环形，请你在环中找出 'o' 字符出现了偶数次最长子字符串的长度。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入是一个小写字母组成的字符串"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出是一个整数"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1 ≤ s.length ≤ 500000\ns 只包含小写英文字母"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nalolobo\n输出\n6",
+      "cases": [
+        {
+          "input": "alolobo",
+          "output": "6",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "最长子字符串之一是 \"alolob\"，它包含2个'o'\n输入\nlooxdolx\n输出\n7\n\n最长子字符串\"oxdolxl\"，由于是首尾连接一起的，所以最后一个'x'和开头的'l'是连接在一起的，此字符串包含2个'o'\n输入\nbcbcbc\n输出\n6\n\n这个示例中，字符串\"bcbcbc\"本身就是最长的，因为'o'都出现了0次。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题很简单，只要统计出输入字符串s中'o'的个数：\n如果 'o' 为偶数个，则s本身就是一个含有偶数个'o'的子字符串，结果输出s.length\n如果 'o' 为奇数个，由于s是环形的，因此只要任选环中任意一个'o'解开（删除），剩下的就是含有偶数个 'o' 的子串，该子串长度为 s.length - 1\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult():\n    # s中'o'的个数\n    zeroCount = 0\n\n    for c in s:\n        if c == 'o':\n            zeroCount += 1\n\n    if zeroCount % 2 == 0:\n        return len(s)\n    else:\n        return len(s) - 1\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

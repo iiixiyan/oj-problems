@@ -1,0 +1,19 @@
+{
+  "id": "q469",
+  "title": "翻牌求最大分",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给出n个牌数，在-100到100之间，求最大得分。\n规则如下：连续翻牌，如果选当前牌，则总得分等于上一次翻牌总得分加上当前牌的数字，\n如果当前总得分小于它前三次的总得分的话，那此次不翻牌，并且总得分就等于它前三次的得分。\n1到3次翻牌数如果小于0的话就取0。\n例子："
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = list(map(int, input().split(\",\")))\n\n\n# 算法入口\ndef getResult():\n    n = len(arr)\n\n    dp = [0] * n\n\n    for i in range(n):\n        if i == 0:\n            dp[0] = max(0, arr[0])\n        elif i < 3:\n            dp[i] = max(0, dp[i - 1] + arr[i])\n        else:\n            dp[i] = max(dp[i - 3], dp[i - 1] + arr[i])\n\n    return dp[-1]\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

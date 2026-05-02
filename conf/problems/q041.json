@@ -69,6 +69,8 @@
       "content": "匿名信中的某个单词在报纸单词中找不到替代，因此可以直接返回false。\n如果全部都可以找到，则返回true。\n这个过程的时间复杂度是O(n)。\n因此总的时间复杂度是O(n)。\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nnewspaper = input().split()\nanonymousLetter = input().split()\n\n\n# 算法源码\ndef getResult(newspaper, anonymousLetter):\n    count = {}\n    for s in newspaper:\n        s = \"\".join(sorted(s))\n        if count.get(s) is None:\n            count[s] = 1\n        else:\n            count[s] += 1\n\n    flag = True\n    for s in anonymousLetter:\n        s = \"\".join(sorted(s))\n        if count.get(s) is not None and count[s] > 0:\n            count[s] -= 1\n        else:\n            flag = False\n            break\n\n    return str(flag).lower()\n\n\n# 调用算法\nprint(getResult(newspaper, anonymousLetter))"
+  },
   "verified": false
 }

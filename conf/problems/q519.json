@@ -1,0 +1,39 @@
+{
+  "id": "q519",
+  "title": "手机App防沉迷系统",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n智能手机方便了我们生活的同时，也侵占了我们不少的时间。“手机App防沉迷系统”能够让我们每天合理地规划手机App使用时间，在正确的时间做正确的事。\n它的大概原理是这样的：\n在一天24小时内，可以注册每个App的允许使用时段\n一个时间段只能使用一个App\nApp有优先级，数值越高，优先级越高。注册使用时段时，如果高优先级的App时间和低优先级的时段有冲突，则系统会自动注销低优先级的时段，如果App的优先级相同，则后添加的App不能注册。\n请编程实现，根据输入数据注册App，并根据输入的时间点，返回时间点使用的App名称，如果该时间点没有注册任何App，请返回\n字符串\n“NA”。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行表示注册的App数量 N（N ≤ 100）\n第二部分包括 N 行，每行表示一条App注册数据\n最后一行输入一个时间点，程序即返回该时间点使用的App\n2\nApp1 1 09:00 10:00\nApp2 2 11:00 11:30\n09:30\n数据"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "如下：\nN行注册数据以空格分隔，四项数依次表示：App名称、优先级、起始时间、结束时间\n优先级1~5，数字越大，优先级越高\n时间格式 HH:MM，小时和分钟都是两位，不足两位前面补0\n起始时间需小于结束时间，否则注册不上\n注册信息中的时间段包含起始时间点，不包含结束时间点"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个字符串，表示App名称，或NA表示空闲时间"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "class App:\n    def __init__(self, name, priority, start, end):\n        self.name = name\n        self.priority = priority\n        self.start = start\n        self.end = end\n\n\ndef convert(time):\n    # 时间格式 HH:MM,小时和分钟都是两位,不足两位前面补0\n    hours, minutes = map(int, time.split(\":\"))\n    return hours * 60 + minutes\n\n\n# 输入获取\nn = int(input())\n\n# 需要注册的App\napps = []\nfor _ in range(n):\n    name, priority, start, end = input().split(\" \")\n    apps.append(App(name, int(priority), convert(start), convert(end)))\n\n# 需要查询的时间点\nqueryTime = convert(input())\n\n\n# 算法入口\ndef getResult():\n    registereds = []\n\n    for app in apps:\n        # 起始时间>=结束时间,则注册不上\n        if app.start >= app.end:\n            continue\n\n        # 记录已注册的App中被注销的App的位置\n        idxs = []\n\n        flag = False\n\n        # 比较app_registering和它前面完成注册的所有app_registered\n        for j in range(len(registereds)):\n            registered = registereds[j]\n\n            # 两个App的注册时间无冲突,则继续和下一个app_registered比较\n            if registered.start >= app.end or app.start >= registered.end:\n                continue\n\n            # 两个App的注册时间有冲突,则比较优先级\n            if app.priority > registered.priority:\n                # 这里不能直接注销低优先级的app_registered,我们要保证app_registering一定能注册后才能进行此操作,因此先记录要被注销的app_registered的位置\n                idxs.append(j)\n            else:\n                # app_registering的优先级 <= app_registered的优先级时,则app_registering不能注册,终止比较\n                flag = True\n                break\n\n        # 如果app_registering不能注册,则终止比较\n        if flag:\n            continue\n\n        # idxs中索引是升序的,如果正序删除的话,那么每删除一个元素,都会改变后面元素的索引位置,因此这里采用倒序删除\n        idxs.reverse()\n        for idx in idxs:\n            registereds.pop(idx)\n\n        registereds.append(app)\n\n    ans = \"NA\"\n\n    # 注册成功的App时段之间互不冲突,因此queryTime只会对应一个App\n    for registered in registereds:\n        if registered.start <= queryTime < registered.end:\n            ans = registered.name\n            break\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

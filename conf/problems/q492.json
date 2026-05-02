@@ -1,0 +1,71 @@
+{
+  "id": "q492",
+  "title": "机器人走迷宫",
+  "score": 200,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "房间由XY的方格组成，例如下图为6*4的大小。每一个方格以坐标(x，y)描述。\n机器人固定从方格(0，0)出发，只能向东或者向北前进。出口固定为房间的最东北角，如下图的方格(5，3)。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证机器人可以从入口走到出口。\n房间有些方格是墙壁，如(4，1)，机器人不能经过那儿。\n有些地方是一旦到达就无法走到出口的，如标记为B的方格，称之为陷阱方格。\n有些地方是机器人无法到达的的，如标记为A的方格，称之为不可达方格，不可达方格不包括墙壁所在的位置。\n如下示例图中，陷阱方格有2个，不可达方格有3个。\n请为该机器人实现路径规划功能：给定房间大小、墙壁位置，请计算出陷阱方格与不可达方格分别有多少个。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为房间的X和Y（0 < X,Y <= 1000）\n第二行为房间中墙壁的个数N（0 <= N < X*Y）\n接着下面会有N行墙壁的坐标\n同一行中如果有多个数据以一个空格隔开，"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证所有的输入数据均合法。（结尾不带回车换行）"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "陷阱方格与不可达方格数量，两个信息在一行中输出，以一个空格隔开。（结尾不带回车换行）"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n6 4\n5\n0 2\n1 2\n2 2\n4 1\n5 1\n输出\n2 3",
+      "cases": [
+        {
+          "input": "6 4\n5\n0 2\n1 2\n2 2\n4 1\n5 1",
+          "output": "2 3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "该输入对应上图示例中的迷宫，陷阱方格有2个，不可达方格有3个\n输入\n6 4\n4\n2 0\n2 1\n3 0\n3 1\n输出\n0 4\n\n该输入对应的迷宫如下图，没有陷阱方格，不可达方格有4个，分别是(4,0) (4,1) (5,0) (5,1)"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题要求的并不是入口到出口的路径，而是找陷阱位置和不可达位置。\n陷阱位置的特点是，它的北边位置和东边位置都是死路，我们可以认为越界位置和墙位置是死路，另外陷阱本身也是死路。\n不可达位置的特点是，从起点位置开始，只能朝东或者朝北进行dfs，到过的点就标记一下，如果dfs结束，矩阵中任然存在着未被标记过的点，那么就是不可达点。\n了解了陷阱和不可达位置特点后，我们就可以开始初始化地图了，初始化地图主要是为了标记出墙的位置和非墙位置。我们用1标记墙，用0标记非墙。\n另外地图我们应该这样看：\n这样的话，x就是矩阵的行数，y就是矩阵的列数\n比如，根据"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1初始化完地图后，如下图所示\n下面我们要做的工作是，从起点开始dfs，即找起点的 东边点（下边）以及北边点（右边）\n如果这东边点和北边点有一个可达，那么起点就可达。但是我们并不知道这两个点是否可达，因此将这两个进行dfs\n如果发现当前点的东点和北点都是死路，则当前点就是死路，如果只有一边是死路，则不能"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "什么，即还需要继续dfs。当然，死路点不需要dfs。\n最终，我们必然会dfs到终点位置\n如果根据前面判断逻辑，则此时终点的东边、北边都是死路，因此会错误判断终点也是死路，从而影响前面所有的点，因此，我们在从起点dfs之前，就要将终点位置设为活路，即标记为2\n​​​​​​这样的话，就可以正确影响前面的点了\n​​​​​​​\n最终得到如下图\n​​​​​​​\n矩阵中，-1值的元素个数作为陷阱数量，0值的元素个数作为不可达数量\n2023.06.16\n本题Python代码可能会出现递归过深而报错的情况，\n\n是递归过深，而不是Stack Overflow，因此我们可以适当增大Python递归的最大深度限制，如下面代码色湖之最大递归深度为2500"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\nsys.setrecursionlimit(2500)\n\n# 输入获取\nx, y = map(int, input().split())\nn = int(input())\nposes = [list(map(int, input().split())) for _ in range(n)]\n\n\n# 深搜\ndef dfs(cx, cy, matrix):\n    if cx >= x or cy >= y:\n        return False\n\n    if matrix[cx][cy] == 1:  # 如果下一步为墙,则下一步不可达\n        return False\n\n    if matrix[cx][cy] == -1:  # 如果下一步为不可达点,则下一步不可达\n        return False\n\n    if matrix[cx][cy] == 2:   # 如果下一步为可达点,则下一步可达\n        return True\n\n    if matrix[cx][cy] == 0:\n        east = dfs(cx + 1, cy, matrix)  # 向东走下一步\n        north = dfs(cx, cy + 1, matrix)  # 下北走下一步\n\n        if east or north:\n            matrix[cx][cy] = 2  # 如果向东可达或者向北可达,则当前点可达,标记2\n        else:\n            matrix[cx][cy] = -1  # 如果向东,向北都不可达,则当前前也是不可达点,标记-1\n\n    return matrix[cx][cy] == 2\n\n\n# 算法入口\ndef getResult():\n    matrix = [[0 for _ in range(y)] for _ in range(x)]\n\n    for i, j in poses:\n        matrix[i][j] = 1  # 墙标记为1,非墙标记为0\n\n    matrix[x - 1][y - 1] = 2  # 可达点标记为2\n\n    dfs(0, 0, matrix)\n\n    trap = 0  # 陷阱数量\n    unreach = 0  # 不可达点数量\n\n    for i in range(x):\n        for j in range(y):\n            if matrix[i][j] == 0:\n                unreach += 1\n            elif matrix[i][j] == -1:\n                trap += 1\n\n    return f\"{trap} {unreach}\"\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,64 @@
+{
+  "id": "q375",
+  "title": "迷宫问题",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "定义一个二维数组 N*M ，如 5 × 5 数组下所示：\nint maze[5][5] = {\n0, 1, 0, 0, 0,\n0, 1, 1, 1, 0,\n0, 0, 0, 0, 0,\n0, 1, 1, 1, 0,\n0, 0, 0, 1, 0,\n};\n它表示一个迷宫，其中的1表示墙壁，0表示可以走的路，只能横着走或竖着走，不能斜着走，要求编程序找出从左上角到右下角的路线。入口点为[0,0],既第一格是可以走的路。\n数据范围： 2≤n,m≤10 ， 输入的内容只包含 0≤val≤1。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入两个整数，分别表示二维数组的行数，列数。再输入相应的数组，其中的1表示墙壁，0表示可以走的路。数据保证有唯一解,不考虑有多解的情况，即迷宫只有一条通道。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "左上角到右下角的最短路径，格式如样例所示。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5 5\n0 1 0 0 0\n0 1 1 1 0\n0 0 0 0 0\n0 1 1 1 0\n0 0 0 1 0\n输出\n(0,0)\n(1,0)\n(2,0)\n(2,1)\n(2,2)\n(2,3)\n(2,4)\n(3,4)\n(4,4)",
+      "cases": [
+        {
+          "input": "5 5\n0 1 0 0 0\n0 1 1 1 0\n0 0 0 0 0\n0 1 1 1 0\n0 0 0 1 0",
+          "output": "(0,0)\n(1,0)\n(2,0)\n(2,1)\n(2,2)\n(2,3)\n(2,4)\n(3,4)\n(4,4)",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n5 5\n0 1 0 0 0\n0 1 0 1 0\n0 0 0 0 1\n0 1 1 1 0\n0 0 0 0 0\n输出\n(0,0)\n(1,0)\n(2,0)\n(3,0)\n(4,0)\n(4,1)\n(4,2)\n(4,3)\n(4,4)\n\n：不能斜着走！！"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "说\n左上角到右下角的\n最短路径\n但是"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "说\n数据保证有唯一解,不考虑有多解的情况，即迷宫只有一条通道。\n这是不是有点矛盾呢？已经确认只有唯一可达路径了，又何来最短路径一说呢？但是这不影响解题。\n本题有两种"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "：\n广度优先搜索\n深度优先搜索\n广搜解法更适合本题，关于广度优先搜索的知识，可以看下：\n华为OD机试 - 计算疫情扩散时间（Java & JS & Python）_在一个地图中(地图由n*n个区域组成)_伏城之外的博客-CSDN博客\n广搜解决本题的难点在于：如何记录路径？\n解决方案是，设计一个点类Pos，该类具有三个属性：\n当前点对象的横坐标x\n当前点对象的纵坐标y\n前一个点对象pre\n类似于链表节点的定义。这样设计的原因是，广搜过程是一个发射过程，可以简单理解为一个父节点，发散出多个子节点，因此对于每个节点来说都有一个父节点（除了根节点）。\n这样当我们找到终点时，就可以沿着pre属性，一直找到起点。\n另外，找到终点后，该如何打印路径呢？如果从终点沿着pre属性链打印，那么打印出来的顺序，其实和题目要求的打印顺序是相反的。这里可以采用递归方式打印，即如果一个点存在pre，那么就递归打印其pre点，等pre点打印完了，再回溯打印自身。\n广度优先搜索\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn, m = map(int, input().split())\nmatrix = [list(map(int, input().split())) for i in range(n)]\n\n\nclass Pos:\n    def __init__(self, x, y, pre):\n        self.x = x  # 当前点的横坐标\n        self.y = y  # 当前点的纵坐标\n        self.pre = pre  # 当前点的上一个点&#xff08;此属性用于形成路径链&#xff09;\n\n\ndef printPath(cur):\n    # 这里采用递归打印,保证打印顺序是起点到终点\n    if cur.pre:\n        # 递归的作用是优先打印pre点,pre点打印完,回溯打印cur点\n        printPath(cur.pre)\n\n    print(f\"({cur.x},{cur.y})\")\n\n\n# 算法入口\ndef getResult():\n    # 广搜队列\n    queue = []\n\n    # 将&#xff08;0,0&#xff09;位置标记为“走过状态”,即将元素值设为2\n    matrix[0][0] = 2\n    # 将走过的点加入队列\n    queue.append(Pos(0, 0, None))\n\n    # 上下左右偏移量\n    offsets = ((-1, 0), (1, 0), (0, -1), (0, 1))\n\n    # 广搜\n    while len(queue) > 0:\n        # 当前点\n        cur = queue.pop(0)\n\n        # 遍历当前点的上、下、左、右方向的新点\n        for offsetX, offsetY in offsets:\n            # 新点的坐标\n            newX = cur.x + offsetX\n            newY = cur.y + offsetY\n\n            # 如果新点不越界,且未被访问过,且不是墙, 则新点可以访问\n            if n > newX >= 0 and m > newY >= 0 and matrix[newX][newY] == 0:\n                # 将新点状态设为走过\n                matrix[newX][newY] = 2\n                # 将新点和上一个点关联,形成路径链\n                nxt = Pos(newX, newY, cur)\n                queue.append(nxt)\n\n                # 如果新点就是终点,那么则说明找到了起点到终点的路径\n                if newX == n - 1 and newY == m - 1:\n                    # 打印路径\n                    printPath(nxt)\n                    # 结束查找\n                    return\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

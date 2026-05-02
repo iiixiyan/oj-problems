@@ -1,0 +1,34 @@
+{
+  "id": "q525",
+  "title": "数字涂色",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n疫情过后，希望小学终于又重新开学了，三年二班开学第一天的任务是将后面的黑板报重新制作。\n黑板上已经写上了N个正整数，同学们需要给这每个数分别上一种颜色。\n为了让黑板报既美观又有学习意义，老师要求同种颜色的所有数都可以被这种颜色中最小的那个数整除。\n现在请你帮帮小朋友们，算算最少需要多少种颜色才能给这N个数进行上色。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行有一个正整数N，其中。\n第二行有N个int型数(保证输入数据在[1,100]范围中)，表示黑板上各个正整数的值。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出只有一个整数，为最少需要的颜色种数。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    arr.sort()\n\n    if arr[0] == 1:\n        return 1\n\n    color = [False]*n\n    count = 0\n\n    for i in range(n):\n        if color[i]:\n            continue\n\n        color[i] = True\n        for j in range(i+1, n):\n            if not color[j] and arr[j] % arr[i] == 0:\n                color[j] = True\n\n        count += 1\n\n    return count\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,54 @@
+{
+  "id": "q634",
+  "title": "200分-WIFI设备网络规划",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "200\n分\n-WIFI\n设备网络规划\n(C/C++/Py/Java/Js/Go)\n\nWIFI\n网络中，专业的网络规划不仅可以提升业务体验，还可以减少部署成本。把办公区可以看作一个\nm * n\n的网格，部分网格包含墙壁（无法放置\nAP\n），部分为空地（可以放置\nAP\n）。每个\nAP\n覆盖范围是一个\n3*3\n的正方形（包括自身位置、上下左右以及对角线区域），且\nAP\n和\nAP\n的覆盖区域不能重叠，防止相互干扰。\n现在给定一个\nm x n\n（不超过\n50\n* 50\n）的网络布局图（墙壁用字符\n#\n表示，空地用字符\n.\n表示），请设计一个算法，计算最少放置多少数量的\nAP\n来覆盖所有空地；如果不能按条件完成覆盖，请返回\n-1\n。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入\nm n\n接下来\nm\n行输入，每行一个字符串"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最少放置多少数量的\nAP\n来覆盖所有空地；如果不能按条件完成覆盖，请返回\n-1\n。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入\n3 3\n#.#\n#.#\n#.#\n输出\n1",
+      "cases": [
+        {
+          "input": "3 3\n#.#\n#.#\n#.#",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2\n输入\n4 3\n#.#\n#.#\n#.#\n#.#\n输出\n2",
+      "cases": [
+        {
+          "input": "4 3\n#.#\n#.#\n#.#\n#.#",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "思路：递归回溯\n预处理\n每个空地都可以看作\nAP\n可放置候选集，预处理统计每个\nAP\n能够覆盖的空地以及覆盖区域\n利用\nAP\n候选信息，统计出每个空地能被覆盖的\nAP\n信息，用于后续剪枝。使用\npointToAP\n存储\n递归回溯计算最少\nAP\n数\n创建\ncovered\n布尔数组，跟踪指定编号空地是否被覆盖\n创建\nused[][]\n布尔数组表示指定位置是否被覆盖，用于快速判断\nAP\n放置是否会产生冲突\n定义\nans\n表示能够覆盖所有空地的最少\nAP\n数，初始可设为一个很大值\n然后进行正常的递归回溯\n+\n剪枝搜索，主要剪枝思路：\n如果当前所用\nAP\n数已超过\nans\n，直接剪枝\n如果 当前使用\nAP\n数\n+\n未覆盖空地数\n/ 9 >= ans\n，直接剪枝\n如果当前局面存在某个空地不能再被任何合法\nAP\n覆盖，直接剪枝\n优先处理当前可覆盖\nAP\n最少的空地作为扩展点，利用\npointToAP\n找出符合条件的\nAP\n候选位置，并优先按可覆盖空地数多的点进行递归\n根据第\n2\n步结果\n如果最终\nans\n仍不可达，返回\n-1\n否则返回\nans\n如果你要，我也可以下一条直接给你整理成\n更适合一键复制的纯文本紧凑版\n。\nC++\n#include<iostream>\n#include<vector>\n#include<string>\n#include <utility>\n#include <sstream>\n#include<algorithm>\n#include<cstring>\n#include<climits>\n#include<map>\nusing namespace std;\nconst int MAXN = 55;\nconst int MAXP = 2500;\nint n, m;\nstring g[MAXN];\nint id[MAXN][MAXN];\nint tot = 0;\nstruct AP {\nvector<int>\ndots;                 \n//\n覆盖的\n'.'\nvector<pair<int,int>> cells;       //\n3x3\n占用格子\n};\nvector<AP> apList;\n//\n空地能够被覆盖的\nAP\n的编号\nvector<vector<int>> pointToAP;\n//\n空地是否被覆盖\nbool covered[MAXP];\n//\n已被覆盖点\nbool used[MAXN][MAXN];\nint ans;\n//\n方向\nint dx[9]={-1,-1,-1,0,0,0,1,1,1};\nint dy[9]={-1,0,1,-1,0,1,-1,0,1};\nbool in(int x,int y){\nreturn x>=0\n&& x<n && y>=0 && y<m;\n}\n//\n预处理候选集\nAP\n信息\n覆盖的空地位置\n/\n占用格子位置\nvoid buildAP(){\nfor(int i=0;i<n;i++){\nfor(int j=0;j<m;j++){\nif(g[i][j] != '.') continue;\nAP ap;\nfor(int k=0;k<9;k++){\nint x=i+dx[k], y=j+dy[k];\nif(!in(x,y)) continue;\nap.cells.push_back({x,y});\nif(g[x][y]=='.'){\nap.dots.push_back(id[x][y]);\n}\n}\napList.push_back(ap);\n}\n}\n}\n//\n剩余未覆盖点\nint remain(){\nint cnt=0;\nfor(int\ni=0;i<tot;i++)\nif(!covered[i]) cnt++;\nreturn cnt;\n}\n//\n选取最佳点\nint selectPoint(){\nint best=-1,\nbestCnt=1e9;\nfor(int\ni=0;i<tot;i++){\nif(covered[i]) continue;\nint cnt=0;\nfor(int ap:pointToAP[i]){\nbool ok=true;\nfor(auto &c:apList[ap].cells){\nif(used[c.first][c.second]){\nok=false; break;\n}\n}\nif(ok) cnt++;\n}\n//\n存在某个点不能被任何\nAP\n覆盖，直接返回\n-1\nif(cnt==0) return -1;\nif(cnt < bestCnt){\nbestCnt = cnt;\nbest = i;\n}\n}\nreturn best;\n}\n//\n递归回溯\nvoid dfs(int usedCnt){\nif(usedCnt >= ans)\nreturn;\n//\n判断是否已全部覆盖\nbool all = true;\nfor(int\ni=0;i<tot;i++){\nif(!covered[i]){\nall=false; break;\n}\n}\nif(all){\nans = usedCnt;\nreturn;\n}\n//\n理论最少还需要多少\nAP\n，超过最佳直接剪枝\nint lb = (remain() + 8)\n/ 9;\nif(usedCnt + lb >=\nans) return;\n//\n选取最佳点，可覆盖\nAP\n最少的空地作为扩展点\nint p = selectPoint();\nif(p == -1) return;\nvector<int> cand;\nfor(int ap:\npointToAP[p]){\nbool ok=true;\nfor(auto &c: apList[ap].cells){\nif(used[c.first][c.second]){\nok=false; break;\n}\n}\nif(ok) cand.push_back(ap);\n}\n//\n优先选取能覆盖位置多的\nAP\nsort(cand.begin(),\ncand.end(),\n[&](int a,int b){\nreturn apLis"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

@@ -1,0 +1,67 @@
+{
+  "id": "q383",
+  "title": "一种字符串压缩表示的解压",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有一种简易压缩算法：针对全部由小写英文字母组成的字符串，将其中连续超过两个相同字母的部分压缩为连续个数加该字母，其他部分保持原样不变。\n例如：字符串“aaabbccccd”经过压缩成为字符串“3abb4cd”。\n请您编写解压函数，根据输入的字符串，判断其是否为合法压缩过的字符串，\n若输入合法则输出解压缩后的字符串，否则输出字符串“\n!error\n”来报告错误。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一行，为一个ASCII字符串，长度不会超过100字符，"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证输出的字符串长度也不会超过100字符。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "若判断输入为合法的经过压缩后的字符串，则输出压缩前的字符串；\n若输入不合法，则输出字符串“\n!error\n”。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4dff\n输出\nddddff",
+      "cases": [
+        {
+          "input": "4dff",
+          "output": "ddddff",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "4d扩展为dddd，故解压后的字符串为ddddff。\n输入\n2dff\n输出\n!error\n\n两个d不需要压缩，故输入不合法。\n输入\n4d@A\n输出\n!error\n\n全部由小写英文字母组成的字符串压缩后不会出现特殊字符@和大写字母A，故输入不合法。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "简单的字符串操作题，难度在于如何将输入压缩字符串中4d这种子串找到并替换为dddd，我这里用的正则的捕获组。\n同时生成重复字符的字符串，发现了一个好方法，即：\nnew Array(重复次数).fill(重复字符)\n比如 new Array(4).fill('d') 就可以生成 'dddd'\n2023.05.25\n给几个"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "：3bb，bbb，3b4b\n大家觉得这几个压缩字符串是合法的吗？\n答案是不合法，原因很简单，我们将他们解压后，再按照题目要求重新压缩，得到的压缩字符串和这些是不一样的，比如3bb，解压后为bbbb，再次压缩后为4b。\n因此，我们只能得到解压字符串后，还需要重新压缩，来对比输入的字符串，如果不一样，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "输入的压缩字符串不合法，需要返回!error\n2024.1.15\n下面代码中，当我们用正则匹配到：数字+字母，比如4d，后面进行了字符串替换，将字符串中所有4d替换为了dddd，这是有问题的，比如输入串为 4d5a14d，进行4d替换后，就变为dddd5a1dddd，这是不正确的，因为后面的14d被错误替换为1dddd了，因此我们进行字符串替换操作时，只能进行首次替换。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import re\n\n# 输入获取\ns = input()\n\n\n# 压缩字符串\ndef zip(src):\n    src += \"-\"\n\n    ans = []\n    stack = []\n    repeat = 0\n\n    for c in src:\n        if len(stack) == 0:\n            stack.append(c)\n            repeat += 1\n            continue\n\n        # stack.length > 0\n        top = stack[-1]\n        if top == c:\n            repeat += 1\n            continue\n\n        # top != c\n        if repeat > 2:\n            ans.append(f\"{repeat}{top}\")\n        else:\n            ans.append(\"\".join([top] * repeat))\n\n        stack.clear()\n        stack.append(c)\n        repeat = 1\n\n    return \"\".join(ans)\n\n\n# 算法入口\ndef getResult():\n    # 对字符串进行备份\n    back_s = s\n\n    # 压缩字符串str只能包含小写字母和数字,如果包含其他字符则非法\n    if re.search(r\"[^a-z0-9]\", back_s) is not None:\n        return \"!error\"\n\n    # 该正则用于匹配 “4a”,“12b” 这种 “数字+小写字母” 的子串\n    reg = re.compile(r\"(\\d+)([a-z])?\")\n\n    while True:\n        match = reg.search(back_s)\n\n        if match is None:\n            break\n\n        # 要被替换的压缩子串\n        src = match.group()\n        repeat_times = int(match.group(1))\n\n        # 压缩字符串中不会存在0,1,2\n        if repeat_times <= 2:\n            return \"!error\"\n\n        repeat_content = match.group(2)\n\n        #  abc4这种情况视为异常\n        if repeat_content is None:\n            return \"!error\"\n\n        # 替换后的解压子串\n        tar = \"\".join([repeat_content] * repeat_times)\n\n        back_s = back_s.replace(src, tar, 1)\n\n    # 如果解压字符串重新压缩后,和输入的压缩子串不一样,则说明输入的压缩字符串不合法,比如输入为3bb,bbb, 3b4b都是不合法\n    if zip(back_s) != s:\n        return \"!error\"\n    else:\n        return back_s\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

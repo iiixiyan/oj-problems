@@ -1,0 +1,51 @@
+{
+  "id": "q258",
+  "title": "寻找最大价值的矿堆",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给你一个由 '0' (空地)、'1' (银矿)、'2'(金矿) 组成的的地图，矿堆只能由上下左右相邻的金矿或银矿连接形成。超出地图范围可以认为是空地。\n假设银矿价值1，金矿价值2 ，请你找出地图中最大价值的矿堆并输出该矿堆的价值。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "地图元素信息如：\n22220\n00000\n00000\n11111\n地图范围最大 300*300\n0 ≤ 地图元素 ≤ 2"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "矿堆的最大价值"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n22220\n00000\n00000\n01111\n输出\n8",
+      "cases": [
+        {
+          "input": "22220\n00000\n00000\n01111",
+          "output": "8",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n22220\n00020\n00010\n01111\n输出\n15\n\n无\n输入\n20000\n00020\n00000\n00111\n输出\n3\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用深度优先搜索解决。\n首先，根据输入得到一个地图矩阵。\n然后，定义一个visited集合，用于记录访问过的点的坐标，或者将访问过的点赋值为0，避免一些点被二次访问。\n之后，开始遍历矩阵的每一个元素，如果\n该元素的值>0（代表有价值）\n该元素位置未被访问过\n那么就可以从该点向上、下、左、右四个方向开始深搜，对于新点依旧按照上面规则判断是否可以继续深搜。\n2023.05.25\n经过测试，本题的深度优先搜索（递归实现）在地图矩阵达到50*50以上时就会发生栈内存溢出，因此本题可以使用深度优先搜索（栈实现）。\n深度优先搜索的栈实现，非常类似于广度优先搜索，其实就是将广度优先搜索的队列结构，换成栈结构，具体区别可以看：\n华为OD机试 - 计算疫情扩散时间（Java & JS & Python）_伏城之外的博客-CSDN博客\n在线OJ地址\n在线OJ - 寻找最大价值的矿堆\n深度优先搜索-栈实现\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 上下左右,四个方向的偏移量\noffsets = ((-1, 0), (1, 0), (0, -1), (0, 1))\n\n\n# 广搜\ndef dfs(x, y, matrix, row, col):\n    total = matrix[x][y]\n    matrix[x][y] = 0\n\n    stack = [[x, y]]\n\n    while len(stack) > 0:\n        x, y = stack.pop()\n\n        for offset in offsets:\n            newX = x + offset[0]\n            newY = y + offset[1]\n\n            if row > newX >= 0 and col > newY >= 0 and matrix[newX][newY] > 0:\n                total += matrix[newX][newY]\n                matrix[newX][newY] = 0\n                stack.append([newX, newY])\n\n    return total\n\n\n# 算法入口\ndef getResult(matrix):\n    # 记录地图矩阵的行数row\n    row = len(matrix)\n\n    if row == 0:\n        return 0\n\n    # 记录地图矩阵的行数col\n    col = len(matrix[0])\n\n    # 记录最大矿堆价值\n    ans = 0\n\n    # 遍历矩阵元素\n    for i in range(row):\n        for j in range(col):\n            # 如果点(i,j)没有被访问过,且点(i,j)上有矿,则进入深搜\n            if matrix[i][j] > 0:\n                ans = max(ans, dfs(i, j, matrix, row, col))\n\n    return ans\n\n\n# 输入获取\nmatrix = []\n\n# 假设存在空行作为输入截止条件\n# while True:\n#     line = input()\n#\n#     if line == \"\":\n#         print(getResult(matrix))\n#         break\n#     else:\n#         matrix.append(list(map(int, list(line))))\n\n# 没有空行作为输入截止条件\nwhile True:\n    try:\n        matrix.append(list(map(int, list(input()))))\n    except:\n        break\nprint(getResult(matrix))"
+  },
+  "verified": false
+}

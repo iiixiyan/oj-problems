@@ -1,0 +1,51 @@
+{
+  "id": "q287",
+  "title": "购物",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "商店里有N件唯一性商品，每件商品有一个价格，第 i 件商品的价格是 ai。\n一个购买方案可以是从N件商品种选择任意件进行购买（至少一件），花费即价格之和。\n现在你需要求出所有购买方案中花费前K小的方案，输出这些方案的花费。\n当两个方案选择的商品集合至少有一件不同，视为不同方案，因此可能存在两个方案花费相同。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入数据含两行：\n第一行包含两个整数N，K，整数之间通过空格隔开。分别表示商品的个数，以及需要求得的花费个数。1 ≤ N ≤ 10000，1 ≤ K ≤ min(2^N - 1，100000)\n第二行包含N个整数a1，a2，...，an，整数之间通过空格隔开。表示N件商品的价格。1 ≤ a1 ≤ a2 ≤ ... ≤ an ≤ 10000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "按花费从小到大的顺序依次输出K行，一行一个整数。表示花费前K小的购买方案的花费。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5 6\n1 1 2 3 3\n输出\n1\n1\n2\n2\n3\n3",
+      "cases": [
+        {
+          "input": "5 6\n1 1 2 3 3",
+          "output": "1\n1\n2\n2\n3\n3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n3 5\n1 100 101\n输出\n1\n100\n101\n101\n102\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题其实就是要我们求解：全组合中前k小组合（按照组合之和大小排序）。\n具体解析可以参考：\nHDU - 4546 比赛难度（Java & JS & Python）_伏城之外的博客-CSDN博客\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import heapq\nimport queue\n\n# 输入获取\nn, m = map(int, input().split())\nnums = list(map(int, input().split()))\n\n\n# 组合模型\nclass CombineModel:\n    def __init__(self, curSum, nextIdx):\n        self.curSum = curSum  # 当前组合之和\n        self.nextIdx = nextIdx  # 将要被加入当前组合的新元素索引位置\n\n    def __lt__(self, other):\n        # 对于一个组合模型,其”将要产生的新组合“之和越小,则优先级越高\n        # curSum + nums[nextIdx] 为 ”将要产生的新组合“之和\n        return self.curSum + nums[self.nextIdx] < (other.curSum + nums[other.nextIdx])\n\n\n# 算法入口\ndef getResult():\n    nums.sort()\n\n    # pq = queue.PriorityQueue()\n    pq = []\n\n    # 空组合的和为0, 将要加入的新元素是nums[0], 即索引0的元素,其将要产生的新组合之和为 0 + nums[0]\n    c = CombineModel(0, 0)\n\n    for _ in range(0, m):\n        # 打印第 i 小组合\n        print(c.curSum + nums[c.nextIdx])\n\n        # c是当前最小组合模型,最小的组合模型指的是将要产生的新组合之和在对应轮次中最小\n        # 如果当前组合模型c还有可合入的下一个元素,即c.nextIdx + 1 < n, 则说明可以基于当前组合模型产生一个新组合\n        if c.nextIdx + 1 < n:\n            # 基于当前组合模型产生的新组合,也是本轮最小的组合,即第 i 小组合\n            # pq.put(CombineModel(c.curSum + nums[c.nextIdx], c.nextIdx + 1))\n            heapq.heappush(pq, CombineModel(c.curSum + nums[c.nextIdx], c.nextIdx + 1))\n\n            # 当前组合需要更新nextIdx后,重新加入优先队列\n            c.nextIdx += 1\n            # pq.put(c)\n            heapq.heappush(pq, c)\n\n        # 取出优先队列中最小组合&#xff08;注意这里的最小,指的是基于当前组合,将要产生的新组合之和最小&#xff09;\n        # c = pq.get()\n        if len(pq) > 0:\n            c = heapq.heappop(pq)\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

@@ -1,0 +1,35 @@
+{
+  "id": "q620",
+  "title": "模拟目录管理",
+  "score": 200,
+  "tags": [
+    "E卷",
+    "模拟"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n实现一个模拟\n目录管理\n功能的软件，输入一个命令序列，输出最后一条命令运行结果。\n支持命令：\n创建目录命令：mkdir 目录名称，如 mkdir abc 为在当前目录创建abc目录，如果已存在同名目录则不执行任何操作。此命令无输出。\n进入目录命令：cd 目录名称，如 cd abc 为进入abc目录，特别地，cd … 为返回上级目录，如果目录不存在则不执行任何操作。此命令无输出。\n查看当前所在路径命令：pwd，输出当前路径字符串。\n约束：\n目录名称仅支持小写字母；mkdir 和 cd 命令的参数仅支持单个目录，如：mkdir abc 和 cd abc；不支持嵌套路径和绝对路径，如 mkdir abc/efg，cd abc/efg，mkdir /abc/efg，cd /abc/efg 是不支持的。\n目录符号为/，根目录/作为初始目录。\n任何不符合上述定义的无效命令不做任何处理并且无输出。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入 N 行\n字符串\n，每一行字符串是一条命令。\n命令行数限制100行以内，目录名称限制10个字符以内。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出最后一条命令运行结果字符串。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "class TreeNode:\n    def __init__(self, curDicName, father):\n        self.curDicName = curDicName\n        self.father = father\n        self.children = {}\n\n\nclass Tree:\n    def __init__(self):\n        # root是根目录,根目录 / 作为初始目录\n        self.root = TreeNode(\"/\", None)\n        # cur用于指向当前正在操作的目录\n        self.cur = self.root\n\n    def mkdir(self, dicName):\n        # mkdir 目录名称,如 mkdir abc 为在当前目录创建abc目录,如果已存在同名目录则不执行任何操作\n        self.cur.children.setdefault(dicName, TreeNode(dicName + \"/\", self.cur))  # 目录符号为 /\n\n    def cd(self, dicName):\n        if dicName == \"..\":\n            # cd .. 为返回上级目录,如果目录不存在则不执行任何操作\n            if self.cur.father is not None:\n                # cur 变更指向上级目录\n                self.cur = self.cur.father\n        else:\n            # cd 目录名称,如 cd abc 为进入abc目录,如果目录不存在则不执行任何操作\n            if self.cur.children.get(dicName) is not None:\n                # cur 变更指向下级目录\n                self.cur = self.cur.children[dicName]\n\n    def pwd(self):\n        # 输出当前路径字符串\n        lst = []\n\n        # 倒序路径,即不停向上找父目录\n        cur = self.cur\n        while cur is not None:\n            lst.append(cur.curDicName)\n            cur = cur.father\n\n        # 反转后拼接\n        lst.reverse()\n\n        return \"\".join(lst)\n\n\n# 算法逻辑\n# 初始化目录结构\ntree = Tree()\n\n# 记录最后一条命令的输出\nlastCommandOutput = \"\"\n\nwhile True:\n    try:\n        line = input()\n\n        # 本地测试解开此行\n        # if line == \"\":\n        #     break\n\n        tmp = line.split()\n        cmd_key = tmp[0]\n\n        if cmd_key == \"pwd\":\n            # pwd 命令不需要参数\n            if len(tmp) != 1:\n                continue\n            lastCommandOutput = tree.pwd()\n        elif cmd_key == \"mkdir\" or cmd_key == \"cd\":\n            # 约束&#xff1a;mkdir 和 cd 命令的参数仅支持单个目录,如&#xff1a;mkdir abc 和 cd abc\n            if len(tmp) != 2:\n                continue\n\n            # 目录名\n            cmd_val = tmp[1]\n\n            # 目录名约束校验\n            # 约束&#xff1a;目录名称仅支持小写字母\n            # 约束&#xff1a;不支持嵌套路径和绝对路径,如 mkdir abc/efg,cd abc/efg,mkdir /abc/efg,cd /abc/efg 是不支持的。\n            # 关于嵌套路径和绝对路径,我简单理解就是cmd_val含有'/'字符,可以被小写字母判断涵盖住\n            if not (cmd_val.isalpha() and cmd_val.islower()) and not (cmd_key == 'cd' and cmd_val == '..'):\n                continue\n\n            if cmd_key == \"mkdir\":\n                tree.mkdir(cmd_val)\n                # 题目进要求输出最后一个命令的运行结果,因此,对于无输出的命令,我认为需要覆盖掉前面的命令的输出结果\n                lastCommandOutput = \"\"\n            else:\n                tree.cd(cmd_val)\n                # 题目进要求输出最后一个命令的运行结果,因此,对于无输出的命令,我认为需要覆盖掉前面的命令的输出结果\n                lastCommandOutput = \"\"\n    except:\n        break\n\nprint(lastCommandOutput)"
+  },
+  "verified": false
+}

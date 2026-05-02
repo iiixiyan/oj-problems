@@ -1,0 +1,69 @@
+{
+  "id": "q318",
+  "title": "TLV解析 Ⅱ",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "两端通过TLV格式的报文来通信，现在收到对端的一个TLV格式的消息包，要求生成匹配后的(tag, length, valueOffset)列表。\n具体要求如下:\n(1)消息包中多组tag、length、value紧密排列，其中tag,length各占1字节(uint8_t) , value所占字节数等于length的值\n(2)结果数组中tag值已知，需要填充每个tag对应数据的length和valueOffset值(valueOffset为value在原消息包中的起始偏移量（从0开始，以字节为单位))，\n即将消息包中的tag与结果数组中的tag进行匹配（可能存在匹配失败的情况，若结果数组中的tag在消息包中找不到，则length和valueOffset都为0)\n(3)消息包和结果数组中的tag值都按升序排列，且不重复\n(4)此消息包未被篡改，但尾部可能不完整，不完整的一组TLV请丢弃掉"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行: 一个字符串，代表收到的消息包。字符串长度在10000以内。"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "1: 字符串使用十六进制文本格式（字母为大写）来展示消息包的数据，如0F04ABABABAB代表一组TLV:前两个字符(0F）代表tag值为15，接下来两个字符（04）代表length值为4字节，接下来8个字符即为4字节的value。\n\n2: 输入字符串中，每一组TLV紧密排列，中间无空格等分隔符\n第二行: 需要匹配的tag数量n (0 < n <1000) 。\n后面n行: 需要匹配的n个tag值（十进制表示)，递增排列。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "和需要匹配的n个tag对应的n行匹配结果，每一行由长度和偏移量组成"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n0F04ABABABAB\n1\n15\n输出\n4 2",
+      "cases": [
+        {
+          "input": "0F04ABABABAB\n1\n15",
+          "output": "4 2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "tag15(十六进制0F)对应数据的长度为4，其value从第三个字节开始，因此偏移量为2\n输入\n0F04ABABABAB1001FF\n2\n15\n17\n输出\n4 2\n0 0\n\n第二个tag匹配失败"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "以"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1为例：\n因为根据题目意思， tag,length各占1字节，1个字节 = 8 位2进制 = 2位16进制，因此：\n黄色部分两位代表tag，绿色部分两位代表len，而橙色部分value的长度取决于绿色部分len的16进制值，比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "的len= 0x04 = 4，因此value的就是4个字节，即8位16进制。\n这样的话，我们就确定了输入字符串的tag,len,value。\n但是，本题需要输出[len, valueOffset]\n其中valueOffset，是value起始位置的在整个字符串中的（\n字节单位\n）索引，比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1中的valueOffset就是2。\n另外，本题中，有可能给的报文不是完全的，比如输入字符串为：\n0F04ABABAB\n按照len值，value理论上应该有4字节长度，但是实际只有3字节，因此此时报文不完整，可以丢弃。\n关于下面源码中各行代码的解释\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nmsg = input()\nn = int(input())\ntags = [int(input()) for i in range(n)]\n\n\n# 算法入口\ndef getResul(msg, tags):\n    tagDict = {}\n\n    # 这里只遍历到len(msg) - 3的目的是确保tag,len的截取不会越界\n    i = 0\n    while i < len(msg) - 3:\n        tag = int(msg[i:i + 2], 16)\n        long = int(msg[i + 2:i + 4], 16)\n        valueOffset = (i + 5) // 2\n\n        # 本TLV格式报文段结束位置i\n        i += 3 + long * 2\n\n        # 如果结束位置i越界,则当前TLV报文段是一个不完整的,需要丢弃\n        if i >= len(msg):\n            break\n\n        # 题目已经保证tag不会重复\n        tagDict[tag] = [long, valueOffset]\n\n        i += 1\n\n    for tag in tags:\n        if tagDict.get(tag) is None:\n            print(\"0 0\")\n        else:\n            print(\" \".join(map(str, tagDict[tag])))\n\n\n# 算法调用\ngetResul(msg, tags)"
+  },
+  "verified": false
+}

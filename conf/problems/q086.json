@@ -1,0 +1,71 @@
+{
+  "id": "q086",
+  "title": "端口合并",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有M个端口组(1<=M<=10)，\n每个端口组是长度为N的整数数组(1<=N<=100)，\n如果端口组间存在2个及以上不同端口相同，则认为这2个端口组互相关联，可以合并。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入端口组个数M，再输入M行，每行逗号分割，代表端口组。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "：端口组内数字可以重复。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出合并后的端口组，用二维数组表示。\n组内相同端口仅保留一个，从小到达排序。\n组外顺序保持输入顺序"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "：M,N不在限定范围内，统一输出一组空数组[[]]"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\n4\n2,3,2\n1,2\n5\n输出\n[[4],[2,3],[1,2],[5]]",
+      "cases": [
+        {
+          "input": "4\n4\n2,3,2\n1,2\n5",
+          "output": "[[4],[2,3],[1,2],[5]]",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "仅有一个端口2相同，不可以合并。\n输入\n3\n2,3,1\n4,3,2\n5\n输出\n[[1,2,3,4],[5]]\n\n无\n输入\n6\n10\n4,2,1\n9\n3,6,9,2\n6,3,4\n8\n输出\n[[10],[1,2,3,4,6,9],[9],[8]]\n\n无\n输入\n11\n输出\n[[]]\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题有一个疑点：\n如果端口组间存在2个及以上\n不同端口\n相同，则认为这2个端口组互相关联，可以合并。\n那就是上面这句话中“不同端口”指的是什么？\n比如下面"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "中两个端口组都有端口3 3，那么是否可以合并呢？\n2\n3 3 5\n1 3 3\n我们假设 a = [3,3,5]，b = [1,3,3]，那么a[0]和b[1]相同，a[1]和b[2]相同，这种端口所在位置不同，但是端口值相同的，是否也能算2个不同端口相同呢？\n这里搞不清楚，就会产生两种"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "：\n1、两个端口组，如果可以形成2对端口值相同的端口对，那么也可以合并\n2、两个端口组，只有形成2对端口值不同的端口对，那么才可以合并\n如果能形成2个端口值相同的端口对，那么也可以合并\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import re\n\n# 如果端口组间存在2个及以上不同端口相同,则认为这2个端口组互相关联,可以合并。\n# 下面方法实现中&#xff1a;对于“不同端口”的理解是&#xff1a;端口位置不同,端口值可以相同,即以不同位置的端口视为不同端口\ndef canUnion(port1, port2):\n    port1.sort()\n    port2.sort()\n\n    same = 0\n    i = 0\n    j = 0\n\n    while i < len(port1) and j < len(port2):\n        if port1[i] == port2[j]:\n            i += 1\n            j += 1\n            same += 1\n            if same >= 2:\n                return True\n        elif port1[i] > port2[j]:\n            j += 1\n        else:\n            i += 1\n\n    return False\n\n\n# 从头开始尝试合并端口组\ndef forPorts(ports):\n    # 这里倒序遍历端口组是为了实现&#xff1a;组外顺序保持输入顺序\n    for i in range(len(ports) - 1, -1, -1):\n        for j in range(i - 1, -1, -1):\n            # 判断两个端口是否可以合并\n            if canUnion(ports[i], ports[j]):\n                # 将后面的端口组,并入前面的端口组,这样就不会破坏组外顺序\n                ports[j].extend(ports[i])\n                ports.pop(i)\n                return True  # 继续尝试合并\n\n    return False  # 合并尝试结束\n\n\n# 组内相同端口仅保留一个,从小到达排序\ndef distinctAndSort(port):\n    tmp = list(set(port))\n    tmp.sort()\n    return tmp\n\n\n# 算法入口\ndef getResult(ports):\n    while True:\n        if not forPorts(ports):\n            break\n\n    # return list(map(distinctAndSort, ports)) # 如果输出内容不去除空格,可得83.33%通过率\n    return re.sub(f\"\\\\s\", \"\", str(list(map(distinctAndSort, ports))))\n\n\n# 输入获取\nm = int(input())\n\nif m < 1 or m > 10:\n    print(\"[[]]\")\nelse:\n    ports = [list(map(int, input().split(\",\"))) for _ in range(m)]\n    if len(list(filter(lambda p: len(p) < 1 or len(p) > 100, ports))) > 0:\n        print(\"[[]]\")\n    else:\n        print(getResult(ports))"
+  },
+  "verified": false
+}

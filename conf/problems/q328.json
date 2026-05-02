@@ -1,0 +1,56 @@
+{
+  "id": "q328",
+  "title": "启动多任务排序",
+  "score": 200,
+  "tags": [
+    "排序"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一个应用启动时，会有多个初始化任务需要执行，并且任务之间有依赖关系，例如A任务依赖B任务，那么必须在B任务执行完成之后，才能开始执行A任务。\n现在给出多条任务依赖关系的规则，请输入任务的顺序执行序列，规则采用贪婪策略，即一个任务如果没有依赖的任务，则立刻开始执行，如果同时有多个任务要执行，则根据任务名称字母顺序排序。\n例如：B任务依赖A任务，C任务依赖A任务，D任务依赖B任务和C任务，同时，D任务还依赖E任务。那么执行任务的顺序由先到后是：\nA任务，E任务，B任务，C任务，D任务\n这里A和E任务都是没有依赖的，立即执行。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入参数每个元素都表示任意两个任务之间的依赖关系，输入参数中符号\"->\"表示依赖方向，例如：\nA->B：表示A依赖B\n多个依赖之间用单个空格分隔"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出排序后的启动任务列表，多个任务之间用单个空格分隔"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nA->B C->B\n输出\nB A C",
+      "cases": [
+        {
+          "input": "A->B C->B",
+          "output": "B A C",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是拓扑排序问题，本\n\n析可以参考下面博客：\nLeetCode - 207 课程表_leetcode207课程表-CSDN博客\n本题没有"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "循环依赖的情况该如何处理，因此我认为本题没有循环依赖的情况。实际考试需要\n\n下。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nrelations = list(map(lambda s: s.split(\"->\"), input().split()))\n\n\n# 算法入口\ndef getResult():\n    inDegree = {}\n    next = {}\n\n    # a依赖b, 即b执行完,才能执行a\n    for a, b in relations:\n        # b的入度不变\n        inDegree[b] = inDegree.get(b, 0)\n        # a的入度+1\n        inDegree[a] = inDegree.get(a, 0) + 1\n\n        # b的后继节点集合添加a\n        next[b] = next.get(b, [])\n        next[b].append(a)\n\n        # a的后继节点集合不变\n        next[a] = next.get(a, [])\n\n    # queue收集第一层入度为0的点\n    queue = []\n    for task in inDegree:\n        if inDegree[task] == 0:\n            queue.append(task)\n\n    # 记录任务执行的顺序\n    ans = []\n\n    while len(queue) > 0:\n        # 如果同时有多个任务要执行,则根据任务名称字母顺序排序\n        queue.sort()\n\n        # newQueue用于记录下一层入度为0的点\n        newQueue = []\n        for fa in queue:\n            # fa执行,则加入已完成的任务列表\n            ans.append(fa)\n\n            for ch in next[fa]:\n                # fa是父任务,ch是子任务, 即fa执行完,才能执行ch\n                # fa执行完,则对应ch的入度-1\n                inDegree[ch] -= 1\n\n                # 如果ch的入度变为0,则加入新一层入度0的点集\n                if inDegree[ch] == 0:\n                    newQueue.append(ch)\n\n        queue = newQueue\n\n    return \" \".join(ans)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

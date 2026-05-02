@@ -1,0 +1,54 @@
+{
+  "id": "q327",
+  "title": "可以组成网络的服务器",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在一个机房中，服务器的位置标识在 n*m 的整数矩阵网格中，1 表示单元格上有服务器，0 表示没有。如果两台服务器位于同一行或者同一列中紧邻的位置，则认为它们之间可以组成一个局域网。\n请你统计机房中最大的局域网包含的服务器个数。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入两个正整数，n和m，0<n,m<=100\n之后为n*m的二维数组，代表服务器信息"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最大局域网包含的服务器个数。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2 2\n1 0\n1 1\n输出\n3",
+      "cases": [
+        {
+          "input": "2 2\n1 0\n1 1",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "[0][0]、[1][0]、[1][1]三台服务器相互连接，可以组成局域网"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以用深度优先搜索DFS求解。\n我们找到一个服务器后，就再去其上下左右找下一个服务器，当找到新服务器，再递归去找其上下左右，按此逻辑，就像拔地瓜藤一样，一下子把所有地瓜都拔出来。而这就是深度优先搜索，即dfs。\n为了避免重复统计，我们将统计过的服务器位置的值从1变为0。\n2023.06.18\n本题极限"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "下，深度优先搜索（递归实现）可能会发生Stack Overflow，因此推荐使用广度优先搜索，广度优先搜索依赖于自定义的队列，来完成图的遍历，因此不会发生Stack Overflow。\n关于广度优先搜索可以看：\n华为OD机试 - 计算疫情扩散时间（Java & JS & Python）_华为机考数组扩散求用时_伏城之外的博客-CSDN博客\n当然，本题也可以基于深度优先搜索（自定义栈）实现，对应代码可以参考：\n华为OD机试 - 寻找最大价值的矿堆（Java & JS & Python）_伏城之外的博客-CSDN博客\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn, m = map(int, input().split())\nmatrix = [list(map(int, input().split())) for _ in range(n)]\n\noffsets = ((-1, 0), (1, 0), (0, -1), (0, 1))\n\n\ndef bfs(i, j):\n    count = 1\n    matrix[i][j] = 0\n\n    queue = [[i, j]]\n\n    while len(queue) > 0:\n        x, y = queue.pop(0)\n\n        for offsetX, offsetY in offsets:\n            newX = x + offsetX\n            newY = y + offsetY\n\n            if n > newX >= 0 and m > newY >= 0 and matrix[newX][newY] == 1:\n                count += 1\n                matrix[newX][newY] = 0\n                queue.append([newX, newY])\n\n    return count\n\n\n# 算法入口\ndef getResult():\n    ans = 0\n\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] == 1:\n                ans = max(ans, bfs(i, j))\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

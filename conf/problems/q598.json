@@ -1,0 +1,35 @@
+{
+  "id": "q598",
+  "title": "树状结构查询",
+  "score": 200,
+  "tags": [
+    "E卷",
+    "树"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n通常使用多行的节点、\n父节点\n表示一棵树，比如\n西安 陕西\n陕西 中国\n江西 中国\n中国 亚洲\n泰国 亚洲\n输入一个节点之后，请打印出来树中他的所有下层节点"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入行数，下面是多行数据，每行以空格区分节点和父节点\n接着是查询节点"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出查询节点的所有下层节点。以\n字典序排序"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\n\ntree = {}\nfor _ in range(n):\n    ch, fa = input().split()\n    tree.setdefault(fa, set())\n    tree[fa].add(ch)\n\ntarget = input()\n\n\n# 算法入口\ndef getResult():\n    if tree.get(target) is None:\n        print(\"\")\n        return\n\n    queue = list(tree[target])\n    ans = []\n\n    while len(queue) > 0:\n        node = queue.pop(0)\n        ans.append(node)\n\n        if tree.get(node) is not None:\n            queue.extend(list(tree[node]))\n\n    ans.sort()\n    for v in ans:\n        print(v)\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

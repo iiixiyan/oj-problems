@@ -1,0 +1,57 @@
+{
+  "id": "q254",
+  "title": "字符匹配",
+  "score": 200,
+  "tags": [
+    "B卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给你一个字符串数组（每个字符串均由小写字母组成）和一个字符规律（由小写字母和.和*组成），识别数组中哪些字符串可以匹配到字符规律上。\n‘.’ 匹配任意单个字符，’*’ 匹配零个或多个任意字符；\n判断字符串是否匹配，是要涵盖整个字符串的，而不是部分字符串。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为空格分割的多个字符串，1 < 单个字符串长度 < 100，1 < 字符串个数 < 100\n第二行为字符规律，1 <= 字符规律长度 <= 50\n不需要考虑异常场景。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "匹配的字符串在数组中的下标（从0开始），多个匹配时下标升序并用,分割，若均不匹配输出-1"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nab aab\n.*\n输出\n0,1",
+      "cases": [
+        {
+          "input": "ab aab\n.*",
+          "output": "0,1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nab abc bsd\n.*\n输出\n0,1,2\n\n无\n输入\navd adb sss as\nadb\n输出\n1\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题的最佳\n\n策略是动态规划，即基于动态规实现模拟正则匹配。\n具体解析请看我写的这篇博客：\nLeetCode - 10 正则表达式匹配_伏城之外\n2023.08.15\n本题收集题目时，"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "是错的.......，现在已改正。\n新的\n\n中中关于 \"*\" 的描述，和正则的 \"*\" 量词符是不等价的。\n’*’ 匹配零个或多个任意字符，因此题目中的\"*\" 应该和 正则表达式 \".*\" 等价。\n本题正则解法可以100%通过。\n正则解法\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import re\n\n# 输入获取\narr = input().split()\nreg = input().replace(\"*\", \"(.*)\")\n\n\n# 算法入口\ndef getResult():\n    c = re.compile(f\"^{reg}$\")\n\n    ans = []\n    for i in range(len(arr)):\n        if c.match(arr[i]):\n            ans.append(i)\n\n    if len(ans) == 0:\n        return \"-1\"\n    else:\n        return \",\".join(map(str, ans))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

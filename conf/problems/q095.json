@@ -1,0 +1,51 @@
+{
+  "id": "q095",
+  "title": "货币单位换算",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "记账本上记录了若干条多国货币金额，需要转换成人民币分（fen），汇总后输出。\n每行记录一条金额，金额带有货币单位，格式为数字+单位，可能是单独元，或者单独分，或者元与分的组合。\n要求将这些货币全部换算成人民币分（fen）后进行汇总，汇总结果仅保留整数，小数部分舍弃。\n元和分的换算关系都是1:100，如下：\n1CNY=100fen（1元=100分）\n1HKD=100cents（1港元=100港分）\n1JPY=100sen（1日元=100仙）\n1EUR=100eurocents（1欧元=100欧分）\n1GBP=100pence（1英镑=100便士）\n汇率表如下：\nCNY\nJPY\nHKD\nEUR\nGBP\n100\n1825\n123\n14\n12\n即：100CNY = 1825JPY = 123HKD = 14EUR = 12GBP"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为N，N表示记录数。0<N<100\n之后N行，每行表示一条货币记录，且该行只会是一种货币。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "将每行货币转换成人民币分（fen）后汇总求和，只保留整数部分。\n输出格式只有整数数字，不带小数，不带单位。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1\n100CNY\n输出\n10000",
+      "cases": [
+        {
+          "input": "1\n100CNY",
+          "output": "10000",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "100CNY转换后是10000fen，所以输出结果为10000\n输入\n1\n3000fen\n输出\n3000\n\n3000fen，结果就是3000\n输入\n1\n123HKD\n输出\n10000\n\nHKD与CNY的汇率关系是123:100，所以换算后，输出结果为10000\n输入\n2\n20CNY53fen\n53HKD87cents\n输出\n6432\n\n20元53分 + 53港元87港分，换算成人民币分后汇总，为6432"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "纯逻辑题。\n本题唯一的难度应该在于如何解析输入字符串中的金额和单位，这里最好是使用正则表达式：\n剩下的就是将不同单位转换成人民币分的汇率计算工作了，如下源码中exchange记录的不同单位转成人民币分的汇率。\nJavaScript算法源码\n正则解法"
+    }
+  ],
+  "solutions": {
+    "Python": "import math\nimport re\n\n# 输入获取\nn = int(input())\narr = [input() for i in range(n)]\n\n\n# 算法入口\ndef getResult(arr):\n    pattern = r\"(\\d+)((CNY)|(JPY)|(HKD)|(EUR)|(GBP)|(fen)|(cents)|(sen)|(eurocents)|(pence))\"\n\n    exchage = {\n        \"CNY\": 100,\n        \"JPY\": 100 / 1825 * 100,\n        \"HKD\": 100 / 123 * 100,\n        \"EUR\": 100 / 14 * 100,\n        \"GBP\": 100 / 12 * 100,\n        \"fen\": 1,\n        \"cents\": 100 / 123,\n        \"sen\": 100 / 1825,\n        \"eurocents\": 100 / 14,\n        \"pence\": 100 / 12\n    }\n\n    ans = 0\n\n    for s in arr:\n        result = re.findall(pattern, s)\n        for item in result:\n            amount = item[0]\n            unit = item[1]\n            ans += int(amount) * exchage[unit]\n\n    return math.floor(ans)\n\n\n# 算法调用\nprint(getResult(arr))"
+  },
+  "verified": false
+}

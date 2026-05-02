@@ -1,0 +1,66 @@
+{
+  "id": "q395",
+  "title": "勾股数元组",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "如果3个正整数(a,b,c)满足a^2 + b^2 = c^2的关系，则称(a,b,c)为勾股数（著名的勾三股四弦五），\n为了探索勾股数的规律，我们定义如果勾股数(a,b,c)之间两两互质（即a与b，a与c，b与c之间均互质，没有公约数），则其为勾股数元组（例如(3,4,5)是勾股数元组，(6,8,10)则不是勾股数元组）。\n请求出给定范围[N,M]内，所有的勾股数元组。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "起始范围N，1 <= N <= 10000\n结束范围M，N < M <= 10000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "1. a,b,c请保证a < b < c,输出格式：a b c；\n2. 多组勾股数元组请按照a升序，b升序，最后c升序的方式排序输出；\n3. 给定范围中如果找不到勾股数元组时，输出”NA“。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1\n20\n输出\n3 4 5\n5 12 13\n8 15 17",
+      "cases": [
+        {
+          "input": "1\n20",
+          "output": "3 4 5\n5 12 13\n8 15 17",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "[1,20]范围内勾股数有：(3 4 5)，(5 12 13)，(6 8 10)，(8 15 17)，(9 12 15)，(12 16 20)；\n其中，满足(a,b,c)之间两两互质的勾股数元组有：(3 4 5)，(5 12 13)，(8 15 17);\n按"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "中顺序要求输出结果。\n输入\n5\n10\n输出\nNA"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "[5,10]范围内勾股数有：(6 8 10)；\n其中，没有满足(a,b,c)之间两两互质的勾股数元组；\n给定范围中找不到勾股数元组，输出”NA“"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题首先需要找出给定区间内的所有勾股数，当找出勾股数后，继续判断勾股数两两之间是否互质，若否，则丢弃，若是，则保留。\n最终保留的就是勾股数元组。\n因此本题难点有二：1、如何找出所有勾股数； 2、如何判断两个数互质\n关于1，我们可以先求出区间[n,m]的所有数的平方，缓存到一个数组arr中，然后对该数组进行双重for遍历，外层遍历所有元素arr[i]，内层遍历i之后的每一个元素arr[j]，我们求arr[i]+arr[j]的和sum，看arr中是否包含sum元素，若是，则就得到一组勾股数sqrt(arr[i])、sqrt(arr[j])、sqrt(sum)。\n按照上面逻辑求得所有勾股数。\n之后，我们可以根据辗转相除法判断两个数是否互质，比如求9和12是否互质，以及求47和18是否互质。\n我们只需要用\na % b 得到一个 mod\n然后将\na <= b\nb <= mod\n如果进行到b===0时，则看此时a的值，若a===1，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "初始时的a,b互质，否则就有最大公约数结束时的a。\n如下图所示：\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import math\n\n# 输入获取\nn = int(input())\nm = int(input())\n\n\n# 判断两个数是否互质,辗转相除\ndef isRelativePrime(x, y):\n    while y > 0:\n        mod = x % y\n        x = y\n        y = mod\n\n    return x == 1\n\n\n# 算法入口\ndef getResult():\n    arr = []\n\n    for i in range(n, m + 1):\n        arr.append(i * i)\n\n    setArr = set(arr)\n\n    res = []\n    for i in range(len(arr)):\n        for j in range(i + 1, len(arr)):\n            # 判断勾股数 a^2 + b^2 = c^2\n            sumV = arr[i] + arr[j]\n            if sumV in setArr:\n                res.append([int(math.sqrt(arr[i])), int(math.sqrt(arr[j])), int(math.sqrt(sumV))])\n\n    ans = list(\n        filter(lambda x: isRelativePrime(x[0], x[1]) and isRelativePrime(x[0], x[2]) and isRelativePrime(x[1], x[2]),\n               res))\n\n    if len(ans) == 0:\n        print(\"NA\")\n    else:\n        for g in ans:\n            print(\" \".join(map(str, g)))\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

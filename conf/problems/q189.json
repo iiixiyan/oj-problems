@@ -1,0 +1,56 @@
+{
+  "id": "q189",
+  "title": "敏感字段加密",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个由多个命令字组成的命令字符串：\n1、字符串长度小于等于127字节，只包含大小写字母，数字，下划线和偶数个双引号；\n2、命令字之间以一个或多个下划线_进行分割；\n3、可以通过两个双引号””来标识包含下划线_的命令字或空命令字（仅包含两个双引号的命令字），双引号不会在命令字内部出现；\n请对指定索引的敏感字段进行加密，替换为******（6个*），并删除命令字前后多余的下划线_。\n如果无法找到指定索引的命令字，输出字符串ERROR。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为两行，第一行为命令字索引K（从0开始），第二行为命令字符串S。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出处理后的命令字符串，如果无法找到指定索引的命令字，输出字符串ERROR"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1\npassword__a12345678_timeout_100\n输出\npassword_******_timeout_100",
+      "cases": [
+        {
+          "input": "1\npassword__a12345678_timeout_100",
+          "output": "password_******_timeout_100",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n2\naaa_password_\"a12_45678\"_timeout__100_\"\"_\n输出\naaa_password_******_timeout_100_\"\"\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "一开始我想构造一个正则只匹配“_”，而不会收到引号的影响，但是发现很难。\n于是，就想到之前有一题报文解压缩也是处理字符串，但是正则不好构造，后面使用栈结构来解决的。\n那么这题是否也可以用栈结构来解题呢？\n答案是可以的。逻辑如下：\n创建一个stack栈，用于接收输入字符串遍历出来的每一个字符\n如果是'_'字符，则看看stack栈底是否为'\n\"\n'，如果是，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "当前‘_’字符是命令字的组成部分，而不是命令字分隔符，因此保留push进栈。如果不是，则\n\n当前'_'字符是分隔符，我们将stack栈中所有元素拼接为字符串保存进result，然后stack.length = 0，将栈清空。\n如果是'\n\"\n'，则看看当前栈是否为空，若为空，则\n\n当前‘\n”\n’是第一个引号，若不为空，则\n\n当前引号是第二个引号，此时我们需要将stack栈中所有元素拼接为字符串保存进result，然后stack.length = 0，将栈清空。\n如果既不是‘_’字符，也不是'\n\"\n'字符，则是普通字符，直接push进stack\n遍历完所有字符后，则判断stack是否为空，若不为空，则还需要将stack栈中所有元素拼接为字符串保存进result。\n当输入字符串,如"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nk = int(input())\ns = input()\n\n\n# 算法入口\ndef getResult(k, s):\n    stack = []\n    res = []\n\n    for c in s:\n        if c == '_' and (len(stack) == 0 or stack[0] != '\"'):\n            res.append(\"\".join(stack))\n            stack = []\n        elif c == '\"' and len(stack) != 0:\n            stack.append(c)\n            res.append(\"\".join(stack))\n            stack = []\n        else:\n            stack.append(c)\n\n    if len(stack) > 0:\n        res.append(\"\".join(stack))\n\n    ans = list(filter(lambda x: x != \"\", res))\n\n    if k > len(ans) - 1:\n        return \"ERROR\"\n\n    ans[k] = \"******\"\n\n    return \"_\".join(ans)\n\n\n# 算法调用\nprint(getResult(k, s))"
+  },
+  "verified": false
+}

@@ -1,0 +1,39 @@
+{
+  "id": "q274",
+  "title": "服务失效判断",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "某系统中有众多服务，每个服务用字符串（只包含字母和数字，长度<=10）唯一标识，服务间可能有依赖关系，如A依赖B，则当B故障时导致A也故障。\n依赖具有传递性，如A依赖B，B依赖C，当C故障时导致B故障，也导致A故障。\n给出所有依赖关系，以及当前已知故障服务，要求输出所有正常服务。\n依赖关系：服务1-服务2 表示“服务1”依赖“服务2”\n不必考虑输入异常，"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证：依赖关系列表、故障列表非空，且依赖关系数，故障服务数都不会超过3000，服务标识格式正常。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "半角逗号分隔的依赖关系列表\n（换行）\n半角逗号分隔的故障服务列表"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "依赖关系列表中提及的所有服务中可以正常工作的服务列表，用半角逗号分隔，按依赖关系列表中出现的次序排序。\n特别的，没有正常节点输出单独一个\n半角逗号\n。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nrelations = [s.split(\"-\") for s in input().split(\",\")]\nbreakdowns = input().split(\",\")\n\n\ndef remove(next, s):\n    if next.get(s) is not None:\n        need_remove = next[s]\n        del next[s]\n\n        for ss in need_remove:\n            remove(next, ss)\n\n\n# 算法入口\ndef getResult():\n    next = {}\n    first = {}\n\n    i = 0\n    for c, f in relations:\n        if next.get(c) is None:\n            next[c] = set()\n\n        if next.get(f) is None:\n            next[f] = set()\n\n        next[f].add(c)\n\n        if first.get(c) is None:\n            first[c] = i\n            i += 1\n\n        if first.get(f) is None:\n            first[f] = i\n            i += 1\n\n    for s in breakdowns:\n        remove(next, s)\n\n    ans = list(next.keys())\n    if len(ans) == 0:\n        return \",\"\n\n    ans.sort(key=lambda x: first[x])\n\n    return \",\".join(ans)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

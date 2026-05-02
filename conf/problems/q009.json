@@ -47,6 +47,8 @@
       "content": "（分治递归+双指针）\n本题其实就是要求K数之和。\n本题的要求的K元组是从整数数组中选取的，这里的整数数组，既可能包含正数，也可能包含负数，也可能包含0，另外最终求得的符合要求的K元组，还要进行去重。\n本题其实需要参考：\n这两题。如果你对这两题不熟悉，请做本题前，先做完前面这两题，这两题是基础。否则下面代码会看不懂。\n其中三数之和，是需要固定三元组中的最小的一个值，然后通过双指针找到剩余两个数。\n其中四数之和，是需要固定四元组中的最小的两个值，然后通过双指针找到剩余两个数。\n而K数之和，其实需要固定K元组中最小的K-2个值，然后通过双指针找到剩余两个数。\n因此，下面代码实现中分为了两部分：\nK-2重for循环完成 K元组中最小的K-2个值的确定\n通过双指针完成剩余两个值的确定\n而实际上K的值是不确定的，因此第1部分的K-2重for循环需要通过递归完成。\n具体请看下面代码实现。\nJS算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nnums = list(map(int, input().split()))\nk = int(input())\ntarget = int(input())\n\n\n# 两数之和\ndef twoSum(nums, target, start, count, preTotal):\n    l = start\n    r = len(nums) - 1\n\n    while l < r:\n        total = preTotal + nums[l] + nums[r]\n\n        if target < total:\n            r -= 1\n        elif target > total:\n            l += 1\n        else:\n            count += 1\n            # 去重\n            while l + 1 < r and nums[l] == nums[l + 1]:\n                l += 1\n            # 去重\n            while r - 1 > l and nums[r] == nums[r - 1]:\n                r -= 1\n            l += 1\n            r -= 1\n\n    return count\n\n\n# k数之和\ndef kSum(nums, k, target, start, count, total):\n    if k < 2:\n        return count\n\n    if k == 2:\n        return twoSum(nums, target, start, count, total)\n\n    for i in range(start, len(nums) - k + 1):\n        # 剪枝\n        if nums[i] > 0 and total + nums[i] > target:\n            break\n\n        # 去重\n        if i > start and nums[i] == nums[i - 1]:\n            continue\n        count = kSum(nums, k - 1, target, i + 1, count, total + nums[i])\n\n    return count\n\n\n# 算法入口\ndef getResult():\n    if k > len(nums):\n        return 0\n\n    nums.sort()\n    return kSum(nums, k, target, 0, 0, 0)\n\n\n# 算法调用\nprint(getResult())"
+  },
   "verified": false
 }

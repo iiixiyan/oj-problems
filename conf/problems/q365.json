@@ -1,0 +1,59 @@
+{
+  "id": "q365",
+  "title": "结队编程",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "某部门计划通过结队编程来进行项目开发，\n已知该部门有 N 名员工，每个员工有独一无二的职级，每三个员工形成一个小组进行结队编程，结队分组规则如下：\n从部门中选出序号分别为 i、j、k 的3名员工，他们的职级分贝为 level[i]，level[j]，level[k]，\n结队小组满足 level[i] < level[j] < level[k] 或者 level[i] > level[j] > level[k]，\n其中 0 ≤ i < j < k < n。\n请你按上述条件计算可能组合的小组数量。同一员工可以参加多个小组。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入：员工总数 n\n第二行输入：按序号依次排列的员工的职级 level，中间用空格隔开\n限制：\n1 ≤ n ≤ 6000\n1 ≤ level[i] ≤ 10^5"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "可能结队的小组数量"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\n1 2 3 4\n输出\n4",
+      "cases": [
+        {
+          "input": "4\n1 2 3 4",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "可能结队成的组合(1,2,3)、(1,2,4)、(1,3,4)、(2,3,4)\n输入\n3\n5 4 7\n输出\n0\n\n根据结队条件，我们无法为该部门组建小组"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题的意思其实就是让我们求解给定输入数组中，比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1中 [1,2,3,4] ，每个数组元素：\n左边比自己大的元素的个数，设为：leftBiggerCount\n左边比自己小的元素的个数，设为：leftSmallerCount\n右边比自己大的元素的个数，设为：rightBiggerCount\n右边比自己小的元素是的个数，设为：rightSmallerCount\n当我们求解出每个数组元素的上述信息后，累加每个数组元素的如下计算结果：\nleftBiggerCount * rightSmallerCount + leftSmallerCount * rightBiggerCount\n比如题目"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1中，数组 [1,2,3,4]，索引为 idx\nidx=0元素，leftBiggerCount = 0，leftSmallerCount = 0，rightBiggerCount = 3，rightSmallerCount = 0\nleftBiggerCount * rightSmallerCount + leftSmallerCount * rightBiggerCount = 0\nidx=1元素，leftBiggerCount = 0，leftSmallerCount = 1，rightBiggerCount = 2，rightSmallerCount = 0\nleftBiggerCount * rightSmallerCount + leftSmallerCount * rightBiggerCount = 2\nidx=2元素，leftBiggerCount = 0，leftSmallerCount = 2，rightBiggerCount = 1，rightSmallerCount = 0\nleftBiggerCount * rightSmallerCount + leftSmallerCount * rightBiggerCount = 2\nidx=3元素，leftBiggerCount = 0，leftSmallerCount = 3，rightBiggerCount = 0，rightSmallerCount = 0\nleftBiggerCount * rightSmallerCount + leftSmallerCount * rightBiggerCount = 0\n因此数组[1,2,3,4]的结队编程数量为4。\n暴力解法\n那么如何求解每个元素左右两边大于自己，小于自己的元素数量呢？\n最简单的思路是暴力求解。定义两层循环，外层确定结队中间值，内层两个平级循环，分别扫描中间值左边，和中间值右边。\n整体时间复杂度O(n^2)，本题1 ≤ n ≤ 6000，有超时的可能。\n具体实现请看代码。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nlevels = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    ans = 0\n\n    for i in range(1, n - 1):\n        mid = levels[i]\n\n        leftSmallerCount = 0\n        leftBiggerCount = 0\n\n        for j in range(i):\n            if levels[j] > mid:\n                leftBiggerCount += 1\n            else:\n                leftSmallerCount += 1\n\n        rightSmallerCount = 0\n        rightBiggerCount = 0\n\n        for k in range(i + 1, n):\n            if levels[k] > mid:\n                rightBiggerCount += 1\n            else:\n                rightSmallerCount += 1\n\n        ans += leftSmallerCount * rightBiggerCount + leftBiggerCount * rightSmallerCount\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

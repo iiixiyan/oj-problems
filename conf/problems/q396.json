@@ -1,0 +1,51 @@
+{
+  "id": "q396",
+  "title": "单词加密",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "1、输入一个英文句子，句子中包含若干个单词，每个单词间有一个空格；\n2、需要将句子中的每个单词按照要求加密输出。\n要求：\n1）单词中包括元音字符（‘aeuio’、‘AEUIO’，大小写都算），则将元音字符替换成‘*’\n2）单词中不包括元音字符，将单词首尾字符进行对换"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入只有一行，包含一个长度都不超过100的字符串，表示英文句子。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出只有一行，即按要求输出加密处理后的英文句子"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nHello world\n输出\nH*ll* w*rld",
+      "cases": [
+        {
+          "input": "Hello world",
+          "output": "H*ll* w*rld",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "简单的正则应用。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import re\n\n# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult():\n    words = s.split()\n\n    letter = \"[aeiouAEIOU]\"\n\n    for i in range(len(words)):\n        if re.search(letter, words[i]):\n            words[i] = re.sub(letter, \"*\", words[i])\n        else:\n            lst = list(words[i])\n            lst[0], lst[-1] = lst[-1], lst[0]\n            words[i] = \"\".join(lst)\n\n    return \" \".join(words)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

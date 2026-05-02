@@ -1,0 +1,52 @@
+{
+  "id": "q279",
+  "title": "矩阵扩散",
+  "score": 200,
+  "tags": [
+    "B卷",
+    "矩阵"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "存在一个m×n的二维数组，其成员取值范围为0或1。\n其中值为1的成员具备扩散性，每经过1S，将上下左右值为0的成员同化为1。\n二维数组的成员初始值都为0，将第[i,j]和[k,l]两个个位置上元素修改成1后，求矩阵的所有元素变为1需要多长时间。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入数据中的前2个数字表示这是一个m×n的矩阵，m和n不会超过1024大小；\n中间两个数字表示一个初始扩散点位置为i,j；\n最后2个数字表示另一个扩散点位置为k,l。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出矩阵的所有元素变为1所需要秒数。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4,4,0,0,3,3\n输出\n3",
+      "cases": [
+        {
+          "input": "4,4,0,0,3,3",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "输入数据中的前2个数字表示这是一个4*4的矩阵；\n中间两个数字表示一个初始扩散点位置为0,0；\n最后2个数字表示另一个扩散点位置为3,3。\n给出的样例是一个简单模型，初始点在对角线上，达到中间的位置分别为3次迭代，即3秒。所以输出为3。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "图示如下：\n一共需要4-1=3秒。\n本题可以使用图的多源BFS来解题。\n关于图的多源BFS得解析，请看：\n华为OD机试 - 计算疫情扩散时间_伏城之外的博客-CSDN博客\n更多相关题目请看：\n华为OD机试 - 污染水域_伏城之外的博客-CSDN博客\n华为OD机试 - 计算网络信号、输出给定位置的信号强弱_伏城之外的博客-CSDN博客\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, n, i, j, k, l = map(int, input().split(\",\"))\n\n\n# 算法入口\ndef getResult(m, n, i, j, k, l):\n    \"\"\"\n    :param m: 矩阵行数\n    :param n: 矩阵列数\n    :param i: 扩散点1行号\n    :param j: 扩散点1列好\n    :param k: 扩散点2行号\n    :param l: 扩散点2列号\n    :return: 矩阵的所有元素变为1所需要秒数\n    \"\"\"\n    matrix = [[0 for _ in range(n)] for _ in range(m)]\n    matrix[i][j] = 1\n    matrix[k][l] = 1\n\n    # count记录未被扩散的点的数量\n    count = m * n - 2\n\n    # 多源BFS实现队列\n    queue = [[i, j], [k, l]]\n\n    # 上下左右偏移量\n    offsets = ((1, 0), (-1, 0), (0, 1), (0, -1))\n\n    day = 0\n\n    # 如果扩散点没有了,或者所有点已被扩散,则停止循环\n    while len(queue) > 0 and count > 0:\n        newQueue = []\n\n        for x, y in queue:\n            for offsetX, offsetY in offsets:\n                newX = x + offsetX\n                newY = y + offsetY\n\n                if 0 <= newX < m and 0 <= newY < n and matrix[newX][newY] == 0:\n                    # 将点被扩散的时间记录为该点的值\n                    matrix[newX][newY] = 1\n                    # 被扩散到的点将变为新的扩散源\n                    newQueue.append([newX, newY])\n                    # 未被扩散点的数量--\n                    count -= 1\n\n        queue = newQueue\n        day += 1\n\n    return day\n\n\n# 算法调用\nprint(getResult(m, n, i, j, k, l))"
+  },
+  "verified": false
+}

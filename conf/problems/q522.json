@@ -1,0 +1,34 @@
+{
+  "id": "q522",
+  "title": "找终点",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n给定一个正整数数组，设为nums，最大为100个成员，求从第一个成员开始，正好走到数组最后一个成员，所使用的最少步骤数。\n要求：\n第一步必须从第一元素开始，且1<=第一步的步长<len/2;（len为数组的长度，需要自行解析）。\n从第二步开始，只能以所在成员的数字走相应的步数，不能多也不能少, 如果目标不可达返回**-1**，只输出最少的步骤数量。\n只能向数组的尾部走，不能往回走。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "由正整数组成的数组，以空格分隔，数组长度小于100，\n请自行解析数据数量\n。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "正整数，表示最少的步数，如果不存在输出**-1**"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = list(map(int, input().split()))\n\n\ndef loop(arr, i, count):\n    j = i + arr[i]\n\n    if j == len(arr) - 1:\n        return count\n    elif j < len(arr) - 1:\n        count += 1\n        return loop(arr, j, count)\n    else:\n        return -1\n\n\n# 算法入口\ndef getResult():\n    res = []\n    for i in range(1, len(arr)//2):\n        res.append(loop(arr, i, 2))\n\n    tmp = list(filter(lambda x: x>0, res))\n\n    tmp.sort()\n\n    if len(tmp) > 0:\n        return tmp[0]\n    else:\n        return -1\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

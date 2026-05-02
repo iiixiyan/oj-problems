@@ -1,0 +1,61 @@
+{
+  "id": "q179",
+  "title": "座位调整",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "疫情期间课堂的座位进行了特殊的调整，不能出现两个同学紧挨着，必须隔至少一个空位。\n给你一个整数数组 desk 表示当前座位的占座情况，由若干 0 和 1 组成，其中 0 表示没有占位，1 表示占位。\n在不改变原有座位秩序情况下，还能安排坐几个人？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行是个子数组表示作为占座情况，由若干 0 和 1 组成，其中 0 表示没有占位，1 表示占位"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出数值表示还能坐几个人"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1 ≤ desk.length ≤ 2 * 10^4"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1,0,0,0,1\n输出\n1",
+      "cases": [
+        {
+          "input": "1,0,0,0,1",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "只有desk[2]的位置可以坐一个人"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "我的\n\n如下：\n将输入解析为一个整型数组desk，然后遍历每一个元素desk[i]：\n如果 desk[i] == 0，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "desk[i]是一个空位，此时只需要检查desk[i]的左右两边也是空位，则\n\ndesk[i]可以坐人，此时将desk[i]更新为1，表示坐人了，而判断左右是否为空位的逻辑如下：\n如果 i == 0 || desk[i-1] == 0，则\n\ndesk[i]左边是空位，i == 0\n\n其左边没有其他座位了，也相当于空位。\n如果 i == desk.length - 1 || desk[i+1] == 0，则\n\ndesk[i]右边也是空位，i == desk.length - 1\n\n其右边没有其他座位了，也就相当于空位\n如果 desk[i] != 0，则\n\ndesk[i]不是一个空位，坐不了人，且\n\n了下一个i+1座位也不能坐人\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ndesk = list(map(int, input().split(\",\")))\n\n\n# 算法入口\ndef getResult():\n    ans = 0\n\n    i = 0\n    while i < len(desk):\n        if desk[i] == 0:\n            isLeftEmpty = i == 0 or desk[i - 1] == 0\n            isRightEmpty = i == len(desk) - 1 or desk[i + 1] == 0\n\n            if isLeftEmpty and isRightEmpty:\n                ans += 1\n                desk[i] = 1\n                i += 1\n        i += 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

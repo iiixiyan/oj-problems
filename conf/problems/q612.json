@@ -1,0 +1,34 @@
+{
+  "id": "q612",
+  "title": "项目排期",
+  "score": 200,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n项目组共有N个开发人员，项目经理接到了M个独立的需求，每个需求的工作量不同，且每个需求只能由一个开发人员独立完成，不能多人合作。假定各个需求直接无任何先后\n依赖关系\n，请设计算法帮助项目经理进行工作安排，使整个项目能用最少的时间交付。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为M个需求的工作量，单位为天，用逗号隔开。\n例如：X1 X2 X3 … Xm 。表示共有M个需求，每个需求的工作量分别为X1天，X2天…Xm天。\n其中0<M<30；0<Xm<200\n第二行输入为项目组人员数量N"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最快完成所有工作的天数"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入："
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nballs = list(map(int, input().split()))\nn = int(input())\n\n\ndef check(index, buckets, limit):\n    \"\"\"\n    :param index: 要被装入球的&#xff08;balls&#xff09;索引\n    :param buckets: 桶数组,buckets[i]记录第i个桶的已经使用的容量\n    :param limit: 每个桶的最大容量,即限制\n    :return: k个桶&#xff08;每个桶容量limit&#xff09;是否可以装下所有balls\n    \"\"\"\n    if index == len(balls):\n        # 如果balls已经取完,则说明k个limit容量的桶,可以装完所有balls\n        return True\n\n    # select是当前要装的球\n    selected = balls[index]\n\n    # 遍历桶\n    for i in range(len(buckets)):\n        # 剪枝优化\n        if i > 0 and buckets[i] == buckets[i - 1]:\n            continue\n\n        # 如果当前桶装了当前选择的球后不超过容量限制,则可以装入\n        if selected + buckets[i] <= limit:\n            buckets[i] += selected\n            # 递归装下一个球\n            if check(index + 1, buckets, limit):\n                return True\n            # 如果这种策略无法装完所有球,则回溯\n            buckets[i] -= selected\n\n    return False\n\n\n# 算法入口\ndef getResult():\n    # 这里对balls降序,有利于降低后面回溯操作的复杂度\n    balls.sort(reverse=True)\n\n    # 分范围&#xff1a;即每个桶的容量最小,最大值\n    low = balls[0]  # 桶至少要有max(balls)的容量\n    high = sum(balls)  # 当只有一个桶时,此时该桶容量要装下所有balls\n\n    # 记录题解\n    ans = high\n\n    # 二分找中间值作为桶容量\n    while low <= high:\n        mid = (low + high) >> 1\n\n        if check(0, [0] * n, mid):\n            # 如果k个mid容量的桶,可以装完所有balls,那么mid容量就是一个可能解,但不一定是最优解,我们应该尝试更小的桶容量\n            ans = mid\n            high = mid - 1\n        else:\n            # 如果k个mid容量的桶,无法装完所有balls,那么说明桶容量取小了,我们应该尝试更大的桶容量\n            low = mid + 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

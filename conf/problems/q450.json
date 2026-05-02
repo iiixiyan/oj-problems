@@ -1,0 +1,56 @@
+{
+  "id": "q450",
+  "title": "求符合要求的结对方式",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "用一个数组A代表程序员的工作能力，公司想通过结对编程的方式提高员工的能力，假设结对后的能力为两个员工的能力之和，求一共有多少种结对方式使结对后能力为N。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "5\n1 2 2 2 3\n4\n第一行为员工的总人数，取值范围[1,1000]\n第二行为数组A的元素，每个元素的取值范围[1,1000]\n第三行为N的值，取值范围[1,1000]"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "4\n满足结对后能力为N的结对方式总数。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n1 2 2 2 3\n4\n输出\n4",
+      "cases": [
+        {
+          "input": "5\n1 2 2 2 3\n4",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "满足要求的结对方式为：A[0]和A[4]，A[1]和A[2]，A[1]和A[3]，A[2]和A[3]。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题应该只能用暴力方法求解所有两两组队。\n但是员工的总人数，取值范围[1,1000]，这意味着O(n^2)时间复杂度可能会超时，因此我们需要做一些优化。\n我们可以先将数组A升序，然后外层循环 i 范围0 ~ A.len-1，内层循环 j 范围 A.len-1 ~ i+1，如果遇到A[i]+A[j] === N，则计数++，如果遇到A[i]+A[j] < N，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "内层后续遍历出来的元素都无法满足要求，则内层循环终止，继续下一次外层。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ntotal = int(input())\narr = list(map(int, input().split()))\nn = int(input())\n\n\n# 算法入口\ndef getResult():\n    arr.sort()\n\n    ans = 0\n    for i in range(total):\n        for j in range(total - 1, i, -1):\n            sumV = arr[i] + arr[j]\n\n            if sumV == n:\n                ans += 1\n            elif sumV < n:\n                break\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

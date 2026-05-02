@@ -1,0 +1,61 @@
+{
+  "id": "q088",
+  "title": "简单的自动曝光、平均像素值",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一个图像有n个像素点，存储在一个长度为n的数组img里，每个像素点的取值范围[0,255]的正整数。\n请你给图像每个像素点值加上一个整数k（可以是负数），得到新图newImg，使得新图newImg的所有像素平均值最接近中位值128。\n请输出这个整数k。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "n个整数，中间用空格分开"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "一个整数k"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "• 1 <= n <= 100\n• 如有多个整数k都满足，输出小的那个k；\n• 新图的像素值会自动截取到[0,255]范围。当新像素值<0，其值会更改为0；当新像素值>255，其值会更改为255；\n例如newImg=”-1 -2 256″,会自动更改为”0 0 255″"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n0 0 0 0\n输出\n128",
+      "cases": [
+        {
+          "input": "0 0 0 0",
+          "output": "128",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "四个像素值都为0\n输入\n129 130 129 130\n输出\n-2\n\n-1的均值128.5，-2的均值为127.5，输出较小的数-2"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题如果用暴力法求解的话思路如下：\n首先输入的老图片的像素值，应该是符合要求的，即像素点应都在[0,255]范围内，因此像素点最小值为0，最大值为255。\n那么如果我们想让0接近中位值128，则需要加上128。\n如果我们想让255接近中位值128，则需要减去127。\n因此，k的取值范围应该在-127到128之间，这样的话，就可以保证每一个点都能接近到中位值。\n那么我们就从-127遍历到128，然后将遍历值加到老图片的每一个像素值上，然后求平均值。\n需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是，如果新图片的像素点值低于0，则取0，高于255，则取255"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(arr):\n    minDiff = sys.maxsize\n    ans = None\n\n    for k in range(-127, 129):\n        sum = 0\n        for j in range(len(arr)):\n            # 新图的像素值会自动截取到[0,255]范围。当新像素值<0,其值会更改为0&#xff1b;当新像素值>255,其值会更改为255&#xff1b;\n            newVal = min(max(0, arr[j] + k), 255)\n            sum += newVal\n\n        diff = abs(sum / len(arr) - 128)\n\n        if diff < minDiff:\n            minDiff = diff\n            ans = k\n        elif diff == minDiff and ans is not None:\n            # 如有多个整数k都满足,输出小的那个k\n            ans = min(ans, k)\n\n    return ans\n\n\n# 算法调用\nprint(getResult(arr))"
+  },
+  "verified": false
+}

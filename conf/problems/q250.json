@@ -1,0 +1,57 @@
+{
+  "id": "q250",
+  "title": "单词搜索",
+  "score": 200,
+  "tags": [
+    "B卷",
+    "搜索"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "找到它是一个小游戏，你需要在一个矩阵中找到给定的单词。\n假设给定单词 HELLOWORD，在矩阵中只要能找到 H->E->L->L->O->W->O->R->L->D连成的单词，就算通过。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "区分英文字母大小写，并且您只能上下左右行走，不能走回头路。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入第 1 行包含两个整数 n、m (0 < n,m < 21) 分别表示 n 行 m 列的矩阵，\n第 2 行是长度不超过100的单词 W (在整个矩阵中给定单词 W 只会出现一次)，\n从第 3 行到第 n+2 行是指包含大小写英文字母的长度为 m 的字符串矩阵。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "如果能在矩阵中连成给定的单词，则输出给定单词首字母在矩阵中的位置(第几行 第几列)，\n否则输出“NO”。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5 5\nHELLOWORLD\nCPUCY\nEKLQH\nCHELL\nLROWO\nDGRBC\n输出\n3 2",
+      "cases": [
+        {
+          "input": "5 5\nHELLOWORLD\nCPUCY\nEKLQH\nCHELL\nLROWO\nDGRBC",
+          "output": "3 2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n5 5\nHELLOWORLD\nCPUCY\nEKLQH\nCHELL\nLROWO\nAGRBC\n输出\nNO\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题就是\nLeetCode - 79 单词搜索_伏城之外的博客-CSDN博客\n的变种题，具体解析请看上面的博客。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn, m = map(int, input().split())\nword = input()\nmatrix = [input() for _ in range(n)]\nvisited = [[False for _ in range(m)] for _ in range(n)]\n\n\ndef backTracking(i, j, k):\n    if k == len(word):\n        return True\n\n    if i < 0 or i >= n or j < 0 or j >= m or visited[i][j] or matrix[i][j] != word[k]:\n        return False\n\n    visited[i][j] = True\n\n    newK = k + 1\n    res = backTracking(i - 1, j, newK) or backTracking(i + 1, j, newK) or backTracking(i, j - 1, newK) or backTracking(\n        i, j + 1, newK)\n    visited[i][j] = False\n    return res\n\n\n# 算法入口\ndef getResult():\n    for i in range(n):\n        for j in range(m):\n            if backTracking(i, j, 0):\n                return f\"{i + 1} {j + 1}\"\n\n    return \"NO\"\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

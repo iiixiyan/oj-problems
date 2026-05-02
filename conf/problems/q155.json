@@ -1,0 +1,61 @@
+{
+  "id": "q155",
+  "title": "IPv4地址转换成整数",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "存在一种虚拟IPv4地址，由4小节组成，每节的范围为0~255，以#号间隔，虚拟IPv4地址可以转换为一个32位的整数，例如：\n128#0#255#255，转换为32位整数的结果为2147549183（0x8000FFFF）\n1#0#0#0，转换为32位整数的结果为16777216（0x01000000）\n现以字符串形式给出一个虚拟IPv4地址，限制第1小节的范围为1~128，即每一节范围分别为(1~128)#(0~255)#(0~255)#(0~255)，要求每个IPv4地址只能对应到唯一的整数上。\n如果是非法IPv4，返回invalid IP"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一行，虚拟IPv4地址格式字符串"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一行，按照要求输出整型或者特定字符"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "输入不能确保是合法的IPv4地址，需要对非法IPv4（空串，含有IP地址中不存在的字符，非合法的#分十进制，十进制整数不在合法区间内）进行识别，返回特定错误"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n100#101#1#5\n输出\n1684340997",
+      "cases": [
+        {
+          "input": "100#101#1#5",
+          "output": "1684340997",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n1#2#3\n输出\ninvalid IP\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题主要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "异常情况的处理，有如下几种异常情况：\nIPv4存在空串，比如1##3#4\nIPv4存在非法字符，比如a#b#c#d\nIPv4组成部分不足，比如1#2#3\nIPv4组成部分的十进制整数，不再合法区间内，比如255#255#255#255\n其中，对于存在非法字符的情况，可以转整型时抛出异常的捕获流程中处理。\n2023.05.24\n本题的Java语言需要\n\n，最后输出的数可能会超出int类型，因此需要使用Long.parseLong\n2023.06.06\n如果ip地址如下：\n01#01#01#01\n应该也要算作非法\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 获取十进制数字符串对应的十六进制数字符串\ndef getHexString(num):\n    tmp = hex(int(num))[2:]\n    # 补足前导0\n    if len(tmp) == 1:\n        tmp = \"0\" + tmp\n    return tmp\n\n\n# ip组成是否合法\ndef isValid(ipSub, start, end):\n    # 如果包含非数字字符,则不合法\n    if not ipSub.isdigit():\n        return False\n\n    # 如果包含前导0,则不和法,如012\n    num = int(ipSub)\n    if str(num) != ipSub:\n        return False\n\n    # 如果不是规定范围,则不合法\n    return start <= num <= end\n\n\n# 算法入口\ndef getResult():\n    ip = s.split(\"#\")\n\n    # ip地址由四部分组成,少于或多于四部分都不合法\n    if len(ip) != 4:\n        return \"invalid IP\"\n\n    # 如果ip地址四部分某部分不合法,则ip不合法\n    if not isValid(ip[0], 1, 128) or not isValid(ip[1], 0, 255) or not isValid(ip[2], 0, 255) or not isValid(ip[3], 0, 255):\n        return \"invalid IP\"\n\n    # python支持大数,不需要担心整型溢出\n    return str(int(getHexString(ip[0]) + getHexString(ip[1]) + getHexString(ip[2]) + getHexString(ip[3]), 16))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

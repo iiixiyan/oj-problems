@@ -1,0 +1,64 @@
+{
+  "id": "q364",
+  "title": "篮球游戏",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "幼儿园里有一个放倒的圆桶，它是一个线性结构，允许在桶的右边将篮球放入，可以在桶的左边和右边将篮球取出。\n每个篮球有单独的编号，老师可以连续放入一个或多个篮球，小朋友可以在桶左边或右边将篮球取出，当桶只有一个篮球的情况下，必须从左边取出。\n如老师按顺序放入1、2、3、4、5 共有 5 个编号的篮球，那么小朋友可以依次取出编号为1、2、3、4、5 或者 3、1、2、4、5 编号的篮球，无法取出 5、1、3、2、4 编号的篮球。\n其中 3、1、2、4、5 的取出场景为：\n连续放入1、2、3号\n从右边取出3号\n从左边取出1号\n从左边取出2号\n放入4号\n从左边取出4号\n放入5号\n从左边取出5号\n简答起见，我们以 L 表示左，R表示右，此时取出篮球的依次取出序列为“RLLLL”。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "每次输入包含一个测试"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "：\n第一行的数字作为老师依次放入的篮球编号\n第二行的数字作为要检查是否能够按照放入的顺序取出给定的篮球的编号，其中篮球的编号用逗号进行分隔。\n其中篮球编号用逗号进行分隔。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "对于每个篮球的取出序列，如果确实可以获取，请打印出其按照左右方向的操作取出顺序，如果无法获取则打印“NO”。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1 ≤ 篮球编号，篮球个数 ≤ 200\n篮球上的数字不重复\n输出的结果中 LR 必须为大写"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4,5,6,7,0,1,2\n6,4,0,1,2,5,7\n输出\nRLRRRLL",
+      "cases": [
+        {
+          "input": "4,5,6,7,0,1,2\n6,4,0,1,2,5,7",
+          "output": "RLRRRLL",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "篮球的取出顺序依次为“右、左、右、右、右、左、左”\n输入\n4,5,6,7,0,1,2\n6,0,5,1,2,4,7\n输出\nNO\n\n无法取出对应序列的篮球\n输入\n1,2,3,4\n1,2,3,5\n输出\nNO\n\n不存在编号为5的篮球，所以无法取出对应编号的数据"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用双端队列dque来模拟圆桶。\n假设\n第一行给定放入顺序是inputs\n第二行给定取出顺序是outputs\n由于需要按照outputs顺序取出，因此我们定义一个index指向当前outputs要被取出的元素，\n初始时index = 0\n按照inputs顺序依次放入（篮球编号）到dque（圆桶）右边（addLast操作），每当放入一个后，则需要进行多次取出检查，即一次放入后，可以进行多次取出行为：\n假设\n圆桶左边篮球编号是left，则 left = dque.getFirst\n圆桶右边篮球编号是right，则 right = dque.getLast\n当前要取出的篮球编号是outputs[index]\n优先检查 outputs[index] 编号的篮球是不是left，若是，则取出左边，然后index++，继续循环判断下一个要取出的篮球\n否则继续检查 outputs[index] 编号的篮球是不是right，若是则取出右边，然后index++，继续循环判断下一个要取出的篮球\n否则，本轮无法取出篮球，结束本轮取出操作\n优先检查 outputs[index] 编号的篮球是不是left 的原因是：题目说当桶只有一个篮球的情况下，必须从左边取出\n最后，完成上面逻辑，检查圆桶中是否有剩余篮球\n若有，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无法按照当前放入顺序和取出顺序，取完所有篮球，打印“NO”，\n若没有，则打印前面的取出顺序\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nipts = list(map(int, input().split(\",\")))\nopts = list(map(int, input().split(\",\")))\n\n\n# 算法入口\ndef getResult():\n    # 利用队列结构模拟圆桶\n    queue = []\n    # outputs[index]是要被取出的篮球的编号\n    index = 0\n\n    # 记录题解\n    res = []\n\n    for ipt in ipts:\n        # 按照放入顺序,从圆桶右边放入\n        queue.append(ipt)\n\n        # 然后开始尝试取出\n        while len(queue) > 0:\n            # 圆桶左边的篮球的编号\n            left = queue[0]\n            # 圆桶右边的篮球的编号\n            right = queue[-1]\n\n            if left == opts[index]:\n                # 优先比较圆桶左边的篮球是不是当前要取出的篮球,优先左边的原因是&#xff1a;当桶只有一个篮球的情况下,必须从左边取出\n                res.append(\"L\")\n                queue.pop(0)\n                index += 1\n            elif right == opts[index]:\n                # 比较圆桶右边的篮球是不是当前要取出的篮球\n                res.append(\"R\")\n                queue.pop()\n                index += 1\n            else:\n                # 如果圆桶左右两边都不是要取出的球,则本轮取出流程结束\n                break\n\n    # 最终如果圆桶空了,则说明所有球都取出了,否则按照给定要求无法取出所有球\n    if len(queue) != 0:\n        return \"NO\"\n    else:\n        return \"\".join(map(str, res))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

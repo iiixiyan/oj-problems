@@ -1,0 +1,66 @@
+{
+  "id": "q124",
+  "title": "快递投放问题",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有N个快递站点用字符串标识，某些站点之间有道路连接。\n每个站点有一些包裹要运输，每个站点间的包裹不重复，路上有检查站会导致部分货物无法通行，计算哪些货物无法正常投递？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入M N，M个包裹N个道路信息.\n0<=M,N<=100，\n检查站禁止通行的包裹如果有多个以空格分开"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出不能送达的包裹，如：package2 package4，\n如果所有包裹都可以送达则输出：none，\n输出结果按照升序排列。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4 2\npackage1 A C\npackage2 A C\npackage3 B C\npackage4 A C\nA B package1\nA C package2\n输出\npackage2",
+      "cases": [
+        {
+          "input": "4 2\npackage1 A C\npackage2 A C\npackage3 B C\npackage4 A C\nA B package1\nA C package2",
+          "output": "package2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "这题。。。。我能说我读都费劲嘛。。。\n这题意思我只能猜一猜，因为我无法肯定自己的理解是对的。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "第一行\n输入的4代表有4个包裹，分别是package1、package2、package3、package4\n输入的2代表：有2个：两站点之间无法通行的包裹，比如A B package1 代表A、B站点之间无法通行包裹package1。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "第2~5行（对应第一行输入的4），对应4个包裹，以及它们要从哪个站点发往哪个站点。比如package1 A C，表示package1要从A发往C站点。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "第6~7行（对应第二行输入的2），表示两站点之间无法通行的包裹。\n因此，按照上面理解：\nA-B无法通行package1，但是package1要从A发往C，因此不受影响。\nA-C无法通行package2，而package2刚好要从A发往C，因此受到影响，无法发送。\n因此最后，只有package2无法发送。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, n = map(int, input().split())\n\nwant = []\nfor i in range(m):\n    want.append(input().split())\n\ncant = []\nfor i in range(n):\n    cant.append(input().split())\n\n\n# 算法入口\ndef getResult(want, cant):\n    \"\"\"\n    :param want: 二维数组,元素是 [包裹, 起始站点, 目的站点]\n    :param cant: 二维数组,元素是 [起始站点, 目的站点,...无法通行的货物列表]\n    :return: 不能送达的包裹\n    \"\"\"\n    wantDict = {}\n    cantDict = {}\n\n    for arr in want:\n        package, src, dst = arr\n        path = f\"{src}-{dst}\"\n        if wantDict.get(path) is None:\n            wantDict[path] = [package]\n        else:\n            wantDict[path].append(package)\n\n    for arr in cant:\n        src = arr[0]\n        dst = arr[1]\n        path = f\"{src}-{dst}\"\n        packages = arr[2:]\n        if cantDict.get(path) is None:\n            cantDict[path] = packages[::]\n        else:\n            cantDict[path].extend(packages)\n\n    ans = []\n    for path in wantDict.keys():\n        if cantDict.get(path) is None:\n            continue\n\n        wantPKG = set(wantDict[path])\n        cantPKG = set(cantDict[path])\n\n        for pkg in wantPKG:\n            if pkg in cantPKG:\n                ans.append(pkg)\n\n    if len(ans) > 0:\n        ans.sort(key=lambda x: int(x[7:]))\n        return \" \".join(ans)\n    else:\n        return \"none\"\n\n\nprint(getResult(want, cant))"
+  },
+  "verified": false
+}

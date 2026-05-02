@@ -1,0 +1,67 @@
+{
+  "id": "q391",
+  "title": "分割均衡字符串",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "均衡串定义：字符串中只包含两种字符，且这两种字符的个数相同。\n给定一个均衡字符串，请给出可分割成新的均衡子串的最大个数。\n约定：字符串中只包含大写的 X 和 Y 两种字符。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一个均衡串。\n字符串的长度：[2， 10000]。\n给定的字符串均为均衡字符串"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出可分割成新的均衡子串的最大个数。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "分割后的子串，是原字符串的连续子串"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nXXYYXY\n输出\n2",
+      "cases": [
+        {
+          "input": "XXYYXY",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "XXYYXY可分割为2个均衡子串，分别为：XXYY、XY"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题要求分割出最多的均衡子串，含义其实是分割出来的均衡子串无法再分解。\n比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "\"XXYYXY\" 分解出来的两个子串 \"XXYY\" 和 \"XY\" 都是无法再次分解出均衡子串的。\n如果我们从一个均衡串中取走一个的均衡子串，则均衡串剩余部分依旧是一个均衡串，因为取走的均衡子串中X和Y的数量是相等，因此均衡串剩余部分的X和Y数量也一定是相等的，满足均衡串要求。\n因此，本题我们只需要从左往右扫描输入的均衡串每个字符即可，统计扫描过程中，X字符和Y字符的数量，每当两种字符数量相等时，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "遇到了一个不可分解的均衡子串。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult():\n    countX = 0\n    countY = 0\n\n    ans = 0\n\n    for c in s:\n        if c == 'X':\n            countX += 1\n        else:\n            countY += 1\n\n        if countX == countY:\n            ans += 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

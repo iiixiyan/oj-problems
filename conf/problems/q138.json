@@ -1,0 +1,51 @@
+{
+  "id": "q138",
+  "title": "最差产品奖",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "A公司准备对他下面的N个产品评选最差奖，\n评选的方式是首先对每个产品进行评分，然后根据评分区间计算相邻几个产品中最差的产品。\n评选的标准是依次找到从当前产品开始前M个产品中最差的产品，请给出最差产品的评分序列。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行，数字M，表示评分区间的长度，取值范围是0<M<10000\n第二行，产品的评分序列，比如[12,3,8,6,5]，产品数量N范围是-10000 < N <10000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "评分区间内最差产品的评分序列"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n12,3,8,6,5\n输出\n3,3,5",
+      "cases": [
+        {
+          "input": "3\n12,3,8,6,5",
+          "output": "3,3,5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "12,3,8 最差的是3\n3,8,6 最差的是3\n8,6,5 最差的是5\n暴力解法（可100%通过）"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "计算出每一个滑窗的范围，然后每个滑窗都花费O(m)时间去遍历，收集每一个滑窗的最小值。\n该暴力解法的时间复杂度是O((n-m+1) * m)\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm = int(input())\narr = list(map(int, input().split(\",\")))\n\n\n# 算法入口\ndef getResult(arr, m):\n    ans = []\n    for i in range(0, len(arr) - m + 1):\n        ans.append(min(arr[i:i+m]))\n    return \",\".join(map(str, ans))\n\n\n# 算法调用\nprint(getResult(arr, m))"
+  },
+  "verified": false
+}

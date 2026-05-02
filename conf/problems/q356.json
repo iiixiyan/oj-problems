@@ -1,0 +1,44 @@
+{
+  "id": "q356",
+  "title": "污染水域",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "输入一行字符串，字符串可转换为N*N的数组，数组可认为是一个水域，判断多少天后，水域被全部污染。\n数组中只有0和1，0表示纯净，1表示污染，每天只可污染上下左右的水域，如果开始全部被污染，或永远无法污染，则返回-1。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "无"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1,0,1,0,0,0,1,0,1\n输出\n2",
+      "cases": [
+        {
+          "input": "1,0,1,0,0,0,1,0,1",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "输入转化为数组为：\n1 0 1\n0 0 0\n1 0 1\n第一天后水域变为"
+    }
+  ],
+  "solutions": {
+    "Python": "import math\n\n# 输入获取\nnums = list(map(int, input().split(\",\")))\n\n\n# 算法入口\ndef getResult():\n    # 矩阵 n x n\n    n = int(math.sqrt(len(nums)))\n\n    # 未污染区域数量\n    total = len(nums)\n\n    # 矩阵\n    matrix = [[0 for _ in range(n)] for _ in range(n)]\n\n    # BFS队列\n    queue = []\n\n    for i in range(n):\n        for j in range(n):\n            matrix[i][j] = nums[i * n + j]\n            if matrix[i][j] == 1:\n                queue.append([i, j])\n                total -= 1\n\n    if len(queue) == 0 or len(queue) == len(nums):\n        return -1\n\n    # 上下左右偏移量\n    offsets = ((-1, 0), (1, 0), (0, -1), (0, 1))\n\n    # 扩散天数\n    day = 0\n\n    while len(queue) > 0 and total > 0:\n        newQueue = []\n\n        for i, j in queue:\n            for offsetX, offsetY in offsets:\n                newI = i + offsetX\n                newJ = j + offsetY\n\n                if 0 <= newI < n and 0 <= newJ < n and matrix[newI][newJ] == 0:\n                    matrix[newI][newJ] = 1\n                    newQueue.append([newI, newJ])\n                    total -= 1\n\n        queue = newQueue\n        day += 1\n\n    return day\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

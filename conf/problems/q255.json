@@ -1,0 +1,46 @@
+{
+  "id": "q255",
+  "title": "学生方阵",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "学校组织活动，将学生排成一个矩形方阵。\n请在矩形方阵中找到最大的位置相连的男生数量。\n这个相连位置在一个直线上，方向可以是水平的，垂直的，成对角线的或者呈反对角线的。\n注：学生个数不会超过10000"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的第一行为矩阵的行数和列数，接下来的n行为矩阵元素，元素间用”,”分隔。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个整数，表示矩阵中最长的位置相连的男生个数。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3,4\nF,M,M,F\nF,M,M,F\nF,F,F,M\n输出\n3",
+      "cases": [
+        {
+          "input": "3,4\nF,M,M,F\nF,M,M,F\nF,F,F,M",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题的\n\n其实不难，遍历查找矩阵中每一个M点，然后求该M点的水平、垂直、正对角线、反对角线，四个方向的M点个数，然后保留最大的个数，就是\n\n。\n但是这种方法会存在很多重复的查找，比如\n红色M是当前遍历到的M，绿色M是以红色M为原点查找到的M，如上图两个红色M点会重复查找同一条M链。\n为了避免这种重复查找，我们可以增加判断：\n如果当前M点的\n左上角点是M，则反对角线不用查找了\n右上角点是M，则正对角线不用查找了\n上边点是M，则垂直线不用查找了\n左边点是M，最水平线不用查找了\n如上图红色M的左上、上、左点都是M，因此红色M的\n反对角线已经被其左上点M查找过了，因此不用找了，\n垂直线已经被其上边点M查找过了，因此不用找了\n水平线已经被其左边点M查找过了，因此不用找了\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn, m = map(int, input().split(\",\"))\nmatrix = [input().split(\",\") for _ in range(n)]\n\n\n# 算法入口\ndef getResult():\n    ans = 0\n\n    offsets = ((0, 1), (1, 0), (1, 1), (1, -1))\n\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] == \"M\":\n                for offset in offsets:\n                    oldI = i - offset[0]\n                    oldJ = j - offset[1]\n\n                    if n > oldI >= 0 and m > oldJ >= 0 and matrix[oldI][oldJ] == \"M\":\n                        continue\n\n                    length = 1\n                    newI = i + offset[0]\n                    newJ = j + offset[1]\n\n                    while n > newI >= 0 and m > newJ >= 0 and matrix[newI][newJ] == \"M\":\n                        length += 1\n                        newI += offset[0]\n                        newJ += offset[1]\n\n                    ans = max(ans, length)\n\n    return ans\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

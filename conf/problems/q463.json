@@ -1,0 +1,56 @@
+{
+  "id": "q463",
+  "title": "用连续自然数之和来表达整数",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一个整数可以由连续的自然数之和来表示。\n给定一个整数，计算该整数有几种连续自然数之和的表达式，且打印出每种表达式"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一个目标整数T (1 <=T<= 1000)"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "该整数的所有表达式和表达式的个数。\n如果有多种表达式，输出要求为：自然数个数最少的表达式优先输出，每个表达式中按自然数递增的顺序输出，具体的格式参见样例。\n在每个测试数据结束时，输出一行”Result:X”，其中X是最终的表达式个数。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n9\n输出\n9=9\n9=4+5\n9=2+3+4\nResult:3",
+      "cases": [
+        {
+          "input": "9",
+          "output": "9=9\n9=4+5\n9=2+3+4\nResult:3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "整数 9 有三种表示方法，第1个表达式只有1个自然数，最先输出，\n第2个表达式有2个自然数，第2次序输出，\n第3个表达式有3个自然数，最后输出。\n每个表达式中的自然数都是按递增次序输出的。\n数字与符号之间无空格\n输入\n10\n输出\n10=10\n10=1+2+3+4\nResult:2\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以考虑使用滑动窗口。\n比如输入9，则生成一个数组arr = [1,2,3,4,5,6,7,8,9]。\n然后用left、right指针同时指向arr的索引0，并取arr[0]为初始sum值\nleft指针和right指针的移动逻辑如下：\nright指针从左向右开始移动，每移动一次就计算left~right之间的子数组和赋值给sum，并且判断：\nsum > target 若true，则left++，sum -= arr[left]\nsum === target，若true，则保存此时的子数组到res中，然后left++且right++，计算sum += arr[right] - arr[left]，此步有可能right指针会处于越界位置，因此"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "越界检查。\nsum < target，若true，则right++，计算sum+=arr[right]\n当left都移动到数组尾部时，结束。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nt = int(input())\n\n\n# 算法入口\ndef getResult():\n    arr = [i + 1 for i in range(t)]\n\n    ans = []\n\n    l = 0\n    r = 1\n    total = arr[l]\n\n    while l < t:\n        if total > t:\n            total -= arr[l]\n            l += 1\n        elif total == t:\n            ans.append(arr[l:r])\n            total -= arr[l]\n            l += 1\n            if r >= t:\n                break\n            else:\n                total += arr[r]\n                r += 1\n        else:\n            total += arr[r]\n            r += 1\n\n    ans.sort(key=lambda x: len(x))\n\n    for an in ans:\n        print(f\"{t}={'+'.join(map(str, an))}\")\n\n    print(f\"Result:{len(ans)}\")\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

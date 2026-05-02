@@ -49,6 +49,8 @@
       "content": "1的滑窗（黄色部分）运动过程\n第二个滑窗相较于第一个滑窗而言，失去了0，新增了1，因此我们不需要重新统计第二个滑窗内部各种颜色的数量，只需要在第一个滑窗的统计结果基础上，减少0颜色数量1个，增加1颜色数量1个即可。\n2023.03.31 根据考友反馈，本题会出现不止3种颜色，可能出现多种颜色，因此代码需要解除颜色限制。\n下面代码已更新。\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\narr = input().split()\nn = int(input())\n\n\n# 算法入口\ndef getResult(arr, n):\n    count = {}\n\n    l = 0\n    r = l + n\n\n    for c in arr[l:r]:\n        if count.get(c) is None:\n            count[c] = 0\n        count[c] += 1\n\n    maxV = max(count.values())\n\n    while r < len(arr):\n        add = arr[r]\n        remove = arr[l]\n\n        r += 1\n        l += 1\n\n        if count.get(add) is None:\n            count[add] = 0\n        count[add] += 1\n\n        if count.get(remove) is None:\n            count[remove] = 0\n        count[remove] -= 1\n\n        maxV = max(maxV, count[add])\n\n    return maxV\n\n\n# 算法调用\nprint(getResult(arr, n))"
+  },
   "verified": false
 }

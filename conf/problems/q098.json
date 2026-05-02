@@ -1,0 +1,51 @@
+{
+  "id": "q098",
+  "title": "预订酒店",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "放暑假了，小明决定到某旅游景点游玩，他在网上搜索到了各种价位的酒店（长度为n的数组A），他的心理价位是x元，请帮他筛选出k个最接近x元的酒店（n>=k>0）,并\n由低到高\n打印酒店的价格。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行：n, k, x\n第二行：A[0] A[1] A[2]…A[n-1]"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "从低到高打印筛选出的酒店价格"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "酒店价格数组A和小明的心理价位x均为整型数据\n优先选择价格最接近心理价位的酒店，若两家酒店距离心理价位差价相同，则选择价格较低的酒店。（比如100元和300元距离心理价位200元同样接近，此时选择100元）\n酒店价格可能相同重复"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n10 5 6\n1 2 3 4 5 6 7 8 9 10\n输出\n4 5 6 7 8",
+      "cases": [
+        {
+          "input": "10 5 6\n1 2 3 4 5 6 7 8 9 10",
+          "output": "4 5 6 7 8",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n10 4 6\n10 9 8 7 6 5 4 3 2 1\n输出\n4 5 6 7\n\n无\n输入\n6 3 1000\n30 30 200 500 70 300\n输出\n200 300 500\n\n无\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn, k, x = map(int, input().split())\nprices = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(n, k, x, prices):\n    tmp = []\n\n    for p in prices:\n        tmp.append((p, abs(p - x)))\n\n    tmp.sort(key=lambda x: (x[1], x[0]))\n\n    ans = list(map(lambda x: x[0], tmp[:k]))\n\n    ans.sort()\n\n    return \" \".join(map(str, ans))\n\n\n# 调用算法\nprint(getResult(n, k, x, prices))"
+  },
+  "verified": false
+}

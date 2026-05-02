@@ -1,0 +1,56 @@
+{
+  "id": "q425",
+  "title": "报数问题",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有n个人围成一圈，顺序排号为1-n。\n从第一个人开始报数(从1到3报数)，凡报到3的人退出圈子，问最后留下的是原来第几号的那位。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入人数n（n < 1000）"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出最后留下的是原来第几号"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2\n输出\n2",
+      "cases": [
+        {
+          "input": "2",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "报数序号为1的人最终报3，因此序号1的人退出圈子，最后剩下序号为2的那位"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是经典的约瑟夫环问题，最佳解题策略是利用循环链表。\n因此，本题的关键是实现循环链表。\n简易的循环链表实现：\n循环链表节点定义\n节点双向性prev、next（方便节点删除）\n节点值val\n循环链表的属性：\n链表长度size\n链表头节点head\n链表尾节点tail\n循环链表的操作\n尾增节点（append操作）\n删除任意节点（remove操作）\n循环链表尾增节点，需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：\n如果size>0，则相当于只需要更新循环链表的尾节点tail\n如果size == 0，则相当于更新循环链表的head和tail\n循环链表删除任意节点，需要\n\n：\n如果删除的不是head，tail节点，则只需要将被删除节点的prev和next节点关联\n如果删除的是head或tail，则还需要更新head、tail指向\n具体实现请对照下面CycleLinkedList代码来看。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "class Node:\n    def __init__(self, val):\n        self.val = val\n        self.prev = None\n        self.next = None\n\n\nclass CycleLinkedList:\n    def __init__(self):\n        self.size = 0\n        self.head = None\n        self.tail = None\n\n    def append(self, val):\n        node = Node(val)\n\n        if self.size > 0:\n            self.tail.next = node\n            node.prev = self.tail\n            self.tail = node\n        else:\n            self.head = node\n            self.tail = node\n\n        self.head.prev = self.tail\n        self.tail.next = self.head\n        self.size += 1\n\n    def remove(self, cur):\n        pre = cur.prev\n        nxt = cur.next\n\n        pre.next = nxt\n        nxt.prev = pre\n\n        cur.next = cur.prev = None\n\n        if self.head == cur:\n            self.head = nxt\n\n        if self.tail == cur:\n            self.tail = pre\n\n        self.size -= 1\n\n        return nxt\n\n\n# 输入获取\nn = int(input())\n\n\n# 算法入口\ndef getResult():\n    link = CycleLinkedList()\n\n    for i in range(1, n + 1):\n        link.append(i)\n\n    num = 1\n    cur = link.head\n\n    while link.size > 1:\n        if num == 3:\n            num = 1\n            cur = link.remove(cur)\n        else:\n            num += 1\n            cur = cur.next\n\n    return cur.val\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

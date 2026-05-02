@@ -70,6 +70,8 @@
       "content": "，时间复杂度O（n）\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\na = input()\nb = input()\n\n\n# 算法入口\ndef getResult(a, b):\n    # idxs对象记录字符串b中每个字符的索引\n    idxs = {}\n    for i in range(len(b)):\n        idxs[b[i]] = i\n\n    # count对象用于记录遍历字符串a每个字符串过程中,统计到的符合顺序要求的字符串b中字符出现次数\n    count = [0] * len(b)\n    for c in a:\n        idx = idxs.get(c)\n\n        # 下面判断逻辑请看图解\n        if idx is not None and (idx == 0 or count[idx] < count[idx - 1]):\n            count[idx] += 1\n\n    return count[-1]\n\n\n# 算法调用\nprint(getResult(a, b))"
+  },
   "verified": false
 }

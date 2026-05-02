@@ -1,0 +1,51 @@
+{
+  "id": "q313",
+  "title": "最长的指定瑕疵度的元音子串",
+  "score": 100,
+  "tags": [
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "开头和结尾都是元音字母（aeiouAEIOU）的字符串为元音字符串，其中混杂的非元音字母数量为其瑕疵度。比如:\n“a” 、 “aa”是元音字符串，其瑕疵度都为0\n“aiur”不是元音字符串（结尾不是元音字符）\n“abira”是元音字符串，其瑕疵度为2\n给定一个字符串，请找出指定瑕疵度的最长元音字符子串，并输出其长度，如果找不到满足条件的元音字符子串，输出0。\n子串：字符串中任意个连续的字符组成的子序列称为该字符串的子串。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "首行输入是一个整数，表示预期的瑕疵度flaw，取值范围[0, 65535]。\n接下来一行是一个仅由字符a-z和A-Z组成的字符串，字符串长度(0, 65535]。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出为一个整数，代表满足条件的元音字符子串的长度。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n0\nasdbuiodevauufgh\n输出\n3",
+      "cases": [
+        {
+          "input": "0\nasdbuiodevauufgh",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n2\naeueo\n输出\n0\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "瑕疵度计算规则如上图注解所示。\n当两指针之间划定的子串的瑕疵度diff  大于  指定的瑕疵度flaw时，则左指针 l++\n当两指针之间划定的子串的瑕疵度diff  小于  指定的瑕疵度flaw时，则右指针 r++\n当两指针之间划定的子串的瑕疵度diff  等于  指定的瑕疵度flaw时，则记录当前子串长度，并r++\n按以上逻辑，直到r指针移动到idxs数组的尾部。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nflaw = int(input())\ns = input()\n\n\n# 算法入口\ndef getResult():\n    yuanSet = set(list(\"aeiouAEIOU\"))\n\n    idxs = []\n    for i in range(len(s)):\n        if s[i] in yuanSet:\n            idxs.append(i)\n\n    ans = 0\n\n    l = 0\n    r = 0\n\n    while r < len(idxs):\n        # 瑕疵度计算\n        diff = idxs[r] - idxs[l] - (r - l)\n\n        if diff > flaw:\n            l += 1\n        elif diff < flaw:\n            r += 1\n        else:\n            ans = max(ans, idxs[r] - idxs[l] + 1)\n            r += 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

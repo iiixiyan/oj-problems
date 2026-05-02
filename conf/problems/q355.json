@@ -1,0 +1,54 @@
+{
+  "id": "q355",
+  "title": "比较两个版本号的大小",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "输入两个版本号 version1 和 version2，每个版本号由多个子版本号组成。\n子版本号之间由 “.” 隔开，由大小写字母、数字组成，并且至少有一个字符。\n按从左到右的顺序比较子版本号，比较规则如下：\n子版本号前面的0不参与比较，比如 001 和 1 是相等的。\n小写字母 > 大写字母 > 数字\n空字符和0相等，比如 1 和 1.0 相等\n比较结果\n如果 version1 > version2 ，返回 1\n如果 version1 < version2 ，返回-1\n其他情况返回0"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入version1\n第二行输入version2"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出version1和version2的比较结果"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5.2\n5.1a\n输出\n1",
+      "cases": [
+        {
+          "input": "5.2\n5.1a",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n5.6.1\n5.6.2a\n输出\n-1\n\n无\n输入\n5.6.8.a\n5.6.8.0a\n输出\n0\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "我的\n\n如下：\n首先把版本号的每个子版本的前导0去掉，这里我用的是正则表达式 /^0+/ 去匹配前导0，并替换为''。\n需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是，如果子版本就是0或者由多个0组成，则按上面替换逻辑，会得到一个空串子版本，为了避免这种情况，在替换后，我们需要判断子版本是否为空串，如果为空串，则给一个'0'。\n去掉每个子版本的前导0后，我们需要求出两个版本号的子版本个数，将最多的个数赋值给len。\n然后for循环遍历两个版本号0~len-1序号的子版本，\n\n，如果某个版本号不存在对应序号子版本，则默认取0作为子版本。\n然后比较两个版本号的同序号子版本，比较规则是：小写字母 > 大写字母 > 数字\n由于这里的数字就是数字字符串，因此该比较规则就是字典序。\n我们直接用比较运算符比较两个子版本字符串即可。\n2023.04.29 根据网友指正，本题输入的两个版本，如果对应序号的子版本，都是纯数字的话，此时不应该按照字典序来比较，比如下面例子：\n10\n6\n很明显的，10版本要比6版本大，但是由于采用字典序比较，因此10会比6小。\n因此，当对应序号子版本都是纯数字字符串时，我们应该进行数值比较。而只要对应序号的子版本有一个是非纯数字，则按照字典序比较。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nv1 = input()\nv2 = input()\n\n\n# 去除前导0\ndef rmLeadZero(x):\n    tmp = x.lstrip(\"0\")\n    return \"0\" if tmp == \"\" else tmp\n\n\n# 将大版本按\".\"切割为子版本列表\ndef convert(version):\n    return list(map(rmLeadZero, version.split(\".\")))\n\n\n# 算法入口\ndef getResult():\n    arr1 = convert(v1)\n    arr2 = convert(v2)\n\n    n = max(len(arr1), len(arr2))\n\n    for i in range(n):\n        # 空字符和0相等,比如 1 和 1.0 相等\n        tmp1 = arr1[i] if len(arr1) > i else \"0\"\n        tmp2 = arr2[i] if len(arr2) > i else \"0\"\n\n        if tmp1.isdigit() and tmp2.isdigit():\n            tmp1 = int(tmp1)\n            tmp2 = int(tmp2)\n\n        if tmp1 > tmp2:\n            return 1\n        elif tmp1 < tmp2:\n            return -1\n\n    return 0\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

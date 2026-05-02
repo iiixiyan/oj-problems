@@ -1,0 +1,56 @@
+{
+  "id": "q427",
+  "title": "拼接URL",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个url前缀和url后缀,通过,分割 需要将其连接为一个完整的url\n如果前缀结尾和后缀开头都没有/，需要自动补上/连接符\n如果前缀结尾和后缀开头都为/，需要自动去重\n约束：不用考虑前后缀URL不合法情况"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "url前缀(一个长度小于100的字符串)，url后缀(一个长度小于100的字符串)"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "拼接后的url"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n/acm,/bb\n输出\n/acm/bb",
+      "cases": [
+        {
+          "input": "/acm,/bb",
+          "output": "/acm/bb",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n/abc/,/bcd\n输出\n/abc/bcd\n\n无\n输入\n/acd,bef\n输出\n/acd/bef\n\n无\n输入\n,\n输出\n/\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "逻辑题，可以直接看代码实现了解逻辑。\n20230813 本题Java解法中split函数比较难搞，对于下面情况按照\",\"分割出来的字符串数组分别是：\n\",\"     =>   []\n\"1,\"   =>   [\"1\"]\n\",1\"   =>   [\"\", \"1\"]\n我们需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "处理下。\nJS和Python的split函数就要规矩的多，上面三种输入情况，都会返回一个长度为2的字符串数组。\n更新解法使用了正则表达式，其中\nprefix前缀，需要将其结尾的多个/去除，使用正则 /+$ 来匹配结尾的多个/\nsuffix后缀，需要将其开头的多个/去除，使用正则 ^/+ 来匹配开头的多个/\n最后拼接 prefix + \"/\" + suffix 即可\n对于python而言，有更简单的lstrip和rstrip方法，实现同样效果。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nprefix, suffix = input().split(\",\")\n\nprefix = prefix.rstrip(\"/\")\nsuffix = suffix.lstrip(\"/\")\n\nprint(prefix + \"/\" + suffix)"
+  },
+  "verified": false
+}

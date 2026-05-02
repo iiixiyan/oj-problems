@@ -1,0 +1,64 @@
+{
+  "id": "q297",
+  "title": "堆内存申请",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在线OJ刷题\n题目详情 - 堆内存申请 - Hydro\n\n有一个总空间为100字节的堆，现要从中新申请一块内存，内存分配原则为：优先紧接着前一块已使用内存，分配空间足够且最接近申请大小的空闲内存。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第1行是1个整数，表示期望申请的内存字节数\n第2到第N行是用空格分割的两个整数，表示当前已分配的内存的情况，每一行表示一块已分配的连续内存空间，每行的第1和第2个整数分别表示偏移地址和内存块大小，如：\n0 1\n3 2\n表示 0 偏移地址开始的 1 个字节和 3 偏移地址开始的 2 个字节已被分配，其余内存空闲。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "若申请成功，输出申请到内存的偏移；\n若申请失败，输出 -1。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "若输入信息不合法或无效，则申请失败\n若没有足够的空间供分配，则申请失败\n堆内存信息有区域重叠或有非法值等都是无效输入"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1\n0 1\n3 2\n输出\n1",
+      "cases": [
+        {
+          "input": "1\n0 1\n3 2",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "堆中已使用的两块内存是偏移从0开始的1字节和偏移从3开始的2字节，空闲的两块内存是偏移从1开始2个字节和偏移从5开始95字节，根据分配原则，新申请的内存应从1开始分配1个字节，所以输出偏移为1。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "图示如下：\n黄色表示从第2行开始输入的内存占用情况\n绿色表示对应第1行的申请到的内存\n本题我的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "如下：\n首先收集所有的已分配的内存（第2行~最后一行），然后将这些已分配内存按照起始位置升序排序。我们假设升序后的已分配内存为 used_memory。\n然后，定义一个 free_offset，用于记录当前已分配内存的上一个空闲内存块的起始位置，比如\nfree_offset初始化为0。\n之后，开始遍历 used_memory，每遍历一个已分配内存块，我们会得到如下信息：\nused.offset，当前已分配内存块的起始位置\nused.size，当前已分配内存块的大小\n下面需要对于used.offset和used.size进行判断：\n如果 used.offset < free_offset，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "已分配内存块之间存在区域重叠，此时需要返回-1\n如果 used.offset > 99，则\n\n越界，因为当前堆只有100个字节，即最大偏移（起始位置）为99，此时应该返回-1\n如果 used.size <= 0，则\n\n占用的内存非法，返回-1\n如果 used.size > 100 - used.offset，则\n\n占用的内存无效，即起始位置为used.offset的内存块，最大占用内存大小为 100 - used.offset，如果超过，则返回-1\n如果used.offset和used.size都合法，则我们可以比较used.offset 和 free_offset，如果 used.offset > free_offset，则 [free_offset, used.offset - 1] 这个闭区间范围内是空闲内存块，比如下图所示：\n该空闲内存块的大小为： used.offset - free_offset\n我们判断下该空闲内存块大小是否 ≥ 申请内存，若是，则继续判断该空闲内存块大小是否最接近 申请内存，若是，则记录此时的free_offset为一个可能解\n接下来，更新 free_offset = used.offset + used.size，即如下图所示：\n之后继续遍历下一个used_memory，重复上面逻辑。\n需要\n\n收尾操作，即如下图所示：\n当遍历完used_memory后，free_offset会如上图所示指向最后一块空闲内存起始位置，此时该空闲内存块大小为 100 - free_offset，我们需要判断下这个空闲内存块是不是足够申请内存，且是最接近申请内存大小的。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "class Memory:\n    def __init__(self, offset, size):\n        self.offset = offset  # 内存块起始位置\n        self.size = size  # 内存块大小\n\n\n# 输入获取\nmalloc_size = int(input())  # 要申请的内存大小\n\nused_memory = []  # 已占用的内存\nwhile True:\n    try:\n        offset, size = map(int, input().split())\n        used_memory.append(Memory(offset, size))\n    except:\n        break\n\n\n# 算法入口\ndef getResult():\n    # 申请的内存大小非法,则返回-1\n    if malloc_size <= 0 or malloc_size > 100:\n        return -1\n\n    # 记录最优的申请内存起始位置\n    malloc_offset = -1\n    # 记录最接近申请内存的空闲内存块大小\n    min_malloc_size = 100\n\n    # 对占用的内存按照起始位置升序\n    used_memory.sort(key=lambda x: x.offset)\n\n    # 记录&#xff08;相对于已占用内存的前面一个&#xff09;空闲内存块的起始位置\n    free_offset = 0\n\n    for used in used_memory:\n        # 如果占用的内存起始位置 小于 前面一个空闲内存块起始位置,则存在占用内存区域重叠\n        # 如果占用的内存起始位置 大于 99,则非法\n        if used.offset < free_offset or used.offset > 99:\n            return -1\n\n        # 如果占用的内存的大小少于0,则非法\n        # 如果占用的内存的大小超过该内存起始位置往后所能申请到的最大内存大小,则无效\n        if used.size <= 0 or used.size > 100 - used.offset:\n            return -1\n\n        # 空闲内存块地址范围是&#xff1a;free_offset ~ memory.offset - 1\n        if used.offset > free_offset:\n            # 空闲内存块大小\n            free_memory_size = used.offset - free_offset\n\n            # 如果该空闲内存块大小足够,且最接近申请的内存大小\n            if malloc_size <= free_memory_size < min_malloc_size:\n                malloc_offset = free_offset\n                min_malloc_size = free_memory_size\n\n        # 更新&#xff1a;空闲内存的起始位置 = &#xff08;当前占用内存的结束位置 + 1&#xff09; = &#xff08;当前占用内存的起始位置 + 占用大小&#xff09;\n        free_offset = used.offset + used.size\n\n    # 收尾\n    last_free_memory_size = 100 - free_offset\n    if malloc_size <= last_free_memory_size < min_malloc_size:\n        malloc_offset = free_offset\n\n    return malloc_offset\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

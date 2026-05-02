@@ -1,0 +1,56 @@
+{
+  "id": "q173",
+  "title": "喊7的次数重排",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "喊7是一个传统的聚会游戏，N个人围成一圈，按顺时针从1到N编号。\n编号为1的人从1开始喊数，下一个人喊的数字为上一个人的数字加1，但是当将要喊出来的数字是7的倍数或者数字本身含有7的话，不能把这个数字直接喊出来，而是要喊”过”。\n假定玩这个游戏的N个人都没有失误地在正确的时机喊了”过”，当喊到数字K时，可以统计每个人喊”过”的次数。\n现给定一个长度为N的数组，存储了打乱顺序的每个人喊”过”的次数，请把它还原成正确的顺序，即数组的第i个元素存储编号i的人喊”过”的次数。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为一行，为空格分隔的喊”过”的次数，"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "K并不提供，K不超过200，而数字的个数即为N。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出为一行，为顺序正确的喊”过”的次数，也由空格分隔。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n0 1 0\n输出\n1 0 0",
+      "cases": [
+        {
+          "input": "0 1 0",
+          "output": "1 0 0",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "一共只有一次喊”过”，那只会发生在需要喊7时，按顺序，编号为1的人会遇到7，故输出1 0 0。\n\n结束时的K不一定是7，也可以是8、9等，喊过的次数都是1 0 0。\n输入\n0 0 0 2 1\n输出\n0 2 0 1 0\n\n一共有三次喊”过”，发生在7 14 17，按顺序，编号为2的人会遇到7 17，编号为4的人会遇到14，故输出0 2 0 1 0。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是约瑟夫环问题，有多种解法，可以看下面博客：\n华为OD机试 - 报数游戏（Java & JS & Python）_华为od 机考 csdn 游戏里面_伏城之外的博客-CSDN博客\n本题采用环形数组解法，所谓环形数组，即数组的尾部元素的下一个是数组头部元素\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    # totalGo表示一共喊了多少次过\n    totalGo = sum(arr)\n\n    # n表示一共几个人\n    n = len(arr)\n    # p[i]表示每个人喊了几次过,初始为0\n    p = [0]*n\n\n    i = 1\n    j = 0\n    while totalGo > 0:\n        if i % 7 == 0 or str(i).find(\"7\") != -1:\n            totalGo -= 1\n            p[j] += 1\n        i += 1\n        j += 1\n\n        if j >= n:\n            j = 0\n\n    return \" \".join(map(str, p))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

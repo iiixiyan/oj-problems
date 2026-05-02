@@ -1,0 +1,24 @@
+{
+  "id": "q151",
+  "title": "连接器问题",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有一组区间[a0，b0]，[a1，b1]，…（a，b表示起点，终点），区间有可能重叠、相邻，重叠或相邻则可以合并为更大的区间；\n给定一组连接器[x1，x2，x3，…]（x表示连接器的最大可连接长度，即x>=gap），可用于将分离的区间连接起来，但两个分离区间之间只能使用1个连接器；\n请编程实现使用连接器后，最少的区间数结果。\n区间数量<10000，a,b均 <=10000\n连接器梳理<10000；x <= 10000"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "区间组：[1,10],[15,20],[18,30],[33，40]\n连接器组：[5,4,3,2]"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nrans = eval(\"[\" + input() + \"]\")\nconnects = eval(input())\n\n\n# 算法入口\ndef getResult(rans, connects):\n    rans.sort(key=lambda x: x[0])\n\n    mergeRan = [rans.pop(0)]\n    diffs = []\n\n    for ran in rans:\n        s1, e1 = mergeRan[-1]\n        s2, e2 = ran\n\n        if s2 <= e1:\n            mergeRan.pop()\n            mergeRan.append([s1, max(e1, e2)])\n        else:\n            diffs.append(s2 - e1)\n            mergeRan.append(ran)\n\n    diffs.sort(reverse=True)\n    connects.sort(reverse=True)\n\n    while len(connects) > 0 and len(diffs) > 0:\n        if connects.pop() >= diffs[-1]:\n            diffs.pop()\n\n    return len(diffs) + 1\n\n\n# 算法调用\nprint(getResult(rans, connects))"
+  },
+  "verified": false
+}

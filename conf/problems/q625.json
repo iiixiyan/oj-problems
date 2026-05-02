@@ -1,0 +1,42 @@
+{
+  "id": "q625",
+  "title": "100分-8位LED控制器",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "100\n分\n-\n8\n位\nLED\n控制器\n(C/C++/Py/Java/Js/Go)\n\n有一个\n8\n位\nLED\n控制器，包含\n8\n个\nLED\n灯，编号\n0~7\n，初始状态全灭，对应\n8\n位二进制为\n00000000\n。\n控制器可以接收以下三种指令：\nLx\n：点亮操作，\nx\n表示\nLED\n编号\n0~7\n，执行后将第\nx\n个\nLED\n置为\n1\nDx\n：熄灭操作，\nx\n表示\nLED\n编号\n0~7\n，执行后将第\nx\n个\nLED\n置为\n0\nTx\n：切换操作，\nx\n表示\nLED\n编号\n0~7\n，执行后将第\nx\n个\nLED\n状态取反，\n0\n变\n1\n，\n1\n变\n0\n现在给定一组指令字符串，按顺序解析并执行所有指令，返回最终\n8\n位二进制对应的整数值。\n例如：\nL0L1L2T1\n表示先点亮\nLED0\n、\nLED1\n、\nLED2\n，再切换\nLED1\n，最终二进制为\n00000101\n，对应整数\n5\n。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "给定一组指令字符串，长度满足\n0 <=\n长度\n<= 1000\n。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "返回最终\n8\n位二进制对应的整数值。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入\nL0L1L2T1\n输出\n5",
+      "cases": [
+        {
+          "input": "L0L1L2T1",
+          "output": "5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "思路：模拟\n创建一个长度为\n8\n的状态数组，初始全为\n0\n。\n按顺序每两个字符解析一条指令：\nLx\n：将第\nx\n位设为\n1\nDx\n：将第\nx\n位设为\n0\nTx\n：将第\nx\n位取反\n全部执行完后，将最终\n8\n位二进制转换为十进制整数返回。\nC++\n#include<iostream>\n#include<vector>\n#include<string>\n#include <utility>\n#include <sstream>\n#include<algorithm>\n#include<cmath>\n#include<map>\nusing namespace std;\nint controlInstruct(string& instruct) {\nvector<int>\nbits(8, 0);\nfor (int i = 0; i <\ninstruct.size(); i+=2) {\nchar c = instruct[i];\nint pos = instruct[i+1] - '0';\n//\n点亮变为\n1\nif (c == 'L') {\nbits[pos] = 1;\n//\n熄灭\n} else if (c =='D') {\nbits[pos] = 0;\n//\n切换\n} else if (c == 'T'){\nbits[pos] ^= 1;\n}\n}\nint res = 0;\nfor (int i = 7; i >=\n0; i--) {\nres = res * 2 + bits[i];\n}\nreturn res;\n}\nint main() {\nstring input;\ngetline(cin, input);\nint res =\ncontrolInstruct(input);\ncout << res;\nreturn 0;\n}\nJAVA\nimport java.util.*;\npublic class Main {\npublic static int\ncontrolInstruct(String instruct) {\nint[] bits = new int[8];\nfor (int i = 0; i < instruct.length(); i += 2) {\nchar c = instruct.charAt(i);\nint pos = instruct.charAt(i + 1) - '0';\n//\n点亮变为\n1\nif (c == 'L') {\nbits[pos] = 1;\n//\n熄灭\n} else if (c == 'D') {\nbits[pos] = 0;\n//\n切换\n} else if (c == 'T') {\nbits[pos] ^= 1;\n}\n}\nint res = 0;\nfor (int i = 7; i >= 0; i--) {\nres = res * 2 + bits[i];\n}\nreturn res;\n}\npublic static void\nmain(String[] args) {\nScanner sc = new Scanner(System.in);\nString input = sc.nextLine();\nint res = controlInstruct(input);\nSystem.out.println(res);\n}\n}\nPython\nimport sys\ndef controlInstruct(instruct):\nbits = [0] * 8\ni = 0\nwhile i <\nlen(instruct):\nc = instruct[i]\npos = int(instruct[i + 1])\n#\n点亮变为\n1\nif c == 'L':\nbits[pos] = 1\n#\n熄灭\nelif c == 'D':\nbits[pos] = 0\n#\n切换\nelif c == 'T':\nbits[pos] ^= 1\ni += 2\nres = 0\nfor i in range(7, -1,\n-1):\nres = res * 2 + bits[i]\nreturn res\nif __name__ == \"__main__\":\ninput_str =\nsys.stdin.readline().strip()\nprint(controlInstruct(input_str))\nJS\nconst readline = require('readline');\nfunction controlInstruct(instruct) {\nlet bits = new\nArray(8).fill(0);\nfor (let i = 0; i <\ninstruct.length; i += 2) {\nlet c = instruct[i];\nlet pos = instruct[i + 1].charCodeAt(0) - '0'.charCodeAt(0);\n//\n点亮变为\n1\nif (c === 'L') {\nbits[pos] = 1;\n//\n熄灭\n} else if (c === 'D') {\nbits[pos] = 0;\n//\n切换\n} else if (c === 'T') {\nbits[pos] ^= 1;\n}\n}\nlet res = 0;\nfor (let i = 7; i >=\n0; i--) {\nres = res * 2 + bits[i];\n}\nreturn res;\n}\nconst rl = readline.createInterface({\ninput: process.stdin,\noutput: process.stdout\n});\nrl.on('line', (input) => {\nconsole.log(controlInstruct(input.trim()));\n});\nGO\npackage main\nimport (\n\"bufio\"\n\"fmt\"\n\"os\"\n)\nfunc controlInstruc"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

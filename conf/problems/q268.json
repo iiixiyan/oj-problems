@@ -1,0 +1,51 @@
+{
+  "id": "q268",
+  "title": "最小传输时延",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "某通信网络中有N个网络结点，用1到N进行标识。网络通过一个有向无环图表示，其中图的边的值表示结点之间的消息传递时延。\n现给定相连节点之间的时延列表times[i]={u，v，w}，其中u表示源结点，v表示目的结点，w表示u和v之间的消息传递时延。\n请计算给定源结点到目的结点的最小传输时延，如果目的结点不可达，返回\n-1\n。\n注：\nN的取值范围为[1，100];\n时延列表times的长度不超过6000，且 1 <= u,v <= N，0 <= w <= 100;"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的第一行为两个正整数，分别表示网络结点的个数N，以及时延列表的长度M，用空格分隔；\n接下来的M行为两个结点间的时延列表[u v w];\n输入的最后一行为两个正整数，分别表示源结点和目的结点。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "起点到终点得最小时延，不可达则返回-1"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 3\n1 2 11\n2 3 13\n1 3 50\n1 3\n输出\n24",
+      "cases": [
+        {
+          "input": "3 3\n1 2 11\n2 3 13\n1 3 50\n1 3",
+          "output": "24",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是\nLeetCode - 743 网络延迟时间_伏城之外的博客-CSDN博客\n的变种题，逻辑几乎一致，\n\n请参考链接博客。\n本题采用的是dijkstra算法，即迪杰斯特拉算法求解。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nimport sys\n\nn, m = map(int, input().split())\ntimes = [list(map(int, input().split())) for _ in range(m)]\nsrc, dist = map(int, input().split())\n\n\n# 算法入口\ndef getResult(n, times, src, tar):\n    graph = {}\n\n    for u, v, w in times:\n        if graph.get(u) is None:\n            graph[u] = []\n        graph[u].append([v, w])\n\n    dist = [sys.maxsize for _ in range(n + 1)]\n    dist[src] = 0\n\n    needCheck = []\n    while True:\n        flag = False\n\n        if graph.get(src) is not None:\n            for v, w in graph[src]:\n                newDist = dist[src] + w\n\n                if newDist >= dist[v]:\n                    continue\n\n                dist[v] = newDist\n\n                if v not in needCheck:\n                    needCheck.append(v)\n                    flag = True\n\n        if len(needCheck) == 0:\n            break\n\n        if flag:\n            needCheck.sort(key=lambda x: dist[x])\n\n        src = needCheck.pop(0)\n\n    return -1 if dist[tar] == sys.maxsize else dist[tar]\n\n\n# 算法调用\nprint(getResult(n, times, src, dist))"
+  },
+  "verified": false
+}

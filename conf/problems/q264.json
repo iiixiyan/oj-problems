@@ -1,0 +1,76 @@
+{
+  "id": "q264",
+  "title": "数字游戏",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小明玩一个游戏。\n系统发1+n张牌，每张牌上有一个整数。\n第一张给小明，后n张按照发牌顺序排成连续的一行。\n需要小明判断，后n张牌中，是否存在连续的若干张牌，其和可以整除小明手中牌上的数字。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入数据有多组，每组输入数据有两行，输入到文件结尾结束。\n第一行有两个整数n和m，空格隔开。m代表发给小明牌上的数字。\n第二行有n个数，代表后续发的n张牌上的数字，以空格隔开。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "对每组输入，如果存在满足条件的连续若干张牌，则输出1;否则，输出0"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1 ≤ n ≤ 1000\n1 ≤ 牌上的整数 ≤ 400000\n输入的组数，不多于1000"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "确保输入都正确，不需要考虑非法情况。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n6 7\n2 12 6 3 5 5\n10 11\n1 1 1 1 1 1 1 1 1 1\n输出\n1\n0",
+      "cases": [
+        {
+          "input": "6 7\n2 12 6 3 5 5\n10 11\n1 1 1 1 1 1 1 1 1 1",
+          "output": "1\n0",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "两组输入。第一组小明牌的数字为7，再发了6张牌。第1、2两张牌教字和为14，可以整除7，输出1，第二组小明牌的教字为11，再发了10张牌，这10张牌数字和为10，无法整除11，输出0。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题考察前缀和知识，以及数学问题。\n本题要求连续若干张牌的和，其实就是求区间的元素之和。\n而求解任意区间和的最佳算法就是：前缀和之差，这个知识点可以看下\n算法设计 - 前缀和 & 差分数列_伏城之外的博客-CSDN博客\n利用前缀和，我们可以在O(1)的时间求解出[L,R]区间和 = preSum[R] - preSum[L-1]。\n那么接下来，我们是否需要双重for遍历出所有区间，然后逐一验证对应区间和是否可以整除k呢？\n本题中每组"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "最多n = 1000张牌，因此双重for遍历对应牌的所有连续区间的时间复杂度O(n^2)。\n而本题有最多有1000组"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "，因此相当于O(n^3)的时间复杂度，这是非常容易超时的。\n本题优化是基于一个数学性质：\n如果两个数a,b，他们的差a - b可以被k整除，则必然 a % k == b % k。\n反之，如果a % k == b % k，那么 a - b 必然可以被k整除。\n大家可以自行验证下这个数学性质。\n验证好后，我们只需要将preSum[R]带入a，preSum[L-1]带入b 再来看看：\n如果preSum[R] % k == preSum[L-1] % k，那么必然 preSum[R] - preSum[L-1] 可以被k整除。\n利用这个数学性质，我们就不必双重for遍历所有区间了，只需要检查preSum数组中是否存在两个元素 % k 的结果相同，即可"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "存在区间之和可以整除k。\n2023.08.19 根据考友反馈，本题python代码输入获取逻辑存在问题，\n本题的输入是没有截止条件的，因此我这边默认将输入空行作为截止条件。\n但是考到这题的考友反馈，这题按这种逻辑处理输入是不行的，需要死循环获取输入，每获取到一组输入，就要立即输出对应解。\n核心代码逻辑没问题，可以100%。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "def isExist(nums, m):\n    remain = set()\n    remain.add(0)\n\n    total = 0\n    for num in nums:\n        total += num\n        if total % m in remain:\n            return 1\n        else:\n            remain.add(total % m)\n\n    return 0\n\n\n# 输入获取\nwhile True:\n    try:\n        n, m = map(int, input().split())\n        nums = list(map(int, input().split()))\n        print(isExist(nums, m))\n    except ValueError:\n        break"
+  },
+  "verified": false
+}

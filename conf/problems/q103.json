@@ -1,0 +1,52 @@
+{
+  "id": "q103",
+  "title": "二进制差异数",
+  "score": 200,
+  "tags": [
+    "A卷",
+    "位运算"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "对于任意两个正整数A和B，定义它们之间的\n差异值和相似值\n：\n差异值：\nA、B转换成二进制后，对于二进制的每一位，对应位置的bit值不相同则为1，否则为0；\n相似值：\nA、B转换成二进制后，对于二进制的每一位，对应位置的bit值都为1则为1，否则为0；\n现在有n个正整数A0到A（n-1），问有多少(i, j) (0<=i<j<n），Ai和Aj的差异值大于相似值。\n假设A=5，B=3；则A的二进制表示101；B的二进制表示011；\n则A与B的差异值二进制为110；相似值二进制为001；\nA与B的差异值十进制等于6，相似值十进制等于1，满足条件。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一个n接下来n个正整数\n数据范围\n：1<=n<=10^5，1<=A[i]<2^30"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "满足差异值大于相似值的对数"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\n4 3 5 2\n输出\n4",
+      "cases": [
+        {
+          "input": "4\n4 3 5 2",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "满足条件的分别是(0,1)(0,3)(1,2)(2,3)，共4对。"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "中，\nA，B差异值其实就是A和B二进制的按位异或运算，即A ^ B。\nA，B相似值其实就是A和B二进制的按位与运算，即A & B。\n因此，如果本题使用暴力法求解，则逻辑非常简单，如下"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(arr):\n    # highBit是一个数组,由于题目说给定的A[i]取值小于2^30,因此我们可以定义一个30长度的数组,其元素含义是,比如highBit[i]代表最高位1处于第i位的数的个数\n    # highBit = [0] * 30\n    highBit = [0] * 60  # 经网友反馈这里长度改为60可得100%通过率\n    for a in arr:\n        binStr = format(a, 'b')\n        length = len(binStr)  # 数的二进制形式字符串&#xff08;无前导0&#xff09;的长度,就是该数二进制最高位1所处位数\n\n        # 将一位二进制数“0”和“1”区别开来\n        if binStr == \"0\":\n            highBit[0] += 1\n        else:\n            highBit[length] += 1\n\n    # 排除统计个数为0的情况\n    highBit = list(filter(lambda d: d > 0, highBit))\n\n    ans = 0\n    for i in range(len(highBit)):\n        for j in range(i + 1, len(highBit)):\n            ans += highBit[i] * highBit[j]\n\n    return ans\n\n\n# 算法调用\nprint(getResult(arr))"
+  },
+  "verified": false
+}

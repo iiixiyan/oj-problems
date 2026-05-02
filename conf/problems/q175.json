@@ -1,0 +1,51 @@
+{
+  "id": "q175",
+  "title": "太阳能板最大面积",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给航天器一侧加装长方形或正方形的太阳能板（图中的红色斜线区域），需要先安装两个支柱（\n图中的黑色竖条\n），再在支柱的中间部分固定太阳能板。\n但航天器不同位置的支柱长度不同，太阳能板的安装面积受限于\n最短一侧\n的那根支柱长度。如图：\n现提供一组整形数组的支柱高度数据，假设每根支柱间距离相等为1个单位长度，计算如何选择两根支柱可以使太阳能板的面积最大。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "10,9,8,7,6,5,4,3,2,1\n注：支柱至少有2根，最多10000根，能支持的高度范围1~10^9的整数。柱子的高度是无序的，例子中递减只是巧合。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "可以支持的最大太阳能板面积：（10米高支柱和5米高支柱之间）\n25"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n10,9,8,7,6,5,4,3,2,1\n输出\n25",
+      "cases": [
+        {
+          "input": "10,9,8,7,6,5,4,3,2,1",
+          "output": "25",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "10米高支柱和5米高支柱之间宽度为5，高度取小的支柱高也是5，面积为25。\n任取其他两根支柱所能获得的面积都小于25。\n所以最大的太阳能板面积为25。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "首先想到的依旧是暴力破解"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nheights = list(map(int, input().split(\",\")))\n\n\n# 算法入口\ndef getResult():\n    l = 0\n    r = len(heights) - 1\n    maxArea = 0\n\n    while l < r:\n        x = r - l\n\n        y = 0\n        if heights[l] < heights[r]:\n            y = heights[l]\n            l += 1\n        else:\n            y = heights[r]\n            r -= 1\n\n        maxArea = max(maxArea, x * y)\n\n    return maxArea\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

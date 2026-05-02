@@ -1,0 +1,49 @@
+{
+  "id": "q628",
+  "title": "100分-分辨率排序",
+  "score": 100,
+  "tags": [
+    "排序"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "100\n分\n-\n分辨率排序\n(C/C++/Py/Java/Js/Go)\n\n4K\n、\n2K\n、\n1080P\n、\n720P\n清晰度定义如下（清晰度\n=\n宽\n×\n高）：\n4K\n：\n3840 × 2160\n2K\n：\n2560 × 1440\n1080P\n：\n1920 × 1080\n720P\n：\n1280 × 720\n清晰度大小定义：\n720P < 1080P < 2K < 4K\n分辨率（宽\n×\n高）匹配清晰度的规则：\n给定任意分辨率（宽高），宽和高同时都大于等于某清晰度定义的宽、高时，才认为满足该清晰度定义，并且优先匹配高级别清晰度。\n例如：\n2600 × 1400\n2600 < 3840\n，\n1400\n     < 2160\n，不满足\n4K\n清晰度定义\n2600 > 2560\n，\n1400\n     < 1440\n，不满足\n2K\n清晰度定义\n2600 > 1920\n，\n1400\n     > 1080\n，满足\n1080P\n清晰度定义\n因此\n2600 × 1400\n是\n1080P\n清晰度。\n特别"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：\n所有低于\n720P\n的清晰度，都认为是\n720P\n。\n最大清晰度为\n4K\n，只要满足\n4K\n清晰度标准的宽、高，无论多大，都归为\n4K\n。\n简化逻辑不考虑交换宽高的情况，例如\n2500 × 3200\n，匹配为\n1080P\n，不能匹配为\n2K\n。\n分辨率大小规则：\n优先比较该分辨率对应的清晰度大小。\n如果清晰度一致，则比较面积（宽\n×\n高）。\n如果清晰度和面积一致，则比较\n“\n宽\n”\n。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "n\n组\n“\n宽高\n”\n字符串，空格间隔，\nn < 10\n。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "从大到小排序后的\nn\n组\n“\n宽高\n”\n字符串，空格间隔。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入\n3840x2160\n输出\n3840x2160",
+      "cases": [
+        {
+          "input": "3840x2160",
+          "output": "3840x2160",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "思路：模拟\n+\n自定义排序\n对输入字符串按空格分割，得到每组分辨率规格。\n对每组分辨率计算对应清晰度等级、面积。\n按规则排序：\n先按清晰度降序\n清晰度相同按面积降序\n面积相同按宽降序\n输出排序后的结果。\nC++\n#include<iostream>\n#include<vector>\n#include<string>\n#include <utility>\n#include <sstream>\n#include<algorithm>\n#include<cmath>\n#include<map>\nusing namespace std;\nstruct node{\nint height;\nint width;\nint level;\nint area;\nnode(int width, int\nheight, int level, int\narea):width(width),height(height),level(level),area(area) {}\n};\n//\n通用 切割函数 函数 将字符串\nstr\n根据\ndelimiter\n进行切割\nvector<string> split(const\nstring& str, const string& delimiter) {\nvector<string>\nresult;\nsize_t start = 0;\nsize_t end =\nstr.find(delimiter);\nwhile (end !=\nstring::npos) {\nresult.push_back(str.substr(start, end - start));\nstart = end + delimiter.length();\nend = str.find(delimiter, start);\n}\n//\n添加最后一个部分\nresult.push_back(str.substr(start));\nreturn result;\n}\n//\n获取对应分辨率\nint getLevel(int width, int height) {\nif (width >= 3840\n&& height >= 2160) return 4;\nif (width >= 2560\n&& height >= 1440) return 3;\nif (width >= 1920\n&& height >= 1080) return 2;\nreturn 1;\n}\nstring resolutionSort(string& input) {\nvector<string>\nitems= split(input, \" \");\nint n = items.size();\nvector<node>\nnodes;\nfor (int i = 0; i <\nn; i++) {\nstring item = items[i];\nvector<string> tmp = split(item, \"x\");\nint width = stoi(tmp[0]);\nint height = stoi(tmp[1]);\nint level = getLevel(width, height);\nint area = width * height;\nnodes.push_back({width, height, level, area});\n}\n//\n自定义排序\nsort(nodes.begin(),\nnodes.end(), [](node& a, node& b) {\nif (a.level != b.level) {\nreturn a.level > b.level;\n}\nif (a.area != b.area) {\nreturn a.area > b.area;\n}\nreturn a.width > b.width;\n});\n//\n构建结果字符串\nstring res;\nfor (int i = 0; i <\nnodes.size(); i++) {\nnode a = nodes[i];\nint width = a.width;\nint height = a.height;\nres += (to_string(width) + \"x\" + to_string(height));\nif (i != nodes.size() -1) {\nres += \" \";\n}\n}\nreturn res;\n}\nint main() {\nstring input;\ngetline(cin, input);\nstring res =\nresolutionSort(input);\ncout << res;\nreturn 0;\n}\nJAVA\nimport java.util.*;\nclass Node {\nint width;\nint height;\nint level;\nint area;\nNode(int width, int\nheight, int level, int area) {\nthis.width = width;\nthis.height = height;\nthis.level = level;\nthis.area = area;\n}\n}\npublic class Main {\n//\n获取对应分辨率等级\npublic static int\ngetLevel(int wid"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

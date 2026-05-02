@@ -1,0 +1,81 @@
+{
+  "id": "q132",
+  "title": "最多几个直角三角形",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有N条线段，长度分别为a[1]-a[n]。\n现要求你计算这N条线段最多可以组合成几个直角三角形。\n每条线段只能使用一次，每个三角形包含三条线段。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入一个正整数T（1<＝T<＝100），表示有T组测试数据.\n对于每组测试数据，接下来有T行，\n每行第一个正整数N，表示线段个数（3<＝N<＝20），接着是N个正整数，表示每条线段长度，（0<a[i]<100）。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "对于每组测试数据输出一行，每行包括一个整数，表示最多能组合的直角三角形个数"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1\n7 3 4 5 6 5 12 13\n输出\n2",
+      "cases": [
+        {
+          "input": "1\n7 3 4 5 6 5 12 13",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "可以组成2个直角三角形（3，4，5）、（5，12，13）\n双回溯（通过率80%）"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题并不是简单的全组合求解，比如我们看"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1：\n1\n7\n3 4 5 6 5 12 13\n如果单纯以全组合角度来求解组成直角三角形的线段的话，有如下情况：\n3 4 5\n3 4 5\n5 12 13\n5 12 13\n一共四组，造成重复的原因是，存在两个5。\n现在要求的是，以给的的线段，能组合出来的最多直角三角形数量。这句话的意思是，我们能用\n3 4 5 6 5 12 13\n组合出最多几个直角三角形？\n比如，我们已经用了3 4 5组成一个直角三角形，那么给的线段还剩下6 5 12 13，而剩下的线段中，只能组合出一个直角三角形5 12 13。\n那么该如何实现一种算法找出最多的呢？\n我的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "如下，首先用全组合，求出所有直角三角形的组合可能：\n3 4 5\n3 4 5\n5 12 13\n5 12 13\n然后统计出给的各种长度线段对应的数量，比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1可以统计如下：\n{\n3: 1, // 长度为3的线段有1个\n4: 1,\n5: 2,\n6: 1,\n12: 1,\n13: 1\n}\n然后我们通过回溯算法，比如遍历出（前面全组合求解出来的）第一个可能的直角三角形组合3 4 5，然后上面统计数量变为：\n{\n3: 0,\n4: 0,\n5: 1,\n6: 1,\n12: 1,\n13: 1\n}\n然后，继续遍历下一个可能直角三角形组合3 4 5，发现统计的3的数量已经为0了，因此这个三角形无法组合，继续遍历下一个可能直角三角形组合 5 12 13，然后统计数量变为\n{\n3: 0,\n4: 0,\n5: 0,\n6: 1,\n12: 0,\n13: 0\n}\n然后继续遍历下一个可能组合5 12 13，发现对应长度线段的数量都变为了0，因此无法组合。\n继续遍历，发现没有下一个可能的组合了，因此，计算出该种情况可以得到2个直角三角形组合：3 4 5以及5 12 13\n下面通过回溯算法，开始从第二个可能的组合开始向后遍历。\n最终，最多的组合数就是"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "。\n我们可以尝试下这个自测"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "：\n1\n7 3 4 5 12 13 84 85\n其中有三种可能得直角三角形组合，分别是：\n3 4 5\n5 12 13\n13 84 85\n如果我们选择组合3 4 5，则还可以组合一个13 84 85\n如果我们选择组合5 12 13，则无法组合出其他直角三角形\n因此，最终本"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "返回2，最多可以组合出2个直角三角形，分别是3 4 5和13 84 85\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nt = int(input())\ncases = [list(map(int, input().split()))[1:] for i in range(t)]\n\n\n# 算法入口\ndef getResult(cases):\n    for case in cases:\n        # 对每组测试线段升序排序\n        case.sort()\n\n        res = []\n        dfs(case, 0, [], res)\n\n        count = [0 for i in range(100)]\n        for val in case:\n            count[val] += 1\n\n        ans = []\n        canCombine(res, 0, count, 0, ans)\n        print(max(ans))\n\n\n# 全组合求解,即n个数中选3个\ndef dfs(arr, index, path, res):\n    if len(path) == 3:\n        if isRightTriangle(path):\n            res.append(path[:])\n        return\n\n    for i in range(index, len(arr)):\n        path.append(arr[i])\n        dfs(arr, i + 1, path, res)\n        path.pop()\n\n\n# 判断三条边是否可以组成直角三角形\ndef isRightTriangle(path):\n    # 注意,path中元素是升序的,因为path是取自arr的组合,而arr是升序的\n    x, y, z = path\n    return x ** 2 + y ** 2 == z ** 2\n\n\n# 求解当前直角三角形中不超用线段的最多组合数\ndef canCombine(ts, index, count, num, ans):\n    if index >= len(ts):\n        ans.append(num)\n        return\n\n    for i in range(index, len(ts)):\n        a, b, c = ts[i]\n\n        if count[a] > 0 and count[b] > 0 and count[c] > 0:\n            count[a] -= 1\n            count[b] -= 1\n            count[c] -= 1\n            num += 1\n            canCombine(ts, i + 1, count, num, ans)\n            num -= 1\n            count[a] += 1\n            count[b] += 1\n            count[c] += 1\n\n    ans.append(num)\n\n\n# 算法调用\ngetResult(cases)"
+  },
+  "verified": false
+}

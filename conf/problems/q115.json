@@ -1,0 +1,76 @@
+{
+  "id": "q115",
+  "title": "去除多余空格",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "去除文本多余空格，但不去除配对单引号之间的多余空格。给出关键词的起始和结束下标，去除多余空格后刷新关键词的起始和结束下标。\n条件约束：\n1，不考虑关键词起始和结束位置为空格的场景；\n2，单词的的开始和结束下标保证涵盖一个完整的单词，即一个坐标对开始和结束下标之间不会有多余的空格；\n3，如果有单引号，则"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证单引号成对出现；\n4，关键词可能会重复；\n5，文本字符长度length取值范围：[0, 100000];"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为两行字符串：\n第一行：待去除多余空格的文本，"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证如果有单引号，则单引号成对出现，且单引号可能有多对。\n第二行：关键词的开始和结束坐标，关键词间以逗号区分，关键词内的开始和结束位置以单空格区分。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出为两行字符串：\n第一行：去除多余空格后的文本\n第二行：去除多余空格后的关键词的坐标开始和结束位置，为数组方式输出。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nLife is painting a  picture, not doing 'a  sum'.\n8 15,20 26,43 45\n输出\nLife is painting a picture, not doing 'a  sum'.\n[8, 15][19, 25][42, 44]",
+      "cases": [
+        {
+          "input": "Life is painting a  picture, not doing 'a  sum'.\n8 15,20 26,43 45",
+          "output": "Life is painting a picture, not doing 'a  sum'.\n[8, 15][19, 25][42, 44]",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "a和picture中间多余的空格进行删除\n输入\nLife is painting a picture, not doing 'a  sum'.\n8 15,19 25,42 44\n输出\nLife is painting a picture, not doing 'a  sum'.\n[8, 15][19, 25][42, 44]\n\na和sum之间有多余的空格，但是因为有成对单引号，不去除多余空格"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1图示"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2图示\n我的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "如下：\n定义一个数组needDel，记录需要被删除的空格的位置，定义一个变量quotaStart，记录是否已有未闭合的单引号，默认为false，即没有。\n遍历输入字符串的每一个字符，\n首先看被遍历的字符c是不是\" \"空格\n如果不是，则继续后面逻辑\n如果是，则看当前遍历字符的前一个字符是不是也是“ ”，如果不是则继续后面逻辑，如果是，则看quotaStart是否为false，若不是，则继续后面逻辑，若是，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "空格c就是需要删除的空格，我们将其索引位置记录到needDel中\n然后看遍历的字符c是不是单引号，若是，则将quotaStart取反（表示单引号开闭）\n当扫描完后，我们就可以做两件事：\n1、将输入字符串转为数组，根据needDel中记录的索引，来删除对应空格（即替换对应数组元素为“”空串），然后将数组join后打印\n2、双重for，外层遍历needDel获得每一个要删除的空格的索引，内存遍历题目第一行输入的多组开始、结束位置arr，如果要删除的空格处于开始位置之前，则对应开始，结束位置都要减去1。\n我们需要\n\n的是：我们不能基于原始的arr处理，应该对arr进行深拷贝后，对拷贝数组进行处理，因为如果基于原始arr进行处理，则会造成needDel中要删除的索引，和arr中记录的索引不同步。\n比如 needDel = [18,19]，arr = [ [8,15], [20,26], [43,45] ]\n如果我们直接在arr上进行操作，则\n首先needDel遍历出18，然后对比每一个arr范围的开始位置，发现[20,26], [43,45]在18后面，因此当18位置的空格删除后，这两个范围都要前移，因此arr变为了[[8,15], [19,25], [42,44]]。\n之后needDel遍历出19，然后对比每一个arr范围的开始位置，发现和[19,25]产生了冲突，因为19坐标位置既是要删除的空格，又是一个关键词的起始位置，造成这种冲突的原因是此时needDel 19 和 arr范围[19,25] 已经不同步了。\n因此我们要对，arr进行深拷贝后（数组元素是数组，需要深拷贝，可以使用最简单的JSON方法实现深拷贝），然后needDel和原始arr进行对比操作，具体范围移动操作在arr的拷贝对象上处理。\n但是本题的文本字符长度length取值范围：[0, 100000];\n这个有点大啊，会不会爆内存呢？有点悬。\nJavaScript算法源码\n克隆版（85%通过率）"
+    }
+  ],
+  "solutions": {
+    "Python": "import copy\n\n# 输入获取\ns = input()\narr = list(map(lambda x: list(map(int, x.split())), input().split(\",\")))\n\n\n# 算法入口\ndef getResult(arr, s):\n    quotaStart = False\n    needDel = []\n\n    for i in range(len(s)):\n        if s[i] == \" \" and s[i - 1] == \" \" and i > 0 and not quotaStart:\n            needDel.append(i)\n\n        if s[i] == \"\\'\":\n            quotaStart = not quotaStart\n\n    sArr = list(s)\n    ans = copy.deepcopy(arr)\n\n    for d in needDel:\n        sArr[d] = \"\"\n        for i in range(len(arr)):\n            start = arr[i][0]\n            if d < start:\n                ans[i][0] -= 1\n                ans[i][1] -= 1\n\n    print(\"\".join(sArr))\n    print(\"\".join(list(map(lambda x: str(x), ans))))\n\n\n# 算法调用\ngetResult(arr, s)"
+  },
+  "verified": false
+}

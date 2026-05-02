@@ -1,0 +1,66 @@
+{
+  "id": "q291",
+  "title": "跳格子游戏",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "地上共有N个格子，你需要跳完地上所有的格子，但是格子间是有强依赖关系的，跳完前一个格子后，后续的格子才会被开启，格子间的依赖关系由多组steps数组给出，steps[0]表示前一个格子，steps[1]表示steps[0]可以开启的格子:\n比如[0,1]表示从跳完第0个格子以后第1个格子就开启了，比如[2,1]，[2,3]表示跳完第2个格子后第1个格子和第3个格子就被开启了。\n请你计算是否能由给出的steps数组跳完所有的格子，如果可以输出yes，否则输出no。"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：\n1.你可以从一个格子跳到任意一个开启的格子\n2.没有前置依赖条件的格子默认就是开启的\n3.如果总数是N，则所有的格子编号为[0,1,2,3…N-1]连续的数组"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一个整数N表示总共有多少个格子，接着输入多组二维数组steps表示所有格子之间的依赖关系。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "如果能按照steps给定的依赖顺序跳完所有的格子输出yes，\n否则输出no。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1 ≤ N ＜ 500\nstep[i].length = 2\n0 ≤ step[i][0]，step[i][1] ＜ N"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n0 1\n0 2\n输出\nyes",
+      "cases": [
+        {
+          "input": "3\n0 1\n0 2",
+          "output": "yes",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "总共有三个格子[0,1,2]，跳完0个格子后第1个格子就开启了，跳到第0个格子后第2个格子也被开启了，按照0->1->2或者0->2->1的顺序都可以跳完所有的格子\n输入\n2\n1 0\n0 1\n输出\nno\n\n总共有2个格子，第1个格子可以开启第0格子，但是第1个格子又需要第0个格子才能开启，相互依赖，因此无法完成\n输入\n6\n0 1\n0 2\n0 3\n0 4\n0 5\n输出\nyes\n\n总共有6个格子，第0个格子可以开启第1,2,3,4,5个格子，所以跳完第0个格子之后其他格子都被开启了，之后按任何顺序可以跳完剩余的格子\n输入\n5\n4 3\n0 4\n2 1\n3 2\n输出\nyes\n\n跳完第0个格子可以开启格子4，跳完格子4可以开启格子3，跳完格子3可以开启格子2，跳完格子2可以开启格子1，按照0->4->3->2->1这样就跳完所有的格子\n输入\n4\n1 2\n1 0\n输出\nyes\n\n总共4个格子[0,1,2,3]，格子1和格子3没有前置条件所以默认开启，格子1可以开启格子0和格子2，所以跳到格子1之后就可以开启所有的格子，因此可以跳完所有格子。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用拓扑排序求解，关于拓扑排序的解题原理请看\nLeetCode - 207 课程表_伏城之外的博客-CSDN博客\n在上面博客中，对拓扑排序做了详细描述，且上面算法题和本题意思几乎一致。\n另外，本题"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "中未给出输入结束条件，因此，我这里判断如果输入是一个空串，则判定为输入结束。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\n\nrelations = []\nwhile True:\n    line = input()\n\n    # 本题没有给输入终止条件,因此我已输入空串为结束条件\n    if \"\" == line:\n        break\n\n    relations.append(list(map(int, line.split())))\n\n\n# 算法入口\ndef getResult():\n    inDegree = [0] * n\n    next = {}\n\n    for a, b in relations:\n        inDegree[b] += 1\n        next.setdefault(a, [])\n        next[a].append(b)\n\n    stack = []\n    for i in range(n):\n        if inDegree[i] == 0:\n            stack.append(i)\n\n    count = 0\n    while len(stack) > 0:\n        a = stack.pop()\n        count += 1\n\n        if next.get(a) is not None:\n            for b in next[a]:\n                inDegree[b] -= 1\n                if inDegree[b] == 0:\n                    stack.append(b)\n\n    return \"yes\" if count == n else \"no\"\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

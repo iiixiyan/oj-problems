@@ -1,0 +1,56 @@
+{
+  "id": "q199",
+  "title": "最大花费金额",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "双十一众多商品进行打折销售，小明想购买自己心仪的一些物品，但由于受购买资金限制，所以他决定从众多心仪商品中购买三件，而且想尽可能的花完资金。\n现在请你设计一个程序帮助小明计算尽可能花费的最大资金数额。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入第一行为一维整型数组M，数组长度小于100，数组元素记录单个商品的价格，单个商品价格小于1000。\n输入第二行为购买资金的额度R，R小于100000。\n输入格式是正确的，无需考虑格式错误的情况。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出为满足上述条件的最大花费额度。\n如果不存在满足上述条件的商品，请返回-1。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n23,26,36,27\n78\n输出\n76",
+      "cases": [
+        {
+          "input": "23,26,36,27\n78",
+          "output": "76",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "金额23、26和27相加得到76，而且最接近且小于输入金额78。\n输入\n23,30,40\n26\n输出\n-1\n\n因为输入的商品，无法组合出来满足三件之和小于26.故返回-1。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题其实就是让我们从n个数中选择3个，保证这个3个数之和最接近且小于等于某个target。\n\n是：\n首先，我们将n个数的数组进行升序。\n然后用三个指针I，L，R去指向数组的三个元素，形成三数组合，其中：\nI指针就是按照for循环遍历的顺序进行移动，从0~n-1\nL指针初始为 I + 1 位置\nR指针初始为 n - 1 位置\n如下图所示：\n其中 I 指针在每一轮循环中是位置固定的，我们需要移动L，R来找不大于，且最接近target的组合。L，R指针的移动逻辑如下：\n假设 sum = arr[I] + arr[L] + arr[R]\n如果sum == target了，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "当前三个指针指向的元素组合就是不大于，且最接近target的答案，可以直接返回。\n如果 sum < target，则\n\n三指针指向元素组合之和是一个可能解，但是不一定是最优解，此时我们应该先记录这个可能解，然后尝试将L++，由于arr已经升序了，因此L++后，新的三数组合之和一定比现在的大。\n如果 sum > target，则\n\n三指针指向元素组合之和过大了，此时应该R--，这样新的三数组合之和一定比现在的小。\n按此逻辑，将当前 I 指针固定的数的三数组合情况全部求出。\n之后，再 I ++ ，尝试其他三数组合。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = list(map(int, input().split(\",\")))\ntarget = int(input())\n\n\n# 算法入口\ndef getResult():\n    # 题目说小明要购买三件,如果商品不足三件直接返回-1\n    if len(arr) < 3:\n        return -1\n\n    # 数组升序\n    arr.sort()\n\n    ans = -1\n\n    for i in range(len(arr)):\n        l = i + 1\n        r = len(arr) - 1\n\n        while l < r:\n            total = arr[i] + arr[l] + arr[r]\n\n            if total == target:\n                return total\n            elif total < target:\n                ans = max(ans, total)\n                l += 1\n            else:\n                r -= 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

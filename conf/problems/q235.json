@@ -1,0 +1,51 @@
+{
+  "id": "q235",
+  "title": "阿里巴巴找黄金宝箱(V)",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一贫如洗的樵夫阿里巴巴在去砍柴的路上，无意中发现了强盗集团的藏宝地，藏宝地有编号从0~N的箱子，每个箱子上面贴有一个数字。\n阿里巴巴念出一个咒语数字k(k<N)，找出连续k个宝箱数字和的最大值，并输出该最大值。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入一个数字字串，数字之间使用逗号分隔，例如：2,10,-3,-8,40,5\n1 ≤ 字串中数字的个数 ≤ 100000\n-10000 ≤ 每个数字 ≤ 10000\n第二行输入咒语数字，例如：4，咒语数字大小小于宝箱的个数"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "连续k个宝箱数字和的最大值，例如：39"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2,10,-3,-8,40,5\n4\n输出\n39",
+      "cases": [
+        {
+          "input": "2,10,-3,-8,40,5\n4",
+          "output": "39",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n8\n1\n输出\n8\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用滑动窗口解决。\n题目说：\n找出\n连续k个\n宝箱数字和的最大值\n其中连续k个刚好可以用一个固定长度为k的滑动窗口去限定。\n我们只需要花费O(k)的时间求解出初始滑动窗口的数字和，之后每右移一个后的新状态滑窗的数字和都可以依赖于前一个滑窗的数字和求得：\n如上图所示，除了初始滑窗，所有的滑窗的数字和cur = 之前滑窗的数字和last - 红色失去的数字 + 绿色新增的数字\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = list(map(int, input().split(\",\")))\nk = int(input())\n\n\n# 算法入口\ndef getResult():\n    window_sum = 0\n\n    for i in range(k):\n        window_sum += arr[i]\n\n    ans = window_sum\n\n    for i in range(1, len(arr) - k + 1):\n        window_sum -= arr[i - 1]\n        window_sum += arr[i + k - 1]\n        ans = max(ans, window_sum)\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

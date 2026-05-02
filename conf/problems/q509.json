@@ -1,0 +1,34 @@
+{
+  "id": "q509",
+  "title": "分披萨",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n\"吃货\"和\"馋嘴\"两人到披萨店点了一份铁盘（圆形）披萨，并嘱咐店员将披萨按放射状切成大小相同的偶数个小块。但是粗心的\n服务员\n将披萨切成了每块大小都完全不同奇数块，且肉眼能分辨出大小。\n由于两人都想吃到最多的披萨，他们商量了一个他们认为公平的分法：从\"吃货\"开始，轮流取披萨。除了第一块披萨可以任意选取外，其他都必须从缺口开始选。\n他俩选披萨的思路不同。\"馋嘴\"每次都会选最大块的披萨，而且\"吃货\"知道\"馋嘴\"的想法。\n已知披萨小块的数量以及每块的大小，求\"吃货\"能分得的最大的披萨大小的总和。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第 1 行为一个正整数奇数 N，表示披萨小块数量。\n3 ≤ N < 500\n接下来的第 2 行到第 N + 1 行（共 N 行），每行为一个正整数，表示第 i 块披萨的大小\n1 ≤ i ≤ N\n披萨小块从某一块开始，按照一个方向次序顺序编号为 1 ~ N\n每块披萨的大小范围为 [1, 2147483647]"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "\"吃货\"能分得到的最大的披萨大小的总和。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())  # 披萨数量&#xff08;奇数个&#xff09;\n\npizza = []  # n个披萨的大小&#xff08;各不相同&#xff09;\nfor _ in range(n):\n    pizza.append(int(input()))\n\n\n# 越界索引环形变化\ndef check(idx):\n    if idx < 0:\n        idx = n - 1\n    elif idx >= n:\n        idx = 0\n\n    return idx\n\n\ndef recursive(l, r):\n    # 进入递归前,\"吃货\"已经拿了披萨,因此进入递归后,轮到\"馋嘴\"拿\n    # 而\"馋嘴\"拿披萨的策略固定是&#xff1a;缺口左右两边中较大的那块\n    if pizza[l] > pizza[r]:  # 注意披萨大小各部相同,因此要么左边大,要么右边大,不存在相等的情况\n        # 拿走第 l 块,因此缺口左边的位置变为 l - 1\n        l = check(l - 1)\n    else:\n        # 拿走第 r 块,因此缺口右边的位置变为 r + 1\n        r = check(r + 1)\n\n    if l == r:\n        # 当 l == r 是,说明只剩一块披萨了,由于奇数个披萨,且\"吃货\"第一个拿,因此最后一个也是\"吃货\"拿\n        return pizza[l]\n    else:\n        # 如果还剩多块披萨,那么\"吃货\"有两种选择&#xff1a;\n        # 1、拿缺口左边的披萨\n        # 2、拿缺口右边的披萨\n        # 因此这里直接开两个递归分支,最终结果取较大值\n        return max(recursive(check(l - 1), r) + pizza[l], recursive(l, check(r + 1)) + pizza[r])\n\n\ndef getResult():\n    # ans记录\"吃货\"能获得的最大披萨大小\n    ans = 0\n\n    # i 指向首轮被\"吃货\"选取的披萨位置,可以理解为缺口位置,相当于给环切了一个口\n    for i in range(n):\n        # i - 1 是缺口的左边披萨,check函数作用是防止 i - 1 越界, 进行绕环运动\n        # i + 1 是缺口的右边披萨,check函数作用是防止 i + 1 越界,进行绕环运动\n        # recursive的作用求解是\"吃货\"从缺失了 第 i 块的披萨铁盘 开始选,最终可得的最大披萨大小,\n        # 而第 i 块是首轮就被\"吃货\"拿走的,因此是recursive + pizza[i]\n        ans = max(ans, recursive(check(i - 1), check(i + 1)) + pizza[i])\n\n    return ans\n\n\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,46 @@
+{
+  "id": "q154",
+  "title": "AI面板识别",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "AI识别到面板上有N（1 ≤ N ≤ 100）个指示灯，灯大小一样，任意两个之间无重叠。\n由于AI识别误差，每次别到的指示灯位置可能有差异，以4个坐标值描述AI识别的指示灯的大小和位置(左上角x1,y1，右下角x2,y2)，\n请输出先行后列排序的指示灯的编号，排序规则：\n每次在尚未排序的灯中挑选最高的灯作为的基准灯，\n找出和基准灯属于同一行所有的灯进行排序。两个灯高低偏差不超过灯半径算同一行（即两个灯坐标的差 ≤ 灯高度的一半）。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为N，表示灯的个数\n接下来N行，每行为1个灯的坐标信息，格式为：\n编号 x1 y1 x2 y2\n编号全局唯一\n1 ≤ 编号 ≤ 100\n0 ≤ x1 < x2 ≤ 1000\n0  ≤  y1 < y2 ≤ 1000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "排序后的编号列表，编号之间以空格分隔"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n1 0 0 2 2\n2 6 1 8 3\n3 3 2 5 4\n5 5 4 7 6\n4 0 4 2 6\n输出\n1 2 3 4 5",
+      "cases": [
+        {
+          "input": "5\n1 0 0 2 2\n2 6 1 8 3\n3 3 2 5 4\n5 5 4 7 6\n4 0 4 2 6",
+          "output": "1 2 3 4 5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "题目给的图好像有问题，我画出来是\n按照题目意思，每次取出一个最高的灯（y坐标最小的），然后找出和最高灯坐标相差小于等于灯半径的，作为同一行，然后按照x轴坐标进行升序\n即存在如下用圈框住的三行，因此打印顺序是：1，2，3，4，5\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "class Light:\n    def __init__(self, id, x, y, r):\n        self.id = id  # 编号\n        self.x = x  # 圆心横坐标\n        self.y = y  # 圆心纵坐标\n        self.r = r  # 圆半径\n\n\n# 输入获取\nn = int(input())\narr = [list(map(int, input().split())) for _ in range(n)]\nlights = list(map(lambda ele: Light(ele[0], (ele[1] + ele[3]) // 2, (ele[2] + ele[4]) // 2, (ele[3] - ele[1]) // 2), arr))\n\n\n# 算法入口\ndef getResult():\n    # 按照圆心y坐标升序\n    lights.sort(key=lambda l: l.y)\n\n    # ans记录题解\n    ans = []\n\n    # sameRowLights记录同一行的灯\n    sameRowLights = []\n    base = lights[0]\n    sameRowLights.append(base)\n\n    for i in range(1, len(lights)):\n        light = lights[i]\n\n        # 如果lights[i]的纵坐标和base的纵坐标相差不超过半径,则视为同一行\n        if light.y - base.y <= base.r:\n            sameRowLights.append(light)\n        else:\n            # 否则,不是同一行\n            # 针对同一行的灯,再按照横坐标升序\n            sameRowLights.sort(key=lambda l: l.x)\n            for l in sameRowLights:\n                ans.append(l.id)\n            sameRowLights.clear()\n\n            # 开始新的一行记录\n            base = light\n            sameRowLights.append(base)\n\n    # 注意不要漏了最后一行\n    if len(sameRowLights) > 0:\n        sameRowLights.sort(key=lambda l: l.x)\n        for l in sameRowLights:\n            ans.append(l.id)\n\n    return \" \".join(map(str, ans))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

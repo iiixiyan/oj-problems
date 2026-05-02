@@ -1,0 +1,42 @@
+{
+  "id": "q638",
+  "title": "2025B -200分黑白格子棋盘",
+  "score": 200,
+  "tags": [
+    "2025B"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "(2025B\n卷\n,200\n分\n)\n黑白格子棋盘（\nJava & JS & Python\n）\n-"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "待更新"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有一个\nN×N\n的棋盘，由黑格子和白格子组成，棋 子在棋盘上可以上下左右移动，只可以从\n黑色格走\n到相邻的白色，或者从白色格走到相邻的黑色： 你的任务是：对于给定的棋盘，询问从某一格开始 的移动范围。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行两个正整数，表示\nn\n，\nm\n。\n下面\nn\n行，每行\nn\n个\n字符，字符是\n1\n或\n0\n分别表示黑格子 和白格子，字符之间无空格。 接下来\nm\n行，每行两个数\ni\n，\nj\n，用空格隔开，表示棋盘 的第\ni\n行第\nj\n列的格子，需要计算该棋子从该格子的移动\n范\n围是多少格。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "m\n行，每行\n一\n个数表示每个询问的答案。\n补充"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "对于全部的测试点，保证\n1≤n≤1000\n，\n1≤m≤10000\n示例\n1\n输入\n2 1\n01\n10\n2 2\n输出\n4\n示例\n2\n输入\n3 3\n001\n111\n001\n1 1\n2 2\n2 3\n输出\n3\n5\n1"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

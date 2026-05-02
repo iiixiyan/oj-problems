@@ -1,0 +1,56 @@
+{
+  "id": "q113",
+  "title": "区块链文件转储系统",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "区块链底层存储是一个链式文件系统，由顺序的N个文件组成，每个文件的大小不一，依次为F1,F2,...,Fn。随着时间的推移，所占存储会越来越大。\n云平台考虑将区块链按文件转储到廉价的SATA盘，只有连续的区块链文件才能转储到SATA盘上，且转储的文件之和不能超过SATA盘的容量。\n假设每块SATA盘容量为M，求能转储的最大连续文件之和。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为SATA盘容量M，1000 ≤ M ≤ 1000000\n第二行为区块链文件大小序列F1,F2,...,Fn。其中 1 ≤ n ≤ 100000，1 ≤ Fi ≤ 500"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "求能转储的最大连续文件大小之和"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1000\n100 300 500 400 400 150 100\n输出\n950",
+      "cases": [
+        {
+          "input": "1000\n100 300 500 400 400 150 100",
+          "output": "950",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "最大序列和为950，序列为[400,400,150]\n输入\n1000\n100 500 400 150 500 100\n输出\n1000\n\n最大序列和为1000，序列为[100,500,400]"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "由于本题需要求解最大\n连续\n文件大小之和，因此可以考虑使用双指针+滑动窗口来解题。\n本题的滑动窗口的左边界l,右边界r的运动逻辑如下：\n如果滑动窗口内部和 < m，则r++\n如果滑动窗口内部和 > m，则l++\n如果滑动窗口内部和 = m，则已得到最大值，直接返回m即可。\n在计算滑动窗口内部和的过程中，如果r++，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "内部和可能会增大产生最大值，因此我们需要在r++时，判断并保留最大值。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "m = int(input())\nf = list(map(int, input().split()))\n\n\ndef getResult(m, f):\n    l = 0\n    r = 0\n    n = len(f)\n\n    sum = 0\n    maxV = 0\n\n    while r < n:\n        # 尝试右指针右移一下的新和&#xff08;注意初始时右指针右移后指向0&#xff09;\n        newSum = sum + f[r]\n\n        # 如果新和超过了m,即SATA盘容量,则右指针不能右移,并且还需要左指针右移来减少旧和\n        if newSum > m:\n            # 左指针右移只会减少旧和,因此不会产生最大值\n            sum -= f[l]\n            l += 1\n        # 如果新和小于m,则当前尝试的右指针右移可行,因此 sum += F[r],并且我们下一步还可以继续尝试让右指针右移,即r++\n        elif newSum < m:\n            sum += f[r]\n            r += 1\n            maxV = max(sum, maxV) # 右指针右移时会增加旧和,因此可能会产生最大值\n        # 如果新和等于m,那么说明已经找到了一个容量和SATA盘相同的连续文件大小,即此时已经是最大值了,可以直接返回\n        else:\n            return m\n\n    return maxV\n\n\nprint(getResult(m, f))"
+  },
+  "verified": false
+}

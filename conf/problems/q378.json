@@ -1,0 +1,61 @@
+{
+  "id": "q378",
+  "title": "5键键盘",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有一个特殊的5键键盘，上面有a，ctrl-c，ctrl-x，ctrl-v，ctrl-a五个键。\na键在屏幕上输出一个字母a；\nctrl-c将当前选择的字母复制到剪贴板；\nctrl-x将当前选择的字母复制到剪贴板，并清空选择的字母；\nctrl-v将当前剪贴板里的字母输出到屏幕；\nctrl-a选择当前屏幕上的所有字母。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：\n剪贴板初始为空，新的内容被复制到剪贴板时会覆盖原来的内容\n当屏幕上没有字母时，ctrl-a无效\n当没有选择字母时，ctrl-c和ctrl-x无效\n当有字母被选择时，a和ctrl-v这两个有输出功能的键会先清空选择的字母，再进行输出\n给定一系列键盘输入，输出最终屏幕上字母的数量。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为一行，为简化解析，用数字1 2 3 4 5代表a，ctrl-c，ctrl-x，ctrl-v，ctrl-a五个键的输入，数字用空格分隔。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个数字，为最终屏幕上字母的数量。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1 1 1\n输出\n3",
+      "cases": [
+        {
+          "input": "1 1 1",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "连续键入3个a，故屏幕上字母的长度为3。\n输入\n1 1 5 1 5 2 4 4\n输出\n2\n\n输入两个a后ctrl-a选择这两个a，再输入a时选择的两个a先被清空，所以此时屏幕只有一个a，\n后续的ctrl-a，ctrl-c选择并复制了这一个a，最后两个ctrl-v在屏幕上输出两个a，\n故屏幕上字母的长度为2（第一个ctrl-v清空了屏幕上的那个a）。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "逻辑题，主要考察多情况的处理。\n题目中没有准确"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "选择状态 何时被解除，比如我ctrl-a全选所有字母时，然后ctrl-c将选择的字母复制到剪贴板，那么此时屏幕中字母的选中状态是保留还是清除呢？\n我理解ctrl-x剪切走屏幕内容，没有字母了，自然就没有选中状态了。另外，a、ctrl-v输入时，如果有字母选中状态，则输入时会覆盖选中内容，那么选中状态就没了。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ncommands = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    screen = []\n    clip = []\n    isSelect = False\n\n    for command in commands:\n        if command == 1:\n            if isSelect:\n                screen.clear()\n            screen.append(\"a\")\n            isSelect = False\n        elif command == 2:\n            if isSelect:\n                clip.clear()\n                clip.extend(screen)\n        elif command == 3:\n            if isSelect:\n                clip.clear()\n                clip.extend(screen)\n                screen.clear()\n                isSelect = False\n        elif command == 4:\n            if isSelect:\n                screen.clear()\n            screen.extend(clip)\n            isSelect = False\n        elif command == 5:\n            if len(screen) != 0:\n                isSelect = True\n\n    return len(screen)\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

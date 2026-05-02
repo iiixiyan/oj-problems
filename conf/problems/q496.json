@@ -1,0 +1,51 @@
+{
+  "id": "q496",
+  "title": "转骰子",
+  "score": 200,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "骰子是一个立方体，每个面一个数字，初始为左1，右2，前3(观察者方向)，后4，上5，下6，用123456表示这个状态，放置在平面上，\n可以向左翻转(用L表示向左翻转1次)，\n可以向右翻转(用R表示向右翻转1次)，\n可以向前翻转(用F表示向前翻转1次)，\n可以向后翻转(用B表示向后翻转1次)，\n可以逆时针旋转(用A表示逆时针旋转90度)，\n可以顺时针旋转(用C表示顺时针旋转90度)，\n现从123456这个初始状态开始，根据输入的动作序列，计算得到最终的状态。\n骰子的初始状态和初始状态转动后的状态如图所示。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一行，为只包含LRFBAC的字母序列，最大长度为50，字母可重复。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出最终状态"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nL R\n输出\n123456",
+      "cases": [
+        {
+          "input": "L R",
+          "output": "123456",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nF C R\n输出\n342156\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题感觉就是一道耗时题，考察细心程度的。具体的逻辑反而不是很难。\n具体逻辑请看源码。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 算法入口\ndef turnDice(directives):\n    dice = Dice()\n\n    for directive in directives:\n        if directive == \"L\":\n            dice.turnL()\n        elif directive == \"R\":\n            dice.turnR()\n        elif directive == \"F\":\n            dice.turnF()\n        elif directive == \"B\":\n            dice.turnB()\n        elif directive == \"A\":\n            dice.turnA()\n        elif directive == \"C\":\n            dice.turnC()\n\n    return str(dice)\n\n# 筛子实现类\nclass Dice:\n    def __init__(self):\n        self.left = 1\n        self.right = 2\n        self.front = 3\n        self.back = 4\n        self.top = 5\n        self.bottom = 6\n\n    def turnL(self):\n        # 前后不变,上变左,左变下,下变右,右变上\n        self.right, self.bottom, self.left, self.top = self.bottom, self.left, self.top, self.right\n\n    def turnR(self):\n        # 前后不变,上变右,右变下,下变左,左变上\n        self.left, self.bottom, self.right, self.top = self.bottom, self.right, self.top, self.left\n\n    def turnF(self):\n        # 左右不变,上变前,前变下,下变后,后变上\n        self.front, self.top, self.back, self.bottom = self.top, self.back, self.bottom, self.front\n\n    def turnB(self):\n        # 左右不变,前变上,上变后,后变下,下边前\n        self.top, self.front, self.bottom, self.back = self.front, self.bottom, self.back, self.top\n\n    def turnA(self):\n        # 上下不变, 前变右,右变后,后变左,左变前\n        self.right, self.front, self.left, self.back = self.front, self.left, self.back, self.right\n\n    def turnC(self):\n        # 上下不变, 右变前,前变左,左变后,后变右\n        self.front, self.right, self.back, self.left = self.right, self.back, self.left, self.front\n\n    def __str__(self):\n        return f\"{self.left}{self.right}{self.front}{self.back}{self.top}{self.bottom}\"\n\n\n# 输入获取\ndirectives = input().split()\n\n# 算法调用\nprint(turnDice(directives))"
+  },
+  "verified": false
+}

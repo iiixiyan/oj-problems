@@ -1,0 +1,86 @@
+{
+  "id": "q627",
+  "title": "100分-准备生日礼物(Py.Java.C.C++.Js.Go)",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "100\n分\n-\n准备生日礼物\n(Py/Java/C/C++/Js/Go)\n\n小明在一个充满人文关怀的公司上班，公司每个月都要为该月生日的同事送一份生日小礼物，该事项由小明负责，请帮助小明统计某一月份应该准备多少礼物，重复录入的员工生日以最后一次录入结果为准，请不要重复统计，避免浪费。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "参数\n1\n，要发放礼物的月份，取值\n1\n到\n12\n。\n参数\n2\n，员工列表。\n参数\n3\n，员工生日日期列表，该列表和员工列表中的数据对应存在一一对应关系，长度一致。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "该月份要准备的礼品个数。\n补充"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "小明公司的员工人数不超过\n100\n人。\n员工姓名是字母和数字的组合，姓名长度大于\n0\n，小于\n16\n字节。\n日期录入格式统一采用\nYear/Month/Day\n，\nYear\n长度为\n4\n，\nMonth\n和\nDay\n长度为\n1\n到\n2\n，系统保证录入日期为合法日期。\n不考虑同名多位员工的情况，名字一致即可以认为是同一员工（在生产系统会通过工号区分，本系统简化处理）。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入\n5\nAlice Bob Charlie David Eve Frank Grace\nHelen\n1985/5/10 1990/10/11 1995/10/11 2000/11/10\n2005/05/01 2010/10/13 2015/10/14 2020/5/2\n输出\n3",
+      "cases": [
+        {
+          "input": "5\nAlice Bob Charlie David Eve Frank Grace\nHelen\n1985/5/10 1990/10/11 1995/10/11 2000/11/10\n2005/05/01 2010/10/13 2015/10/14 2020/5/2",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "在\n5\n月份出生的员工有\n3\n人，因此返回为\n3\n。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2\n输入\n10\nAlice Bob Charlie David Eve Frank Grace\nHelen\n1985/05/10 1990/10/11 1995/10/11 2000/11/10\n2005/10/13 2010/10/13 2015/10/14 2020/10/15\n输出\n6",
+      "cases": [
+        {
+          "input": "10\nAlice Bob Charlie David Eve Frank Grace\nHelen\n1985/05/10 1990/10/11 1995/10/11 2000/11/10\n2005/10/13 2010/10/13 2015/10/14 2020/10/15",
+          "output": "6",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "10\n月份出生的员工有\n6\n人，因此返回\n6\n。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "3\n输入\n5\nAlice Bob Charlie Alice Eve Frank Grace\nHelen\n1985/5/10 1990/10/11 1995/10/11 1985/7/10\n2005/05/01 2010/10/13 2015/10/14 2020/5/2\n输出\n2",
+      "cases": [
+        {
+          "input": "5\nAlice Bob Charlie Alice Eve Frank Grace\nHelen\n1985/5/10 1990/10/11 1995/10/11 1985/7/10\n2005/05/01 2010/10/13 2015/10/14 2020/5/2",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "5\n月份出生的员工有\n2\n个，因此返回\n2\n。\n\n：\nAlice\n重复录入了，第一次录入出生月份为\n5\n月，第二次录入出生月份为\n7\n月，因此\nAlice\n不被统计到\n5\n月份。"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "思路：模拟\n使用哈希表或者类似数据结构，记录每个人的生日月份。\n遍历并统计生日月份为指定发放礼物月份的人数。\n输出结果。\nC++\n#include<iostream>\n#include<vector>\n#include<string>\n#include <utility>\n#include <sstream>\n#include<algorithm>\n#include<cmath>\n#include<map>\nusing namespace std;\n//\n通用 切割函数 函数 将字符串\nstr\n根据\ndelimiter\n进行切割\nvector<string> split(const\nstring& str, const string& delimiter) {\nvector<string>\nresult;\nsize_t start = 0;\nsize_t end = str.find(delimiter);\nwhile (end !=\nstring::npos) {\nresult.push_back(str.substr(start, end - start));\nstart = end + delimiter.length();\nend = str.find(delimiter, start);\n}\n//\n添加最后一个部分\nresult.push_back(str.substr(start));\nreturn result;\n}\nint main() {\nint month;\nstring name;\nstring birthday;\ncin >> month;\n//\n读取空格\ncin.ignore();\ngetline(cin, name);\ngetline(cin, birthday);\nvector<string>\nnames = split(name, \" \");\nvector<string>\nbirthdays = split(birthday, \" \");\nmap<string, int>\nnameMonth;\nfor (int i = 0; i <\nnames.size(); i++) {\nstring currentName = names[i];\nstring currentBirthday = birthdays[i];\nnameMonth[currentName] = stoi(split(currentBirthday, \"/\")[1]);\n}\n//\n统计\nint count = 0;\nfor (auto &p :\nnameMonth) {\nif (p.second == month) {\ncount++;\n}\n}\ncout << count;\nreturn 0;\n}\nJAVA\nimport java.util.*;\npublic class Main {\npublic static int\ncalGiftNum(int month, String[] names, String[] birthdays) {\nMap<String, Integer> nameMonth = new HashMap<>();\nfor (int i = 0; i < names.length; i++) {\nString currentName = names[i];\nString currentBirthday = birthdays[i];\n//\n生日格式：\nxxxx/xx/xx\n，取月份\nint m = Integer.parseInt(currentBirthday.split(\"/\")[1]);\nnameMonth.put(currentName, m);\n}\n//\n统计\nint count = 0;\nfor (int m : nameMonth.values()) {\nif (m == month) {\ncount++;\n}\n}\nreturn count;\n}\npublic static void\nmain(String[] args) {\nScanner sc = new Scanner(System.in);\nint month = sc.nextInt();\nsc.nextLine(); //\n吃掉换行\nString name = sc.nextLine();\nString birthday = sc.nextLine();\nString[] names = name.split(\" \");\nString[] birthdays = birthday.split(\" \");\nint res = calGiftNum(month,"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

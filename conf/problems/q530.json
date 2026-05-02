@@ -1,0 +1,51 @@
+{
+  "id": "q530",
+  "title": "最大值",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n给定一组整数（非负），重排顺序后输出一个最大的整数。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入：[10,9]\n输出：910",
+      "cases": [
+        {
+          "input": "[10,9]",
+          "output": "910",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": ":输出结果可能非常大，所以你需要返回一个\n字符串\n而不是整数。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "数字组合"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最大的整数"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nmatrix = [input().split(\",\") for _ in range(n)]\n\n\n# 算法入口\ndef getResult():\n    ans = 0\n\n    for i in range(n):\n        maxV = int(\"\".join(matrix[i]), 2)\n        for j in range(1, n):\n            matrix[i].insert(0, matrix[i].pop())\n            maxV = max(maxV, int(\"\".join(matrix[i]), 2))\n        ans += maxV\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,51 @@
+{
+  "id": "q137",
+  "title": "最大数字",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个由纯数字组成以字符串表示的数值，现要求字符串中的每个数字最多只能出现2次，超过的需要进行删除；\n删除某个重复的数字后，其它数字相对位置保持不变。\n如”34533″，数字3重复超过2次，需要删除其中一个3，删除第一个3后获得最大数值”4533″\n请返回经过删除操作后的最大的数值，以字符串表示。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为一个纯数字组成的字符串，长度范围：[1,100000]"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出经过删除操作后的最大的数值"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n34533\n输出\n4533",
+      "cases": [
+        {
+          "input": "34533",
+          "output": "4533",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n5445795045\n输出\n5479504\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题最优\n\n是利用栈结构。\n首先，我们需要定义两个map，分别是unused和reserve，其中：\nunused含义是：每个数字剩余可用个数\nreserve含义是：每个数字已保留的个数\n然后对他们进行初始化，初始时unused就是统计输入字符串中各数字字符的出现次数，而reserve每个数字字符的个数都初始化为0。\n接下来，遍历出输入字符串的每个字符c：\n如果此时stack栈顶没有元素，则将遍历的c直接压入栈，然后unused[c]--，reserve[c]++\n如果此时stack栈顶有元素，假设为top，则：\nc <= top 的话，则直接压入栈，然后unused[c]--，reserve[c]++\nc > top的话，则需要考虑将栈顶top弹出，而弹出是有条件的，因为题目说，每个数字最多出现两次，那么表示每个数字出现次数>=2的话，我们就保留该数字2个，此时整体数值才会最长，最长才有可能最大。如果此时我们将top弹出，那么需要看 unused[top] + reserve[top] - 1是不是 >= 2，只有成立时，我们才能弹出top，否则对应数字字符的数量将不足2个，最终影响整体数值的长度，进而影响大小。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult(s):\n    # 每个数字字符的可用个数\n    unused = {}\n    # 每个数字字符的保留个数\n    reserve = {}\n\n    # 初始时,每个数字有多少个,就可用多少个,由于还未使用,因此保留个数为0\n    for c in s:\n        if unused.get(c) is None:\n            unused[c] = 0\n\n        if reserve.get(c) is None:\n            reserve[c] = 0\n\n        unused[c] += 1\n\n    # 定义一个栈\n    stack = []\n\n    # 遍历输入字符串的每个数字字符c\n    for c in s:\n        # 如果该字符已经保留了2个了,则后续再出现该数字字符可以不保留\n        if reserve[c] == 2:\n            # 则可用c数字个数--\n            unused[c] -= 1\n            continue\n\n        # 比较当前数字c和栈顶数字top,如果c>top,那么需要考虑将栈顶数字弹出\n        while len(stack) > 0:\n            top = stack[-1]\n\n            # 如果栈顶数字被弹出后,已保留的top字符数量和未使用的top字符数量之和大于等于2,则可以弹出,否则不可以\n            if top < c and unused[top] + reserve[top] - 1 >= 2:\n                stack.pop()\n                reserve[top] -= 1\n            else:\n                break\n\n        # 选择保留当前遍历的数字c\n        stack.append(c)\n        # 则可用c数字个数--\n        unused[c] -= 1\n        # 已保留c数字个数++\n        reserve[c] += 1\n\n    return \"\".join(stack)\n\n\n# 算法调用\nprint(getResult(s))"
+  },
+  "verified": false
+}

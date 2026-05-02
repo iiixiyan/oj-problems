@@ -1,0 +1,66 @@
+{
+  "id": "q081",
+  "title": "猜数字",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一个人设定一组四码的数字作为谜底，另一方猜。\n每猜一个数，出数者就要根据这个数字给出提示，提示以XAYB形式呈现，直到猜中位置。\n其中X表示位置正确的数的个数（数字正确且位置正确），而Y表示数字正确而位置不对的数的个数。\n例如，当谜底为8123，而猜谜者猜1052时，出题者必须提示0A2B。\n例如，当谜底为5637，而猜谜者才4931时，出题者必须提示1A0B。\n当前已知N组猜谜者猜的数字与提示，如果答案确定，请输出答案，不确定则输出NA。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入一个正整数，0＜N ＜ 100。\n接下来N行，每一行包含一个猜测的数字与提示结果。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出最后的答案，答案不确定则输出NA。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n6\n4815 1A1B\n5716 0A1B\n7842 0A1B\n4901 0A0B\n8585 3A0B\n8555 2A1B\n输出\n3585",
+      "cases": [
+        {
+          "input": "6\n4815 1A1B\n5716 0A1B\n7842 0A1B\n4901 0A0B\n8585 3A0B\n8555 2A1B",
+          "output": "3585",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "我的\n\n是：\n暴力枚举所有可能的谜底，即0000~9999，然后用每一个谜底去过输入的猜测。\n我们假设某个谜底 和 输入的猜测数字 产生的猜测提示是real_result，而输入中猜测数字对应的猜测提示是expect_result，如果real_result == expect_result，那么"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "当前谜底符合当前猜测数字的要求。\n如果某个谜底，可以符合所有猜测数字的要求，那么该谜底就是一个可用谜底。\n如果，暴力枚举出来的所有谜底中，只有一个可用谜底，那么该谜底就是"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "。否则本题无解，返回NA。\n当前上面算法非常容易超时，原因就是我们需要验证0000~9999这一万个可能的谜底，而每个可能的谜底有需要验证最多100个输入的猜测数字。\n因此，我们需要做一些剪枝优化，比如题目"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入中有一行：\n4901 0A0B\n这行的含义其实是：真正的谜底的四个数字不能取4，9，0，1这些。\n再比如：\n5716 0A1B\n7842 0A1B\n4901 0A0B\n上面三行中，都是0A，即每一位上的数字都不是真正谜底的该位置的数字。\n比如：5716 0A1B\n即：真正的谜底，第一位不可能是5，第二位不可能是7，第三位不可能是1，第四位不可能是6\n那么真正的谜底，第一位只能从非5数种选，第二位只能从非7数中选.......\n这样的话，就做到了剪枝优化，即四码谜底的每一位数不需要从0~9中选，而是可以从更小的范围内选。\n目前，我这边制作了0A，以及0A0B的剪枝处理，其他情况比如：\n0A0B  0A1B  0A2B  0A3B  0A4B\n1A0B  1A1B  1A2B  1A3B\n2A0B  2A1B  2A2B\n3A0B  3A1B\n4A0B\n可以视实际机试时间限制要求选做。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\ninfos = [input().split() for _ in range(n)]\n\n\n# 获取猜的数字guess在指定谜底answer下的猜测提示\ndef getGuessResult(guess, answer):\n    countA = 0\n    countB = 0\n\n    answer_arr = [0] * 10\n    guess_arr = [0] * 10\n\n    for i in range(len(guess)):\n        c1 = int(guess[i])\n        c2 = int(answer[i])\n\n        if c1 == c2:\n            countA += 1\n        else:\n            guess_arr[c1] += 1\n            answer_arr[c2] += 1\n\n    for i in range(10):\n        countB += min(answer_arr[i], guess_arr[i])\n\n    return f\"{countA}A{countB}B\"\n\n\n# 判断谜底answer是否正确,即是否符合所有猜测提示\ndef isValid(answer):\n    for info in infos:\n        guess, expect_result = info\n        real_result = getGuessResult(guess, answer)\n        if expect_result != real_result:\n            return False\n    return True\n\n\n# 剪枝逻辑,本题的后期优化主要在这个方法内进行\n# 返回的是一个列表,列表有四个元素,分别对应四码的谜底数字的每一位,而每个列表元素又是一个列表,里面存放谜底数字对应的位上可能是哪些数字\ndef getCombine():\n    # 初始时,四码谜底的每一位都有十种可能,即每一位都能取值0~9\n    num = [set([i for i in range(10)]) for _ in range(4)]\n\n    # 遍历猜谜者猜的数字guess_num与提示guess_result\n    for info in infos:\n        guess_num, guess_result = info\n\n        # 数字正确且位置正确的个数\n        countA = int(guess_result[0])\n        # 数字正确而位置不对的数的个数\n        countB = int(guess_result[2])\n\n        # 如果countA == 0,则说明当前guess_num的每一位上的数字的位置都不正确,即对应位上不应该出现对应数字\n        if countA == 0:\n            for i in range(4):\n                c = int(guess_num[i])\n                if countB == 0:\n                    # 如果countB == 0,则说明当前guess_num上所有位上的数字都不正确,即任意位上都不应该出现该数字\n                    num[0].discard(c)\n                    num[1].discard(c)\n                    num[2].discard(c)\n                    num[3].discard(c)\n                else:\n                    num[i].discard(c)\n\n    return num\n\n\n# 算法入口\ndef getResult():\n    num = getCombine()\n    cache = []\n\n    for c1 in num[0]:\n        for c2 in num[1]:\n            for c3 in num[2]:\n                for c4 in num[3]:\n                    answer = f\"{c1}{c2}{c3}{c4}\"\n                    if isValid(answer):\n                        cache.append(answer)\n\n    # 答案不确定则输出NA\n    if len(cache) != 1:\n        return \"NA\"\n    else:\n        return cache[0]\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

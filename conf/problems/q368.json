@@ -1,0 +1,59 @@
+{
+  "id": "q368",
+  "title": "贪吃的猴子",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在线OJ刷题\n题目详情 - 贪吃的猴子 - Hydro\n\n一只贪吃的猴子，来到一个果园，发现许多串香蕉排成一行，每串香蕉上有若干根香蕉。每串香蕉的根数由数组numbers给出。\n猴子获取香蕉，每次都只能从行的开头或者末尾获取，并且只能获取N次，求猴子最多能获取多少根香蕉。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为数组numbers的长度\n第二行为数组numbers的值每个数字通过空格分开\n第三行输入为N，表示获取的次数"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "按照题目要求能获取的最大数值"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1 ≤ numbers.length ≤ 100000\n1 ≤ numbers ≤ 100\n1 ≤ N ≤ numbers.length"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n7\n1 2 2 7 3 6 1\n3\n输出\n10",
+      "cases": [
+        {
+          "input": "7\n1 2 2 7 3 6 1\n3",
+          "output": "10",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "第一次获取香蕉，无论是从行的开头或者末尾获取，得到的香蕉根数目为1, 但是，从行末尾获取能获取到最优的策略，后面可以直接得到香蕉根数目6和3。因此最终根数为1+6+3=10\n输入\n3\n1 2 3\n3\n输出\n6\n\n全部获取所有的香蕉，因此最终根数为1+2+3=6\n输入\n4\n4 2 2 3\n2\n输出\n7\n\n第一次获取香蕉为行的开头，第二次获取为行的末尾，因此最终根数为4+3=7"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题我第一个思路是通过分支递归+缓存优化求解\n但是经过测试，1 ≤ numbers.length ≤ 100000 数量级下，递归操作会StackOverflow，缓存cache数组占用的内存会超出限制。\n后面思考了一下，无论我们怎么选，左边选择的，以及右边选择的，必然都是连续的，且是从头尾开始的连续，即不可出现下面情况：\n因此，本题其实可以简化为，将n次分解为左边选择的个数，以及右边选择的个数。\n以"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1画图示：\n初始时，假设左边选择了0个，右边选择了n=3个，（黄色部分代表选择）：\n之后，左边选择1个，右边选择2个\n之后，左边选择2，右边选择1个\n最后，左边选择3个，右边选择0个\n上面图示逻辑，我们除了需要计算初始时的leftSum和rightSum外，之后的状态均可以基于前一个状态求解，如下图所示\n更多细节请看下面代码和注释。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nlength = int(input())\nnums = list(map(int, input().split()))\nn = int(input())\n\n\n# 算法入口\ndef getResult():\n    # 初始时,左边选择0个,因此左边选择的香蕉数为 0\n    leftSum = 0\n    # 初始时,右边选择n个,因此右边选择的香蕉数为 nums[len-n] ~ nums[len - 1] 这个n个元素之和\n    rightSum = sum(nums[length - n:])\n\n    # 如果选择数n == len,即全选,此时直接返回初始rightSum\n    if length == n:\n        return rightSum\n\n    # 如果不是全选\n    # sum记录当前选择结果\n    sumV = leftSum + rightSum\n    # ans记录所有选择结果中最大的\n    ans = sumV\n\n    # l指向左边将要获得的,即左边获得一个\n    l = 0\n    # r指向右边将要失去的,即右边失去一个\n    r = length - n\n\n    while l < n:\n        sumV += nums[l] - nums[r]\n        ans = max(ans, sumV)\n        l += 1\n        r += 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

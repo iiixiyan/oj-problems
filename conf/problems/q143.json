@@ -1,0 +1,51 @@
+{
+  "id": "q143",
+  "title": "硬件产品销售方案",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "某公司目前推出了AI开发者套件，AI加速卡，AI加速模块，AI服务器，智能边缘多种硬件产品，每种产品包含若干个型号。\n现某合作厂商要采购金额为\namount\n元的硬件产品搭建自己的AI基座。\n例如当前库存有\nN\n种产品，每种产品的库存量充足，给定每种产品的价格，记为price（不存在价格相同的产品型号）。\n请为合作厂商列出所有可能的产品组合。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入包含采购金额amount和产品价格列表price。第一行为amount，第二行为price，例如：\n500\n[100, 200, 300, 500]"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出为组合列表。例如：\n[[100, 100, 100, 100, 100], [100, 100, 100, 200], [100, 100, 300], [100, 200, 200], [200, 300], [500]]"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n500\n[100, 200, 300, 500, 500]\n输出\n[[100, 100, 100, 100, 100], [100, 100, 100, 200], [100, 100, 300], [100, 200, 200], [200, 300], [500], [500]]",
+      "cases": [
+        {
+          "input": "500\n[100, 200, 300, 500, 500]",
+          "output": "[[100, 100, 100, 100, 100], [100, 100, 100, 200], [100, 100, 300], [100, 200, 200], [200, 300], [500], [500]]",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "简单的可重复元素组合求解。\n2023.08.01\n更新了JS代码的输出格式逻辑，即在逗号后面加空格\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "amount = int(input())\nprices = eval(input())\n\n\ndef dfs(total, arr, index, sum, path, res):\n    if sum >= total:\n        if sum == total:\n            res.append(path[:])\n        return\n\n    for i in range(index, len(arr)):\n        path.append(arr[i])\n        dfs(total, arr, i, sum + arr[i], path, res)\n        path.pop()\n\n\nres = []\ndfs(amount, prices, 0, 0, [], res)\nprint(res)"
+  },
+  "verified": false
+}

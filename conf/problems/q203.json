@@ -1,0 +1,52 @@
+{
+  "id": "q203",
+  "title": "最长连续子序列",
+  "score": 100,
+  "tags": [
+    "B卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有N个正整数组成的一个序列。给定整数sum，求长度最长的连续子序列，使他们的和等于sum，返回此子序列的长度，\n如果没有满足要求的序列，返回-1。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入是：N个正整数组成的一个序列\n第二行输入是：给定整数sum"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最长的连续子序列的长度"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "输入序列仅由数字和英文逗号构成，数字之间采用英文逗号分隔\n序列长度：1 <= N <= 200\n输入序列不考虑异常情况"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1,2,3,4,2\n6\n输出\n3",
+      "cases": [
+        {
+          "input": "1,2,3,4,2\n6",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "1,2,3和4,2两个序列均能满足要求，所以最长的连续序列为1,2,3，因此结果为3。\n输入\n1,2,3,4,2\n20\n输出\n-1\n\n没有满足要求的子序列，返回-1\n前缀和解法\n本题数量级不大，可以考虑求解输入序列的前缀和数组，实现O(1)时间复杂度计算任意区间和，关于前缀和可以看：\n算法设计 - 前缀和 & 差分数列_伏城之外的博客-CSDN博客\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nnums = list(map(int, input().split(\",\")))\ntarget = int(input())\n\n\n# 算法入口\ndef getResult():\n    n = len(nums)\n\n    preSum = [0] * (n + 1)\n    for i in range(1, n + 1):\n        preSum[i] = preSum[i - 1] + nums[i - 1]\n\n    maxLen = -1\n\n    for l in range(0, n):\n        for r in range(l + 1, n+1):\n            if preSum[r] - preSum[l] == target:\n                maxLen = max(maxLen, r - l)\n\n    return maxLen\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

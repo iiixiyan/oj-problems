@@ -1,0 +1,51 @@
+{
+  "id": "q424",
+  "title": "报数游戏",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "100个人围成一圈，每个人有一个编码，编号从1开始到100。\n他们从1开始依次报数，报到为M的人自动退出圈圈，然后下一个人接着从1开始报数，直到剩余的人数小于M。\n请问最后剩余的人在原先的编号为多少？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一个整数参数 M"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "如果输入参数M小于等于1或者大于等于100，输出“ERROR!”；\n否则按照原先的编号从小到大的顺序，以英文逗号分割输出编号字符串"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n输出\n58,91",
+      "cases": [
+        {
+          "input": "3",
+          "output": "58,91",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "输入M为3，最后剩下两个人。\n输入\n4\n输出\n34,45,97\n\n输入M为4，最后剩下三个人。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是经典的约瑟夫环问题，可以利用循环链表解决。\n解法一：循环链表\n定义一个循环链表，头节点val=1，尾节点val=100，头.prev = 尾，尾.next = 头\n这样的话，就构造出了一个循环链表。\n我们还需要为循环链表设置，尾部追加新节点，删除任意节点的操作。\n另外，我们还需要维护一个报数变量idx，从1开始。\n这样的话，我们从链表头head开始查询，此时报数idx=1，\n如果idx===m，则删除当前节点cur，下一个查询节点变为删除节点的下一个节点，并且重置报数idx=1，\n如果idx!==m，则继续查询下一节点，即cur = cur.next，并且报数idx++\n按上面逻辑，直到链表的size < m时，结束。\n然后，for(i=0; i<size; i++) 遍历出循环链表的每一个节点值，就是\n\n。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 双向节点\nclass Node:\n    def __init__(self, val):\n        self.val = val\n        self.next = None\n        self.prev = None\n\n\n# 循环链表\nclass CycleLinkedList:\n    def __init__(self):\n        self.head = None\n        self.tail = None\n        self.size = 0\n\n    def append(self, val):\n        node = Node(val)\n\n        if self.size > 0:\n            self.tail.next = node\n            node.prev = self.tail\n            self.tail = node\n        else:\n            self.head = node\n            self.tail = node\n\n        self.head.prev = self.tail\n        self.tail.next = self.head\n        self.size += 1\n\n    def remove(self, cur):\n        pre = cur.prev\n        nxt = cur.next\n\n        pre.next = nxt\n        nxt.prev = pre\n\n        cur.next = cur.prev = None\n\n        if self.head == cur:\n            self.head = nxt\n\n        if self.tail == cur:\n            self.tail = pre\n\n        self.size -= 1\n\n        return nxt\n\n    def __str__(self):\n        arr = []\n        cur = self.head\n\n        for i in range(self.size):\n            arr.append(str(cur.val))\n            cur = cur.next\n\n        return \",\".join(arr)\n\n\n# 输入获取\nm = int(input())\n\n\n# 算法入口\ndef getResult():\n    if m <= 1 or m >= 100:\n        return \"ERROR!\"\n\n    cycList = CycleLinkedList()\n    for i in range(1, 101):\n        cycList.append(i)\n\n    idx = 1\n    cur = cycList.head\n\n    while cycList.size >= m:\n        if idx == m:\n            idx = 1\n            cur = cycList.remove(cur)\n        else:\n            idx += 1\n            cur = cur.next\n\n    return str(cycList)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

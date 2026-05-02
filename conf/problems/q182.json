@@ -1,0 +1,56 @@
+{
+  "id": "q182",
+  "title": "找终点",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个正整数数组，设为nums，最大为100个成员，求从第一个成员开始，正好走到数组最后一个成员，所使用的最少步骤数。\n要求：\n第一步必须从第一元素开始，且1<=第一步的步长<len/2;（len为数组的长度，需要自行解析）。\n从第二步开始，只能以所在成员的数字走相应的步数，不能多也不能少, 如果目标不可达返回\n-1\n，只输出最少的步骤数量。\n只能向数组的尾部走，不能往回走。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "由正整数组成的数组，以空格分隔，数组长度小于100，\n请自行解析数据数量\n。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "正整数，表示最少的步数，如果不存在输出\n-1"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n7 5 9 4 2 6 8 3 5 4 3 9\n输出\n2",
+      "cases": [
+        {
+          "input": "7 5 9 4 2 6 8 3 5 4 3 9",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "第一步： 第一个可选步长选择2，从第一个成员7开始走2步，到达9；\n第二步： 从9开始，经过自身数字9对应的9个成员到最后。\n输入\n1 2 3 7 1 5 9 3 2 1\n输出\n-1\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "首先，这题至少要走两步，因为第一步的步长是自选的，只要小于len/2，即可，也就是说第一步走完，应该处于[1, len/2]的范围中，我们假设处于A位置。\n而第二步开始，每次走的步长都是前一步结束所在位置的值，比如第二步要走的步长就是A位置的值，因此有三种可能：\n第二步要走的步长刚好到达arr.length-1位置，则最短步数就是2\n第二步要走的步长小于arr.length-1位置，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "需要继续往下走，逻辑还是第二步的逻辑，递归下去\n第二步要走的步长大于arr.length-1位置，则\n\n当前路径走不通\nJavaScript算法源码\n可以解开代码中注释log辅助理解"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = list(map(int, input().split()))\n\n\ndef loop(arr, i, count):\n    j = i + arr[i]\n\n    if j == len(arr) - 1:\n        return count\n    elif j < len(arr) - 1:\n        count += 1\n        return loop(arr, j, count)\n    else:\n        return -1\n\n\n# 算法入口\ndef getResult():\n    res = []\n    for i in range(1, len(arr)//2):\n        res.append(loop(arr, i, 2))\n\n    tmp = list(filter(lambda x: x>0, res))\n\n    tmp.sort()\n\n    if len(tmp) > 0:\n        return tmp[0]\n    else:\n        return -1\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

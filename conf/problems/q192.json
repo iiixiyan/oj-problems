@@ -1,0 +1,41 @@
+{
+  "id": "q192",
+  "title": "数字反转打印",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小华是个对数字很敏感的小朋友，他觉得数字的不同排列方式有特殊美感。\n某天，小华突发奇想，如果数字多行排列，第一行1个数，第二行2个，第三行3个，即第n行有n个数字，并且奇数行正序排列，偶数行逆序排列，数字依次累加。\n这样排列的数字一定很有意思。聪明的你能编写代码帮助小华完成这个想法吗？\n规则总结如下：\na、每个数字占据4个位置，不足四位用‘*’补位，如1打印为1***。\nb、数字之间相邻4空格。\nc、数字的打印顺序按照正序逆序交替打印,奇数行正序，偶数行逆序。\nd、最后一行数字顶格，第n-1行相对第n行缩进四个空格"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为N，表示打印多少行; 1<=N<=30\n输入：2"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "xxxx1***\n3***xxxx2***"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2\n输出",
+      "cases": [
+        {
+          "input": "2\n输出",
+          "output": "",
+          "explanation": ""
+        }
+      ]
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\n\n\n# 算法入口\ndef getResult():\n    printNum = 1  # 每行要打印的数,起始为第一行第一个数1\n    for i in range(1, n + 1):\n        printList = []\n        for j in range(i):\n            # 每行多少个数\n            printList.append(printNum)\n            printNum += 1\n\n        if i % 2 == 0:\n            # 如果是偶数行,则逆序\n            printList.reverse()\n\n        sArr = []\n\n        for ele in printList:\n            tmp = str(ele)\n\n            # 如果数字不足4位则后面用*补足\n            while len(tmp) < 4:\n                tmp += \"*\"\n\n            sArr.append(tmp)\n\n        res = \"    \".join(sArr)\n\n        for k in range(n - i):\n            # 每行的缩进\n            res = \"    \" + res\n\n        print(res)\n\n\n# 调用算法\ngetResult()"
+  },
+  "verified": false
+}

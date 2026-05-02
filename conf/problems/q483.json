@@ -1,0 +1,46 @@
+{
+  "id": "q483",
+  "title": "九宫格按键输入",
+  "score": 200,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "九宫格按键输入，输出显示内容，有英文和数字两个模式，默认是数字模式，数字模式直接输出数字，英文模式连续按同一个按键会依次出现这个按键上的字母，如果输入”/”或者其他字符，则循环中断。\n字符对应关系如图：\n要求输入一串按键，输出屏幕显示。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入范围为数字 0~9 和字符’#’、’/’，输出屏幕显示，例如，\n在数字模式下，输入 1234，显示 1234\n在英文模式下，输入 1234，显示,adg"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "#用于切换模式，默认是数字模式，执行#后切换为英文模式；\n/表示延迟，例如在英文模式下，输入 22/222，显示为 bc；\n英文模式下，多次按同一键，例如输入 22222，显示为 b；"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n123#222235/56\n输出\n123adjjm",
+      "cases": [
+        {
+          "input": "123#222235/56",
+          "output": "123adjjm",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题主要考察逻辑分析，和栈结构使用。\n我的\n\n如下：\n首先，定义一个栈stack，用于缓存结果。再定义一个isEng标识来记录当前模式，true代表英文模式，false代表数字模式。isEng初始化为false。\n然后，遍历输入的字符串s，将s的每一个字符c遍历出来：\n如果 c == '#'，则表示要切换模式，即让 isEng = !isEng，但是在切换模式之前，需要先检查isEng是否为英文模式，如果是英文模式，则切换前，需要先将栈顶数字的循环中断，并转化为对应的字母。\n如果 c == '/'，则表示要循环中断，此时先检查isEng是否为英文模式，若是，则再将栈顶数字转化为对应字母，若不是，则不做处理\n如果 c 为其他字符，则：\n如果isEng为数字模式，则c直接压入stack中\n如果isEng为英文模式，则需要检查stack栈顶元素是否和c相同，若不同，则需要循环中断，即将栈顶数字转化为字母，若相同，则栈顶数字重复次数++\n本题循环中断的逻辑，需要做好预检查，即\n当前必须是英文模式\n栈不能为空\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n# 全局变量\nstack = []\ntopRepeat = 0\nisEng = False\n\ndictionary = (\" \", \",.\", \"abc\", \"def\", \"ghi\", \"jkl\", \"mno\", \"pqrs\", \"tuv\", \"wxyz\")\n\n\n# 基于dictionary,获取一个数字c被重复repeat次后,对应的字符\ndef mapping(c, repeat):\n    num = int(c)\n    s1 = dictionary[num]\n    i = (repeat - 1) % len(s1)\n    return s1[i]\n\n\n# 英文模式连续按同一个按键会依次出现这个按键上的字母,如果输入”/”或者其他字符,则循环中断\n# interrupt用于处理循环中断后的逻辑\ndef interrupt():\n    global topRepeat\n    if not isEng or len(stack) == 0 or topRepeat == 0:\n        return\n    stack.append(mapping(stack.pop(), topRepeat))\n    topRepeat = 0\n\n\n# 算法入口\ndef getResult():\n    global s\n    global isEng\n    global topRepeat\n\n    s += \" \"\n\n    for c in s:\n        if c == '#':\n            # 如果输入”/”或者其他字符,则循环中断\n            interrupt()\n            # #用于切换模式\n            isEng = not isEng\n        elif c == '/':\n            # 如果输入”/”或者其他字符,则循环中断\n            interrupt()\n        else:\n            # 数字模式直接输出数字\n            if not isEng:\n                stack.append(c)\n                continue\n\n            # 英文模式,需要检查栈顶\n            # 如果栈顶不是英文模式字符&#xff08;这里可以基于topRepeat判断,topRepeat是英文模式下对应按键的重复次数,如果为0,则说明栈顶存储的不是英文模式字符&#xff09;,则缓存对应字符c,并记录重复次数\n            if topRepeat == 0:\n                stack.append(c)\n                topRepeat += 1\n                continue\n\n            # 如果栈顶字符有重复次数,则此时需要比较当前按键c和之前重复的按键stack.getLast是否相同\n            if c != stack[-1]:\n                # 如果输入”/”或者其他字符,则循环中断\n                interrupt()\n                stack.append(c)\n\n            topRepeat += 1\n\n    return \"\".join(stack[:-1])\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,56 @@
+{
+  "id": "q172",
+  "title": "响应报文时间",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "IGMP 协议中，有一个字段称作最大响应时间 (Max Response Time) ，HOST收到查询报文，解折出 MaxResponsetime 字段后，需要在 (0，MaxResponseTime] 时间 (s) 内选取随机时间回应一个响应报文，如果在随机时间内收到一个新的查询报文，则会根据两者时间的大小，选取小的一方刷新回应时间。\n最大响应时间有如下计算方式：\n当 Max Resp Code < 128, Max Resp Time = Max Resp Code；\n当 Max Resp Code ≥ 128,\nMax Resp Time = (mant | 0x10) << (exp + 3)；\n注: exp最大响应时间的高5~7位: mant 为最大响应时间的低4位。\n其中接收到的MaxRespCode 最大值为 255，以上出现所有字段均为无符号数。\n现在我们认为 HOST收到查询报文时，选取的随机时间必定为最大值，现给出 HOST 收到查询报文个数 C，HOST 收到该报文的时间T，以及查询报文的最大响应时间字段值 M，请计算出HOST 发送响应报文的时间。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为查询报文个数 C，后续每行分别为 HOST 收到报文时间 T，及最大响应时间M，以空格分割。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "HOST 发送响应报文的时间。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "确定只会发送一个响应报文， 不存在计时结束后依然收到查询报文的情况。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n0 20\n1 10\n8 20\n输出\n11",
+      "cases": [
+        {
+          "input": "3\n0 20\n1 10\n8 20",
+          "output": "11",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "收到3个报文，\n第0秒收到第1个报文，响应时间为20秒，则要到0+20=20秒响应；\n第1秒收到第2个报文，响应时间为10秒，则要到1+10=11秒响应，与上面的报文的响应时间比较获得响应时间最小为11秒；\n第8秒收到第3个报文，响应时间为20秒，则要到8+20=28秒响应，与第上面的报文的响应时间比较获得响应时间最小为11秒；\n最终得到最小响应报文时间为11秒\n输入\n2\n0 255\n200 60\n输出\n260\n\n收到2个报文，\n第0秒收到第1个报文，响应时间为255秒，则要到(15 | 0x10) << (7 + 3)= 31744秒响应; (mant = 15，exp =7)\n第200秒收到第2个报文，响应时间为60秒，则要到200+60-260秒响应，与第上面的报文的响应时间比较获得响应时间最小为260秒:\n最终得到最小响应报文时间为260秒"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题主要考察字符串操作。\n每一个报文都一个最迟响应时间，即 t + getMaxResponseTime(m)，我们只需要求出最小的最迟响应时间即可。\n关于getMaxResponseTime的逻辑：\n当 m < 128 时，m就是MaxResponseTime\n当 m >= 128 时，需要将m转化为八位二进制字符串，取1~3范围作为exp，取4~7范围作为mant\n然后再将exp和mant从二进制串转化为十进制，带入公式：(mant | 16) << (exp + 3) 求解即可。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nc = int(input())\nmessages = [list(map(int, input().split())) for _ in range(c)]\n\n\ndef getMaxResponseTime(m):\n    if m >= 128:\n        bStr = bin(m)[2:]\n\n        exp = int(bStr[1:4], 2)\n        mant = int(bStr[4:], 2)\n\n        return (mant | 16) << (exp + 3)\n    else:\n        return m\n\n\n# 算法入口\ndef getResult():\n    ans = sys.maxsize\n\n    for t, m in messages:\n        respTime = t + getMaxResponseTime(m)\n        ans = min(ans, respTime)\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

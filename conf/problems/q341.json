@@ -1,0 +1,59 @@
+{
+  "id": "q341",
+  "title": "找城市",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一张地图上有n个城市，城市和城市之间有且只有一条道路相连：要么直接相连，要么通过其它城市中转相连（可中转一次或多次）。城市与城市之间的道路\n都不会成环\n。\n当切断通往某个城市 i 的所有道路后，地图上将分为多个连通的城市群，设该城市i的聚集度为DPi（Degree of Polymerization），DPi = max（城市群1的城市个数，城市群2的城市个数，…城市群m 的城市个数）。\n请找出地图上DP值最小的城市（即找到城市j，使得DPj = min(DP1,DP2 … DPn))\n提示：如果有\n多个城市\n都满足条件，这些城市都要找出来（\n可能存在多个解\n）\n提示：DPi的计算，可以理解为已知一棵树，删除某个节点后；生成的多个子树，求解多个子数节点数的问题。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "每个样例：第一行有一个整数N，表示有N个节点。1 <= N <= 1000。\n接下来的N-1行每行有两个整数x，y，表示城市x与城市y连接。1 <= x,  y <= N"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出城市的编号。如果有多个，按照编号升序输出。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n1 2\n2 3\n3 4\n4 5\n输出\n3",
+      "cases": [
+        {
+          "input": "5\n1 2\n2 3\n3 4\n4 5",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "输入表示的是如下地图：\n对于城市3，切断通往3的所有道路后，形成2个城市群[（1，2），（4，5）]，其聚集度分别都是2。DP3 = 2。\n对于城市4，切断通往城市4的所有道路后，形成2个城市群[（1，2，3），（5）]，DP4 = max（3，1）= 3。\n依次类推，切断其它城市的所有道路后，得到的DP都会大于2，因为城市3就是满足条件的城市，输出是3。\n输入\n6\n1 2\n2 3\n2 4\n3 5\n3 6\n输出\n2 3\n\n将通往2或者3的所有路径切断，最大城市群数量是3，其他任意城市切断后，最大城市群数量都比3大，所以输出2 3"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1的意思如下：\nDPi = max（城市群1的城市个数，城市群2的城市个数，…城市群m 的城市个数）\n题目要求找出地图上DP值最小的城市（即找到城市j，使得DPj = min(DP1,DP2 … DPn))，\n因此DP3最小，输出DP3的3。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2图示如下\n输出2，3。\n通过上面两个示例的图示可以发现，其实本题就是求解：图的连通分量。\n本题的难点在于，分量关系没有直接给出，需要我们自己推导，其次是需要我们统计出每个连通分量的节点个数。\n比如，上面且1的所有联系，则会产生两个连通分量，分别是[1], [4,2,3,5,6]，这两个连通分量的节点个数分别为1，5。\n求解图的连通分量，我们一般使用并查集。\n但是，这里我们不能直接根据输入的连接关系，来产生并查集，因为输入的连接关系没有被切断。\n本题是要我们尝试切断每一个城市的连接，因此我们遍历出每一个城市，比如城市2，然后遇到和城市2相关的连接后，我们就跳过并查集的合并操作，这样就能产生切断效果。\n我们模拟下"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2\n初始时，每个城市的父都是自己\n输入的连接关系如下\n1 2\n2 3\n2 4\n3 5\n3 6\n现在我们要切断城市2的所有联系，则遇到和2相关的连接时就不进行合并操作\n因此上述连接关系只需要考虑\n3 5\n3 6\n这样的话，最终并查集的合并结果为\n可以发现，父为3的连通分量具有最多城市数量\n这样的话，我们就可以求解出每个DPi了，最后求其中最小的DP对应i即可。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import re\nimport sys\n\n\n# IP地址转整型\ndef ip2dec(ipStr):\n    res = 0\n\n    blocks = ipStr.split(\".\")\n    for block in blocks:\n        res = int(block) | (res << 8)\n\n    return res\n\n\nclass Range:\n    def __init__(self, city, startIpStr, endIpStr):\n        self.city = city\n        # 将IP地址转为整型\n        self.startIp = ip2dec(startIpStr)\n        self.endIp = ip2dec(endIpStr)\n        self.ipLen = self.endIp - self.startIp + 1\n\n\n# 输入获取\ncities = input().split(\";\")  # 城市IP列表\nqueryIps = input().split(\",\")  # 带查询的IP列表\n\n# 核心代码\nranges = []\n\n# 提取各个城市IP列表信息\nfor s in cities:\n    # * 用于函数参数自动解构\n    ranges.append(Range(*(re.split(r\"[=,]\", s))))\n\nans = []\n\n# 遍历待查询的IP地址\nfor ip in queryIps:\n    ipDec = ip2dec(ip)\n\n    # 记录该目标IP地址的最佳匹配城市\n    best_city = \"\"\n    # 记录最佳匹配城市IP段的长度\n    minLen = sys.maxsize\n\n    # 将带查询IP与城市IP段列表逐一匹配\n    for ran in ranges:\n        # 如果带查询的IP地址 在某城市的IP段范围内,且该城市的IP段长度更小,则该城市为待查询IP的最佳匹配城市\n        if ran.endIp >= ipDec >= ran.startIp and minLen > ran.ipLen:\n            best_city = ran.city\n            minLen = ran.ipLen\n\n    ans.append(best_city)\n\nprint(\",\".join(ans))"
+  },
+  "verified": false
+}

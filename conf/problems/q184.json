@@ -1,0 +1,56 @@
+{
+  "id": "q184",
+  "title": "报文回路",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "IGMP 协议中响应报文和查询报文，是维系组播通路的两个重要报文，在一条已经建立的组播通路中两个相邻的 HOST 和 ROUTER，ROUTER 会给 HOST 发送查询报文，HOST 收到查询报文后给 ROUTER 回复一个响应报文，以维持相之间的关系，一旦这关系断裂，那么这条组播通路就异常”了。现通过某种手段，抓取到了 HOST 和 ROUTER 两者通讯的所有响应报文和查询报文，请分析该组播通路是否“正常”"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行抓到的报文数量C (C≤100) ，后续C行依次输入设备节点D1和D2，表示从D1到D2发送了单向的报文，D1和D2用空格隔开。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "组播通路是否“正常”，正常输出True， 异常输出False。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n1 2\n2 3\n3 2\n1 2\n2 1\n输出\nTrue",
+      "cases": [
+        {
+          "input": "5\n1 2\n2 3\n3 2\n1 2\n2 1",
+          "output": "True",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n3\n1 3\n3 2\n2 3\n输出\nFalse\n\n无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1图示"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2图示\n根据题目意思，想要组播通路之间正常，则有数据传递的两个节点之间必须是双向的。\n即如果存在D1 → D2，那么需要检查有没有D2 → D1，如果没有的话，则通路失败。\n如果所有的节点和其交互的节点都存在双向传递的话，则整个通路成功。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\narr = [input().split() for _ in range(n)]\n\ntrans = {}\nfor send, receive in arr:\n    if trans.get(send) is None:\n        trans[send] = set()\n\n    if trans.get(receive) is None:\n        trans[receive] = set()\n\n    trans[send].add(receive)\n\n\n# 算法入口\ndef getResult():\n    for s in trans:\n        for c in trans[s]:\n            if s not in trans[c]:\n                return \"False\"\n\n    return \"True\"\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

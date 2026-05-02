@@ -1,0 +1,40 @@
+{
+  "id": "q515",
+  "title": "字符统计及重排",
+  "score": 100,
+  "tags": [
+    "E卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n给出一个仅包含字母的\n字符串\n，不包含空格，统计字符串中各个字母（区分大小写）出现的次数，\n并按照字母出现次数从大到小的顺序。输出各个字母及其出现次数。\n如果次数相同，按照自然顺序进行排序，且小写字母在大写字母之前。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一行，为一个仅包含字母的字符串。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "按照字母出现次数从大到小的顺序输出各个字母和字母次数，用英文分号分隔，"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "末尾的分号；\n字母和次数间用英文冒号分隔。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nimport functools\n\ns = input()\n\n\ndef cmp(a, b):\n    if a[1] != b[1]:\n        return b[1] - a[1]\n\n    if (a[0].islower() and b[0].islower()) or (a[0].isupper() and b[0].isupper()):\n        return 1 if a[0] > b[0] else -1\n    else:\n        if a[0].isupper():\n            return 1\n        else:\n            return -1\n\n\n# 算法入口\ndef getResult():\n    letter = {}\n\n    for c in s:\n        letter[c] = letter.get(c, 0) + 1\n\n    letterList = list(letter.items())\n\n    letterList.sort(key=functools.cmp_to_key(cmp))\n\n    return \"\".join(list(map(lambda x: f\"{x[0]}:{x[1]};\", letterList)))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

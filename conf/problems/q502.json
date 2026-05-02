@@ -1,0 +1,19 @@
+{
+  "id": "q502",
+  "title": "不等式是否满足约束并输出最大差",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n给定一组\n不等式\n，判断是否成立并输出不等式的最大差(输出浮点数的整数部分)\n要求:\n不等式系数为 double类型，是一个二维数组\n不等式的变量为 int类型，是一维数组;\n不等式的目标值为 double类型，是一维数组\n不等式约束为字符串数组，只能是:“>”,“>=”,“<”,“<=”,“=”，\n例如，不等式组:"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = list(map(lambda s: s.split(\",\"), input().split(\";\")))\n\n\ndef compareWithZero(val, constraint):\n    if constraint == \">\":\n        return val > 0\n    elif constraint == \">=\":\n        return val >= 0\n    elif constraint == \"<\":\n        return val < 0\n    elif constraint == \"<=\":\n        return val <= 0\n    elif constraint == \"=\":\n        return val == 0\n    else:\n        return False\n\n\n# 算法入口\ndef getResult(arr):\n    a11, a12, a13, a14, a15 = map(float, arr[0])\n    a21, a22, a23, a24, a25 = map(float, arr[1])\n    a31, a32, a33, a34, a35 = map(float, arr[2])\n    x1, x2, x3, x4, x5 = map(float, arr[3])\n    b1, b2, b3 = map(float, arr[4])\n    y1, y2, y3 = arr[5]\n\n    diff1 = a11 * x1 + a12 * x2 + a13 * x3 + a14 * x4 + a15 * x5 - b1\n    diff2 = a21 * x1 + a22 * x2 + a23 * x3 + a24 * x4 + a25 * x5 - b2\n    diff3 = a31 * x1 + a32 * x2 + a33 * x3 + a34 * x4 + a35 * x5 - b3\n\n    flag = compareWithZero(diff1, y1) and compareWithZero(diff2, y2) and compareWithZero(diff3, y3)\n\n    maxDiff = max(diff1, diff2, diff3)\n\n    print(f\"{flag} {int(maxDiff)}\".lower())\n\n\n# 算法调用\ngetResult(arr)"
+  },
+  "verified": false
+}

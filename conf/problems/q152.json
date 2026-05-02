@@ -1,0 +1,72 @@
+{
+  "id": "q152",
+  "title": "递增字符串",
+  "score": 200,
+  "tags": [
+    "A卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "定义字符串完全由 ‘A’ 和 ‘B’组成，当然也可以全是’A’或全是’B’。如果字符串从前往后都是以字典序排列的，那么我们称之为严格递增字符串。\n给出一个字符串s，允许修改字符串中的任意字符，即可以将任何的’A’修改成’B’，也可以将任何的’B’修改成’A’，\n求可以使s满足严格递增的最小修改次数。\n0 < s的长度 < 100000。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一个字符串： “AABBA”"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出：1"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nAABBA\n输出\n1",
+      "cases": [
+        {
+          "input": "AABBA",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "修改最后一位得到AABBB。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "新增一个"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "：\nAAA\nB\nAAABBBB\nA\nBB\n该"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "只需要修改两次。\n我的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "如下：\n首先，我们需要记录字符串长度为total，然后统计字符串中A的数量，记为A。\n然后用动态规划，即定义一个dp数组，dp[i]的含义是 [0,i]闭区间内有多少个A。\n统计好后，我们可以假设将 0 ~ i 闭区间内全部变成A，需要修改多少次？\n0~i闭区间内理论会有 i+1 个A，而目前有dp[i] 个A，因此需要修改 i + 1 - dp[i] 次。\n接着考虑将 i+1 ~ str.length-1 区间内全部变成B，需要修改多少次？\ndp[i]表示 0~i闭区间内A的数量，那么 i+1~str.length-1 区间内A的数量= A - dp[i]\n因此需要修改A - dp[i]次\n因此，一共需要修改 i + 1 - dp[i] + A - dp[i] 次\n我们从 0 ~ str.length-1 遍历出每一个 i 带入上面公式，保留最小的结果，就是\n\n。\n另外，本题0 < s的长度 < 100000，如果使用dp数组的话，最坏需要定义一个100000长度的数组，这是有可能爆内存的，因此，下面代码中我不是dp数组，直接使用leftA变量。\n补充一下：上面逻辑遗漏考虑两个分界线位置：\n如上图所示，分别是-1索引位置和n索引位置，即上图两个绿色箭头位置。\n前面逻辑，只考虑分界线位置在数组索引的0~n-1，因此当"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "如下时：\nBBABB\n使用上面逻辑会产生问题。\n此时，我们应该记录将字符串全部修改为A的次数，和全部修改为B的次数，即上面两个绿色箭头分界线。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult(s):\n    total = len(s)\n    A = len(s.replace(\"B\", \"\"))  # 字符串str中共有多少个A\n\n    # 如果全B或全A,则直接返回0\n    if A == 0 or A == total:\n        return 0\n\n    # 修改为全A或者全B的次数取最小值\n    ans = min(A, total - A)\n\n    leftA = 0\n    for i in range(total):\n        if s[i] == 'A':\n            leftA += 1\n\n        ans = min(i + 1 - leftA + A - leftA, ans)\n\n    return ans\n\n\n# 算法调用\nprint(getResult(s))"
+  },
+  "verified": false
+}

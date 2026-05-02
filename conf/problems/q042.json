@@ -45,6 +45,8 @@
       "content": "1示意图如下\nJS本题可以利用数组模拟链表\n基于链表数据结构解题\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nhead, n = input().split()\n\nnodes = {}\nfor i in range(int(n)):\n    addr, val, nextAddr = input().split()\n    nodes[addr] = [val, nextAddr]\n\n\n# 算法入口\ndef getResult(head, nodes):\n    linkedlist = []\n    node = nodes.get(head)\n\n    while node is not None:\n        val, next = node\n        linkedlist.append(val)\n        node = nodes.get(next)\n\n    length = len(linkedlist)\n    mid = int(length / 2)\n\n    return linkedlist[mid]\n\n\n# 算法调用\nprint(getResult(head, nodes))"
+  },
   "verified": false
 }

@@ -1,0 +1,34 @@
+{
+  "id": "q567",
+  "title": "数大雁",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n一群大雁往南飞，给定一个字符串记录地面上的游客听到的大雁叫声，请给出叫声最少由几只大雁发出。\n具体的:\n​ 1.大雁发出的完整叫声为”quack“，因为有多只大雁同一时间嘎嘎作响，所以字符串中可能会混合多个”quack”。\n​ 2.大雁会依次完整发出”quack”，即字符串中’q’ ,‘u’, ‘a’, ‘c’, ‘k’ 这5个字母按顺序完整存在才能计数为一只大雁。如果不完整或者没有按顺序则不予计数。\n​ 3.如果字符串不是由’q’, ‘u’, ‘a’, ‘c’, ‘k’ 字符组合而成，或者没有找到一只大雁，请返回-1。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一个字符串，包含大雁quack的叫声。1 <=\n字符串长度\n<= 1000，字符串中的字符只有’q’, ‘u’, ‘a’, ‘c’, ‘k’。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "大雁的数量"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nquacks = input()\n\n\n# 算法入口\ndef getResult():\n    q = []\n    u, a, c = 0, 0, 0\n\n    rans = []\n\n    for i in range(len(quacks)):\n        char = quacks[i]\n\n        if char == 'q':\n            q.append(i)\n        elif char == 'u':\n            if u + 1 <= len(q):\n                u += 1\n        elif char == 'a':\n            if a + 1 <= u:\n                a += 1\n        elif char == 'c':\n            if c + 1 <= a:\n                c += 1\n        elif char == 'k':\n            if c >= 1:\n                rans.append([q.pop(0), i])\n                u -= 1\n                a -= 1\n                c -= 1\n        else:\n            return -1\n\n    if len(rans) == 0:\n        return -1\n\n    ans = 1\n    for i in range(len(rans)):\n        count = 1\n        for j in range(i + 1, len(rans)):\n            if rans[i][1] >= rans[j][0]:\n                count += 1\n\n        ans = max(ans, count)\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

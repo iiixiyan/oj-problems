@@ -1,0 +1,59 @@
+{
+  "id": "q354",
+  "title": "欢乐的周末",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小华和小为是很要好的朋友，他们约定周末一起吃饭。\n通过手机交流，他们在地图上选择了多个聚餐地点（由于自然地形等原因，部分聚餐地点不可达），求小华和小为都能到达的聚餐地点有多少个？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入 m 和 n\nm 代表地图的长度\nn 代表地图的宽度\n第二行开始具体输入地图信息，地图信息包含：\n0 为通畅的道路\n1 为障碍物（且仅1为障碍物）\n2 为小华或者小为，地图中必定有且仅有2个 （非障碍物）\n3 为被选中的聚餐地点（非障碍物）"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "可以被两方都到达的聚餐地点数量，行末无空格。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "地图的长宽为 m 和 n，其中：\n4 ≤ m ≤ 100\n4 ≤ n ≤ 100\n聚餐的地点数量为 k，则\n1< k ≤ 100"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4 4\n2 1 0 3\n0 1 2 1\n0 3 0 0\n0 0 0 0\n输出\n2",
+      "cases": [
+        {
+          "input": "4 4\n2 1 0 3\n0 1 2 1\n0 3 0 0\n0 0 0 0",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "第一行输入地图的长宽为3和4。\n第二行开始为具体的地图，其中：3代表小华和小明选择的聚餐地点；2代表小华或者小明（确保有2个）；0代表可以通行的位置；1代表不可以通行的位置。\n此时两者能都能到达的聚餐位置有2处。\n输入\n4 4\n2 1 2 3\n0 1 0 0\n0 1 0 0\n0 1 0 0\n输出\n0\n\n第一行输入地图的长宽为4和4。\n第二行开始为具体的地图，其中：3代表小华和小明选择的聚餐地点；2代表小华或者小明（确保有2个）；0代表可以通行的位置；1代表不可以通行的位置。\n由于图中小华和小为之间有个阻隔，此时，没有两人都能到达的聚餐地址，故而返回0。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用并查集解题。\n小华和小为想去同一个餐厅，那么必然小华和小为和餐厅是可以连通，如果它们不能连通，则去不了同一个餐厅。\n因此，我们可以遍历矩阵中每一个元素，将它和其上下左右元素进行连接，需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是如果遍历的元素本身是1，或者其上下左右的元素是1，则不进行连接。\n这样的话，遍历完矩阵后，就可以得到一个连通图。\n同时在遍历矩阵过程中，记录小华、小为（值为2），以及餐厅（值为3）的位置，遍历结束后，首先看小华和小为是不是同一个祖先，若不是，则二者不可连通，就更别说去同一个餐厅了，因此返回0。若二者可以连通，则再看每一个餐厅的祖先是否和华为的祖先相同，若相同则计数++，这样就可以得到小华，小为去的同一个餐厅的数量了。\n2023.11.30 请特别\n\n下：\n本题输入中\nm 代表地图的长度\nn 代表地图的宽度\n长度 m 指的是地图矩阵的行数，宽度 n 指的是地图矩阵的列数。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, n = map(int, input().split())  # 长度m是行数, 宽度n是列数\nmatrix = [list(map(int, input().split())) for _ in range(m)]\n\n\n# 并查集实现\nclass UnionFindSet:\n    def __init__(self, n):\n        self.fa = [i for i in range(n)]\n\n    def find(self, x):\n        if x != self.fa[x]:\n            self.fa[x] = self.find(self.fa[x])\n            return self.fa[x]\n        return x\n\n    def union(self, x, y):\n        x_fa = self.find(x)\n        y_fa = self.find(y)\n        if x_fa != y_fa:\n            self.fa[y_fa] = x_fa\n\n\n# 算法入口\ndef getResult():\n    rows = len(matrix)\n    cols = len(matrix[0])\n\n    ufs = UnionFindSet(rows * cols)\n\n    #  记录小华,小为的位置\n    huawei = []\n    # 记录餐厅的位置\n    restaurants = []\n    # 上下左右四个方向偏移量\n    offsets = ((-1, 0), (1, 0), (0, -1), (0, 1))\n\n    for i in range(rows):\n        for j in range(cols):\n            if matrix[i][j] != 1:\n                # 二维坐标(i, j) 转为 一维坐标pos\n                pos = i * cols + j\n\n                if matrix[i][j] == 2:\n                    # 收集小华,小为的位置\n                    huawei.append(pos)\n                elif matrix[i][j] == 3:\n                    # 收集餐厅的位置\n                    restaurants.append(pos)\n\n                for offset in offsets:\n                    newI = i + offset[0]\n                    newJ = j + offset[1]\n\n                    if 0 <= newI < rows and 0 <= newJ < cols and matrix[newI][newJ] != 1:\n                        # 如果(i,j)和&#xff08;newI,newJ&#xff09;位置都是非1,则合并\n                        ufs.union(pos, newI * cols + newJ)\n\n    # 小华所在连通分量的根\n    hua_fa = ufs.find(huawei[0])\n    # 小为所在连通分量的根\n    wei_fa = ufs.find(huawei[1])\n\n    # 如果小华和小为的不属于同一个连通分量,则二人无法去往相同餐厅\n    if hua_fa != wei_fa:\n        return 0\n\n    # 找出和小华、小为在同一个连通分量里面的餐厅\n    ans = 0\n    for r in restaurants:\n        if ufs.find(r) == hua_fa:\n            ans += 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

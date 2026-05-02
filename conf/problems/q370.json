@@ -1,0 +1,17 @@
+{
+  "id": "q370",
+  "title": "路口最短时间问题",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "假定街道是棋盘型的，每格距离相等，车辆通过每格街道需要时间均为 timePerRoad；\n街道的街口（交叉点）有交通灯，灯的周期 T（=lights[row][col]）各不相同；\n车辆可直行、左转和右转，其中直行和左转需要等相应 T 时间的交通灯才可通行，右转无需等待。\n现给出 n * m 个街口的交通灯周期，以及起止街口的坐标，计算车辆经过两个街口的最短时间。\n其中：\n起点和终点的交通灯不计入时间，且可以在任意方向经过街口\n不可超出 n * m 个街口，不可跳跃，但边线也是道路（即：lights[0][0] -> lights[0][1] 是有效路径）\n入口函数定义："
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nn, m = map(int, input().split())\nlights = [list(map(int, input().split())) for _ in range(n)]\ntimePerRoad = int(input())\nrowStart, colStart = map(int, input().split())\nrowEnd, colEnd = map(int, input().split())\n\noffsets = ((-1, 0), (1, 0), (0, -1), (0, 1))\nvisited = [[False] * m for _ in range(n)]\n\n\n# 根据三点坐标,确定拐弯方向\ndef getDirection(preX, preY, curX, curY, nextX, nextY):\n    \"\"\"\n    :param preX: 前一个点横坐标\n    :param preY: 前一个点纵坐标\n    :param curX: 当前点横坐标\n    :param curY: 当前点纵坐标\n    :param nextX: 下一个点横坐标\n    :param nextY: 下一个点纵坐标\n    :return: cur到next的拐弯方向, >0 表示向左拐, ==0 表示直行&#xff08;含调头&#xff09;, <0 表示向右拐\n    \"\"\"\n    # 向量 pre->cur\n    dx1 = curX - preX\n    dy1 = curY - preY\n\n    # 向量 cur->next\n    dx2 = nextX - curX\n    dy2 = nextY - curY\n\n    #  两个向量的叉积 >0 表示向左拐, ==0 表示直行&#xff08;含调头&#xff09;, <0 表示向右拐\n    return dx1 * dy2 - dx2 * dy1\n\n\n# 暴力搜索\ndef dfs(curX, curY, preX, preY, cost, minCost):\n    \"\"\"\n    :param curX: 当前位置横坐标\n    :param curY: 当前位置纵坐标\n    :param preX: 上一个位置横坐标\n    :param preY: 上一个位置纵坐标\n    :param cost: 到达当前位置花费的时间\n    :param minCost: 记录起点到终点的最小花费时间\n    \"\"\"\n    # 如果到达当前前花费的时间cost 达到了 已知minCost,那么后续路径就没必要探索了,因为必然要比minCost大\n    if cost >= minCost[0]:\n        return\n\n    # 如果当前点是终点,且花费的时间cost更少,则更新minCost\n    if curX == rowEnd and curY == colEnd:\n        minCost[0] = cost\n        return\n\n    # 否则,从当前位置的四个方向继续探索路径\n    for offsetX, offsetY in offsets:\n        # 新位置\n        nextX = curX + offsetX\n        nextY = curY + offsetY\n\n        # 新位置越界或者已经访问过,则不能访问,继续其他方向探索\n        if nextX < 0 or nextX >= n or nextY < 0 or nextY >= m or visited[nextX][nextY]:\n            continue\n\n        # 标记新位置访问过\n        visited[nextX][nextY] = True\n\n        # 根据pre,cur,next三点,判断拐弯方向\n        direction = getDirection(preX, preY, curX, curY, nextX, nextY)\n\n        # cur到达next位置必须要增加timePreRoad个时间\n        increment = timePerRoad\n        # preX=-1, preY=-1 表示pre位置不存在,此时探索下一个位置不需要花费等待周期\n        if preX >= 0 and preY >= 0 and direction >= 0:\n            # pre位置存在,且cur->next是左拐或者直行,则需要增加当前位置对应的等待周期时间\n            increment += lights[curX][curY]\n\n        # 递归进入新位置\n        dfs(nextX, nextY, curX, curY, cost + increment, minCost)\n\n        # 回溯\n        visited[nextX][nextY] = False\n\n\n# 算法入口\ndef getResult():\n    visited[rowStart][colStart] = True\n\n    minCost = [sys.maxsize]\n    dfs(rowStart, colStart, -1, -1, 0, minCost)\n\n    return minCost[0]\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

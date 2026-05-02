@@ -1,0 +1,64 @@
+{
+  "id": "q363",
+  "title": "符号运算",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个表达式，求其分数计算结果。\n表达式的限制如下：\n所有的输入数字皆为正整数（包括0）\n仅支持四则运算（+-*/）和括号\n结果为整数或分数，分数必须化为最简格式（比如6，3/4，7/8，90/7）\n除数可能为0，如果遇到这种情况，直接输出\"ERROR\"\n输入和最终计算结果中的数字都不会超出整型范围"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入一定合法，不会出现括号匹配的情况"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "字符串格式的表达式，仅支持+-*/，数字可能超过两位，可能带有空格，没有负数\n长度小于200个字符"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "表达式结果，以最简格式表达\n如果结果为整数，那么直接输出整数\n如果结果为负数，那么分子分母不可再约分，可以为假分数，不可表达为带分数\n结果可能是负数，符号放在前面"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1 + 5 * 7 / 8\n输出\n43/8",
+      "cases": [
+        {
+          "input": "1 + 5 * 7 / 8",
+          "output": "43/8",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n1 / (0 - 5)\n输出\n-1/5\n\n符号需要提到最前面\n输入\n1 * (3*4/(8-(7+0)))\n输出\n12\n\n括号可以多重嵌套"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是经典的中缀表达式计算问题。\n双栈实现中缀表达式计算\n关于中缀表达式计算，通常是定义两个栈结构：\n一个栈用于记录操作数：假设为oper_num_stack\n一个栈用于记录操作符：假设为oper_sign_stack\n下面我们通过几个例子来"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "两个栈的工作原理：\n通过上面流程，我们可以发现，每次出栈oper_sign_stack一个运算符，那么就要出栈oper_num_stack两个操作数。\n那么如果存在下面这种情况，是否支持这样的出栈运算逻辑呢？\n上面运算出错的问题就在于，当+入栈oper_sign_stack前，我们应该比较要入栈的'+'运算，和栈顶的'*'运算，哪个优先级更高，如果栈顶运算符优先级更高，此时我们应该先将栈顶运算符出栈运算，即如下：\n另外，对于运算符入栈时，对比oper_sign_stack栈顶的运算符，如果二者优先级一样，则也需要将oper_sign_stack栈顶运算先出栈运算。\n且只要oper_sign_stack栈顶的运算符 的优先级>= 需要入栈的运算符，则oper_sign_stack就需要不停的出栈运算。\n因此，总结一下就是，如果扫描到了运算符，此时需要和oper_sign_stack栈顶的运算符比较优先级，如果栈顶运算符优先级\n>=\n当前扫描运算符，则栈顶运算符需要出栈运算，直到oper_sign_stack栈顶运算符优先级小于当前扫描运算符。\n另外，本题表达式中还可能出现()，那么遇到括号该怎么处理呢？\n也就是说：\n'(' 对于 +-*/ 运算的入栈oper_sign_stack的逻辑不产生影响，仅用于扫描到')'时oper_sign_stack的出栈结束界定。\n需要\n\n的时，()内的+-*/运算依旧按照之前的逻辑入栈oper_sign_stack。\n以上就是中缀表达式的基于双栈的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "。更具体的逻辑，请看代码实现。\n分数的四则运算\n本题还对中缀表达式计算做了一些改动，即要求的除法不是整除，而是保留最简分数结果。\n比如 1 / 2 + 3 / 4 的结果不是0，而是 5 / 4。\n解决方案很简单，我们之前在 oper_num_stack 中记录的都是整数操作数，现在我们只要改为分数操作数即可。\n但是编程语言中并不支持分数，因此我们可以将分数拆分为分子和分母两部分，进行记录。即可以定义一个类，有如下属性：\n{\nch:, // 分子\nfa:, // 分母\n}\n分数的分子和分母必然是整数。\n如果入栈的元素是一个整数num，则将其转化为如下分数后入栈oper_num_stack\n{\nch: num,\nfa: 1,\n}\n当我们需要进行出栈运算时，取出的oper_num_stack栈顶的两个操作数，假设分别为a,b，则：\n对于加法运算的结果为：\n{\nch: a.ch * b.fa + b.ch * a.fa,\nfa: a.fa * b.fa,\n}\n比如 a = 1 / 3， b = 3 / 4，进行加法运算时，我们应该将他们的分母变为一样，即同时转为 3 * 4\n则 a = (1 *\n4\n) / (3 *\n4\n)， b = （3 *\n3\n）/  (4 *\n3\n)\n按照此逻辑，减法运算结果为：\n{\nch: a.ch * b.fa - b.ch * a.fa,\nfa: a.fa * b.fa,\n}\n而乘法运算结果：\n{\nch: a.ch * b.ch,\nfa: a.fa * b.fa,\n}\n除法运算结果为：\n{\nch: a.ch * b.fa,\nfa: a.fa * b.ch,\n}\n这样的话，我们就完成了分数的四则运算。\n分数的最简格式转化\n最后就是关于，分数的最简格式转化了，其实也很简单，就是将分子、分母的最大公约数求解出来，然后分子、分母同时除以最大公约数，即可得到最简格式的分数。\n而两个数的最大公约数的求解，可以使用辗转相除法。如果不熟悉辗转相除法，可以去网上搜索相关资料。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n# 操作数栈\noper_num = []\n# 操作符栈\noper_sign = []\n\n\n# 分数类\nclass Fractions:\n    def __init__(self, fa, ch):\n        self.fa = fa  # 分母\n        self.ch = ch  # 分子\n\n\n# 辗转相除法,求两个数的最大公约数\ndef getMaxCommonDivisor(x, y):\n    while y != 0:\n        tmp = y\n        y = x % y\n        x = tmp\n\n    return x\n\n\n# 取出oper_num栈顶两个操作数进行运算\ndef calc():\n    # 操作数顺序会对运算产生影响\n    b = oper_num.pop()  # 栈顶元素是运算符右边的操作数\n    a = oper_num.pop()  # 栈顶倒数第二个元素是运算符左边的操作数\n\n    # 运算符\n    op = oper_sign.pop()\n\n    # 记录运算结果\n    result = Fractions(None, None)\n\n    if op == '+':\n        result.fa = a.fa * b.fa\n        result.ch = a.ch * b.fa + b.ch * a.fa\n    elif op == '-':\n        result.fa = a.fa * b.fa\n        result.ch = a.ch * b.fa - b.ch * a.fa\n    elif op == '*':\n        result.fa = a.fa * b.fa\n        result.ch = a.ch * b.ch\n    elif op == '/':\n        result.fa = a.fa * b.ch\n        result.ch = a.ch * b.fa\n\n    oper_num.append(result)\n\n\ndef getResult():\n    # +,-,*,/ 运算符优先级\n    priority = {\n        \"+\": 1,\n        \"-\": 1,\n        \"*\": 2,\n        \"/\": 2\n    }\n\n    # 操作数的字符缓存容器\n    numStr = []\n\n    i = 0\n    while i < len(s):\n        c = s[i]\n\n        # 遇到数字字符\n        if '9' >= c >= '0':\n            # 则将该数字所在操作数的剩余数字字符一次性探索完\n            while '9' >= c >= '0':\n                numStr.append(c)\n                if i + 1 >= len(s):\n                    break\n                i += 1\n                c = s[i]\n\n            # 探索完后,将操作数缓存容器中记录的字符,变为分数后,压入操作数栈\n            oper_num.append(Fractions(1, int(\"\".join(numStr))))\n            # 注意清空操作数缓存容器\n            numStr.clear()\n\n        # 遇到运算符\n        if c == '+' or c == '-' or c == '*' or c == '/':\n            # 只要栈顶运算符的优先级 >= 当前运算符,就需要不停出栈运算\n            while len(oper_sign) > 0 and oper_sign[-1] != '(' and priority[c] <= priority[oper_sign[-1]]:\n                calc()\n            oper_sign.append(c)\n        elif c == ')':\n            # 遇到')', 需要将操作符栈中靠近栈顶的'('后面的运算都出栈做了\n            while oper_sign[-1] != '(':\n                calc()\n            # 最后将')'对应的'('出栈\n            oper_sign.pop()\n        elif c == '(':\n            # 遇到'(',则直接压倒操作符栈\n            oper_sign.append(c)\n\n        i += 1\n\n    # oper_num栈中还有2个以上的数,则还需要进行运算\n    while len(oper_num) > 1:\n        calc()\n\n    # oper_num栈中只剩一个数时,该数就是表达式结果\n    result = oper_num.pop()\n\n    # 如果结果的分母为0&#xff08;除数为0&#xff09;,则不合法\n    if result.fa == 0:\n        return \"ERROR\"\n\n    # 求分子、分母的最大公约数,并进行约份,求得最简格式的分子,分母\n    k = getMaxCommonDivisor(result.fa, result.ch)\n    result.fa //= k\n    result.ch //= k\n\n    # 求计算结果的符号,这里用乘法是为了避免 分母小,分子大,除法结果为0的情况,这样会丢失符号信息\n    sign = \"-\" if result.fa * result.ch < 0 else \"\"\n\n    fa = abs(result.fa)\n    ch = abs(result.ch)\n\n    if fa == 1:\n        #  如果分母为1,则直接输出分子\n        return f\"{sign}{ch}\"\n    else:\n        # 如果分母不为1,则输出 分子 / 分母\n        return f\"{sign}{ch}/{fa}\"\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

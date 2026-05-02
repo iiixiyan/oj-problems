@@ -1,0 +1,51 @@
+{
+  "id": "q111",
+  "title": "分奖金",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "公司老板做了一笔大生意，想要给每位员工分配一些奖金，想通过游戏的方式来决定每个人分多少钱。\n按照员工的工号顺序，每个人随机抽取一个数字。\n按照工号的顺序往后排列，遇到第一个数字比自己数字大的，那么，前面的员工就可以获得“距离*数字差值”的奖金。\n如果遇不到比自己数字大的，就给自己分配随机数数量的奖金。\n例如，按照工号顺序的随机数字是：2,10,3。\n那么第2个员工的数字10比第1个员工的数字2大，\n所以，第1个员工可以获得1*（10-2）=8。第2个员工后面没有比他数字更大的员工，\n所以，他获得他分配的随机数数量的奖金，就是10。\n第3个员工是最后一个员工，后面也没有比他更大数字的员工，所以他得到的奖金是3。\n请帮老板计算一下每位员工最终分到的奖金都是多少钱。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行n表示员工数量（包含最后一个老板）\n第二是每位员工分配的随机数字"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最终每位员工分到的奖金数量\n注：随机数字不重复，员工数量（包含老板）范围1~10000，随机数范围1~100000"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n2 10 3\n输出\n8 10 3",
+      "cases": [
+        {
+          "input": "3\n2 10 3",
+          "output": "8 10 3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题最简单的思路是双重for，但是时间复杂度是O(m^2)，而m取值1~10000，这个数量级非常有可能超时。\n因此我们需要考虑更优的解法：\n上面算法其实就是找每个数组元素的下一个更大值，因此可以参考\n华为机试 - 找朋友_伏城之外的博客-CSDN博客_找朋友算法\n的\n\n，利用栈结构通过O(n)时间，找出数组每一个元素的下一个更大值。\n暴力解法（100%通过）\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm = int(input())\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(arr, m):\n    ans = []\n    for i in range(m):\n        flag = True\n        for j in range(i+1, m):\n            if arr[j] > arr[i]:\n                flag = False\n                ans.append((j-i) * (arr[j] - arr[i]))\n                break\n\n        if flag:\n            ans.append(arr[i])\n\n    return \" \".join(map(str, ans))\n\n\n# 算法调用\nprint(getResult(arr, m))"
+  },
+  "verified": false
+}

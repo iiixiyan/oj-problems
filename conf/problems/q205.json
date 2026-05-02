@@ -1,0 +1,68 @@
+{
+  "id": "q205",
+  "title": "模拟消息队列",
+  "score": 100,
+  "tags": [
+    "B卷",
+    "队列",
+    "模拟"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "让我们来模拟一个消息队列的运作，有一个发布者和若干消费者，发布者会在给定的时刻向消息队列发送消息，\n若此时消息队列有消费者订阅，这个消息会被发送到订阅的消费者中优先级最高（输入中消费者按优先级升序排列）的一个；\n若此时没有订阅的消费者，该消息被消息队列丢弃。\n消费者则会在给定的时刻订阅消息队列或取消订阅。\n当消息发送和订阅发生在同一时刻时，先处理订阅操作，即同一时刻订阅的消费者成为消息发送的候选。\n当消息发送和取消订阅发生在同一时刻时，先处理取消订阅操作，即消息不会被发送到同一时刻取消订阅的消费者。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为两行。\n第一行为2N个正整数，代表发布者发送的N个消息的时刻和内容（为方便解折，消息内容也用正整数表示）。第一个数字是第一个消息的发送时刻，第二个数字是第一个消息的内容，以此类推。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证发送时刻不会重复，但"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "消息并没有按照发送时刻排列。\n第二行为2M个正整数，代表M个消费者订阅和取消订阅的时刻。第一个数字是第一个消费者订阅的时刻，第二个数字是第一个消费者取消订阅的时刻，以此类推。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证每个消费者的取消订阅时刻大于订阅时刻，消费者按优先级升序排列。\n两行的数字都由空格分隔。N不超过100，M不超过10，每行的长度不超过1000字符。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出为M行，依次为M个消费者收到的消息内容，消息内容按收到的顺序排列，且由空格分隔；\n若某个消费者没有收到任何消息，则对应的行输出-1."
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2 22 1 11 4 44 5 55 3 33\n1 7 2 3\n输出\n11 33 44 55\n22",
+      "cases": [
+        {
+          "input": "2 22 1 11 4 44 5 55 3 33\n1 7 2 3",
+          "output": "11 33 44 55\n22",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "消息11在1时刻到达，此时只有第一个消费者订阅，消息发送给它；\n消息22在2时刻到达，此时两个消费者都订阅了，消息发送给优先级最高的第二个消费者；\n消息33在时刻3到达，此时只有第一个消费者订阅，消息发送给它；\n余下的消息按规则也是发送给第一个消费者。\n输入\n5 64 11 64 9 97\n9 11 4 9\n输出\n97\n64\n\n消息64在5时刻到达，此时只有第二个消费者订阅，消息发送给它；\n消息97在9时刻到达，此时只有第一消费者订阅(因为第二个消费者刚好在9时刻取消订阅)，消息发送给它;\n11时刻也到达了一个内容为64的消息，不过因为没有消费者订阅，消息被丢弃。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题应该就是逻辑分析题。\n具体解析请看代码注释，已为代码添加详细注释。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\npubArr = list(map(int, input().split()))\nsubArr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    # 将第一行输入两个一组,收集到&#xff1a;发布者数组中\n    publisher = []\n    for i in range(0, len(pubArr), 2):\n        publisher.append([pubArr[i], pubArr[i + 1]])\n\n    # 将第二行输入两个一组,收集到&#xff1a;订阅者数组中\n    subscriber = []\n    for i in range(0, len(subArr), 2):\n        subscriber.append([subArr[i], subArr[i + 1]])\n\n    # 按照发布时刻升序&#xff1a;发布者数组\n    publisher.sort(key=lambda x: x[0])\n    # 为每一个订阅者构造一个的订阅内容集合\n    subContent = [[] for _ in range(len(subscriber))]\n\n    # 遍历发布者\n    for pubTime, pubContent in publisher:\n        # 倒序遍历订阅者,因为后面的订阅者优先级更高,因此倒序可以实现高优先级的订阅者先匹配到发布者\n        for j in range(len(subscriber) - 1, -1, -1):\n            subTime, unSubTime = subscriber[j]\n\n            # 如果 订阅时刻 <= 发布时刻 < 取消订阅时刻\n            if unSubTime > pubTime >= subTime:\n                # 那么该订阅者就可以收到发布的内容\n                subContent[j].append(pubContent)\n                # 题目说,发布内容只会被最高优先级的订阅者收到\n                break\n\n    # 打印\n    for contents in subContent:\n        if len(contents) == 0:\n            print(\"-1\")\n        else:\n            print(\" \".join(map(str, contents)))\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

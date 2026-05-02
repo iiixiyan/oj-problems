@@ -60,6 +60,8 @@
       "content": "本题可以基于优先队列实现打印机总是打印优先级最高的文件。\n优先队列，如果想简单一点的话，则可以基于有序数组实现，但是有序数组是整体有序，每次有新任务入队，都需要O(n)时间复杂度维持。\n优先队列最好是基于堆结构实现，所谓堆结构，即一颗完全二叉树。本题是优先级数值越大，优先级越高，因此我们可以使用大顶堆。\n关于基于堆结构实现优先队列，可以参考\nLeetCode - 1705 吃苹果的最大数目_伏城之外的博客-CSDN博客\nJavaScript算法源码\n基于有序数组实现优先队列"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "import queue\n\n# 输入获取\nn = int(input())\n\ntasks = []\nfor i in range(n):\n    tasks.append(input().split())\n\n\nclass Task:\n    def __init__(self, taskId, priority, index):\n        \"\"\"\n        :param taskId: 任务ID\n        :param priority: 任务优先级\n        :param index: 任务到达顺序\n        \"\"\"\n        self.taskId = taskId\n        self.priority = priority\n        self.index = index\n\n    def __lt__(self, other):\n        if self.priority != other.priority:\n            return self.priority > other.priority\n        else:\n            return self.index < other.index\n\n\n# 算法入口\ndef getResult(tasks):\n    printer = {}\n\n    taskId = 1\n    for i in range(len(tasks)):\n        task = tasks[i]\n\n        type = task[0]\n        printerId = task[1]\n\n        if type == \"IN\":\n            priority = task[2]\n            if printer.get(printerId) is None:\n                printer[printerId] = queue.PriorityQueue()\n            printer[printerId].put(Task(taskId, int(priority), i))\n            taskId += 1\n        else:\n            if printer.get(printerId) is None or printer[printerId].qsize() == 0:\n                print(\"NULL\")\n            else:\n                t = printer[printerId].get()\n                print(t.taskId)\n\n\ngetResult(tasks)"
+  },
   "verified": false
 }

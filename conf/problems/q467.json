@@ -1,0 +1,51 @@
+{
+  "id": "q467",
+  "title": "约瑟夫问题",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "输入一个由随机数组成的数列（数列中每个数均是大于 0 的整数，长度已知），和初始计数值 m。\n从数列首位置开始计数，计数到 m 后，将数列该位置数值替换计数值 m，\n并将数列该位置数值出列，然后从下一位置从新开始计数，直到数列所有数值出列为止。\n如果计数到达数列尾段，则返回数列首位置继续计数。\n请编程实现上述计数过程，同时输出数值出列的顺序。\n比如：输入的随机数列为：3,1,2,4，初始计数值 m=7，从数列首位置开始计数（数值 3 所在位置）\n第一轮计数出列数字为 2，计数值更新 m=2，出列后数列为 3,1,4，从数值 4 所在位置从新开始计数\n第二轮计数出列数字为 3，计数值更新 m=3，出列后数列为 1,4，从数值 1 所在位置开始计数\n第三轮计数出列数字为 1，计数值更新 m=1，出列后数列为 4，从数值 4 所在位置开始计数\n最后一轮计数出列数字为 4，计数过程完成。输出数值出列顺序为：2,3,1,4。\n要求实现函数：\nvoid array_iterate(int len, int input_array[], int m, int output_array[])"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "int len：输入数列的长度； int intput_array[]：输入的初始数列 int m：初始计数值"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "int output_array[]：输出的数值出列顺序"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3,1,2,4\n4\n7\n输出\n2,3,1,4",
+      "cases": [
+        {
+          "input": "3,1,2,4\n4\n7",
+          "output": "2,3,1,4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "输入\n第一行是初始数列intput_array\n第二行是初始数列的长度len\n第三行是初始计数值m\n输出\n数值出列顺序"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题就是约瑟夫环的变种题。\n约瑟夫环的解题有多种方式，比较容易理解和实现的可以使用双端队列。\n即intput_array当成双端队列，从队头取出元素，判断此时计数是否为m：\n若是，则将取出的元素加入output_arr，并将取出的元素的值赋值给m，然后len--，计数重置为1\n若不是，则将取出的元素塞回intput_array的队尾，仅计数++\n但是本题JS是基于数组实现的双端队列，因此每次头部元素出队，都意味着一次O(n)复杂度的数组元素前移一位操作，这是非常影响性能的。\n对于Java，Python都有内置的双端队列结构，因此可以直接复用，对于C，可以自己实现双端队列结构。\n因此JS语言我们可以选择循环链表来模拟约瑟夫环。\n循环链表本身就实现了环形结构，其head.prev = tail，tail.next = head。\n且循环链表删除节点的复杂度是O(1)。\n唯一的遗憾是，JS没有原生的循环链表结构，我们需要自己实现。但是我们只需要实现最简单的循环链表即可，即只实现循环链表的尾部新增节点操作即可。而删除操作可以在实际业务中完成。\nJavaScript算法源码\n双端队列"
+    }
+  ],
+  "solutions": {
+    "Python": "from collections import deque\n\n# 输入获取\ninput_arr = deque(list(map(int, input().split(\",\"))))\nlength = int(input())\nm = int(input())\n\n\n# 算法入口\ndef getResult():\n    global input_arr\n    global length\n    global m\n\n    output_arr = []\n\n    i = 1\n    while length > 0:\n        out = input_arr.popleft()\n        if i == m:\n            output_arr.append(out)\n            m = out\n            i = 1\n            length -= 1\n        else:\n            input_arr.append(out)\n            i += 1\n\n    return \",\".join(map(str, output_arr))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

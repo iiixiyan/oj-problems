@@ -1,0 +1,62 @@
+{
+  "id": "q403",
+  "title": "字符串序列判定",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "输入两个字符串 S 和 L ，都只包含英文小写字母。S长度 ≤ 100，L长度 ≤ 500,000。判定S是否是L的有效子串。\n判定规则：S 中的每个字符在 L 中都能找到（可以不连续），且 S 在Ｌ中字符的前后顺序与 S 中顺序要保持一致。（例如，S = ”ace” 是 L= ”abcde” 的一个子序列且有效字符是a、c、e，而”aec”不是有效子序列，且有效字符只有a、e）"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入两个字符串 S 和 L，都只包含英文小写字母。S长度 ≤ 100，L长度 ≤ 500,000。\n先输入S，再输入L，每个字符串占一行。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "S 串最后一个有效字符在 L 中的位置。（首位从0开始计算，无有效字符返回-1）"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nace\nabcde\n输出\n4",
+      "cases": [
+        {
+          "input": "ace\nabcde",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nfgh\nabcde\n输出\n-1\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以利用双指针来解决。\n定义两个指针 i , j，分别指向S，L 字符串的索引0位置，\n当 S[i] 和 L[j] 的字符相同时，则 i++ 且 j++\n当 S[i] 和 L[j] 的字符不同时，则仅 j++\n当 i ≥ S.length || J ≥ l.length 时结束\n如果最后，i == S.length，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "，在 L 字符串中找到了所有的 S 字符串字符。且 S 字符串最后一个字符在 L 中的位置就是 j - 1。否则，就返回-1。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1图示如下：\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\nl = input()\n\n\n# 算法入口\ndef getResult():\n    i = 0\n    j = 0\n\n    while i < len(s) and j < len(l):\n        if s[i] == l[j]:\n            i += 1\n        j += 1\n\n    if i == len(s):\n        return j - 1\n    else:\n        return -1\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

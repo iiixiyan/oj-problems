@@ -1,0 +1,67 @@
+{
+  "id": "q164",
+  "title": "关联子串",
+  "score": 100,
+  "tags": [
+    "B卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定两个字符串str1和str2，如果字符串str1中的字符，经过排列组合后的字符串中，只要有一个字符串是str2的子串，则认为str1是str2的关联子串。\n若str1是str2的关联子串，请返回子串在str2的起始位置；\n若不是关联子串，则返回-1。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入两个字符串，分别为题目中描述的str1、str2。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "若str1是str2的关联子串，请返回子串在str2的起始位置；\n若不是关联子串，则返回-1。\n若str2中有多个str1的组合子串，请返回最小的起始位置。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "输入的字符串只包含小写字母；\n两个字符串的长度范围[1, 100000]之间；"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nabc efghicbaiii\n输出\n5",
+      "cases": [
+        {
+          "input": "abc efghicbaiii",
+          "output": "5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "str2包含str1的一种排列组合（\"cab\")，此组合在str2的字符串起始位置为5（从0开始计数）\n输入\nabc efghiccaiii\n输出\n-1\n\n“abc”字符串中三个字母的各种组合（abc、acb、bac、bca、cab、cba），str2中均不包含，因此返回-1"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题看上去是要求解全排列，但是"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "数量级为：两个字符串的长度范围[1, 100000]之间；\n因此str1的全排列肯定会超时。\n本题可以使用尺取法来求解，尺取法其实就是高级一点的滑动窗口，常用于解决最小覆盖子串问题，比如\nLeetCode - 76 最小覆盖子串_伏城之外的博客-CSDN博客\n大家可以认真看下上面这个博客，对尺取法有个大致了解。\n尺取法，通常是有一个子串str1，和一个父串str2，我们需要在父串str2中找到包含str1子串所有字符的目标串target，不在意字符顺序。\n解决方案很固定：\n预处理动作：\n统计出子串str1中各字符的数量，记录到count中，这里的count容器通常选择128长度的数组，因为字符串中的字符通常都是ASCII码表的字符，而ASCII码只有128个，因此选择128长度的数组就可以涵盖到所有字符。\n定义一个total变量，来记录str1字符的总数（即str1的长度）\n滑窗动作：\n初始滑窗，即父串str2的0~str1.length-1范围的滑窗。此时滑窗只有新增字符的过程，即滑窗左边界保持在0，而滑窗右边界从0运动到str1.length-1位置。\n后续滑窗，即父串str2的 i ~ i + str1.length - 1，其中 i >= 1，每次滑窗整体向右移动一格，即相较于上一个滑窗，会失去 str2[i-1]字符，以及新增 str2[i + str1.length - 1] 字符。\n滑窗的意义：\n滑窗其实就是一个str2的子串，我们可以基于滑窗来统计滑窗内子串各字符的数量，如果滑窗内各字符的数量与str1各字符数量一致，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "滑窗内子串就是一个目标子串\n滑窗处理新增字符：\n当滑窗新增一个字符c时，我们应该count[c] -= 1，表示滑窗子串和str1的差别缩小了，此时total是否也需要-=1吗？total是str1的字符总数，此时需要细化讨论\n如果字符c不是str1内的字符，则total不需要-=1\n如果字符c是str1内的字符，此时又需要细化讨论，字符c虽然是str1内的字符，但是滑窗内c字符的数量完全有可能超过str1内的字符数量，即滑窗内存在多余的字符c，那么此时滑窗新增了一个c，并不会缩小和str1的差距，即total不需要-=1。\n那么此时就需要搞清楚，如何判断滑窗内字符c是否是str1的字符？以及是str1字符的情况下，是否为超标字符？\n上面两个判断，可以用一句话实现：count[c] > 0\n如果滑窗新增的字符c不是str1字符，则必然count[c] <= 0\n如果滑窗新增的字符c是str1字符，但是超标了，则经过count[c]--动作，超过的c字符，必然count[c] <= 0\n滑窗处理移除字符：\n当滑窗移除一个字符c是，我们应该count[c]++，表示滑窗子串和str1的差别扩大了，此时total是否也需要+=1吗？total是str1的字符总数，此时需要细化讨论：\n如果字符c不是str1内的字符，则total不需要+=1\n如果字符c是str1内的字符，此时又需要细化讨论，字符c虽然是str1内的字符，但是滑窗内c字符的数量完全有可能超过str1内的字符数量，即滑窗内存在多余的字符c，那么此时滑窗移除一个c，并不会扩大和str1的差距，即不需要total+=1\n那么此时就需要搞清楚，如何判断滑窗内字符c是否是str1的字符？以及是str1字符的情况下，是否为超标字符？\n上面两个判断，可以用一句话实现：count[c]\n>=\n0\n如果滑窗移除的字符c不是str1字符，则移除之前必然count[c] < 0\n如果滑窗移除的字符c是str1字符，但是超标了，则移除之前必然count[c] < 0\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nstr1, str2 = input().split()\n\n\n# 算法入口\ndef getResult():\n    # count用于统计str1中各字符的数量\n    count = {}\n    for c in str1:\n        count[c] = count.get(c, 0) + 1\n\n    # total统计str1总共字符个数\n    total = len(str1)\n\n    # 初始滑窗,滑窗范围内容,就是一个子串\n    for i in range(len(str1)):\n        # 滑窗子串新增的字符\n        add = str2[i]\n\n        # 如果新增字符是str1的字符,即count[add] > 0时,则说明滑窗子串已找到一个目标字符,此时剩余add字符数量count[add]--,剩余目标字符总数total--\n        if count.get(add) is not None:\n            if count[add] > 0:\n                total -= 1\n            count[add] -= 1\n\n    # 如果total == 0,则说明滑窗内所有字符都是str1内的字符,由于限定了滑窗的长度就是str1的长度,因此滑窗内字符和str1完全匹配\n    if total == 0:\n        return 0\n\n    # 下一个滑窗范围是 i ~ i + str1.length() - 1\n    for i in range(1, len(str2) - len(str1) + 1):\n        # 相较于上一个滑窗失去的字符remove\n        remove = str2[i-1]\n        # 相较于上一个滑窗新增的字符add\n        add = str2[i + len(str1) - 1]\n\n        # 本轮滑窗remove字符,在上一轮是被add的字符,我们假设此字符为c&#xff1a;\n        # 1、c是str1的字符,则初始统计时count[c]>0,上一轮滑窗加入c字符,则count[c]--,此轮count[c]是有可能>=0或者<0的,\n        #    1.1、如果本轮count[c]>=0,则说明上轮滑窗并没有找到所有的c字符,因此本轮移除的c字符可以还原total数量\n        #    1.2、如果本轮count[c]<0,这说明上轮滑窗内的c字符超标了,即c字符是目标字符,但是滑窗内包含的c字符数量超过了str1中c字符的数量,因此本轮移除c字符是超标部分,不会还原total\n        if count.get(remove) is not None:\n            if count[remove] >= 0:\n                total += 1\n            count[remove] += 1\n\n        if count.get(add) is not None:\n            if count[add] > 0:\n                total -= 1\n            count[add] -= 1\n\n        if total == 0:\n            return i\n\n    return -1\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

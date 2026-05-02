@@ -1,0 +1,61 @@
+{
+  "id": "q494",
+  "title": "简易内存池",
+  "score": 200,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "请实现一个简易内存池,根据请求命令完成内存分配和释放。\n内存池支持两种操作命令，REQUEST和RELEASE，其格式为：\nREQUEST=请求的内存大小 表示请求分配指定大小内存，如果分配成功，返回分配到的内存首地址；如果内存不足，或指定的大小为0，则输出error。\nRELEASE=释放的内存首地址 表示释放掉之前分配的内存，释放成功无需输出，如果释放不存在的首地址则输出error。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：\n内存池总大小为100字节。\n内存池地址分配必须是连续内存，并优先从低地址分配。\n内存释放后可被再次分配，已释放的内存在空闲时不能被二次释放。\n不会释放已申请的内存块的中间地址。\n释放操作只是针对首地址所对应的单个内存块进行操作，不会影响其它内存块。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "首行为整数 N , 表示操作命令的个数，取值范围：0 < N <= 100。\n接下来的N行, 每行将给出一个操作命令，操作命令和参数之间用 “=”分割。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "请求分配指定大小内存时，如果分配成功，返回分配到的内存首地址；如果内存不足，或指定的大小为0，则输出error\n释放掉之前分配的内存时，释放成功无需输出，如果释放不存在的首地址则输出error。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2\nREQUEST=10\nREQUEST=20\n输出\n0\n10",
+      "cases": [
+        {
+          "input": "2\nREQUEST=10\nREQUEST=20",
+          "output": "0\n10",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n5\nREQUEST=10\nREQUEST=20\nRELEASE=0\nREQUEST=20\nREQUEST=10\n输出\n0\n10\n30\n0\n\n第一条指令，申请地址0~9的10个字节内存，返回首地址0\n第二条指令，申请地址10~29的20字节内存，返回首地址10\n第三条指令，释放首地址为0的内存申请，0~9地址内存被释放，变为空闲，释放成功，无需输出\n第四条指令，申请20字节内存，09地址内存连续空间不足20字节，往后查找到3049地址，返回首地址30\n第五条指令，申请10字节，0~9地址内存空间足够，返回首地址0"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "我的\n\n如下：\n定义一个used数组，用来存储已被占用的内存区间，即[起始位置，结束位置]。\n初始化给used数组一个 [100,101]，表示存在一个已占有内存区间[100,101]，这个内存区间将作为尾边界使用。\n当REQUEST申请size大小的内存时，我们从start=0位置开始申请，即申请[start, start+size-1]区间，接下来看该区间是否和used[i]区间存在交叉，如果存在交xian叉，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "申请的内存区间中部分内存已被使用，因此我们应该更新 start = used[i][1] + 1位置，重新申请一个区间，这样就必然不和used[i]区间交叉了，但是要继续和used[i+1]区间比较。\n直到找到一个不存在交叉的内存区间，打印此时的start，并将申请到的内存区间插入到used数组中，\n\n插入位置是 i 。\n如果一直都找不到不存在交叉的内存区间，则打印error。\n当RELEASE释放起始位置addr的内存时，我们只需要遍历每一个used[i]，比较used[i][0]和addr是否相同，若相同，则表示找到了要释放的内存，此时只要将used[i]从used中删除即可。\n如果没有找到，则打印error。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\ncmds = [input().split(\"=\") for _ in range(n)]\n\n\n# 判断两个区间是否存在交集\ndef hasIntersection(a1, a2):\n    s1, e1 = a1\n    s2, e2 = a2\n\n    if s1 == s2:\n        return True\n    elif s1 < s2:\n        return e1 >= s2\n    else:\n        return e2 >= s1\n\n\n# 算法入口\ndef getResult():\n    # used保存被占用的内存 [起始地址,结束地址],初始时有一个[100,101]作为尾边界限定\n    used = [[100, 101]]\n\n    for key, val in cmds:\n        # 申请内存\n        if key == \"REQUEST\":\n            # 当指令为REQUEST时,对应值为要申请的内存的大小,即size\n            size = int(val)\n\n            #  我们默认从start=0位置开始检查可用内存区间\n            start = 0\n            flag = True\n\n            for i in range(len(used)):\n                end = start + size - 1\n\n                # 要申请的内存区间\n                ran = [start, end]\n\n                # 检查要申请的内存区间和已占有的内存区间是否交叉\n                if not hasIntersection(used[i], ran):\n                    # 若不存在交叉,则将申请区间加入used中\n                    used.insert(i, ran)\n                    flag = False\n                    # 并打印此时申请区间的起始位置\n                    print(start)\n                    break\n                else:\n                    #  若存在交叉,则将变更要申请的内存区间的起始位置\n                    start = used[i][1] + 1\n\n            # 一旦申请到内存,那么flag就会被赋值为false,否则就保持true,意味着每申请到内存,则打印error\n            if flag:\n                print(\"error\")\n        # 释放内存\n        else:\n            # 当指令为RELEASE时,值为要释放内存的起始地址addr\n            addr = int(val)\n            flag = True\n\n            for i in range(len(used)):\n                # 到已占有内存中找起始位置是addr的,找到则将该区间从used中删除,表示解除占用\n                if used[i][0] == addr:\n                    used.pop(i)\n                    flag = False\n                    break\n\n            # 一旦释放成功,则flag就会被置为false,否则就保持True,意味着没有内存释放,则打印error\n            if flag:\n                print(\"error\")\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

@@ -1,0 +1,56 @@
+{
+  "id": "q139",
+  "title": "服务中心选址",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一个快递公司希望在一条街道建立新的服务中心。公司统计了该街道中所有区域在地图上的位置，并希望能够以此为依据为新的服务中心选址：使服务中心到所有区域的距离的总和最小。\n给你一个数组positions，其中positions[i] = [left, right] 表示第 i 个区域在街道上的位置，其中left代表区域的左侧的起点，right代表区域的右侧终点，假设服务中心的位置为location：\n如果第 i 个区域的右侧终点right满足 right < location，则第 i 个区域到服务中心的距离为 location - right；\n如果第 i 个区域的左侧起点left 满足 left > location，则第 i 个区域到服务中心的距离为left - location；\n如果第 i 个区域的两侧left，right满足left <= location <= right，则第 i 个区域到服务中心的距离为0\n选择最佳的服务中心位置为location，请返回最佳的服务中心位置到所有区域的距离总和的最小值。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "先输入区域数组positions的长度n（1 ≤ n ≤ 10^5）\n接下来 n 行每行输入成对的left和right值，以空格隔开\n-10^9 ＜left ≤ 10^9\n-10^9 ＜right ≤ 10^9"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出为location"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n1 2\n3 4\n10 20\n输出\n8",
+      "cases": [
+        {
+          "input": "3\n1 2\n3 4\n10 20",
+          "output": "8",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n2\n1 4\n4 5\n输出\n0\n\n无\n输入\n4\n5 6\n1 8\n7 15\n2 4\n输出\n3\n\n无\n输入\n6\n1 3\n4 9\n2 15\n6 27\n15 17\n5 8\n输出\n12\n\n无\n输入\n16\n41 67\n0 34\n24 69\n58 78\n62 64\n5 45\n27 81\n61 91\n42 95\n27 36\n4 91\n2 53\n82 92\n16 21\n18 95\n26 47\n输出\n127\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "根据网友反馈进行分析得出，本题中各区域应该是有交集的。\n我想了很久，如何求解某个点到有交集区域的最小距离和，但是没有什么好的办法，直到我死心准备用暴力法求解时，发现了一丝丝生机。下面是暴力法测试过程：\n测试"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "：含区域交集情况\n11\n-10 10\n1 2\n3 4\n5 10\n6 8\n7 12\n9 13\n15 20\n31 41\n22 35\n34 50\nJavaScript暴力实现"
+    }
+  ],
+  "solutions": {
+    "Python": "import math\nimport sys\n\n# 输入获取\nn = int(input())\npositions = [list(map(int, input().split())) for i in range(n)]\n\n\n# 算法入口\ndef getResult(n, positions):\n    tmp = []\n    for pos in positions:\n        tmp.append(pos[0])\n        tmp.append(pos[1])\n\n    tmp.sort()\n\n    minP = tmp[0]\n    maxP = tmp[-1]\n\n    ans = sys.maxsize\n\n    i = minP\n    while i <= maxP:\n        dis = 0\n\n        for l, r in positions:\n            if r < i:\n                dis += i - r\n            elif i < l:\n                dis += l - i\n\n        print(str(i) + \"\\t\" + str(dis))\n\n        ans = min(ans, dis)\n        i += 0.5\n\n    return ans\n\n\n# 算法调用\nprint(getResult(n, positions))"
+  },
+  "verified": false
+}

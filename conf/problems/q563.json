@@ -1,0 +1,44 @@
+{
+  "id": "q563",
+  "title": "增强的strstr",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\nC 语言有一个\n库函数\n： char *strstr(const char *haystack, const char *needle) ，实现在字符串 haystack 中查找第一次出现字符串 needle 的位置，如果未找到则返回 null。\n现要求实现一个strstr的增强函数，可以使用带可选段的字符串来模糊查询，与strstr一样返回首次查找到的字符串位置。\n可选段使用“[]”标识，表示该位置是可选段中任意一个字符即可满足匹配条件。比如“a[bc]”表示可以匹配“ab”或“ac”。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "目标字符串中可选段可能出现多次。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "与\nstrstr函数\n一样，输入参数是两个字符串指针，分别是源字符串和目标字符串。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "与strstr函数不同，返回的是源字符串中，匹配子字符串相对于源字符串地址的偏移（从0开始算），如果没有匹配返回-1。\n补充"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：源字符串中必定不包含‘[]’；目标字符串中‘[]’必定成对出现，且不会出现嵌套。\n输入的字符串长度在[1,100]之间。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nsrc = input()\ntar = input()\n\n\ndef indexOf(levels):\n    # 滑动匹配levels.length长度的子串\n    for i in range(len(src) - len(levels) + 1):\n        isFind = True\n\n        for j in range(len(levels)):\n            if src[i + j] not in levels[j]:\n                isFind = False\n                break\n\n        if isFind:\n            return i\n\n    return -1\n\n\n# 核心代码\ndef getResult():\n    # 将tar字符串转化为levels多层结构,转化逻辑为&#xff1a;tar字符串中,每个[]包含的所有字符作为一层,未被[]包含的单个字符作为一层\n    levels = []\n\n    # level用于记录[]中的字符\n    level = set()\n    isOpen = False\n\n    for c in tar:\n        if c == '[':\n            isOpen = True\n        elif c == ']':\n            isOpen = False\n            levels.append(level)\n            level = set()\n        else:\n            if isOpen:\n                level.add(c)\n            else:\n                levels.append({c})\n\n    return indexOf(levels)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

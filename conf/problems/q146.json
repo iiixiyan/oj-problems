@@ -1,0 +1,62 @@
+{
+  "id": "q146",
+  "title": "组装新的数组",
+  "score": 200,
+  "tags": [
+    "A卷",
+    "数组"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给你一个整数M和数组N，N中的元素为连续整数，要求根据N中的元素组装成新的数组R，组装规则：\nR中元素总和加起来等于M\nR中的元素可以从N中重复选取\nR中的元素最多只能有1个不在N中，且比N中的数字都要小（不能为负数）"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入是连续数组N，采用空格分隔\n第二行输入数字M"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出的是组装办法数量，int类型"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "1 ≤ M ≤ 30\n1 ≤ N.length ≤ 1000"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2\n5\n输出\n1",
+      "cases": [
+        {
+          "input": "2\n5",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "只有1种组装办法，就是[2,2,1]\n输入\n2 3\n5\n输出\n2\n\n一共两种组装办法，分别是[2,2,1]，[2,3]"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "我们可以换个说法来看本题，\n在数组N任意选取多个元素，且同一个元素可以重复选取，只要最终选取的所有元素之和等于m，或者：小于m但是差值不超过N.min()。\n现在是不是感觉本题简单多了。\n我们可以使用回溯算法来在N中选取多个元素（同一个元素可以重复选取），这个逻辑其实就是求可重复元素组合情况，每得到一个组合就看其和sum是否等于m，或者m - sum 是否已经小于 N.min，若是，则该组合是符合要求的，count++，否则不符合要求，继续找。当sum > m时，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "往后的组合已经无法符合要求，此时需要进行回溯了。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = list(map(int, input().split()))\nm = int(input())\n\n\ndef dfs(arr, index, sumV, minV, m, count):\n    if sumV > m:\n        return count\n\n    if sumV == m or 0 < m - sumV < minV:\n        return count + 1\n\n    for i in range(index, len(arr)):\n        count = dfs(arr, i, sumV + arr[i], minV, m, count)\n\n    return count\n\n\n# 算法入口\ndef getResult(arr, m):\n    tmp = list(filter(lambda x: x <= m, arr))\n\n    return dfs(tmp, 0, 0, arr[0], m, 0)\n\n\n# 调用算法\nprint(getResult(arr, m))"
+  },
+  "verified": false
+}

@@ -1,0 +1,52 @@
+{
+  "id": "q455",
+  "title": "滑动窗口最大和",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "滑动窗口"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有一个N个整数的数组，和一个长度为M的窗口，窗口从数组内的第一个数开始滑动直到窗口不能滑动为止，\n每次窗口滑动产生一个窗口和（窗口内所有数的和），求窗口滑动产生的所有窗口和的最大值。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入一个正整数N，表示整数个数。（0<N<100000）\n第二行输入N个整数，整数的取值范围为[-100,100]。\n第三行输入一个正整数M，M代表窗口的大小，M<=100000，且M<=N。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "窗口滑动产生所有窗口和的最大值。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n6\n10 20 30 15 23 12\n3\n输出\n68",
+      "cases": [
+        {
+          "input": "6\n10 20 30 15 23 12\n3",
+          "output": "68",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "窗口长度为3，窗口滑动产生的窗口和分别为\n10+20+30=60，\n20+30+15=65，\n30+15+23=68，\n15+23+12=50，\n所以窗口滑动产生的所有窗口和的最大值为68。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "此题应该是考察我们如何计算新的滑动窗口的值，一般有两种方式：\n1、将滑动窗口中的元素值相加求和\n2、基于前一个滑动窗口的和sum，计算新的滑动窗口的和，原理如下\n如上图所示，第二个滑动窗口，相当于第一个滑动窗口减去10，加上15。\n公式如下：i为第二个滑动窗口的起点索引，sum为第一个滑动窗口的和\nsum = sum - arr[i - 1] + arr[i + m - 1];\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\narr = list(map(int, input().split()))\nm = int(input())\n\n\n# 算法入口\ndef getResult():\n    sumV = sum(arr[:m])\n    ans = sumV\n\n    for i in range(1, n-m+1):\n        sumV += arr[i+m-1] - arr[i-1]\n        ans = max(ans, sumV)\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

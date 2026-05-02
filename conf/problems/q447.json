@@ -1,0 +1,19 @@
+{
+  "id": "q447",
+  "title": "求幸存数之和",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给一个正整数数列 nums，一个跳数 jump，及幸存数量 left。\n运算过程为：从索引0的位置开始向后跳，中间跳过 J 个数字，命中索引为 J+1 的数字，该数被敲出，并从该点起跳，以此类推，直到幸存 left 个数为止，然后返回幸存数之和。\n约束：\n0是第一个起跳点\n起跳点和命中点之间间隔 jump 个数字，已被敲出的数字不计入在内。\n跳到末尾时无缝从头开始（循环查找），并可以多次循环。\n若起始时 left > len(nums) 则无需跳数处理过程。\n方法设计："
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nnums = list(map(int, input().split(\",\")))\njump = int(input())\nleft = int(input())\n\n\n# 算法入口\ndef sumOfLeft(nums, jump, left):\n    # 从起跳点开始的话,需要跳jump+1次,到达需要删除的节点\n    # 从起跳点下一个节点开始的话,需要跳jump次,到达需要删除的节点\n    # 这里我们从起跳点的下一个节点开始,初始时起跳点为索引0,因此下一个节点为索引1\n    start = 1\n\n    # 如果剩余节点数 > 幸存数量,则还需要继续删除节点\n    while len(nums) > left:\n        # 跳 jump 次\n        start += jump\n        # 为了避免越界,新起跳点索引位置对剩余节点数取余\n        start %= len(nums)\n        nums.pop(start)\n\n    return sum(nums)\n\n\n# 算法调用\nprint(sumOfLeft(nums, jump, left))"
+  },
+  "verified": false
+}

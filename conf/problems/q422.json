@@ -1,0 +1,62 @@
+{
+  "id": "q422",
+  "title": "找座位",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "目录"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "JavaScript算法源码\nJava算法源码\nPython算法源码\nC算法源码"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在一个大型体育场内举办了一场大型活动，由于疫情防控的需要，要求每位观众的必须间隔至少一个空位才允许落座。\n现在给出一排观众座位分布图，座位中存在已落座的观众，请计算出，在不移动现有观众座位的情况下，最多还能坐下多少名观众。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一个数组，用来标识某一排座位中，每个座位是否已经坐人。0表示该座位没有坐人，1表示该座位已经坐人。\n1 ≤ 数组长度 ≤ 10000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "整数，在不移动现有观众座位的情况下，最多还能坐下多少名观众。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n10001\n输出\n1",
+      "cases": [
+        {
+          "input": "10001",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n0101\n输出\n0\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题和\n华为OD机试 - 座位调整（Java & JS & Python & C）_伏城之外的博客-CSDN博客\n类似，解析可以看该博客。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Java": "Python算法源码\nC算法源码\n题目描述\n在一个大型体育场内举办了一场大型活动，由于疫情防控的需要，要求每位观众的必须间隔至少一个空位才允许落座。\n现在给出一排观众座位分布图，座位中存在已落座的观众，请计算出，在不移动现有观众座位的情况下，最多还能坐下多少名观众。\n输入描述\n一个数组，用来标识某一排座位中，每个座位是否已经坐人。0表示该座位没有坐人，1表示该座位已经坐人。\n1 ≤ 数组长度 ≤ 10000\n输出描述\n整数，在不移动现有观众座位的情况下，最多还能坐下多少名观众。\n用例\n输入\n10001\n输出\n1\n说明\n无\n输入\n0101\n输出\n0\n说明\n无\n题目解析\n本题和\n华为OD机试 - 座位调整（Java & JS & Python & C）_伏城之外的博客-CSDN博客\n类似，解析可以看该博客。",
+    "Python": "# 输入获取\ndesk = list(input())\n\n\n# 算法入口\ndef getResult():\n    ans = 0\n\n    i = 0\n    while i < len(desk):\n        if desk[i] == '0':\n            isLeftEmpty = i == 0 or desk[i - 1] == '0'\n            isRightEmpty = i == len(desk) - 1 or desk[i + 1] == '0'\n\n            if isLeftEmpty and isRightEmpty:\n                ans += 1\n                desk[i] = '1'\n                i += 1\n        i += 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

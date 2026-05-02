@@ -1,0 +1,51 @@
+{
+  "id": "q082",
+  "title": "真正的密码",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在一行中输入一个字符串数组，如果其中一个字符串的所有以索引0开头的子串在数组中都有，那么这个字符串就是潜在密码，\n在所有潜在密码中最长的是真正的密码，如果有多个长度相同的真正的密码，那么取字典序最大的为唯一的真正的密码，求唯一的真正的密码。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "无"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nh he hel hell hello o ok n ni nin ninj ninja\n输出\nninja",
+      "cases": [
+        {
+          "input": "h he hel hell hello o ok n ni nin ninj ninja",
+          "output": "ninja",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "按要求，hello、ok、ninja都是潜在密码。\n检查长度，hello、ninja是真正的密码。\n检查字典序，ninja是唯一真正密码。\n输入\na b c d f\n输出\nf\n\n按要求，a b c d f 都是潜在密码。\n检查长度，a b c d f 是真正的密码。\n检查字典序，f是唯一真正密码。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "我的\n\n如下：\n将输入的所有字符串先按照长度升序，如果长度相同，则按照字典序升序。\n这样最后一个字符串必然就是长度最长，字典序最大的，我们从最后一个字符串str开始：\n接下来，我们不停地截取str的子串，即如下闭区间的子串：\n0~str.length-2\n0~str.length-3\n0~str.length-4\n....\n0~2\n0~1\n0~0\n然后将在输入的所有字符串中查找每次截取的子串是否存在，如果多存在则返回当str作为\n\n，如果有一个不存在，则直接中断查找，开始下一个str\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = input().split()\n\n\n# 算法入口\ndef getResult(arr):\n    setArr = set(arr)\n\n    arr.sort(key=lambda s: (len(s), [ord(c) for c in s]))\n\n    for i in range(len(arr) - 1, -1, -1):\n        s = arr[i]\n        flag = True\n\n        for j in range(len(s) - 1, 0, -1):\n            if s[:j] not in setArr:\n                flag = False\n                break\n\n        if flag:\n            return s\n\n    return \"\"\n\n\n# 算法调用\nprint(getResult(arr))"
+  },
+  "verified": false
+}

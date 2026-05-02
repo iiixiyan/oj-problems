@@ -1,0 +1,19 @@
+{
+  "id": "q566",
+  "title": "敏感字段加密",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n给定一个由多个命令字组成的命令字符串：\n1、\n字符串长度\n小于等于127字节，只包含大小写字母，数字，下划线和偶数个双引号；\n2、命令字之间以一个或多个下划线"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nk = int(input())\ns = input()\n\n\n# 算法入口\ndef getResult(k, s):\n    stack = []\n    res = []\n\n    for c in s:\n        if c == '_' and (len(stack) == 0 or stack[0] != '\"'):\n            res.append(\"\".join(stack))\n            stack = []\n        elif c == '\"' and len(stack) != 0:\n            stack.append(c)\n            res.append(\"\".join(stack))\n            stack = []\n        else:\n            stack.append(c)\n\n    if len(stack) > 0:\n        res.append(\"\".join(stack))\n\n    ans = list(filter(lambda x: x != \"\", res))\n\n    if k > len(ans) - 1:\n        return \"ERROR\"\n\n    ans[k] = \"******\"\n\n    return \"_\".join(ans)\n\n\n# 算法调用\nprint(getResult(k, s))"
+  },
+  "verified": false
+}

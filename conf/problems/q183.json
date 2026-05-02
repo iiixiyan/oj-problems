@@ -1,0 +1,56 @@
+{
+  "id": "q183",
+  "title": "找车位",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "停车场有一横排车位，0代表没有停车，1代表有车。至少停了一辆车在车位上，也至少有一个空位没有停车。\n为了防剐蹭，需为停车人找到一个车位，使得距\n停车人的车\n最近的车辆的距离是最大的，返回此时的\n最大距离\n。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一个用半角逗号分割的停车标识字符串，停车标识为0或1，0为空位，1为已停车。\n停车位最多100个。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个整数记录最大距离。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1,0,0,0,0,1,0,0,1,0,1\n输出\n2",
+      "cases": [
+        {
+          "input": "1,0,0,0,0,1,0,0,1,0,1",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "当车停在第3个位置上时，离其最近的的车距离为2（1到3）。\n当车停在第4个位置上时，离其最近的的车距离为2（4到6）。\n其他位置距离为1。\n因此最大距离为2"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题类似于\n华为OD机试 - 新员工座位（Java & JS & Python）_伏城之外的博客-CSDN博客\n本题也可以采用两步走：\n正向遍历一遍，确认每个空闲车位的左边的最大停车距离（即当前空闲车位的左边连续空闲车位个数+1）\n反向遍历一遍，确认每个空闲车位的右边的最大停车距离（即当前空闲车位的右边连续空闲车位个数+1）\n而每个空闲车位的最大停车距离，取其左、右最大停车距离中的较小值。\n最后，返回所有空闲车位中的最大停车距离即可。\n本题需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是，首尾如果是空闲车位的话：\n对第0个空闲车位，其最大停车距离，取得是其右边的停车距离\n对第n-1个空闲车位，其最大停车距离，取得是其左边的停车距离\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nnums = list(map(int, input().split(\",\")))\n\n\n# 算法入口\ndef getResult():\n    n = len(nums)\n\n    # leftFree[i] 表示第i个车位的左边空闲车位个数\n    leftFree = [0]*n\n    for i in range(n):\n        if nums[i] == 1:\n            continue\n\n        if nums[i-1] == 0:\n            leftFree[i] = leftFree[i-1] + 1\n        else:\n            leftFree[i] = 0\n\n    # rightFree[i] 表示第i个车位的右边空闲车位个数\n    rightFree = [0]*n\n    for i in range(n-2, -1, -1):\n        if nums[i] == 1:\n            continue\n\n        if nums[i+1] == 0:\n            rightFree[i] = rightFree[i+1] + 1\n        else:\n            rightFree[i] = 0\n\n    # 如果第0个车位是空闲车位,那么第0个车位的最大距离就是它右边的空闲车位个数\n    # 如果第n-1个车位是空闲车位,那么第n-1个车位的最大安全距离就是它左边的空闲车位个数\n    ans = max(rightFree[0], leftFree[n-1])\n\n    # 对于第i个车位&#xff08;i取值1~n-2&#xff09;,其最大距离取min(leftFree[i], rightFree[i])\n    for i in range(1, n-1):\n        if nums[i] == 1:\n            continue\n\n        ans = max(ans, min(leftFree[i], rightFree[i]))\n\n    # ans记录的空闲车位数,转化为距离要+1\n    return ans + 1\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

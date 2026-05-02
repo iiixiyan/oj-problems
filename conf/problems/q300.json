@@ -1,0 +1,57 @@
+{
+  "id": "q300",
+  "title": "字符串排序",
+  "score": 100,
+  "tags": [
+    "字符串",
+    "排序"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "排序规则：\n单词中字母比较不区分大小写，两个单词先以第一个字母作为排序的基准，如果第一个字母相同，就用第二个字母为基准，如果第二个字母相同就以第三个字母为基准。依此类推，如果到某个字母不相同，字母顺序在前的那个单词顺序在前。\n当一个短单词和一个长单词的开头部分都相同（即短单词是长单词从首字母开始的一部分），短单词顺序在前。\n字母大小写不同的相同单词，只输出一次。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "无"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nHello hello world\n输出\nHello world",
+      "cases": [
+        {
+          "input": "Hello hello world",
+          "output": "Hello world",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\ni LOVE Cc I love CC Hello Hel Hellow\n输出\nCc Hel Hello Hellow i LOVE\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "这题有两部分逻辑，一个是排序，一个是去重。\n我这里是先排序后去重，因为我想基于栈结构去重，即排序后，不区分大小写的两个字符串一定是紧挨着的，因此后入栈的字符串如果和栈顶字符串相同（不区分大小写），则不入栈。\n排序规则是其实就是字典序。但是需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是，不区分大小写排序，因此我们不能直接使用Array.prototype.sort的原生字典序排序，而是需要自定义不区分大小写的字典序排序。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = input().split()\n\n\n# 算法入口\ndef getResult():\n    arr.sort(key=lambda x: x.lower())\n\n    stack = [arr[0]]\n\n    for i in range(1, len(arr)):\n        s = arr[i]\n        top = stack[-1].lower()\n        add = s.lower()\n        if top == add:\n            continue\n        stack.append(s)\n\n    return \" \".join(stack)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

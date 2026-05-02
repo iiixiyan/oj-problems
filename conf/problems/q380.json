@@ -1,0 +1,51 @@
+{
+  "id": "q380",
+  "title": "API集群负载统计",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "某个产品的RESTful API集合部署在服务器集群的多个节点上，近期对客户端访问日志进行了采集，需要统计各个API的访问频次，根据热点信息在服务器节点之间做负载均衡，现在需要实现热点信息统计查询功能。\nRESTful API是由多个层级构成，层级之间使用 / 连接，如 /A/B/C/D 这个地址，A属于第一级，B属于第二级，C属于第三级，D属于第四级。\n现在负载均衡模块需要知道给定层级上某个名字出现的频次，未出现过用0表示，实现这个功能。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为N，表示访问历史日志的条数，0 ＜ N ≤ 100。\n接下来N行，每一行为一个RESTful API的URL地址，约束地址中仅包含英文字母和连接符 / ，最大层级为10，每层级字符串最大长度为10。\n最后一行为层级L和要查询的关键字。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出给定层级上，关键字出现的频次，使用完全匹配方式（大小写敏感）。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n/huawei/computing/no/one\n/huawei/computing\n/huawei\n/huawei/cloud/no/one\n/huawei/wireless/no/one\n2 computing\n输出\n2",
+      "cases": [
+        {
+          "input": "5\n/huawei/computing/no/one\n/huawei/computing\n/huawei\n/huawei/cloud/no/one\n/huawei/wireless/no/one\n2 computing",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "在第二层级上，computing出现了2次，因此输出2\n输入\n5\n/huawei/computing/no/one\n/huawei/computing\n/huawei\n/huawei/cloud/no/one\n/huawei/wireless/no/one\n4 two\n输出\n0\n\n存在第四层级的URL上，没有出现two，因此频次是0"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题应该就是一个逻辑模拟题，以及考察集合的应用。\n本题的难度主要在于数据结构的定义，我们需要按照下图所示方式，对各层级的关键字进行统计\n[\n{},                                                                  // 层级0\n{\"huawei\": 5},                                                // 层级1\n{\"computing\": 2，\"cloud\": 1，\"wireless\": 1}, // 层级2\n{\"no\": 3},                                                        // 层级3\n{\"one\": 3}                                                       // 层级4\n]\n外层是一个数组（数组索引就是层级号），数组元素是一个map结构（key是关键字，val是关键字在对应层级出现次数）\n我们按照这种数据结构收集各条日志URL的组成关键字，就能快速的找到指定层级（通过数组索引）下的指定关键字（通过map结构的key）的出现频次（map结构的val）\n更多细节信息，请看代码注释。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 访问历史日志的条数\nn = int(input())\n\n# 记录各层级上各关键字出现的频次\ncnts = []\n\n# 遍历历史日志\nfor _ in range(n):\n    # 将日志按照 \"/\" 分割,注意split函数会将 \"/a/b/c\" 会分割出数组 [\"\", \"a\", \"b\", \"c\"],因此a,b,c的层级就是其索引值\n    urlComponents = input().split(\"/\")\n\n    # 遍历url的各层级\n    for level in range(len(urlComponents)):\n        urlComponent = urlComponents[level]\n\n        # 如果cnts不存在对于层级\n        if level >= len(cnts):\n            # 则创建对应层级\n            cnts.append({})\n\n        # 获取对应层级\n        cnts[level][urlComponent] = cnts[level].get(urlComponent, 0) + 1\n\n# 要查询的给定层级, 要查询的关键字\ntar_level, tar_urlComponent = input().split()\n\ntar_level = int(tar_level)\n\nif tar_level >= len(cnts):\n    # 如果要查询的层级超出了统计范围,则返回0\n    print(0)\nelse:\n    # 获取对应层级上对应关键字出现的频次,如果没有出现,则返回0\n    print(cnts[tar_level].get(tar_urlComponent, 0))"
+  },
+  "verified": false
+}

@@ -1,0 +1,46 @@
+{
+  "id": "q237",
+  "title": "非严格递增连续数字序列",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "输入一个字符串仅包含大小写字母和数字，求字符串中包含的最长的非严格递增连续数字序列的长度，（比如12234属于非严格递增连续数字序列）。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一个字符串仅包含大小写字母和数字，输入的字符串最大不超过255个字符。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最长的非严格递增连续数字序列的长度"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nabc2234019A334bc\n输出\n4",
+      "cases": [
+        {
+          "input": "abc2234019A334bc",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "2234为最长的非严格递增连续数字序列，所以长度为4。\n双指针解法\n简单的双指针题目。\n双指针逻辑如下\n当right指针移动遇到字母时，则right前面可能：\n是一个空串\n是一个符合题意的，且长度right-left的子串，\n然后right++，left = right，即left,right同时移到字母后一个位置\n当right指针移动遇到数字时，\n若此时left、right在同一个位置，则可得一个长度为1的符合要求的子串\n若此时left、right不在同一个位置，则检查right指向数值是否大于right-1指向的数值，\n若是，则可得一个符合要求的，长度right-left+1的子串，然后right++\n若不是，则可得一个符合要求的，长度right-left的子串，然后right++，left = right，即left,right同时移到字母后一个位置\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult():\n    l = 0\n    r = 0\n    maxLen = 0\n\n    while r < len(s):\n        if '0' <= s[r] <= '9':\n            if l != r:\n                if s[r] >= s[r-1]:\n                    maxLen = max(maxLen, r - l + 1)\n                    r += 1\n                else:\n                    maxLen = max(maxLen, r - l)\n                    l = r\n                    r += 1\n            else:\n                maxLen = max(maxLen, 1)\n                r += 1\n        else:\n            maxLen = max(maxLen, r - l)\n            r += 1\n            l = r\n\n    return maxLen\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,62 @@
+{
+  "id": "q388",
+  "title": "全排列",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "数学"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "目录"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "算法源码"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个只包含大写英文字母的字符串S，要求你给出对S重新排列的所有不相同的排列数。\n如：S为ABA，则不同的排列有ABA、AAB、BAA三种。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一个长度不超过10的字符串S，我们确保都是大写的。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出S重新排列的\n所有不相同的排列数\n（包含自己本身）。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nABA\n输出\n3",
+      "cases": [
+        {
+          "input": "ABA",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nABCDEFGHHA\n输出\n907200\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是一个数学问题。即求解无重复的全排列个数。\n首先我们可以求解出有重复的全排列个数，假设共有n个元素，则有重复的全排列个数为n!个。比如ABA有三个元素，则有重复的全排列个数为3! = 3x2x1 = 6。\n然后，我们需要找出重复的元素的个数，比如ABA中的A重复了2次，因此会生成2！组相同排列。\n因此不重复的全排列个数有 3！/ 2! = 3个。\n假设一共n个元素，其中某元素α重复x次，某元素β重复了y次，则最终不重复全排列个数有：\nn! / x! / y! 个\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\ndef getFact(n):\n    fact = 1\n    for i in range(1, n + 1):\n        fact *= i\n    return fact\n\n\n# 算法入口\ndef getResult(s):\n    total = getFact(len(s))\n\n    count = {}\n    for c in s:\n        if count.get(c) is None:\n            count[c] = 1\n        else:\n            count[c] += 1\n\n    for c in count.keys():\n        n = count[c]\n        if n > 1:\n            total /= getFact(n)\n\n    return int(total)\n\n\n# 算法调用\nprint(getResult(s))"
+  },
+  "verified": false
+}

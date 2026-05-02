@@ -1,0 +1,56 @@
+{
+  "id": "q244",
+  "title": "二维伞的雨滴效应",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "普通的伞在二维平面世界中，左右两侧均有一条边，而两侧伞边最下面各有一个伞坠子，雨滴落到伞面，逐步流到伞坠处，会将伞坠的信息携带并落到地面，随着日积月累，地面会呈现伞坠的信息。\n1、为了模拟伞状雨滴效应，用二叉树来模拟二维平面伞（如下图所示），现在输入一串正整数数组序列（不含0，数组成员至少是1个），若此数组序列是二叉搜索树的前序遍历的结果，那么请输出一个返回值1，否则输出0。\n2、同时请将此序列构成的伞状效应携带到地面的数字信息输出来(左边伞坠信息，右边伞坠信息，详细参考示例图地面上数字)，若此树不存在左或右扇坠，则对应位置返回0。同时若非二叉排序树那么左右伞坠信息也返回0。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一个通过空格分割的整数序列字符串，数组不含0，数组成员至少1个，输入的数组的任意两个数字都互不相同，最多1000个正整数，正整数值范围1~65535"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出如下三个值，以空格分隔：是否二叉排序树，左侧地面呈现的伞坠数字值，右侧地面呈现的伞坠数字值。\n若是二叉排序树，则输出1，否则输出0（其左右伞坠值也直接赋值0）。\n若不存存在左侧或者右侧伞坠值，那么对应伞坠值直接赋值0。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n8 3 1 6 4 7 10 14 13\n输出\n1 1 13",
+      "cases": [
+        {
+          "input": "8 3 1 6 4 7 10 14 13",
+          "output": "1 1 13",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "1表示是二叉搜索树前序遍历结果，1表示左侧地面呈现的伞坠数字值，13表示右侧地面呈现的伞坠数字值"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本\n\n题前需要先了解几个概念：\n什么是二叉搜索树？\n二叉搜索树，也叫二叉排序树，它具有如下特点：\n若它的左子树不空，则左子树上所有结点的值均小于它的根结点的值\n若它的右子树不空，则右子树上所有结点的值均大于它的根结点的值\n它的左、右子树也分别为二叉搜索树\n什么是前序遍历？\n二叉树的遍历方式有：前序遍历、中序遍历、后序遍历，这里的”前、中、后“指的是二叉树根节点的遍历顺序，\n前序遍历，可以理解为前根序，即：根左右（先遍历根，再遍历左子树，最后遍历右子树）\n中序遍历，可以理解为中根序，即：左根右（先遍历左子树，再遍历根，最后遍历右子树）\n后续遍历，可以理解为后根序，即：左右根（先遍历左子树，再遍历右子树，最后遍历根）\n下面举个例子帮助理解，\n上图二叉树的\n前序遍历结果为：abc\n中序遍历结果为：bac\n后序遍历结果为：bca\n上图二叉树的\n前序遍历结果为：【a】【[b][d][e]】【[c][f][g]】\n中序遍历结果为：【[d][b][e]】【a】【[f][c][g]】\n后序遍历结果为：【[d][e][b]】【[f][g][c]】【a】\n知道上面概念后，我们再来看本题：\n给定一个二叉树的前序遍历的结果序列，判断该二叉树是否为二叉搜索树？\n我们知道前序遍历是：根左右，因此给定序列的第一个元素必然是根节点值。\n假设根节点对应的序列索引范围是[start, end]，那么根节点索引位置就是start。\n而二叉搜索树的特点是：\n根节点的值 大于 其左子树的所有节点的值\n根节点的值 小于 其右子树的所有节点的值\n因此，我们从start+1位置开始判断，如果satrt+1位置的元素值 < 根节点的元素值（start位置），那么start+1位置的元素就是根节点的左子树节点，按此逻辑，依次往后判断。\n假设在 i 位置，发现 i 位置的元素 ≮ 根节点的元素值（start位置），则当前根节点的左子树索引范围是[satrt + 1, i - 1]\n之后，我们从 i 位置开始判断，如果 i 位置的元素值 ＞ 根节点的元素值（start位置），那么 i 位置的元素就是 根节点的右子树节点，按此逻辑，依次完后判断。\n如果当前序列满足二叉搜索树前序遍历，那么最终，当前根节点的右子树索引范围必须是[i, end]，\n如果右子树索引范围的结束位置达不到end，则不合法。\n按照上面逻辑，我们可以得到根节点、根的左子树、根的右子树。\n之后，我们可以继续按上面逻辑递归的判断：根的左子树[satrt + 1, i - 1]、根的右子树[i, end]，他们对应索引范围的子序列，是否满足二叉搜索树前序遍历的特点（根节点的值 大于 其左子树的所有节点的值、根节点的值 小于 其右子树的所有节点的值）\n以上逻辑，是判断一个序列是否为二叉搜索树的前序遍历结果。但是本题还需要我们求解出：左边伞坠信息，右边伞坠信息\n这里思维上最简单的做法是，根据前面判断二叉搜索树前序遍历序列的逻辑，生成一颗二叉搜索树，还原出二叉搜索树后\n求解左边伞缀的逻辑：\n从根节点开始，不停的遍历当前节点的左子节点，\n如果存在左子节点，则递归继续遍历其左子节点，\n如果不存在左子节点，此时需要看当前节点所处层级：\n如果是第0层，则当前节点就是根节点，且当前根节点没有左子树，因此必然没有左边伞缀；\n如果不是第0层，则需要检查当前节点是否存在右子节点，\n如果存在右子节点，则将当前节点的右子节点当成下一层的节点，然后重复上面逻辑，\n如果不存在右子节点，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "当前节点就是叶子节点，且是最后一层，最左边的叶子节点，即左边伞缀信息。\n求解右边伞缀的逻辑和上面差不多，大家可以自行推导。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\npreOrder = list(map(int, input().split()))  # 二叉搜索树前序遍历的结果序列\n\n\n# 二叉树的节点类定义\nclass Node:\n    def __init__(self, val):\n        self.val = val  # 节点值\n        self.left_child = None  # 当前节点的左子节点\n        self.right_child = None  # 当前节点的右子节点\n\n\ndef isValid(root, start, end):\n    \"\"\"\n    判断preOrder数组是否为合法的二叉搜索树前序遍历结果序列,如果是,则根绝preOrder还原出对应二叉搜索树\n    :param root: 二叉搜索树的节点,每个二叉搜索树节点都对应preOrder序列中的一段子序列\n    :param start: 该子序列在preOrder中的范围的起始位置\n    :param end: 该子序列在preOrder中的范围的结束位置\n    :return: preOrder数组是否为合法的二叉搜索树前序遍历结果\n    \"\"\"\n\n    # 如果当前节点对应的序列范围长度为1,则当前节点为叶子节点,无法继续递归,需要结束递归,而单个节点本身就是前序遍历结果,因此返回true\n    if start == end:\n        return True\n\n    # 前序遍历即&#xff1a;根左右,因此start位置是当前序列对应的子树的根节点位置,当前子树的左子子树从start+1位置开始判断\n    i = start + 1\n    # 二叉搜索树的特点是&#xff1a;当前节点的左子节点值 < 当前节点的值\n    while i <= end and preOrder[i] < root.val:\n        i += 1\n\n    # i 最终指向左右子树的分界位置\n    j = i\n    # 二叉搜索树的特点是&#xff1a;当前节点的右子节点值 > 当前节点的值\n    while j <= end and preOrder[j] > root.val:\n        j += 1\n\n    # j 最终指向右子树的终点位置的后一个位置,而右子树的终点位置必须在end,因此合法的二叉搜索树前序遍历结果 j > end\n    if j <= end:\n        return False\n\n    # i 最终指向左右子树的分界位置\n    # 如果 i > start + 1,则存在左子树\n    if i > start + 1:\n        # 创建当前节点的左子树节点\n        root.left_child = Node(preOrder[start + 1])\n\n        # 递归判断左子树对应的序列范围是否为前序遍历结果\n        if not isValid(root.left_child, start + 1, i - 1):\n            # 若不是,则preOrder无法还原出二叉搜索树\n            return False\n\n    # i 最终指向左右子树的分界位置\n    # 如果 i <= end,则存在右子树\n    if i <= end:\n        # 创建当前节点的右子树节点\n        root.right_child = Node(preOrder[i])\n        # 如果右子树对应的序列是合法的前序遍历结果,结合前面左子树对应的序列也是合法的前序遍历结果,则preOrder整体就是合法的前序遍历结果\n        return isValid(root.right_child, i, end)\n\n    return True\n\n\n# 递归查找二叉树的左缀点,即二叉树最后一层中,最靠左的点\ndef getFarLeftBottomVal(root, level):\n    # 如果当前节点存在左子节点,则递归查找其左子节点\n    if root.left_child is not None:\n        return getFarLeftBottomVal(root.left_child, level + 1)\n\n    # 如果当前节点没有左子节点,则检查当前节点处于哪一层\n    if level > 0:\n        if root.right_child is not None:\n            # 如果当前节点不处于第0层,且存在右子节点,则递归查找其右子节点\n            return getFarLeftBottomVal(root.right_child, level + 1)\n        else:\n            # 如果当前节点不处于第0层,且不存在右子节点,则当前节点即为左缀点\n            return root.val\n    else:\n        # 如果当前节点处于第0层,且没有左子节点,则没有左缀点,按题目要求返回0\n        return 0\n\n\n# 递归查找二叉树的右缀点,即二叉树最后一层中,最靠右的点\ndef getFarRightBottomVal(root, level):\n    if root.right_child is not None:\n        return getFarRightBottomVal(root.right_child, level + 1)\n\n    if level > 0:\n        if root.left_child is not None:\n            return getFarRightBottomVal(root.left_child, level + 1)\n        else:\n            return root.val\n    else:\n        return 0\n\n\n# 核心代码\ndef getResult():\n    # 二叉搜索树的根节点root\n    root = Node(preOrder[0])\n\n    if isValid(root, 0, len(preOrder) - 1):\n        return f\"1 {getFarLeftBottomVal(root, 0)} {getFarRightBottomVal(root, 0)}\"\n    else:\n        return \"0 0 0\"\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,51 @@
+{
+  "id": "q389",
+  "title": "内存冷热标记",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "现代计算机系统中通常存在多级的存储设备，针对海量 workload 的优化的一种思路是将热点内存页优先放到快速存储层级，这就需要对内存页进行冷热标记。\n一种典型的方案是基于内存页的访问频次进行标记，如果统计窗口内访问次数大于等于设定阈值，则认为是热内存页，否则是冷内存页。\n对于统计窗口内跟踪到的访存序列和阈值，现在需要实现基于频次的冷热标记。内存页使用页框号作为标识。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为 N，表示访存序列的记录条数，0 < N ≤ 10000。\n第二行为访存序列，空格分隔的 N 个内存页框号，页面号范围 0 ~ 65535，同一个页框号可能重复出现，出现的次数即为对应框号的频次。\n第三行为热内存的频次阈值 T，正整数范围 1 ≤ T ≤ 10000。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "第一行输出标记为热内存的内存页个数，如果没有被标记的热内存页，则输出 0 。\n如果第一行 > 0，则接下来按照访问频次降序输出内存页框号，一行一个，频次一样的页框号，页框号小的排前面。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n10\n1 2 1 2 1 2 1 2 1 2\n5\n输出\n2\n1\n2",
+      "cases": [
+        {
+          "input": "10\n1 2 1 2 1 2 1 2 1 2\n5",
+          "output": "2\n1\n2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "内存页1和内存页2均被访问了5次，达到了阈值5，因此热内存页有2个。内存页1和内存页2的访问频次相等，页框号小的排前面。\n输入\n5\n1 2 3 4 5\n3\n输出\n0\n\n访存跟踪里面访存频次没有超过3的，因此热内存个数为0。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "简单的多条件排序问题。\n具体逻辑请看代码实现。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nseqs = list(map(int, input().split()))\nthreshold = int(input())\n\n# 统计各个内存页框号出现的次数\ncnts = {}\nfor num in seqs:\n    cnts.setdefault(num, 0)\n    cnts[num] += 1\n\n# 过滤出现次数达到阈值的内存页,即热内存页数量\nitems = list(filter(lambda x: x[1] >= threshold, cnts.items()))\n\n# 打印热内存页数量\nprint(len(items))\n\n# 如果存在热内存页\nif len(items) > 0:\n    # 那么优先按照访问频次降序,如果访问频次相同,则再按页框号升序,items中记录元素是[页框号, 访问频次]\n    items.sort(key=lambda x: (-x[1], x[0]))\n\n    for num, _ in items:\n        print(num)"
+  },
+  "verified": false
+}

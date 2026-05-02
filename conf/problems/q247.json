@@ -1,0 +1,61 @@
+{
+  "id": "q247",
+  "title": "仿LISP运算",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "LISP 语言唯一的语法就是括号要配对。\n形如 (OP P1 P2 …)，括号内元素由单个空格分割。\n其中第一个元素 OP 为操作符，后续元素均为其参数，参数个数取决于操作符类型。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：\n参数 P1, P2 也有可能是另外一个嵌套的 (OP P1 P2 …) ，当前 OP 类型为 add / sub / mul / div（全小写），分别代表整数的加减乘除法，简单起见，所有 OP 参数个数均为 2 。\n举例：\n输入：(mul 3 -7)输出：-21\n输入：(add 1 2) 输出：3\n输入：(sub (mul 2 4) (div 9 3)) 输出 ：5\n输入：(div 1 0) 输出：error\n题目涉及数字均为整数，可能为负；\n不考虑 32 位溢出翻转，计算过程中也不会发生 32 位溢出翻转，\n除零错误时，输出 “error”，\n除法遇除不尽，向下取整，即 3/2 = 1"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为长度不超过512的字符串，"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证了无语法错误"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出计算结果或者“error”"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n(div 12 (sub 45 45))\n输出\nerror",
+      "cases": [
+        {
+          "input": "(div 12 (sub 45 45))",
+          "output": "error",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "45减45得0，12除以0为除零错误，输出error\n输入\n(add 1 (div -7 3))\n输出\n-2\n\n-7除以3向下取整得-3，1加-3得-2"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "纯逻辑题，难点在于将括号中的片段截取出来，我的处理方案是，遍历输入的每一个字符，当遇到\")\"时，则在其前面必然存在一个“(”，找到其前面第一个“(”，然后截取“(”和\")\"之间的内容（从栈中截取走），进行计算，将结果回填如栈中。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import math\n\n# 输入获取\ns = input()\n\n\ndef operate(op, p1, p2):\n    p1 = int(p1)\n    p2 = int(p2)\n    if op == \"add\":\n        return str(p1 + p2)\n    elif op == \"sub\":\n        return str(p1 - p2)\n    elif op == \"mul\":\n        return str(p1 * p2)\n    elif op == \"div\":\n        if p2 == 0:\n            return \"error\"\n        else:\n            return str(int(math.floor(p1 / p2)))\n    else:\n        return \"error\"\n\n\n# 算法入口\ndef getResult():\n    stack = []\n    leftIdx = []\n\n    for i in range(len(s)):\n        if s[i] == ')':\n            l = leftIdx.pop()\n            fragment = stack[l:]\n            del stack[l:]\n\n            op, p1, p2 = \"\".join(fragment[1:]).split(\" \")\n\n            res = operate(op, p1, p2)\n\n            if res == \"error\":\n                return \"error\"\n            else:\n                stack.extend(list(res))\n        elif s[i] == '(':\n            leftIdx.append(len(stack))\n            stack.append(s[i])\n        else:\n            stack.append(s[i])\n\n    return \"\".join(stack)\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,54 @@
+{
+  "id": "q308",
+  "title": "最大括号深度",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "现有一字符串仅由 ‘(‘，’)’，'{‘，’}’，'[‘，’]’六种括号组成。\n若字符串满足以下条件之一，则为无效字符串：\n①任一类型的左右括号数量不相等；\n②存在未按正确顺序（先左后右）闭合的括号。\n输出括号的最大嵌套深度，若字符串无效则输出0。\n0≤字符串长度≤100000"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一个只包括 ‘(‘，’)’，'{‘，’}’，'[‘，’]’的字符串"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "一个整数，最大的括号深度"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n[]\n输出\n1",
+      "cases": [
+        {
+          "input": "[]",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "有效字符串，最大嵌套深度为1\n输入\n([]{()})\n输出\n3\n\n有效字符串，最大嵌套深度为3\n输入\n(]\n输出\n0\n\n无效字符串，有两种类型的左右括号数量不相等\n输入\n([)]\n输出\n0\n\n无效字符串，存在未按正确顺序闭合的括号\n输入\n)(\n输出\n0\n\n无效字符串，存在未按正确顺序闭合的括号。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以通过栈结构来判断括号的对称性。\n本题的难点在于最大深度计算，其实也不难，就是看是否形成了连续出栈\n代码实现就是看入栈的一直是')'，']'，'}' ，则意味着必然要出栈一对括号，则深度一直自增，如果入栈的是'('，'['，'{' ，则意味着入栈元素不会和栈顶元素形成一队括号，也就不会出栈，此时深度重置为0\n2023.05.21 根据网友指正，上面求解最大深度有问题，我们不应该将连续出栈次数作为最大深度，这是有漏洞的，比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "：\n({[]}())\n其实，本题在stack栈中，一旦遇到闭合的括号就会弹出，因此stack栈中能保留的只是左括号，而我们可以直接将stack栈中保留的左括号的最大数量作为最大深度，而stack栈的本身size就是对应的左括号数量。\n比如下面图示中画红框的地方\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult():\n    map = {\n        \")\": \"(\",\n        \"]\": \"[\",\n        \"}\": \"{\"\n    }\n\n    stack = []\n\n    maxDepth = 0\n    for i in range(len(s)):\n        c = s[i]\n\n        if len(stack) > 0 and map.get(c) is not None and map[c] == stack[-1]:\n            stack.pop()\n        else:\n            stack.append(c)\n            maxDepth = max(maxDepth, len(stack))\n\n    if len(stack) > 0:\n        return 0\n\n    return maxDepth\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

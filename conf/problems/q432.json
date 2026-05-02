@@ -1,0 +1,63 @@
+{
+  "id": "q432",
+  "title": "数字字符串组合倒序",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "字符串",
+    "数学"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "对数字，字符，数字串，字符串，以及数字与字符串组合进行倒序排列。\n字符范围：由 a 到 z， A 到 Z，\n数字范围：由 0 到 9\n符号的定义：\n“-”作为连接符使用时作为字符串的一部分，例如“20-years”作为一个整体字符串呈现；\n连续出现 2 个 “-” 及以上时视为字符串间隔符，如“out--standing”中的”–“视为间隔符，是 2 个独立整体字符串”out”和”standing”；\n除了 1，2 里面定义的字符以外其他的所有字符，都是非法字符，作为字符串的间隔符处理，倒序后间隔符作为空格处理；\n要求倒排后的单词间隔符以一个空格表示；如果有多个间隔符时，倒排转换后也只允许出现一个字格间隔符；"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "无"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nI am an 20-years out--standing @ * -stu- dent\n输出\ndent stu standing out 20-years an am I",
+      "cases": [
+        {
+          "input": "I am an 20-years out--standing @ * -stu- dent",
+          "output": "dent stu standing out 20-years an am I",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题考察字符串处理。"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "中说\n除了 1，2 里面定义的字符以外其他的所有字符，都是非法字符，作为字符串的间隔符处理，倒序后间隔符作为空格处理；\n即非数字、字母、'-' 的字符都是作为单词分隔符，因此我们可以按此逻辑对输入的字符串进行分割，得到一个单词数组words。\n接下来，倒序遍历words中每一个单词word，对word处理如下：\n如果word首尾含有'-'，则需要去除首尾'-'\n如果word中间含有\"--\"，则需要将word按照\"--\"分割为多个subWords单词数组\n倒序遍历subWords单词数组，将不为空串的元素拼接到"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "ans中\n2023.07.20\n经考友提醒，本题描述中：\n连续出现 2 个 “-” 及以上时视为字符串间隔符\n这里之前把“及以上”看漏了，因此上面对于word的处理中，第2步不能按照\"--\"分割，而是应该按照正则\"-{2,}\"分割\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nimport re\n\ns = input()\n\n\n# 算法入口\ndef getResult():\n    # 非字母、数字、-的字符都当成单词之间的分隔符\n    words = re.split(r\"[^0-9a-zA-Z\\-]\", s)\n\n    # 记录题解\n    ans = []\n\n    # 倒序遍历单词\n    for i in range(len(words) - 1, -1, -1):\n        word = words[i]\n\n        if word == \"\":\n            continue\n\n        # 单词左、右边界不能是 -\n        word = word.strip('-')\n\n        # 单词中间的\"--\"视为分隔符\n        subWords = re.split(r\"-{2,}\", word)\n\n        # 按照\"--\"分割后,倒序记录入ans\n        for j in range(len(subWords) - 1, -1, -1):\n            if subWords[j] != \"\":\n                ans.append(subWords[j])\n\n    return \" \".join(ans)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

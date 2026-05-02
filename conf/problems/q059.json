@@ -49,6 +49,8 @@
       "content": "数量级来决定是否要做上面这个优化。如果数量级很小，则无需上面优化。如果数量级较大，则有优化的必要。\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nm = int(input())\nmatrix = [list(map(int, input().split())) for i in range(n)]\n\n\n# 算法入口\ndef getResult(matrix, n, m):\n    nums = {}\n\n    # 统计输入矩阵中,相同数字的位置\n    for i in range(n):\n        for j in range(m):\n            num = matrix[i][j]\n            if nums.get(num) is None:\n                nums[num] = [[i, j]]\n            else:\n                nums[num].append([i, j])\n\n    # 遍历矩阵每一个元素,和其他相同数字的位置求距离,取最小距离\n    for i in range(n):\n        for j in range(m):\n            num = matrix[i][j]\n\n            minDis = None\n            for i1, j1 in nums[num]:\n                if i1 != i or j1 != j:\n                    dis = abs(i1 - i) + abs(j1 - j)\n                    if minDis is None:\n                        minDis = dis\n                    else:\n                        minDis = min(minDis, dis)\n\n            matrix[i][j] = -1 if minDis is None else minDis\n\n    return matrix\n\n\n# 调用算法\nprint(getResult(matrix, n, m))"
+  },
   "verified": false
 }

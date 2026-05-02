@@ -1,0 +1,61 @@
+{
+  "id": "q385",
+  "title": "会议室占用时间",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "现有若干个会议，所有会议共享一个会议室，用数组表示各个会议的开始时间和结束时间，格式为：\n[[会议1开始时间, 会议1结束时间], [会议2开始时间, 会议2结束时间]]\n请计算会议室占用时间段。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入一个整数 n，表示会议数量\n之后输入n行，每行两个整数，以空格分隔，分别表示会议开始时间，会议结束时间"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出多行，每个两个整数，以空格分隔，分别表示会议室占用时间段开始和结束"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "会议室个数范围：[1, 100]\n会议室时间段：[1, 24]"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\n1 4\n2 5\n7 9\n14 18\n输出\n1 5\n7 9\n14 18",
+      "cases": [
+        {
+          "input": "4\n1 4\n2 5\n7 9\n14 18",
+          "output": "1 5\n7 9\n14 18",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "输入：[[1,4],[2,5],[7,9],[14,18]]\n输出：[[1,5],[7,9],[14,18]]\n\n：时间段[1,4]和[2,5]重叠，合并为[1,5]\n输入\n2\n1 4\n4 5\n输出\n1 5\n\n输入：[[1,4],[4,5]]\n输出：[[1,5]]\n\n：时间段[1,4]和[4,5]连续"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题实际考试时为核心代码模式，非ACM模式，即无需处理输入输出。\n本博客代码实现仍然以ACM模式处理，但是会将 \"输入输出处理\" 与 \"核心代码\" 分开，大家只看核心代码即可。\n本题是区间合并问题。\n我们可以将所有区间开始起始位置升序，然后取出第一个区间作为基准值pre，从第二个区间cur开始遍历：\n如果 cur.start <= pre.end，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "两个区间有重叠，此时我们应该将两个区间合并，合并策略是将pre.end =\nmax\n(pre.end, cur.end)，比如：\npre = [1, 4]，cur = [2, 5]，那么按此策略合并后，pre = [1, 5]\npre = [1, 100]，cur = [7, 9]，那么按此策略合并后，pre = [1, 100]\n如果 cur.start > pre.end，则\n\n两个区间无交集，此时pre无法和后面任何区间合并（因为已经按照开始时间升序了，后面区间的开始时间肯定也大于pre.end），此时pre时间段就是一个独立的会议室占用时间，我们将它缓存记录下来，并将更新pre = cur，即将cur作为新的基准值和后面的区间比较\n按此逻辑，即可完成所有区间的合并。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 本题实际考试时会核心代码模式,无需处理输入输出,只需要写出merge方法实现即可\ndef merge(roomTimes):\n    # 将各个会议按照开始时间升序\n    roomTimes.sort(key=lambda x: x[0])\n\n    # 记录合并后的会议室占用时间段\n    ans = []\n\n    # 上一个会议占用时间段\n    pre = roomTimes[0]\n    for i in range(1, len(roomTimes)):\n        # 当前会议占用时间段\n        cur = roomTimes[i]\n\n        if cur[0] <= pre[1]:\n            # 当前会议开始时间 <= 上一个会议结束时间,则两个会议时间重叠,可以合并\n            # 注意合并时,结束时间取两个时间段中较大的结束时间\n            pre[1] = max(pre[1], cur[1])\n        else:\n            # 否则不可以合并\n            ans.append(pre)\n            pre = cur\n\n    ans.append(pre)\n\n    return ans\n\n\n# 输入输出处理\nn = int(input())\n\nroomTimes = []\nfor _ in range(n):\n    roomTimes.append(list(map(int, input().split())))\n\nfor start, end in merge(roomTimes):\n    print(f\"{start} {end}\")"
+  },
+  "verified": false
+}

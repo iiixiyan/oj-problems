@@ -1,0 +1,24 @@
+{
+  "id": "q552",
+  "title": "转盘寿司",
+  "score": 100,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n寿司店周年庆，正在举办\n优惠活动\n回馈新老客户。\n寿司转盘上总共有 n 盘寿司，prices[i] 是第 i 盘寿司的价格，\n如果客户选择了第 i 盘寿司，寿司店免费赠送客户距离第 i 盘寿司最近的下一盘寿司 j，前提是 prices[j] < prices[i]，如果没有满足条件的 j，则不赠送寿司。\n每个价格的寿司都可无限供应。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的每一个数字代表每盘寿司的价格，每盘寿司的价格之间使用空格分隔，例如:"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nprices = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    # 记录题解\n    res = []\n    res.extend(prices)\n\n    # 单调栈,栈底到栈顶单调递增,压栈元素是栈顶元素在nums顺序后面的值\n    # 每当压栈时,比较栈顶元素 > 压栈元素&#xff1f;若是,则说明找到了栈顶元素的下一个更小值,此时弹栈,压栈元素继续和新栈顶元素比较大小,直到栈顶元素 <= 压栈元素,则停止比较,执行压栈\n    stack = []\n\n    n = len(prices)\n\n    # 这里循环两轮,因为一轮循环可能无法确保所有值都能找到下一个更小值\n    for j in range(n * 2):\n        # prices_j 是压栈(索引对应的)元素\n        prices_j = prices[j % n] # 索引 j % n 是为了让第二轮遍历时,继续从prices的0索引开始\n\n        while len(stack) > 0:\n            # prices[i] 是栈顶(索引对应的)元素\n            i = stack[-1]\n\n            if prices[i] > prices_j:\n                # 如果栈顶元素 > 压栈元素,则说明找到了栈顶元素的下一个更小值,此时栈顶元素弹出,压栈元素继续和新的栈顶元素比较\n                stack.pop()\n                # 题目要统计当前元素和其下一个更小值元素之和\n                res[i] += prices_j\n            else:\n                break\n\n        # 只有第一轮遍历时,才允许压栈,第二轮遍历时,只进行比较\n        if j < n:\n            stack.append(j)\n\n    return \" \".join(map(str, res))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

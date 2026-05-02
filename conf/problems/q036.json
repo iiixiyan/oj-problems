@@ -44,6 +44,8 @@
       "content": "很简单的双重for，"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nm = int(input())\narrM = list(map(int, input().split()))\n\nn = int(input())\narrN = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(arrM, arrN):\n    setM = set(arrM)\n    setN = set(arrN)\n\n    countM = {}\n    for m in arrM:\n        if m in setN:\n            if countM.get(m) is None:\n                countM[m] = 1\n            else:\n                countM[m] += 1\n\n    countN = {}\n    for n in arrN:\n        if n in setM:\n            if countN.get(n) is None:\n                countN[n] = 1\n            else:\n                countN[n] += 1\n\n    count = 0\n    for k in countM.keys():\n        count += countM[k] * countN[k]\n\n    return count\n\n\n# 算法调用\nprint(getResult(arrM, arrN))"
+  },
   "verified": false
 }

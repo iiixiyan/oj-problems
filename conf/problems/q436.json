@@ -1,0 +1,62 @@
+{
+  "id": "q436",
+  "title": "数组连续和",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "数组"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个含有N个正整数的数组, 求出有多少个连续区间（包括单个正整数）, 它们的和大于等于x。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行两个整数N x（0 < N <= 100000, 0 <= x <= 10000000)\n第二行有N个正整数（每个正整数小于等于100)。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个整数，表示所求的个数。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：此题对效率有要求，暴力解法通过率不高，请考虑高效的实现方式。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 7\n3 4 7\n输出\n4",
+      "cases": [
+        {
+          "input": "3 7\n3 4 7",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "第一行的3表示第二行数组输入3个数，第一行的7是比较数，用于判断连续数组是否大于该数；组合为 3 + 4; 3 + 4 + 7; 4 + 7; 7; 都大于等于指定的7；所以共四组。\n输入\n10 10000\n1 2 3 4 5 6 7 8 9 10\n输出\n0\n\n所有元素的和小于10000，所以返回0。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "区间和，最快的计算方式就是利用：一维前缀和，关于一维前缀和请看：\n算法设计 - 前缀和 & 差分数列_伏城之外的博客-CSDN博客\n因此，我们只需要计算出第二行输入数组的前缀和，即可快速计算出任意区间范围的和，比如求解arr数组的[L,R]范围的元素之和，只需要计算 preSum[R] - preSum[L-1]即可。\n本题中说区间可以是单个元素，因此preSum需要初始化为 arr.length + 1 长度，其中preSum[0] = 0，因为这样的话，才能基于preSum描述出第一个元素单独作为区间时的区间和，即preSum[1] - preSum[0]。\n本题描述第二行输入是：N个正整数的数组。\n即arr数组元素都是正整数，因此preSum数组必然是一个升序的数组。\n这意味着，如果preSum[R] - preSum[L] >= x的话，则必然成立：preSum[i] - preSum[L] >=x ，其中 i >= R。\n这样的话，如果preSum[R] - preSum[L] >= x，那么对于区间左边界固定为L的，且区间和大于等于x的区间个数就有 arr.length - R + 1 个，此时只需要O(1)时间。\n下一次，我们继续找左边界固定为L+1的情况。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "保证R>L。\n由于R必须大于L，因此当R越界时，即R>arr.length时，结束。\n2023.06.16\n本题的Python使用input()获取第二行输入时可能会超时，建议使用"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nn, x = map(int, input().split())\narr = list(map(int, sys.stdin.readline().split()))\n \n \n# 算法入口\ndef getResult():\n    preSum = [0]*(n+1)\n \n    for i in range(1, n+1):\n        preSum[i] = preSum[i-1] + arr[i-1]\n \n    l = 0\n    r = 1\n    ans = 0\n \n    while r <= n:\n        if preSum[r] - preSum[l] >= x:\n            ans += n - r + 1\n            l += 1\n            r = l + 1\n        else:\n            r += 1\n \n    return ans\n \n \n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

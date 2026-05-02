@@ -1,0 +1,40 @@
+{
+  "id": "q614",
+  "title": "字符串化繁为简",
+  "score": 200,
+  "tags": [
+    "E卷",
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n给定一个\n输入字符串\n，字符串只可能由英文字母（ ‘a’ ~ ‘z’、‘A’ ~ ‘Z’ ）和左右小括号（ ‘(’、‘)’ ）组成。\n当字符里存在小括号时，小括号是成对的，可以有一个或多个小括号对，小括号对不会嵌套，小括号对内可以包含1个或多个英文字母，也可以不包含英文字母。\n当小括号对内包含多个英文字母时，这些字母之间是相互等效的关系，而且等效关系可以在不同的小括号对之间传递，即当存在 ‘a’ 和 ‘b’ 等效和存在 ‘b’ 和 ‘c’ 等效时，‘a’ 和 ‘c’ 也等效，另外，同一个英文字母的大写字母和小写字母也相互等效（即使它们分布在不同的括号对里）\n需要对这个输入字符串做简化，输出一个新的字符串，\n输出字符串\n里只需保留输入字符串里的没有被小括号对包含的字符（按照输入字符串里的字符顺序），并将每个字符替换为在小括号对里包含的且字典序最小的等效字符。\n如果简化后的字符串为空，请输出为\"0\"。\n示例 :\n输入字符串为\"never(dont)give(run)up(f)()\"，初始等效字符集合为(‘d’, ‘o’, ‘n’, ‘t’)、(‘r’, ‘u’, ‘n’)，由于等效关系可以传递，因此最终等效字符集合为(‘d’, ‘o’, ‘n’, ‘t’, ‘r’, ‘u’)，将输入字符串里的剩余部分按字典序最小的等效字符替换后得到\"devedgivedp’"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "input_string\n输入为1行，代表输入字符串"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "输入字符串的长度在1~100000之间"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "output_string\n输出为1行，代表输出字符串"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\ndef canCombine(set1, set2):\n    for c in range(97, 123):\n        lc = chr(c)  # 小写字符\n        uc = chr(c - 32)  # 大写字符\n        if (lc in set1 or uc in set1) and (lc in set2 or uc in set2):\n            return True\n    return False\n\n\ndef loop(eqs):\n    for i in range(len(eqs)):\n        for j in range(i + 1, len(eqs)):\n            if canCombine(eqs[i], eqs[j]):\n                tmp = list(eqs[i])\n                tmp.extend(eqs[j])\n                eqs[i] = set(tmp)\n                eqs.pop(j)\n                return True\n    return False\n\n\n# 算法入口\ndef getResult():\n    # 主体字符容器\n    cArr = []\n    # 等效字符容器的集合\n    eqs = []\n\n    # isOpen标志,表示有没有遇到 '(' 字符\n    isOpen = False\n\n    # 下面逻辑用于从输入字符串中解析处主体字符,和等效字符\n    for i in range(len(s)):\n        c = s[i]\n\n        if c == '(':\n            isOpen = True\n            eqs.append(set())\n        elif c == ')':\n            isOpen = False\n            if len(eqs[-1]) == 0: # 如果等效字符容器为空,则删除\n                eqs.pop()\n        else:\n            if not isOpen:\n                cArr.append(c)\n            else:\n                eqs[-1].add(c)\n\n    # 暴力的对等效字符容器进行合并\n    while loop(eqs):\n        pass\n\n    # 替换主体字符容器中的字符\n    for eq in eqs:\n        tmp = list(eq)\n        tmp.sort()\n        t = tmp[0]\n        for i in range(len(cArr)):\n            if cArr[i] in eq:\n                cArr[i] = t\n\n    ans = \"\".join(cArr)\n\n    # 如果简化后的字符串为空,请输出为\"0\"。\n    return \"0\" if len(ans) == 0 else ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

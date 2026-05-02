@@ -1,0 +1,61 @@
+{
+  "id": "q162",
+  "title": "代码编辑器",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "某公司为了更高效的编写代码，邀请你开发一款代码编辑器程序。\n程序的输入为 已有的代码文本和指令序列，程序需输出编辑后的最终文本。指针初始位置位于文本的开头。\n支持的指令(X为大于等于0的整数, word 为无空格的字符串)：\nFORWARD X 指针向前(右)移动X,如果指针移动位置超过了文本末尾，则将指针移动到文本末尾\nBACKWARD X 指针向后(左)移动X,如果指针移动位置超过了文本开头，则将指针移动到文本开头\nSEARCH-FORWARD word 从指针当前位置向前查找 word 并将指针移动到word的起始位置，如果未找到则保持不变\nSEARCH-BACKWARD word 在文本中向后查我 word 并将指针移动到word的起始位置，如果未找到则保持不变\nINSERT word 在指针当前位置前插入word，并将指针移动到word的结尾\nREPLACE word 在指针当前位置替换并插入字符(删除原有字符，并增加新的字符)\nDELETE X 在指针位置删除X个字符"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的第一行为命令列表的长度K\n输入的第二行为文件中的原始文本\n接下来的K行，每行为一个指令"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "编辑后的最终结果"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "文本最长长度不超过 256K"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1\nello\nINSERT h\n输出\nhello",
+      "cases": [
+        {
+          "input": "1\nello\nINSERT h",
+          "output": "hello",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "在文本开头插入\n输入\n2\nhllo\nFORWARD 1\nINSERT e\n输出\nhello\n\n在文本的第一个位置插入\n输入\n2\nhell\nFORWARD 1000\nINSERT o\n输出\nhello\n\n在文本的结尾插入\n输入\n1\nhello\nREPLACE HELLO\n输出\nHELLO\n\n替换\n输入\n1\nhello\nREPLACE HELLO_WORLD\n输出\nHELLO_WORLD\n\n超过文本长度替换\n输入\n2\nhell\nFORWARD 10000\nREPLACE O\n输出\nhellO\n\n超出文本长度替换"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题考察逻辑分析，以及字符串常用操作。\n本题"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "对逻辑描述的非常清晰，大家可以对照\n\n来看下面的代码。\n其中，容易出错的点是：\nSEARCH-BACKWARD 是向后查找，这个“向后”，其实是“向左”\nSEARCH-FORWARD 是向前查找，这个“向前”，其实是“向右”\n假设指针位置是curIdx，原始文本是s，SEARCH-BACKWARD word，即相当于在s的0~curIdx范围反向查找word，这里容易出错的点是反向查找方法参数的含义，大家可以看下各自语言的下面方法参数的含义\nJava\nlastIndexOf\nStringBuilder (Java Platform SE 8 ) (oracle.com)\nJS\nlastIndexOf\nString.prototype.lastIndexOf() - JavaScript | MDN (mozilla.org)\nPython\nrfind\nPython rfind()方法 | 菜鸟教程 (runoob.com)\nINSERT word，这里容易出错的点是，插入word到s中后，curIdx也要更新位置到插入word的最后一个单词位置后面\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nk = int(input())\ns = input()\ncommands = list(input().split() for _ in range(k))\n\n\n# 算法入口\ndef getResult():\n    global s\n\n    curIdx = 0\n\n    for type, value in commands:\n        if type == \"FORWARD\":\n            curIdx += int(value)\n            curIdx = min(curIdx, len(s))\n        elif type == \"BACKWARD\":\n            curIdx -= int(value)\n            curIdx = max(curIdx, 0)\n        elif type == \"SEARCH-FORWARD\":\n            i = s.find(value, curIdx)\n            if i != -1:\n                curIdx = i\n        elif type == \"SEARCH-BACKWARD\":\n            j = s.rfind(value, 0, curIdx)\n            if j != -1:\n                curIdx = j\n        elif type == \"INSERT\":\n            lst = list(s)\n            lst.insert(curIdx, value)\n            s = \"\".join(lst)\n            curIdx += len(value)\n        elif type == \"REPLACE\":\n            lst = list(s)\n            del lst[curIdx:curIdx + len(value)]\n            lst.insert(curIdx, value)\n            s = \"\".join(lst)\n        elif type == \"DELETE\":\n            lst = list(s)\n            del lst[curIdx:curIdx + int(value)]\n            s = \"\".join(lst)\n\n    return s\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

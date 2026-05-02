@@ -1,0 +1,61 @@
+{
+  "id": "q186",
+  "title": "拔河比赛",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "公司最近准备进行拔河比赛，需要在全部员工中进行挑选。\n选拔的规则如下：\n按照身高优先、体重次优先的方式准备比赛阵容；\n规定参赛的队伍派出10名选手。\n请实现一个选拔队员的小程序。\n输入为一个数组，记录了部门人员的身高、体重信息，如[身高,体重]的方式放置；\n部门全部成员数量为大于10的一个数组。\n要求输出一个size为10的二维数组。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为N行员工信息，表示部门报名参加选拔的候选人信息，每行有两个数字，使用空格分隔，表示员工的身高、体重信息\n如\n181 70\n182 70\n表示两位候选员工，第一人身高181厘米，体重70公斤;第二人身高182厘米，体重70公斤"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "要求输出一个10行的已经排序的参赛员工信息数据，每行有两个数字，使用空格分隔，表示员工的身高、体重信息如\n182 70\n181 70"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "输入数据范围：\n成员身高、体重为int数据类型:\n输入备选成员数量为N，10 ≤ N ≤ 100"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n181 70\n182 70\n183 70\n184 70\n185 70\n186 70\n180 71\n180 72\n180 73\n180 74\n180 75\n输出\n186 70\n185 70\n184 70\n183 70\n182 70\n181 70\n180 75\n180 74\n180 73\n180 72",
+      "cases": [
+        {
+          "input": "181 70\n182 70\n183 70\n184 70\n185 70\n186 70\n180 71\n180 72\n180 73\n180 74\n180 75",
+          "output": "186 70\n185 70\n184 70\n183 70\n182 70\n181 70\n180 75\n180 74\n180 73\n180 72",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "考察简单的排序。\n2023.09.21\n本题根据考友反馈，题目"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "的输出格式可能存在问题\n考试时可以考虑将多行输出 改成 一行输出 试试\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 全局变量\nemployees = []\n\n# 输入获取\nwhile True:\n    try:\n        employees.append(list(map(int, input().split())))\n    except:\n        break\n\n\n# 算法入口\ndef getResult(employees):\n    employees.sort(key=lambda x: (-x[0], -x[1]))\n\n    for i in range(10):\n        print(\" \".join(map(str, employees[i])))\n\n\n# 算法调用\ngetResult(employees)"
+  },
+  "verified": false
+}

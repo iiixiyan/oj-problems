@@ -1,0 +1,54 @@
+{
+  "id": "q314",
+  "title": "石头剪刀布游戏",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "石头剪刀布游戏有 3 种出拳形状：石头、剪刀、布。分别用字母A、B、C表示。\n游戏规则：\n出拳形状之间的胜负规则如下：\nA > B；\nB > C；\nC > A；\n\">\" 左边一个字母，表示相对优势形状。右边一个字母，表示相对劣势形状。\n当本场次中有且仅有一种出拳形状优于其他出拳形状，则该形状的玩家是胜利者。否则认为是平局。\n例如1：三个玩家出拳分别是A，B，C。由于三方优势循环（即没有任何一方优于其他出拳者），判断为平局。\n例如2：三个玩家出拳分别是A，B，B。出拳A的获胜。\n例如3：三个玩家出拳全部是A。判为平局。\n当发生平局，没有赢家。有多个胜利者时，同为赢家。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "在一场游戏中，每个玩家的信息为一行。玩家数量不超过1000。每个玩家信息有2个字段，用空格隔开；\n玩家ID：一个仅由英文字母和数字组成的字符串\n出拳形状：以英文大写字母表示，A、B、C形状。\n出拳时间：正整数，越小表示时间越早\n例如：\nabc1 A\nxyz B\n解释：玩家abc1出拳为石头（A）。玩家xyz出拳为剪刀（B）"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出为赢家的玩家ID列表（一个或多个），每个ID一行，按字符串升序排列。如果没有赢家，输出为”NULL“字符串。\n例如：\nabc1"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nabc1 A\nxyz B\n输出\nabc1",
+      "cases": [
+        {
+          "input": "abc1 A\nxyz B",
+          "output": "abc1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "A比B有优势，abc1胜出\n输入\nabc1 A\nxyz A\n输出\nNULL\n\n没有优胜的出拳形状，平局\n输入\nabc1 A\ndef A\nalic A\nxyz B\n输出\nabc1\nalic\ndef\n\nA为优胜方，有三个赢家"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以定义三个数组，分别统计出手势A、B、C的人名。\n统计完后，再计数下非空数组的个数：\n如果有三个，则"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "三个手势都存在，平局\n如果有一个，则\n\n只有一个手势，平局\n如果有两个，则需要继续检查：\n如果只有手势A，B，那么赢家就是手势A的玩家\n如果只有手势A，C，那么赢家就是手势C的玩家\n如果只有手势B，C，那么赢家就是手势B的玩家\n最后将赢家人名进行字典序升序即可。\n2023.12.19\n对于Java，JS，Python这类自带字典结构的编程语言，我们可以用字典来统计出某个手势（key）的所有人名（ele）。\n这样最后字典key的数量就是手势数量，如果key只有2个，那么就判断：\n字典没有'A'的key  => 只有手势B，C，那么赢家就是手势B的玩家\n字典没有'B'的key  => 只有手势A，C，那么赢家就是手势C的玩家\n字典没有'C'的key  => 只有手势A，B，那么赢家就是手势A的玩家\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "def getResult():\n    dic = {}\n\n    while True:\n        try:\n            player, gesture = input().split()\n\n            # 如果有人不按套路出,则此局作废\n            if gesture < 'A' or gesture > 'C':\n                print(\"NULL\")\n                return\n\n            # 统计各个手势的人名\n            dic.setdefault(gesture, [])\n            dic[gesture].append(player)\n\n        except:\n            break\n\n    kinds = len(dic)\n\n    if kinds == 1 or kinds == 3:\n        # 只有一种手势,或者三种手势都有,则平局\n        print(\"NULL\")\n    else:\n        ans = None\n\n        if 'A' not in dic:\n            # 没有A手势,只有B、C手势,则B赢\n            ans = dic['B']\n        elif 'B' not in dic:\n            # 没有B手势,只有A、C手势,则C赢\n            ans = dic['C']\n        else:\n            # 没有C手势,只有A、B手势,则A赢\n            ans = dic['A']\n\n        ans.sort()\n\n        for an in ans:\n            print(an)\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

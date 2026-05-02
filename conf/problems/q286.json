@@ -1,0 +1,76 @@
+{
+  "id": "q286",
+  "title": "评论转换输出",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在一个博客网站上，每篇博客都有评论。\n每一条评论都是一个非空英文字母字符串。\n评论具有树状结构，除了根评论外，每个评论都有一个父评论。\n当评论保存时，使用以下格式：\n首先是评论的内容；\n然后是回复当前评论的数量。\n最后是当前评论的所有了评论。(子评论使用相同的格式嵌套存储)\n所有元素之间都用单个逗号分隔。\n例如，如果评论如下：\n第一条评论是\"helo,2,ok,0,bye,0\"，第二条评论是\"test,0\"，第三条评论是\"one,1,two,1,a,0\"。\n所有评论被保存成\"hello,2,ok,0.bye,0,test,0,one,1,two,1,a,0\"。\n对于上述格式的评论，请以另外一种格式打印：\n首先打印评论嵌套的最大深度。\n然后是打印n行，第 i (1 ≤ i ≤ n) 行对应于嵌套级别为 i 的评论 (根评论的嵌套级别为1)。\n对于第 i 行，嵌套级别为的评论按照它们出现的顺序打印，用空格分隔开。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "一行评论。由英文字母、数字和英文逗号组成。\n保证每个评论都是由英文字符组成的非空字符串。\n每个评论的数量都是整数 (至少由一个数字组成)。\n整个字符串的长度不超过10^6。\n给定的评论结构保证是合法的。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "按照给定的格式打印评论。对于每一级嵌套，评论应该按照输入中的顺序打印。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nhello,2,ok,0,bye,0,test,0,one,1,two,1,a,0\n输出\n3\nhello test one\nok bye two\na",
+      "cases": [
+        {
+          "input": "hello,2,ok,0,bye,0,test,0,one,1,two,1,a,0",
+          "output": "3\nhello test one\nok bye two\na",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "如"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "中图所示，最大嵌套级别为3，嵌套级别为1的评论是\"hello test one\"，嵌套级别为2的评论是\"ok bye two\"，嵌套级别为3的评论为”a\"”。\n输入\nA,5,A,0,a,0,A,0,a,0,A,0\n输出\n2\nA\nA a A a A"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "如下图所示，最大嵌套级别为2，嵌套级别为1的评论是\"A”，嵌套级别为2的评论是\"A a A a A\"\n输入\nA,3,B,2,C,0,D,1,E,0,F,1,G,0,H,1,I,1,J,0,K,1,L,0,M,2,N,0,O,1,P,0\n输出\n4\nA K M\nB F H L N O\nC D G I P\nE J\n\n如下图所示"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题的评论嵌套其实就是一个树形结构。比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1：\n最终题目要求的：\n评论嵌套的最大深度 → 其实就是树的高度\n嵌套级别为 i 的评论 → 其实就是树的第 i 层的所有节点\n因此，本题我们需要还原出一个树结构。\n那么，我们如何从一个字符串数组，例如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1：\nhello,2,ok,0,bye,0,test,0,one,1,two,1,a,0\n中，还原出一颗树呢？\n字符串的组成是多个评论，每一个评论包括两个部分：评论内容 + 子评论数，比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1可以划分如下\n【hello,2】\n,\n【ok,0】\n,\n【bye,0】,\n【test,0】\n,\n【one,1】\n,\n【two,1】\n,\n【a,0】\n另外，每一个子评论都是紧跟着其父评论后面。如下面例子：\n根评论A\n，\n子评论A1\n，\n子评论A2\n，\n根评论B\n，\n子评论B1\n，\n子评论B2\n但是子评论本身也可以有子评论，因此完整的结构图应该是：\n根评论A\n，\n子评论A1，\n子子评论A11，子子评论A12\n，\n子评论A2\n，\n子子评论A21，子子评论A22\n，\n根评论B\n，\n子评论B1\n，\n子子评论B11，子子评论B12,\n子评论B2,\n子子评论B21，子子评论B22\n这个时候，如果根据父评论的“子评论数”往后顺序遍历的话，得到的并不是该父评论的实际子评论信息。\n正确的做法应该是递归的去遍历父评论的子评论。\n比如，\n根评论A\n有2个子评论，分别是\n子评论A1\n，\n子评论A2\n，\n因此，我们需要从\n根评论A\n开始\n往后遍历2个评论，但是每遍历一个评论，我们都需要检查被遍历的评论也有子评论，比如首先遍历到\n子评论A1\n，发现它也有2个子评论，分别是\n子子评论A11\n，\n子子评论A12\n，因此我们应该暂停\n根评论A\n的子评论遍历过程，而是优先去遍历其\n子评论A1\n的子子评论。\n当然，如果子子评论也有子子子评论，则也需要按上面逻辑处理。\n由于评论嵌套的层级是不确定的，因此上面过程需要使用递归。\n在上面递归过程中，一个比较麻烦的问题是，递归处理完\n子评论A1\n后，如何反馈下一个\n子评论A2\n的位置给 → 重启遍历流程的\n根评论A\n。\n因此，我们暂停\n根评论A\n的遍历流程时，对应的遍历指针指向的还是\n子评论A1\n的位置，而\n子评论A1\n递归结束后，重启遍历流程的\n根评论A\n的遍历流程指针还是指向\n子评论A1\n呢！！\n这里为了避免繁琐的索引位置处理，我直接在一开始时，将所有的评论信息加入都队列中，每次都取出队头评论进行处理，这样的话，当前递归处理完\n子评论A1\n，那么队列头部自然而然就是\n子评论A2\n了。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 本题可能Python会maximum recursion depth exceeded in comparison, 因此这里可以将递归深度搞大点\nsys.setrecursionlimit(5000)\n\n# 输入获取\nqueue = input().split(\",\")\n\n\ndef recursive(queue, level, childCount, tree):\n    for i in range(childCount):\n        comment = queue.pop(0)\n\n        if len(tree) < level:\n            tree.append([])\n\n        tree[level - 1].append(comment)\n\n        count = int(queue.pop(0))\n        if count > 0:\n            recursive(queue, level + 1, count, tree)\n\n\n# 算法入口\ndef getResult(queue):\n    # 树结构\n    tree = []\n\n    # 根评论层级为1\n    level = 1\n    while len(queue) > 0:\n        # 根评论\n        comment = queue.pop(0)\n\n        # 如果树还没有对应层级,则初始化对应层级\n        if len(tree) < level:\n            tree.append([])\n\n        # 将根评论加入树结构的第一层\n        tree[0].append(comment)\n\n        # 该根评论有几个直接子评论\n        childCount = int(queue.pop(0))\n        # 按上面逻辑,递归处理子评论,子评论所处级别为level+1\n        recursive(queue, level + 1, childCount, tree)\n\n    # 树结构的高度,就是评论嵌套的最大深度\n    print(len(tree))\n    # 树结构的每一层,记录对应嵌套级别的评论\n    for levelNodes in tree:\n        print(\" \".join(levelNodes))\n\n\n# 算法调用\ngetResult(queue)"
+  },
+  "verified": false
+}

@@ -1,0 +1,76 @@
+{
+  "id": "q251",
+  "title": "周末爬山",
+  "score": 200,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "周末小明准备去爬山锻炼，0代表平地，山的高度使用1到9来表示，小明每次爬山或下山高度只能相差k及k以内，每次只能上下左右一个方向上移动一格，小明从左上角(0,0)位置出发"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入m n k(空格分隔)\n代表m*n的二维山地图，k为小明每次爬山或下山高度差的最大值，\n然后接下来输入山地图，一共m行n列，均以空格分隔。取值范围：\n0 < m ≤ 500\n0< n ≤ 500\n0 < k < 5"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "请问小明能爬到的最高峰多高，到该最高峰的最短步数，输出以空格分隔。\n同高度的山峰输出较短步数。\n如果没有可以爬的山峰，则高度和步数都返回0。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "所有"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入均为正确格式，且在取值范围内，考生不需要考虑不合法的输入格式。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5 4 1\n0 1 2 0\n1 0 0 0\n1 0 1 2\n1 3 1 0\n0 0 0 9\n输出\n2 2",
+      "cases": [
+        {
+          "input": "5 4 1\n0 1 2 0\n1 0 0 0\n1 0 1 2\n1 3 1 0\n0 0 0 9",
+          "output": "2 2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "根据山地图可知，能爬到的最高峰在(0,2)位置，高度为2，最短路径为(0,0)-(0,1)-(0,2)，最短步数为2。\n输入\n5 4 3\n0 0 0 0\n0 0 0 0\n0 9 0 0\n0 0 0 0\n0 0 0 9\n输出\n0 0\n\n根据山地图可知，每次爬山距离3，无法爬到山峰上，步数为0。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用广度优先搜索进行解题。\n初始时，小明位于(0, 0)位置，此时走的步数step = 0，假设地图为matrix，则到高度matrix[0][0]的最短步数为step=0。\n我们可以假设，爬山的最大高度为maxHeight，到达此高度的最小步数为minStep，则初始时，maxHeight = maxtrix[0][0]，minStep = 0。\n对于任意当前位置(x, y)，假设其下一步位置是(newX, newY)\n本题需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是：向四个方向进行深搜时，需要\n\n当前位置的高度值，和下一个位置的高度值，之间的差值需要小于等于k，才能进入下一个位置继续广搜。\n如果可以进入下一步，则step++，假设(newX, newY)位置的山高度为curHeight, 则：\n如果 curHeight > maxHeight 的话，则爬到了更高的山，此时直接更新 maxHeight = curHeight，minStep = step；\n如果 curHeight == maxHeight 的话，则需要继续比较step和minStep，我们需要保留step和minStep中较小步数作为 maxHeight（==curHeight）山高度的步数。\n如果 curHeight < maxHeight 的话，则无需处理\n在广搜过程，为了避免走回头路，我们应该记录走过的节点，我们可以定义一个visited数组来标记走过的路。\n关于广搜的原理，大家可以看：\n华为OD机试 - 计算疫情扩散时间（Java & JS & Python & C）_伏城之外的博客-CSDN博客\n2023.11.2"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "中说：如果没有可以爬的山峰，则高度和步数都返回0。\n其中“没有可以爬的山峰”，结合"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2来理解的话，应该是没有可爬的更高的山峰。即当只有可爬平级的山峰，也要高度和步数都返回0。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, n, k = map(int, input().split())\nmatrix = [list(map(int, input().split())) for _ in range(m)]\n\noffsets = ((-1, 0), (1, 0), (0, -1), (0, 1))\n\n# 到达matrix[0][0]高度的山峰,最短步数是0\nmaxHeight = matrix[0][0]\nminStep = 0\n\n\ndef bfs():\n    global maxHeight, minStep\n\n    # 广搜队列\n    queue = []\n    # 访问记录\n    visited = [[False] * n for _ in range(m)]\n\n    # 首先是(0,0)位置进入队列,且被标记为访问过\n    queue.append((0, 0))\n    visited[0][0] = True\n\n    # 此时消耗步数为0\n    step = 0\n\n    while len(queue) > 0:\n        # 这里没有用queue.removeFirst来控制广搜,而是使用newQueue来控制广搜,因为这样更方便操作step\n        newQueue = []\n        step += 1\n\n        # 遍历同一层的所有节点\n        for x, y in queue:\n            lastHeight = matrix[x][y]\n\n            # 四个方向位置\n            for offsetX, offsetY in offsets:\n                newX = x + offsetX\n                newY = y + offsetY\n\n                # 新位置越界则无法继续广搜\n                if newX < 0 or newX >= m or newY < 0 or newY >= n:\n                    continue\n\n                # 新位置已访问过,则无需重复广搜\n                if visited[newX][newY]:\n                    continue\n\n                curHeight = matrix[newX][newY]\n\n                # 前后位置高度差在k以内, 则可以进入新位置\n                if abs(curHeight - lastHeight) <= k:\n                    visited[newX][newY] = True\n\n                    # 如果此时到达新位置高度的步数step更小,则更新对应高度的最小步数\n                    if curHeight > maxHeight or (curHeight == maxHeight and step < minStep):\n                        maxHeight = curHeight\n                        minStep = step\n\n                    # 新位置加入下一层广搜队列\n                    newQueue.append((newX, newY))\n\n        queue = newQueue\n\n\n# 算法入口\ndef getResult():\n    # 广搜\n    bfs()\n\n    if minStep == 0:\n        # 输出描述&#xff1a;如果没有可以爬的山峰,则高度和步数都返回0。\n        return \"0 0\"\n    else:\n        return f\"{maxHeight} {minStep}\"\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

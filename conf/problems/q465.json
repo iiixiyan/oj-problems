@@ -1,0 +1,66 @@
+{
+  "id": "q465",
+  "title": "精准核酸检测",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "在线OJ刷题\n题目详情 - 精准核酸检测 - Hydro\n\n为了达到新冠疫情精准防控的需要，为了避免全员核酸检测带来的浪费，需要精准圈定可能被感染的人群。\n现在根据传染病流调以及大数据分析，得到了每个人之间在时间、空间上是否存在轨迹交叉。\n现在给定一组确诊人员编号（X1,X2,X3,...,Xn），在所有人当中，找出哪些人需要进行核酸检测，输出需要进行核酸检测的人数。（"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：确诊病例自身不需要再做核酸检测）\n需要进行核酸检测的人，是病毒传播链条上的所有人员，即有可能通过确诊病例所能传播到的所有人。\n例如：A是确诊病例，A和B有接触、B和C有接触、C和D有接触、D和E有接触，那么B\\C\\D\\E都是需要进行核酸检测的人。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为总人数 N\n第二行为确认病例人员编号（确诊病例人员数量 < N），用逗号分割\n第三行开始，为一个 N * N 的矩阵，表示每个人员之间是否有接触，0表示没有接触，1表示有接触。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "整数：需要做核酸检测的人数"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "人员编号从0开始\n0 < N < 100"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n5\n1,2\n1,1,0,1,0\n1,1,0,0,0\n0,0,1,0,1\n1,0,0,1,0\n0,0,1,0,1\n输出\n3",
+      "cases": [
+        {
+          "input": "5\n1,2\n1,1,0,1,0\n1,1,0,0,0\n0,0,1,0,1\n1,0,0,1,0\n0,0,1,0,1",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "编号为1、2号的人员，为确诊病例。\n1号和0号有接触，0号和3号有接触。\n2号和4号有接触。\n所以，需要做核酸检测的人是0号、3号、4号，总计3人需要进行核酸检测。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以用并查集解题。关于并查集的实现可以看：\n华为校招机试 - 发广播（20210310）_华为机试 发广播 伏城之外-CSDN博客\n即将有接触的人进行合并操作，纳入到同一个连通分量中。比如matrix[i]][j] == 1，即 i 和 j 就处于同一个连通分量中，需要进行合并。\n另外，本题的接触关系矩阵matrix是沿对角线对称的，因此只需要遍历对角线一边即可。\n当遍历完所有接触关系后，就可以求解每一个连通分量中的节点数，即每个接触群体的人数，求解原理如下：\n并查集底层的fa数组，fa数组索引代表每个节点，fa数组元素代表对应索引的节点的根节点，而同一个连通分量中的节点的根都是相同的，因此，我们需要对fa每一个数组索引找一下根，这里可以使用并查集的find操作（递归实现），最后统计同一个根下的节点数量，即为同一个接触群体的人数。\n当每个接触群体人数求解出来后，我们只需要统计”确诊病例人员编号“对应的根（连通分量）下的人数即可。\n最后的统计的总人数需要减去确诊病例的数量，因为题目说：\n确诊病例自身不需要再做核酸检测\n本题需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是，有可能多个确诊病人在同一个连通分量重，此时需要\n\n避免重复统计。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 并查集实现\nclass UnionFindSet:\n    def __init__(self, n):\n        self.fa = [i for i in range(n)]\n\n    def find(self, x):\n        if x != self.fa[x]:\n            self.fa[x] = self.find(self.fa[x])\n            return self.fa[x]\n        return x\n\n    def union(self, x, y):\n        x_fa = self.find(x)\n        y_fa = self.find(y)\n\n        if x_fa != y_fa:\n            self.fa[y_fa] = x_fa\n\n\n# 输入获取\nn = int(input())\nconfirmed = list(map(int, input().split(\",\")))\nmatrix = [list(map(int, input().split(\",\"))) for _ in range(n)]\n\n\n# 算法入口\ndef getResult():\n    ufs = UnionFindSet(n)\n\n    for i in range(n):\n        for j in range(i, n):\n            if matrix[i][j] == 1:\n                # 有过接触的人进行合并\n                ufs.union(i, j)\n\n    # 统计每个接触群体&#xff08;连通分量&#xff09;中的人数\n    cnts = [0] * n\n    for i in range(n):\n        fa = ufs.find(i)\n        cnts[fa] += 1\n\n    # 记录已统计过的可能感染群体\n    confirmed_fa = set()\n\n    # 将有感染者的接触群体的人数统计出来\n    ans = 0\n    for i in confirmed:\n        fa = ufs.find(i)\n\n        # 已统计过的可能感染群体不再统计\n        if fa in confirmed_fa:\n            continue\n        confirmed_fa.add(fa)\n\n        ans += cnts[fa]\n\n    # 最终需要做核酸的人数,不包括已感染的人\n    return ans - len(confirmed)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

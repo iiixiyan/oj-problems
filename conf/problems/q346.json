@@ -1,0 +1,64 @@
+{
+  "id": "q346",
+  "title": "文本统计分析",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "有一个文件，包含以一定规则写作的文本，请统计文件中包含的文本数量。\n规则如下：\n1. 文本以”;”分隔，最后一条可以没有”;”，但空文本不能算语句，比如”COMMAND A; ;”只能算一条语句。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "，无字符/空白字符/制表符都算作”空”文本；\n2. 文本可以跨行，比如下面，是一条文本，而不是三条；\nCOMMAND A\nAND\nCOMMAND B;\n3. 文本支持字符串，字符串为成对的单引号(')或者成对的双引号(\")，字符串可能出现用转义字符(\\)处理的单双引号(\"your input is\\\"\")和转义字符本身，比如\nCOMMAND A \"Say \\\"hello\\\"\";\n4. 支持注释，可以出现在字符串之外的任意位置注释以”-“开头，到换行结束，比如：\nCOMMAND A; -this is comment\nCOMMAND -comment\nA AND COMMAND B;\n\n字符串内的”-“，不是注释。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "文本文件"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "包含的文本数量"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nCOMMAND TABLE IF EXISTS \"UNITED STATE\";\nCOMMAND A GREAT (\nID ADSAB,\ndownload_length INTE-GER, -- test\nfile_name TEXT,\nguid TEXT,\nmime_type TEXT,\nnotifica-tionid INTEGER,\noriginal_file_name TEXT,\npause_reason_type INTEGER,\nresumable_flag INTEGER,\nstart_time INTEGER,\nstate INTEGER,\nfolder TEXT,\npath TEXT,\ntotal_length INTE-GER,\nurl TEXT\n);\n输出\n2",
+      "cases": [
+        {
+          "input": "COMMAND TABLE IF EXISTS \"UNITED STATE\";\nCOMMAND A GREAT (\nID ADSAB,\ndownload_length INTE-GER, -- test\nfile_name TEXT,\nguid TEXT,\nmime_type TEXT,\nnotifica-tionid INTEGER,\noriginal_file_name TEXT,\npause_reason_type INTEGER,\nresumable_flag INTEGER,\nstart_time INTEGER,\nstate INTEGER,\nfolder TEXT,\npath TEXT,\ntotal_length INTE-GER,\nurl TEXT\n);",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "梳理一下题目信息：\n一行中可以有多条文本，比如一行输入为：\nabc;abc;abc;\n此时该行有三条文本。\n一条文本以分号结束\n成对双引号、成对单引号中的分号，无法作为一条文本结束的标志\n注释符号后面的分号，无法作为一条文本结束的标志\n成对双引号、成对单引号中的注释符号失效\n成对双引号、成对单引号中可能存在转义字符\n本题要我们求解文本条数，其实可以转化为求解\n有效\n分号个数。\n而无效分号，其实就是：\n成对双引号、成对单引号中的分号\n注释符号后面的分号\n我的\n\n如下，假设一行字符串为line：\n首先，将line中的转义双引号、转义单引号去掉，避免影响成对双引号、成对单引号的判断\n然后，将line中的成对双引号及其中内容、成对单引号及其中内容去除，这样可以简单粗暴的去除成对双引号、成对单引号中的注释符号、分号\n之后，将line中注释内容（即：‘-’及其后内容）去掉，这样可以简单粗暴的去除注释中的分号\n此时line中就只会剩下分号，我们需要处理一些特殊情况，比如空文本不能算语句，我们可以将line中的空白字符去除掉\n经过上一步处理，如果line中存在空白文本，则去除空白字符后，必然会出现类似于\nabc;;\n这种连续分号的现象，此时我们应该将连续分号替换为单个分号\n经过上一步处理，还有一种特殊情况，比如\n;abc\n这种，我们需要去除开头分号\n最后，line中剩余几个分号，就代表此行存在几个文本\n上面逻辑，如果使用字符串操作来写，则较为复杂，我这里直接使用了正则表达式来处理。\n另外，需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是，"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "中说\n文本以”;”分隔，最后一条可以没有”;”\n这句话的意思应该是，最后一行输入中的最后一条文本，可以没有分号。\n比如最后一行为\nabc;abc\n此时最后一行其实有两条文本，因为最后一条可以没有分号。\n关于最后一行，我们可以粗暴的直接给它拼接一个分号，这样话，无论最后一行的最后一条有没有分号，我们都能保证前面的逻辑可以统计到最后一行。\n2023.09.05 根据考友提示，上面逻辑存在漏洞，成对双引号、成对单引号之间的内容不能直接替换为空串，因为对于如下情况：\n\"abc\";\"abc\";\"abc\";\n其实应该是3行。\n我们可以将成对双引号、成对单引号之间的内容替换为简单串，比如a\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 算法入口\nimport re\n\n\ndef fn(s):\n    s = re.sub(\"\\\\[\\\"']\", \"\", s)  # 替换\\\"和\\'为空串\n    s = re.sub(\"\\\".*?\\\"\", \"a\", s)  # 将成对双引号及其中内容替换为空串\n    s = re.sub(\"'.*?'\", \"a\", s)  # 将成对单引号及其中内容替换为空串\n    s = re.sub(\"-.+\", \"\", s)  # 将-往后的注释替换为空串\n    s = re.sub(\"\\\\s+\", \"\", s)  # 将空白字符替换为空串\n    s = re.sub(\";+\", \";\", s)  # 将连续分号替换为单个分号\n    return s\n\n\ndef getResult(lines):\n    s = \"\".join(map(fn, lines))\n\n    # 题目描述说&#xff1a;文本以”;”分隔,最后一条可以没有”;”\n    # 为了避免复杂处理,这里无论最后一条文本有没有分号,都加一个\n    s += \";\"\n\n    # 下面处理主要是为了处理跨行文本\n    \"\"\"\n    比如\n    aaaa;\n    ;aaaa\n\n    比如\n    ;aaaa\n    ;aaaa\n    \"\"\"\n    s = re.sub(\";+\", \";\", s)\n    s = re.sub(\"^;\", \"\", s)\n\n    # 记录文本条数\n    count = 0\n\n    for c in s:\n        if c == ';':\n            count += 1  # 此时一行有几个分号,就代表几条文本\n\n    return count\n\n\n# 输入获取\nlines = []\n\nwhile True:\n    line = input()\n\n    if line != \"\":\n        lines.append(line)\n    else:\n        print(getResult(lines))\n        break"
+  },
+  "verified": false
+}

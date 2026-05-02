@@ -1,0 +1,42 @@
+{
+  "id": "q635",
+  "title": "200分-勇攀数字高峰(JavaPyCC++JsGo)",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "200\n分\n-\n勇攀数字高峰\n(Java/Py/C/C++/Js/Go)\n\n你在给定的数字地形图中寻找登山路径，数字代表当前位置的海拔高度，要求从最低海拔出发，不断攀登，最终到达最高山峰，你需要寻找有满足条件的登山路径。地图保证最低海拔和最高山峰只有一个。\n路径条件\n登山规则：路径海拔必须严格递增\n移动限制：可以上下左右四个方向移动\n路径限制：路径必须从最低海拔开始，到最高海拔结束\n访问限制：每个地点只能走一次\n高度差限制：每一个攀登高度必须大于\n0\n，小于等于指定值。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一个二维数组，表示的海拔图，维度\nn * m\n（\n2 <= n, m <= 10\n）\n输入一个整数，参数表示单步最大允许的高度差"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出满足条件的登山路径的数量"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入\n4 4 5\n7 6 4 5\n9 5 1 1\n2 4 1 4\n1 3 2 0\n输出\n2",
+      "cases": [
+        {
+          "input": "4 4 5\n7 6 4 5\n9 5 1 1\n2 4 1 4\n1 3 2 0",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "思路：非常典型的 递归回溯 模板题\n遍历输入矩阵，找到起点和终点位置。\n从起点出发使用 递归回溯 统计可能路径。\n递归回溯就是一个模板，可参照下面代码逻辑体会一下。\nC++\n#include<iostream>\n#include<vector>\n#include<string>\n#include <utility>\n#include <sstream>\n#include<algorithm>\n#include<cmath>\n#include<map>\n#include<climits>\nusing namespace std;\nint dx[4] = {1, -1, 0, 0};\nint dy[4] = {0, 0, 1, -1};\nbool visited[15][15];\nint sx,sy,ex,ey;\n//\n递归回溯\nint dfs(int x, int y, int n, int m, int k,\nvector<vector<int>>& grid) {\n//\n到达终点\nif (x == ex && y\n== ey) {\nreturn 1;\n}\nvisited[x][y] = true;\nint res = 0;\nfor (int i = 0; i <\n4; i++) {\nint nx = x + dx[i];\nint ny = y + dy[i];\n//\n越界\nif (nx < 0 || nx >= n || ny < 0 || ny >= m) {\ncontinue;\n}\n//\n重复\nif (visited[nx][ny]) {\ncontinue;\n}\nint diff = grid[nx][ny] - grid[x][y];\nif (diff > 0 && diff <= k) {\nres += dfs(nx, ny, n, m, k, grid);\n}\n}\nvisited[x][y] = false;\n//\n回溯\nreturn res;\n}\nint cal(int n, int m, int k,\nvector<vector<int>>& grid) {\n//\n找到终点\n/\n起点坐标\nint minVal = INT_MAX, maxVal =\nINT_MIN;\nfor (int i = 0; i < n; i++)\n{\nfor (int j =0; j < m; j++) {\nif (grid[i][j] < minVal) {\nminVal = grid[i][j];\nsx = i; sy = j;\n}\nif (grid[i][j] > maxVal) {\nmaxVal = grid[i][j];\nex = i; ey = j;\n}\n}\n}\nreturn dfs(sx, sy, n, m,\nk, grid);\n}\nint main() {\nint n, m, k;\ncin >> n >>\nm >> k;\nvector<vector<int>> grid(n, vector<int>(m));\nfor (int i = 0; i <\nn; i++) {\nfor (int j = 0; j < m; j++) {\ncin >> grid[i][j];\n}\n}\nint res = cal(n, m, k,\ngrid);\ncout << res;\nreturn 0;\n}\nJAVA\nimport java.util.*;\npublic class Main {\nstatic int[] dx = {1,\n-1, 0, 0};\nstatic int[] dy = {0, 0,\n1, -1};\nstatic boolean[][]\nvisited = new boolean[15][15];\nstatic int sx, sy, ex,\ney;\n//\n递归回溯\npublic static int\ndfs(int x, int y, int n, int m, int k, int[][] grid) {\n//\n到达终点\nif (x == ex && y == ey) {\nreturn 1;\n}\nvisited[x][y] = true;\nint res = 0;\nfor (int i = 0; i < 4; i++) {\nint nx = x + dx[i];\nint ny = y + dy[i];\n//\n越界\nif (nx < 0 || nx >= n || ny < 0 || ny >= m) continue;\n//\n重复\nif (visited[nx][ny]) continue;\nint diff = grid[nx][ny] - grid[x][y];\nif (diff > 0 && diff <= k) {\nres += dfs(nx, ny, n, m, k, grid);\n}\n}\nvisited[x][y] = false; //\n回溯\nreturn res;\n}\npublic static int\ncal(int n, int m, int k, int[][] grid) {\n//\n找到终点\n/\n起点坐标\nint minVal = Integer.MAX_VALUE, maxVal = Integer.MIN_VALUE;\nfor (int i = 0; i < n; i++) {\nfor (int j = 0; j < m; j++) {\nif (grid[i][j] < minVal) {\nminVal = grid[i][j];\nsx = i; sy = j;\n}\nif (grid[i][j] > maxVal) {\nmaxVal = grid[i][j];\nex = i; ey = j;\n}\n}\n}\nreturn dfs(sx, sy, n, m, k, grid);\n}\npublic static void\nmain(String[] args) {\nScanner sc = new Scanner(System.in);\nint n = sc.nextInt();\nint m = sc.nextInt();\nint k = sc.nextInt();\nint[][] grid = n"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

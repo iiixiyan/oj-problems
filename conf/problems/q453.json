@@ -1,0 +1,61 @@
+{
+  "id": "q453",
+  "title": "消消乐游戏",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "游戏规则：输入一个只包含英文字母的字符串，字符串中的两个字母如果相邻且相同，就可以消除。\n在字符串上反复执行消除的动作，直到无法继续消除为止，此时游戏结束。\n输出最终得到的字符串长度。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入原始字符串 str ，只能包含大小写英文字母，字母的大小写敏感， str 长度不超过100。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出游戏结束后，最终得到的字符串长度。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "输入中包含 非大小写英文字母 时，均为异常输入，直接返回 0。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\ngg\n输出\n0",
+      "cases": [
+        {
+          "input": "gg",
+          "output": "0",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "gg 可以直接消除，得到空串，长度为0。\n输入\nmMbccbc\n输出\n3\n\n在 mMbccbc 中，可以先消除 cc ；\n此时字符串变成 mMbbc ，可以再消除 bb ；\n此时字符串变成 mMc ，此时没有相邻且相同的字符，无法继续消除。\n最终得到的字符串为 mMc ，长度为3。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "这题比较容易地解法是利用栈结构。\n即先创建一个栈，然后遍历输入的字符串，将每一个字符尝试压入栈，但是压入前，需要判断，栈顶元素是否和将要压入的字符相同，若不同，则压入，若相同，则字符不压入，且栈顶元素弹出。\n由于这题只要遇到两两相邻相同的字符就会消除，比如acccb，消除后就变为了acb，因此遇到>2的奇数个相同相邻字符，是无法消除完的，总是会遗留一个。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "，遍历的字符如果是非字母，则直接返回0。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult():\n    stack = []\n\n    for c in s:\n        if c < 'A' or c > 'z' or 'Z' < c < 'a':\n            return 0\n\n        if len(stack) > 0 and stack[-1] == c:\n            stack.pop()\n        else:\n            stack.append(c)\n\n    return len(stack)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

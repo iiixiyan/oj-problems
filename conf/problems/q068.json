@@ -44,6 +44,8 @@
       "content": "本题和\nLeetCode - 698 划分为k个相等的子集_伏城之外的博客-CSDN博客\n华为机试 - 叠积木_伏城之外的博客-CSDN博客_叠积木 算法\n华为机试 - 等和子数组最小和_伏城之外的博客-CSDN博客_等和子数组\n华为机试 - 最大平分数组_伏城之外的博客-CSDN博客\n属于同一类问题，解法相同，\n\n请看上面博客：划分k个相等的子集\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nm = int(input())\nlink = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(link, m):\n    link.sort(reverse=True)\n\n    sumV = 0\n    for ele in link:\n        sumV += ele\n\n    while m >= 1:\n        if canPartitionMSubsets(link[:], sumV, m):\n            return int(sumV / m)\n        m -= 1\n\n    return sumV\n\n\ndef canPartitionMSubsets(link, sumV, m):\n    if sumV % m != 0:\n        return False\n\n    subSum = sumV / m\n\n    if subSum < link[0]:\n        return False\n\n    while len(link) > 0 and link[0] == subSum:\n        link.pop(0)\n        m -= 1\n\n    buckets = [0] * m\n\n    return partition(link, 0, buckets, subSum)\n\n\ndef partition(link, index, buckets, subSum):\n    if index == len(link):\n        return True\n\n    select = link[index]\n\n    for i in range(len(buckets)):\n        if i > 0 and buckets[i] == buckets[i - 1]:\n            continue\n\n        if select + buckets[i] <= subSum:\n            buckets[i] += select\n            if partition(link, index + 1, buckets, subSum):\n                return True\n            buckets[i] -= select\n\n    return False\n\n\n# 算法调用\nprint(getResult(link, m))"
+  },
   "verified": false
 }

@@ -49,6 +49,8 @@
       "content": "中，有三个任务，那么有如下组合：\n三个1\n两个1，一个2\n一个1，两个2\n三个2\n无论每个组合，能编排成几个排列，其实执行总时长，即排列的和都是一样的\n三个1：\n和为3\n两个1，一个2：\n和为4\n一个1，两个2：\n和为5\n三个2：\n和为6\n因此，本题其实就是求解两种类型任务各自可能的数量。\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\ntaskA, taskB, num = map(int, input().split(\",\"))\n\n\n# 算法入口\ndef getResult(taskA, taskB, num):\n    if num == 0:\n        return \"[]\"\n\n    if taskA == taskB:\n        return [taskA * num]\n\n    ans = set()\n    for i in range(num + 1):\n        ans.add(taskA * i + taskB * (num - i))\n\n    return sorted(ans)\n\n\n# 算法调用\nprint(getResult(taskA, taskB, num))"
+  },
   "verified": false
 }

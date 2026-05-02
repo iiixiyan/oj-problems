@@ -1,0 +1,51 @@
+{
+  "id": "q236",
+  "title": "需要打开多少监控器",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "某长方形停车场，每个车位上方都有对应监控器，当且仅当在当前车位或者前后左右四个方向任意一个车位范围停车时，监控器才需要打开；\n给出某一时刻停车场的停车分布，请统计最少需要打开多少个监控器；"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入m，n表示长宽，满足1 < m,n <= 20；\n后面输入m行，每行有n个0或1的整数，整数间使用一个空格隔开，表示该行已停车情况，其中0表示空位，1表示已停；"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最少需要打开监控器的数量；"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 3\n0 0 0\n0 1 0\n0 0 0\n输出\n5",
+      "cases": [
+        {
+          "input": "3 3\n0 0 0\n0 1 0\n0 0 0",
+          "output": "5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题题意比较难以理解，但是画一幅图给大家看下就懂了\n停车（1）的位置必须要打开监控器，另外停车位置的上下左右位置（1或0）的监控器也要打开，问最终需要打开多少个监控器？\n即，求解上面图示种有颜色的格子数量。\n\n如下：\n遍历矩阵每一个元素，\n如果元素值为1，对应位置的监控器就要打开。\n如果元素值为0，则需要进一步检查其上下左右四个位置，只要这四个位置有一个元素值为1，则当前位置的监控器需要打开\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, n = map(int, input().split())\nmatrix = [list(map(int, input().split())) for _ in range(m)]\n\n\n# 算法入口\ndef getResult():\n    # 记录需要打开的监控器数量\n    count = 0\n\n    # 上下左右四个方向的偏移量\n    offsets = ((-1, 0), (1, 0), (0, -1), (0, 1))\n\n    for x in range(m):\n        for y in range(n):\n            # 如果元素值为1,对应位置的监控器就要打开\n            if matrix[x][y] == 1:\n                count += 1\n                continue\n\n            # 如果元素值为0,则需要进一步检查其上下左右4个位置,只要这四个位置有一个元素值为1,则当前位置的监控器需要打开\n            for offsetX, offsetY in offsets:\n                newX = x + offsetX\n                newY = y + offsetY\n\n                if m > newX >= 0 and n > newY >= 0 and matrix[newX][newY] == 1:\n                    count += 1\n                    break\n\n    return count\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

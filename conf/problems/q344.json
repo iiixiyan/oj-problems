@@ -1,0 +1,62 @@
+{
+  "id": "q344",
+  "title": "数组二叉树",
+  "score": 200,
+  "tags": [
+    "数组",
+    "树"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "二叉树也可以用数组来存储，给定一个数组，树的根节点的值存储在下标1，对于存储在下标N的节点，它的左子节点和右子节点分别存储在下标2*N和2*N+1，并且我们用值-1代表一个节点为空。\n给定一个数组存储的二叉树，试求\n从根节点到最小的叶子节点的路径\n，路径由节点的值组成。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一行为数组的内容，数组的每个元素都是正整数，元素间用空格分隔。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "第一个元素即为根节点的值，即数组的第N个元素对应下标N，下标0在树的表示中没有使用，所以我们省略了。\n输入的树最多为7层。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出从根节点到最小叶子节点的路径上，各个节点的值，由空格分隔，"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证最小叶子节点只有一个。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 5 7 -1 -1 2 4\n输出\n3 7 2",
+      "cases": [
+        {
+          "input": "3 5 7 -1 -1 2 4",
+          "output": "3 7 2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "最小叶子节点的路径为3 7 2。\n输入\n5 9 8 -1 -1 7 -1 -1 -1 -1 -1 6\n输出\n5 8 7 6\n\n最小叶子节点的路径为5 8 7 6，\n\n数组仅存储至最后一个非空节点，故不包含节点“7”右子节点的-1。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题有两种思路，一种是从树顶节点向下找，直到找到最小值节点。\n这种方式是典型的深度优先搜索。\n还有一种思路是先找到最小值节点，然后从最小值节点向上找父节点，由于向上找只有一个父节点，因此只有一种路径。\n因此，我们应该选择这种方式。\n采用这种方式，首先需要找到最小值节点在数组中的索引位置idx，然后根据题目定义的规则\n对于存储在下标N的节点，它的左子节点和右子节点分别存储在下标2*N和2*N+1\n当然上面这个规则是针对根节点索引从1开始的，如果根节点索引从0开始算法，则上面规则应变为\n对于存储在下标N的节点，它的左子节点和右子节点分别存储在下标\n2*N+1\n和\n2*N+2\n每找到一个父节点，就将其当成新的子节点，继续向上找父节点，直到子节点本身就是树顶节点为止。\n另外，如何找到最小值叶子节点呢？\n我们可以反向遍历输入的节点数组，如果遍历的节点符合下面条件，那么他就是一个叶子节点：\n自身节点值不为-1\n自身没有子节点（即既没有左子节点，也没有右子节点）\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(arr):\n    # 最小叶子节点的值\n    minV = sys.maxsize\n    # 最小节点在数组中的索引位置\n    minIdx = -1\n    n = len(arr) - 1\n\n    for i in range(n, 0, -1):\n        if arr[i] != -1:\n            if i * 2 + 1 <= n and arr[i * 2 + 1] != -1:\n                continue\n            if i * 2 + 2 <= n and arr[i * 2 + 2] != -1:\n                continue\n\n            if minV > arr[i]:\n                minV = arr[i]\n                minIdx = i\n\n    # path用于缓存最小叶子节点到根的路径\n    path = []\n    path.insert(0, str(minV))\n\n    # 从最小值节点开始向上找父节点,直到树顶\n    while minIdx != 0:\n        f = (minIdx - 1) // 2\n        path.insert(0, str(arr[f]))\n        minIdx = f\n\n    return \" \".join(path)\n\n\n# 算法调用\nprint(getResult(arr))"
+  },
+  "verified": false
+}

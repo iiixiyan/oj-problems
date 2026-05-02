@@ -1,0 +1,69 @@
+{
+  "id": "q336",
+  "title": "快递员的烦恼",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "快递公司每日早晨，给每位快递员推送需要送到客户手中的快递以及路线信息，快递员自己又查找了一些客户与客户之间的路线距离信息，请你依据这些信息，给快递员设计一条最短路径，告诉他最短路径的距离。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：\n不限制快递包裹送到客户手中的顺序，但必须保证都送到客户手中"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "保证一定存在投递站到每位客户之间的路线，但不保证客户与客户之间有路线，客户位置及投递站均允许多次经过\n所有快递送完后，快递员需回到投递站"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "首行输入两个正整数n、m\n接下来 n 行，输入快递公司发布的客户快递信息，格式为：\n客户id  投递站到客户之间的距离distance\n再接下俩的 m 行，是快递员自行查找的客户与客户之间的距离信息，格式为\n客户id1  客户id2  distance\n在每行数据中，数据与数据之间均以单个空格分隔\n规格：\n0 < n ≤ 10\n0 ≤ m ≤ 10\n0 < 客户id ≤ 1000\n0 < distance ≤ 10000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "最短路径距离，如无法找到，请输出-1"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2 1\n1 1000\n2 1200\n1 2 300\n输出\n2500",
+      "cases": [
+        {
+          "input": "2 1\n1 1000\n2 1200\n1 2 300",
+          "output": "2500",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "路径1：快递员先把快递送到客户1中，接下来直接走客户1到客户2之间的直通路线，最后走投递站和客户2之间的路，回到投递站，距离为 1000 + 300 + 1200 = 2500\n路径2：快递员先把快递送到客户1手中，接下来回到快递站，再出发把客户2的快递送过去，再回到快递站，距离为 1000 + 1000 + 1200 + 1200 = 4400\n路径3：快递员先把快递送到客户2手中，接下来直接走客户2到客户1之间的直通线路，最后走投递站和客户1之间的路，回到投递站，距离为 1200 + 300 + 1000 = 2500\n其他路径......\n所有路径中，最短路径距离为 2500\n输入\n5 1\n5 1000\n9 1200\n17 300\n132 700\n500 2300\n5 9 400\n输出\n9200\n\n在所有可行的路径中，最短路径长度为 1000 + 400 + 1200 + 300 + 300 + 700 + 700 + 2300 + 2300 = 9200"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "下图中 0节点 代表快递站。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1图示"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2图示\n本题的原型题应该是：\nPOJ - 3311 Hie with the Pie（Java & JS & Python & C）-CSDN博客\n具体解析可以参考上面链接博客。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nn, m = map(int, input().split())\n\n# floyd算法需要基于dist和path矩阵求解\n# dist[i][j] 用于记录点 i->j 的最短距离,初始时等价于邻接矩阵\ndist = [[sys.maxsize] * (n + 1) for _ in range(n + 1)]\n# path[i][j] 用于记录点 i->j 最短距离情况下需要经过的中转点,初始时默认任意两点间无中转点,即默认path[i][j] = -1\npath = [[-1] * (n + 1) for _ in range(n + 1)]\n\n# 由于本题的客户id不是顺序的,因此这里需要将客户id离散化处理\ndic = {}\n\nfor i in range(1, n + 1):\n    idx, dis = map(int, input().split())\n\n    # 离散化处理\n    dic[idx] = i\n\n    # 投递站到客户之间的距离distance\n    dist[0][i] = dis\n    dist[i][0] = dis\n\nfor i in range(1, m + 1):\n    idx1, idx2, dis = map(int, input().split())\n\n    i1 = dic[idx1]\n    i2 = dic[idx2]\n\n    # 客户与客户之间的距离信息\n    dist[i1][i2] = dis\n    dist[i2][i1] = dis\n\n# ans记录经过所有点后回到出发点的最短距离\nans = sys.maxsize\n\n\n# floyd算法求解图中任意两点之间的最短路径\ndef floyd():\n    for k in range(n + 1):\n        for i in range(n + 1):\n            for j in range(n + 1):\n                # newDist是经过k后,i->j的距离\n                newDist = dist[i][k] + dist[k][j]\n                # 如果newDist是i->j的更短路径\n                if newDist < dist[i][j]:\n                    # 则更新i->j的最短距离\n                    dist[i][j] = newDist\n                    # 且此更短距离需要经过k, path[i][j]即记录 i->j 最短距离下需要经过点 k\n                    path[i][j] = k\n\n\ndef dfs(pre, sumDis, used, level):\n    \"\"\"\n    找一条经过所有点的最短路径,我们可以求解所有点形成的全排列,每一个全排列都对应一条经过所有点的路径,只是经过点的先后顺序不同 //\n    求某个全排列过程中,可以通过dist数组,累计上一个点i到下一个点j的最短路径dist[i][j]\n    :param pre: 上一个点, 初始为0,表示从披萨店出发\n    :param sumDis: 当前全排列路径累计的路径权重\n    :param used: 全排列used数组,用于标记哪些点已使用过\n    :param level: 用于记录排列的长度\n    \"\"\"\n    global ans\n\n    if level == n:\n        # 此时pre是最后一个客户所在点,送完最后一个客户后,司机需要回到披萨店,因此最终累计路径权重为 sum + dist[pre][0]\n        # 我们保留最小权重路径\n        ans = min(ans, sumDis + dist[pre][0])\n        return\n\n    for i in range(1, n + 1):\n        if used[i]:\n            continue\n\n        used[i] = True\n        dfs(i, sumDis + dist[pre][i], used, level + 1)\n        used[i] = False\n\n\n# 算法入口\ndef main():\n    # floyd算法调用\n    floyd()\n\n    # 全排列模拟经过所有点的路径\n    dfs(0, 0, [False] * (n + 1), 0)\n\n    print(ans)\n\n\n# 算法调用\nmain()"
+  },
+  "verified": false
+}

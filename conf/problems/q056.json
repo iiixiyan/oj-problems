@@ -49,6 +49,8 @@
       "content": "本题其实就是求解连通分量的个数，可以用并查集求解。\n本题类似于\n华为机试 - 发广播_伏城之外的博客-CSDN博客_服务器广播 华为机试\n\n可以参考链接博客\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 并查集\nclass UnionFindSet:\n    def __init__(self, n):\n        self.fa = [idx for idx in range(n)]\n        self.count = n\n\n    def find(self, x):\n        if x != self.fa[x]:\n            self.fa[x] = self.find(self.fa[x])\n            return self.fa[x]\n        return x\n\n    def union(self, x, y):\n        x_fa = self.find(x)\n        y_fa = self.find(y)\n\n        if x_fa != y_fa:\n            self.fa[y_fa] = x_fa\n            self.count -= 1\n\n\nn = int(input())\n\nmatrix = []\nfor i in range(n):\n    matrix.append(list(map(int, input().split())))\n\nufs = UnionFindSet(n)\n\nfor i in range(n):\n    for j in range(i+1, n):\n        if matrix[i][j] == 1:\n            ufs.union(i, j)\n\nprint(ufs.count)"
+  },
   "verified": false
 }

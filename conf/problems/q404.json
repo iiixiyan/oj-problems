@@ -1,0 +1,63 @@
+{
+  "id": "q404",
+  "title": "字符串筛选排序",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "字符串",
+    "排序"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "输入一个由N个大小写字母组成的字符串\n按照ASCII码值从小到大进行排序\n查找字符串中第K个最小ASCII码值的字母(k>=1)\n输出该字母所在字符串中的位置索引(字符串的第一个位置索引为0)\nk如果大于字符串长度则输出最大ASCII码值的字母所在字符串的位置索引\n如果有重复字母则输出字母的最小位置索引"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入一个由大小写字母组成的字符串\n第二行输入k ，k必须大于0 ，k可以大于输入字符串的长度"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出字符串中第k个最小ASCII码值的字母所在字符串的位置索引\nk如果大于字符串长度则输出最大ASCII码值的字母所在字符串的位置索引\n如果第k个最小ASCII码值的字母存在重复 则输出该字母的最小位置索引"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nAbCdeFG\n3\n输出\n5",
+      "cases": [
+        {
+          "input": "AbCdeFG\n3",
+          "output": "5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "根据ASCII码值排序，第三个ASCII码值的字母为F\nF在字符串中位置索引为5(0为字符串的第一个字母位置索引)\n输入\nfAdDAkBbBq\n4\n输出\n6\n\n根据ASCII码值排序前4个字母为AABB由于B重复则只取B的第一个最小位置索引6\n而不是第二个B的位置索引8"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "简单的字符串操作题。\n2023.05.20 补充了第二个"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "根据第二个"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "来看，题目要找的第k个，不是去重+升序后的第k个，而只是排序后的第k个。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\nk = int(input())\n\n\n# 算法入口\ndef getResult(s, k):\n    chars = list(s)\n    chars.sort()\n\n    if k > len(s):\n        k = len(s)\n\n    tar = chars[k - 1]\n    return s.index(tar)\n\n\n# 调用算法\nprint(getResult(s, k))"
+  },
+  "verified": false
+}

@@ -42,6 +42,8 @@
       "content": "题目要求，保持W,A,S,D字母个数平衡，即相等，如果不相等，可以从字符串中选取一段连续子串替换，来让字符串平衡。\n比如：WWWWAAAASSSS\n字符串长度12，W,A,S,D平衡的话，则每个字母个数应该是3个，而现在W,A,S各有4个，也就是说各超了1个。\n因此我们应该从字符串中，选取一段包含1个W，1个A，1个S的子串，来替换为D。\nWWWWAAAASSSS\nW\nWWWAAAASSSS\nWW\nWWAAAASSSS\n........\nWWW\nWAAAAS\nSSS\n而符合这种要求的子串可能很多，我们需要找出其中最短的，即\nWAAAAS\n。\n本题其实就是求最小覆盖子串，同LeetCode - 76\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\n\n# 算法入口\ndef getResult(s):\n    # 此时count记录统计W,A,S,D字母的数量\n    count = {\n        \"W\": 0,\n        \"A\": 0,\n        \"S\": 0,\n        \"D\": 0\n    }\n\n    for c in s:\n        count[c] += 1\n\n    avg = len(s) / 4  # 平衡状态时,W,A,S,D应该都是avg数量\n    total = 0  # total用于记录多余字母个数\n    flag = True  # flag表示当前是否为平衡状态,默认是\n\n    for c in count.keys():\n        if count[c] > avg:\n            flag = False  # 如果有一个字母数量超标,则平衡打破\n            count[c] -= avg  # 此时count记录每个字母超过avg的数量\n            total += count[c]\n        else:\n            count[c] = 0\n\n    if flag:\n        return 0  # 如果平衡,则输出0\n\n    i = 0\n    j = 0\n    minLen = len(s) - 1\n\n    while j < len(s):\n        jc = s[j]\n\n        if count[jc] > 0:\n            total -= 1\n        count[jc] -= 1\n\n        while total == 0:\n            minLen = min(minLen, j - i + 1)\n\n            ic = s[i]\n            if count[ic] >= 0:\n                total += 1\n            count[ic] += 1\n\n            i += 1\n\n        j += 1\n\n    return minLen\n\n\nprint(getResult(s))"
+  },
   "verified": false
 }

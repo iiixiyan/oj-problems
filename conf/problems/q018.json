@@ -47,6 +47,8 @@
       "content": "本题主要考察：区间交集求解、以及区间合并。\n首先，我们要求解输入的多个区间中，任意两个区间的交集（公共区间）。\n然后，将这些公共区间进行合并后打印。\n两个区间的交集求解思路如下：\n将两个区间按照开始位置进行升序，假设排序后，两个区间顺序是：[[s1, e1]，[s2, e2]]\n那么必然 s1 <= s2，因此如果存在交集的话，即e1 >= s2\n则交集的左边界必然是s2，而交集的右边界取值Math.min(e1, e2)\nJava算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nranges = [list(map(int, input().split())) for _ in range(n)]\n\n\n# 算法入口\ndef getResult():\n    # 区间按照开始位置升序\n    ranges.sort(key=lambda x: x[0])\n\n    # combine用于保存公共区间\n    combine = []\n\n    for i in range(n):\n        s1, e1 = ranges[i]\n        for j in range(i + 1, n):\n            s2, e2 = ranges[j]\n            if s2 <= e1:\n                combine.append([s2, min(e1, e2)])\n            else:\n                # 由于ranges已经升序,因此如果ranges[i]和ranges[j]没有交集的话,则也不可能和ranges[j+1]区间有交集\n                break\n\n    if len(combine) == 0:\n        print(\"None\")\n        return\n\n    # 合并公共区间\n    combine.sort(key=lambda x: (x[0], -x[1]))\n\n    pre = combine[0]\n    for i in range(1, len(combine)):\n        cur = combine[i]\n\n        if pre[1] >= cur[0]:\n            pre[1] = max(cur[1], pre[1])\n        else:\n            print(\" \".join(map(str, pre)))\n            pre = cur\n\n    print(\" \".join(map(str, pre)))\n\n\n# 算法调用\ngetResult()"
+  },
   "verified": false
 }

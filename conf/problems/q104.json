@@ -1,0 +1,51 @@
+{
+  "id": "q104",
+  "title": "任务调度",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "现有一个CPU和一些任务需要处理，已提前获知每个任务的任务ID、优先级、所需执行时间和到达时间。\nCPU同时只能运行一个任务，请编写一个任务调度程序，采用“可抢占优先权调度”调度算法进行任务调度，规则如下：\n如果一个任务到来时，CPU是空闲的，则CPU可以运行该任务直到任务执行完毕。但是如果运行中有一个更高优先级的任务到来，则CPU必须暂停当前任务去运行这个优先级更高的任务；\n如果一个任务到来时，CPU正在运行一个比他优先级更高的任务时，新到达的任务必须等待；\n当CPU空闲时，如果还有任务在等待，CPU会从这些任务中选择一个优先级最高的任务执行，相同优先级的任务选择到达时间最早的任务。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入有若干行，每一行有四个数字（均小于10^8）,分别为任务ID，任务优先级，执行时间和到达时间。\n每个任务的任务ID不同，优先级数字越大优先级越高，并且相同优先级的任务不会同时到达。\n输入的任务已按照到达时间从小到大排序，并且保证在任何时间，处于等待的任务不超过10000个。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "按照任务执行结束的顺序，输出每个任务的任务ID和对应的结束时间。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1 3 5 1\n2 1 5 10\n3 2 7 12\n4 3 2 20\n5 4 9 21\n6 4 2 22\n输出\n1 6\n3 19\n5 30\n6 32\n4 33\n2 35",
+      "cases": [
+        {
+          "input": "1 3 5 1\n2 1 5 10\n3 2 7 12\n4 3 2 20\n5 4 9 21\n6 4 2 22",
+          "output": "1 6\n3 19\n5 30\n6 32\n4 33\n2 35",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "图示如下\ntask1在1时刻到达，此时CPU空闲，因此执行task1，task1需要执行5个时间，而执行期间没有新任务加入，因此task1首先执行完成，\n结束时刻是6\n。\ntask2在10时刻达到，此时CPU空闲，因此执行task2，task2需要执行5个时间，但是在task2执行到12时刻时，有新任务task3加入，且优先级更高，因此task2让出执行权，\ntask2还需要5-（12-10）= 3 个时间才能执行完\n，task2进入等待队列。\ntask3在12时刻到达，此时CPU正在执行task2，但是由于task3的优先级高于task2，因此task3获得执行权开始执行，task3需要7个时间，而在下一个任务task4会在20时刻到达，因此task3可以执行完，\n结束时刻是19\n。\ntask3执行结束时刻是19，而task4到达时间是20，因此中间有一段CPU空闲期，而等待队列中还有一个task2等待执行，因此此时CPU会调出task2继续执行，但是只能执行1时间，\n因此task2还需要3 - 1 = 2个时间才能执行完\n。\ntask4在20时刻到达，此时CPU正在执行task2，但是由于task4的优先级更高，因此task4获得执行权开始执行，task2重回等待队列，task4需要2个时间，但是执行到时刻21时，task5到达了，且优先级更高，因此\ntask4还需2 - (21-20) = 1 个时间才能执行完\n，task4进入等待队列。\n此时等待队列有两个任务task2，task4，因此需要按照优先级排序，优先级高的在队头，因此queue = [task4, task2]\ntask5在21时刻到达，此时CPU正在执行task4，但是task5的优先级更高，因此task5获得执行权开始执行，task4进入等待队列，task5需要9个时间，但是执行到时刻22时，task6到达了，但是task6的优先级和task5相同，因此task5执行不受影响，task5会在21 + 9 =\n30 时刻执行完成\n。\n而task6则进入等待队列，有新任务进入队列后，就要按优先级重新排序，优先级高的在队头，因此queue = [task6, task4, task2]。\n此时所有任务已经遍历完，我们检查等待队列是否有任务，若有，则此时任务队列中的任务必然是按优先级降序的，因此我们依次取出队头任务，在上一次结束时刻基础上添加需要的时间，就是新的结束时刻，比如\ntask6出队，上一次结束时刻是30，因此task6的结束时刻 = 30 + 2 = 32，新的结束时刻变为32\ntask4出队，上一次结束时刻是32，因此task4的结束时刻 = 32 + 1 = 33，新的结束时刻变为33\ntask2出队，上一次结束时刻是33，因此task2的结束时刻 = 33 + 2 = 35，新的结束时刻变为33。\n本题实现的难点在于：\n1、等待队列的实现\n这里的等待队列其实就是优先队列，优先队列我们可以基于有序数组实现，但是有序数组实现最优先队列的时间复杂度至少O(n)，算是比较高的。优先队列其实只要每次保证最高优先级的任务处于队头即可，无需实现整体有序，因此基于最大堆实现优先队列是更好的选择，最大堆每次实现优先队列，只需要O(logN)的时间复杂度，因此在处理大数量级是更具有优势，但是JS语言并没有实现基于堆结构的优先队列，因此我们需要手动实现，相较于有序数组而言，难度较大。关于基于堆的优先队列实现，请看：\nLeetCode - 1705 吃苹果的最大数目_伏城之外的博客-CSDN博客\n2、CPU的任务执行逻辑\nCPU执行某个任务时，如果有新任务加入，则我们应该比较正在执行的任务和新任务的优先级，\n如果新任务优先级较高，则应该将正在执行的任务撤出，加入到等待队列中，然后执行新任务。\n如果新任务优先级不高于正在执行的任务，则新任务进入等待队列，继续执行当前任务。\nCPU空转期间，应该检查等待队列是否有任务，并取出最高优先级任务执行。\n2023.02.19 根据网友反馈上面逻辑的通过率为20%，我重新看了一下，发现上面遗漏一个逻辑：\n题目说\n当CPU空闲时，如果还有任务在等待，CPU会从这些任务中选择一个优先级最高的任务执行，\n相同优先级的任务选择到达时间最早的任务\n。\n而上面逻辑中遗漏考虑了相同优先级时，按照到达时间为第二优先级来安排任务执行的场景。已修复。\nJavaScript算法源码\n基于最大堆实现优先队列"
+    }
+  ],
+  "solutions": {
+    "Python": "import queue\n\n\nclass Task:\n    def __init__(self, taskId, priority, need, arrived):\n        self.taskId = taskId\n        self.priority = priority\n        self.need = need\n        self.arrived = arrived\n\n    def __gt__(self, other):\n        if self.priority != other.priority:\n            return other.priority > self.priority\n        else:\n            return self.arrived > other.arrived\n\n\n# 算法入口\ndef getResult(tasks):\n    pq = queue.PriorityQueue()\n\n    pq.put(tasks.pop(0))\n    curTime = pq.queue[0].arrived  # curTime记录当前时刻\n\n    while len(tasks) > 0:\n        curtTask = pq.queue[0]  # 当前正在运行的任务curtTask\n        nextTask = tasks.pop(0)  # 下一个任务nextTask\n\n        curTask_endTime = curTime + curtTask.need  # 当前正在运行任务的“理想”结束时间\n\n        # 如果当前正在运行任务的理想结束时间  超过了  下一个任务的开始时间\n        if curTask_endTime > nextTask.arrived:\n            curtTask.need -= nextTask.arrived - curTime  # 先不看优先级,先将当前任务可以运行的时间减去\n            curTime = nextTask.arrived\n        # 如果当前正在运行任务的理想结束时间  没有超过  下一个任务的开始时间,则当前任务可以执行完\n        else:\n            pq.get()\n            print(f\"{curtTask.taskId} {curTask_endTime}\")  # 打印执行完的任务的id和结束时间\n            curTime = curTask_endTime\n\n            # 如果当前任务结束时,下一次任务还没有达到,那么存在CPU空转(即idle)\n            if nextTask.arrived > curTask_endTime:\n                # 此时,我们应该从优先队列中取出最优先的任务出来执行,逻辑同上\n                while pq.qsize() > 0:\n                    idleTask = pq.queue[0]\n                    idleTask_endTime = curTime + idleTask.need\n\n                    if idleTask_endTime > nextTask.arrived:\n                        idleTask.need -= nextTask.arrived - curTime\n                        break\n                    else:\n                        pq.get()\n                        print(f\"{idleTask.taskId} {idleTask_endTime}\")\n                        curTime = idleTask_endTime\n\n                curTime = nextTask.arrived\n\n        pq.put(nextTask)\n\n    # 所有任务都加入优先队列后,我们就可以按照优先队列的安排,顺序取出任务来执行了\n    while pq.qsize() > 0:\n        pollTask = pq.get()\n        pollTask_endTime = curTime + pollTask.need\n        print(f\"{pollTask.taskId} {pollTask_endTime}\")\n        curTime = pollTask_endTime\n\n\n# 输入获取\ntasks = []\nwhile True:\n    task = input()\n    if task == \"\":\n        getResult(tasks)\n        break\n    else:\n        tmp = list(map(int, task.split()))\n        task = Task(tmp[0], tmp[1], tmp[2], tmp[3])\n        tasks.append(task)"
+  },
+  "verified": false
+}

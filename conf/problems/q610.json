@@ -1,0 +1,44 @@
+{
+  "id": "q610",
+  "title": "周末爬山",
+  "score": 200,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n周末小明准备去爬山锻炼，0代表平地，山的高度使用1到9来表示，小明每次爬山或下山高度只能相差k及k以内，每次只能上下左右一个方向上移动一格，小明从左上角(0,0)位置出发"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入m n k(空格分隔)\n代表m*n的二维山地图，k为小明每次爬山或下山高度差的最大值，\n然后接下来输入山地图，一共m行n列，均以空格分隔。取值范围：\n0 < m ≤ 500\n0< n ≤ 500\n0 < k < 5"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "所有"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入均为正确格式，且在取值范围内，考生不需要考虑不合法的输入格式。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "请问小明能爬到的最高峰多高，到该最高峰的最短步数，输出以空格分隔。\n同高度的山峰输出较短步数。\n如果没有可以爬的山峰，则高度和步数都返回0。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm, n, k = map(int, input().split())\nmatrix = [list(map(int, input().split())) for _ in range(m)]\n\noffsets = ((-1, 0), (1, 0), (0, -1), (0, 1))\n\n# 到达matrix[0][0]高度的山峰,最短步数是0\nmaxHeight = matrix[0][0]\nminStep = 0\n\n\ndef bfs():\n    global maxHeight, minStep\n\n    # 广搜队列\n    queue = []\n    # 访问记录\n    visited = [[False] * n for _ in range(m)]\n\n    # 首先是(0,0)位置进入队列,且被标记为访问过\n    queue.append((0, 0))\n    visited[0][0] = True\n\n    # 此时消耗步数为0\n    step = 0\n\n    while len(queue) > 0:\n        # 这里没有用queue.removeFirst来控制广搜,而是使用newQueue来控制广搜,因为这样更方便操作step\n        newQueue = []\n        step += 1\n\n        # 遍历同一层的所有节点\n        for x, y in queue:\n            lastHeight = matrix[x][y]\n\n            # 四个方向位置\n            for offsetX, offsetY in offsets:\n                newX = x + offsetX\n                newY = y + offsetY\n\n                # 新位置越界则无法继续广搜\n                if newX < 0 or newX >= m or newY < 0 or newY >= n:\n                    continue\n\n                # 新位置已访问过,则无需重复广搜\n                if visited[newX][newY]:\n                    continue\n\n                curHeight = matrix[newX][newY]\n\n                # 前后位置高度差在k以内, 则可以进入新位置\n                if abs(curHeight - lastHeight) <= k:\n                    visited[newX][newY] = True\n\n                    # 如果此时到达新位置高度的步数step更小,则更新对应高度的最小步数\n                    if curHeight > maxHeight or (curHeight == maxHeight and step < minStep):\n                        maxHeight = curHeight\n                        minStep = step\n\n                    # 新位置加入下一层广搜队列\n                    newQueue.append((newX, newY))\n\n        queue = newQueue\n\n\n# 算法入口\ndef getResult():\n    # 广搜\n    bfs()\n\n    if minStep == 0:\n        # 输出描述&#xff1a;如果没有可以爬的山峰,则高度和步数都返回0。\n        return \"0 0\"\n    else:\n        return f\"{maxHeight} {minStep}\"\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,56 @@
+{
+  "id": "q497",
+  "title": "高效的任务规划",
+  "score": 200,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "你有 n 台机器，编号为 1~n，每台都需要完成一项工作，机器经过配置后都能独立完成一项工作。\n假设第 i 台机器你需要花 Bi 分钟进行设置，然后开始运行，Ji 分钟后完成任务。\n现在，你需要选择布置工作的顺序，使得用最短的时间完成所有工作。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "，不能同时对两台进行配置，但配置完成的机器们可以同时执行他们各自的工作。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入代表总共有 M 组任务数据（1<M<=10）。\n每组数第一行为一个整数指定机器的数量 N（0<N<=1000）。随后的 N 行每行两个整数，第一个表示 B（0<=B<=10000），第二个表示 J（0<=J<=10000）。\n每组数据连续输入，不会用空行分隔。各组任务单独计时。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "对于每组任务，输出最短完成时间，且每组的结果独占一行。例如，两组任务就应该有两行输出。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1\n1\n2 2\n输出\n4",
+      "cases": [
+        {
+          "input": "1\n1\n2 2",
+          "output": "4",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "输入共3行数据，\n第一行代表只有1组任务；\n第二行代表本组任务只有1台机器；\n第三行代表本机器：配置需要2分钟，执行任务需要2分钟，\n输出共一行数据，代表执行结果为4分钟\n输入\n2\n2\n1 1\n2 2\n3\n1 1\n2 2\n3 3\n输出\n4\n7\n\n第1行 2代表有2组任务；\n2~4行代表第1组数据，为2台机器的配置、执行信息\n第1台：配置1分钟，执行1分钟\n第2台：配置2分钟，执行2分钟\n5~8行代表第2组数据，为3台机器的配置、执行信息\n第1台：配置1分钟，执行1分钟\n第2台：配置2分钟，执行2分钟\n第3台：配置3分钟，执行3分钟\n输出共2行，分别代表第1组任务共需要4分钟和第2组任务共需要7分钟\n先配置3，再配置2，再配置1，执行1分钟，共7分钟"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "如上图是两个机器执行的两种方案，我们可以发现：绿色机器先执行的话，总用时最少。\n因为，绿色机器的运行时间更长，而橙色机器可以在绿色机器运行过程中完成配置和执行。\n得出结论：如果想让任务总用时最少，则优先配置\"运行时间长\"的机器。\n那么，如果两个机器的运行时间相同，但是配置时间不同呢？\n可以发现，两种配置方式的总用时是相同的。\n得出结论：如果两个机器运行时间相同，则谁先配置都可以，对结果总用时无影响。\n因此，对各个机器进行配置先后优先级排序后，再算出\n每个机器的配置结束时间\n此时，总用时 = max(\"\n每个机器的配置结束时间 + 该机器的运行时间\n\")\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nm = int(input())\n\ntasks = [[] for _ in range(m)]\n\nfor i in range(m):\n    n = int(input())\n    task = [[] for _ in range(n)]\n    for j in range(n):\n        task[j] = list(map(int, input().split()))\n    tasks[i] = task\n\n\n# 算法入口\ndef getResult():\n    for task in tasks:\n        # 将每个任务中的机器工作顺序,按照运行时间降序排序\n        task.sort(key=lambda x: -x[1])\n\n        config_endTime = 0\n        ans = 0\n\n        for config_cost, run_cost in task:\n            config_endTime += config_cost\n            ans = max(ans, config_endTime + run_cost)\n\n        print(ans)\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

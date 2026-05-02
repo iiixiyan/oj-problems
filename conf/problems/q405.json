@@ -1,0 +1,61 @@
+{
+  "id": "q405",
+  "title": "密码解密",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一段“密文”字符串 s，其中字符都是经过“密码本”映射的，现需要将“密文”解密并输出。\n映射的规则（'a' ~ 'i'）分别用（'1' ~ '9'）表示；（'j' ~ 'z'）分别用（\"10*\" ~ \"26*\"）表示。\n约束：映射始终唯一。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "“密文”字符串"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "明文字符串"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "翻译后的文本长度在100以内"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n20*19*20*\n输出\ntst",
+      "cases": [
+        {
+          "input": "20*19*20*",
+          "output": "tst",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题有多种\n\n，我的思路是利用字符串替换操作。\n即将如下密文和明文进行按照顺序依次映射替换\n\"26*\" → \"z\"\n\"25*\" → \"y\"\n...\n\"10*\" → \"j\"\n\"9\" → \"i\"\n...\n\"1\" → \"a\"\n这里优先将从“26*” ~ \"10*\" 开始映射替换，比如题目"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "：\n20*19*20*\n如果优先进行 \"1\" ~ “9” 密文的映射替换，则会产生错误答案。\n更多实现细节，请看代码。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\n\nfor i in range(26, 0, -1):\n    key = str(i)\n    if i > 9:\n        key += \"*\"\n\n    val = chr(97 + i - 1)\n\n    s = s.replace(key, val)\n\nprint(s)"
+  },
+  "verified": false
+}

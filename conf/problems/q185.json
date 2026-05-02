@@ -1,0 +1,52 @@
+{
+  "id": "q185",
+  "title": "报文重排序",
+  "score": 100,
+  "tags": [
+    "B卷",
+    "排序"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "对报文进行重传和重排序是常用的可靠性机制，重传缓中区内有一定数量的子报文，每个子报文在原始报文中的顺序已知，现在需要恢复出原始报文。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入第一行为N，表示子报文的个数，0 ＜N ≤ 1000。\n输入第二行为N个子报文，以空格分开，子报文格式为：\n字符审报文内容+后缀顺序索引\n字符串报文内容由[a-z,A-Z]组成，后缀为整型值，表示顺序。\n顺序值唯一，不重复。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出恢复出的原始报文，按照每个子报文的顺序的升序排序恢复出原始报文，顺序后缀需要从恢复出的报文中删除掉"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4\nrolling3 stone4 like1 a2\n输出\nlike a rolling stone",
+      "cases": [
+        {
+          "input": "4\nrolling3 stone4 like1 a2",
+          "output": "like a rolling stone",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "4个子报文的内容分别为 \"rolling\"，\"stone\"，\"like\"，\"a\"，顺序值分别为3，4，1，2，按照顺序值升序并删除顺序后缀，得到恢复的原始报文：\"like a rolling stone“\n输入\n8\ngifts6 and7 Exchanging1 all2 precious5 things8 kinds3 of4\n输出\nExchanging all kinds of precious gifts and things\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "考察字符串操作。\n这\n\n析“字符审报文内容”、\"后缀顺序索引\"时，我使用了正则匹配的捕获组。\n2023.06.04\n本题需要考虑下后缀顺序索引不连续的情况，即不是严格的0~N-1序号\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nimport re\n\nn = int(input())\narr = input().split()\n\n\n# 算法入口\ndef getResult():\n    ans = []\n\n    reg = re.compile(r\"([a-zA-Z]+)(\\d+)\")\n\n    for s in arr:\n        matcher = reg.search(s)\n\n        if matcher is None:\n            continue\n\n        content = matcher.group(1)\n        i = int(matcher.group(2)) - 1\n\n        ans.append([i, content])\n\n    ans.sort(key=lambda x: x[0])\n\n    return \" \".join(map(lambda x: x[1], ans))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

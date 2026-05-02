@@ -1,0 +1,56 @@
+{
+  "id": "q298",
+  "title": "字符串分割(二)",
+  "score": 100,
+  "tags": [
+    "字符串"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个非空字符串S，其被N个‘-’分隔成N+1的子串，给定正整数K，要求除第一个子串外，其余的子串每K个字符组成新的子串，并用‘-’分隔。\n对于新组成的每一个子串，如果它含有的小写字母比大写字母多，则将这个子串的所有大写字母转换为小写字母；\n反之，如果它含有的大写字母比小写字母多，则将这个子串的所有小写字母转换为大写字母；大小写字母的数量相等时，不做转换。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为两行，第一行为参数K，第二行为字符串S。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出转换后的字符串。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n12abc-abCABc-4aB@\n输出\n12abc-abc-ABC-4aB-@",
+      "cases": [
+        {
+          "input": "3\n12abc-abCABc-4aB@",
+          "output": "12abc-abc-ABC-4aB-@",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "子串为12abc、abCABc、4aB@，第一个子串保留，\n后面的子串每3个字符一组为abC、ABc、4aB、@，\nabC中小写字母较多，转换为abc，\nABc中大写字母较多，转换为ABC，\n4aB中大小写字母都为1个，不做转换，\n@中没有字母，连起来即12abc-abc-ABC-4aB-@\n输入\n12\n12abc-abCABc-4aB@\n输出\n12abc-abCABc4aB@\n\n子串为12abc、abCABc、4aB@，第一个子串保留，\n后面的子串每12个字符一组为abCABc4aB@，\n这个子串中大小写字母都为4个，不做转换，\n连起来即12abc-abCABc4aB@"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "此题应该就是考察字符串的操作能力的，只要熟练掌握字符串操作即可。\n本题比较困惑的是，第一个子串是否要做大小写转换？看"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "的意思，应该是不用做的。\n下面代码中，我把大小写转换抽出成一个方法，考试时可以根据自行使用。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nk = int(input())\ns = input()\n\n\ndef convert(s):\n    lowerCount = 0\n    upperCount = 0\n\n    for c in s:\n        if 'z' >= c >= 'a':\n            lowerCount += 1\n        elif 'Z' >= c >= 'A':\n            upperCount += 1\n\n    if lowerCount > upperCount:\n        return s.lower()\n    elif lowerCount < upperCount:\n        return s.upper()\n    else:\n        return s\n\n\n# 算法入口\ndef getResult():\n    arr = s.split(\"-\")\n\n    ans = []\n    # ans.append(convert(arr[0])) # 看用例说明,对应第一个子串是不需要做大小写转换的,但是也拿不准,考试时可以都试下\n    ans.append(arr[0])\n\n    # 剩余子串重新合并为一个新字符串,每k个字符一组\n    newStr = \"\".join(arr[1:])\n    for i in range(0, len(newStr), k):\n        subStr = newStr[i:i + k]\n        # 子串中小写字母居多,则整体转为小写字母,大写字母居多,则整体转为大写字母\n        ans.append(convert(subStr))\n\n    return \"-\".join(ans)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

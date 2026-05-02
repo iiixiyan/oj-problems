@@ -1,0 +1,40 @@
+{
+  "id": "q542",
+  "title": "磁盘容量排序",
+  "score": 100,
+  "tags": [
+    "E卷",
+    "排序"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n磁盘的容量单位常用的有 M，G，T 这三个等级，它们之间的换算关系为：\n1T = 1024G\n1G = 1024M\n现在给定 n 块磁盘的容量，请对它们按从小到大的顺序进行\n稳定排序\n。\n例如给定5块盘的容量：\n1T，20M，3G，10G6T，3M12G9M\n排序后的结果为：\n20M，3G，3M12G9M，1T，10G6T"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "单位可以重复出现，上述 3M12G9M 表示的容量即为：3M+12G+9M，和 12M12G 相等。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入第一行包含一个整数 n，表示磁盘的个数\n2 ≤ n ≤ 100\n接下的 n 行，每行一个\n字符串\n（长度大于2，小于30），表示磁盘的容量，由一个或多个格式为mv的子串组成，其中 m 表示容量大小，v 表示容量单位，例如：20M，1T，30G，10G6T，3M12G9M。\n磁盘容量 m 的范围为 1 到 1024 的正整数\n容量单位 v 的范围只包含题目中提到的 M，G，T 三种，换算关系如"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出 n 行，表示 n 块磁盘容量排序后的结果。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\ncapacitys = [input() for _ in range(n)]\n\n\ndef calc(cap):\n    ans = 0\n\n    num = []\n    for i in range(len(cap)):\n        c = cap[i]\n\n        if '0' <= c <= '9':\n            num.append(c)\n        else:\n            if c == 'M':\n                ans += int(\"\".join(num))\n            elif c == 'G':\n                ans += int(\"\".join(num)) * 1024\n            elif c == 'T':\n                ans += int(\"\".join(num)) * 1024 * 1024\n\n            num = []\n\n    return ans\n\n\n# 算法入口\ndef getResult():\n    capacitys.sort(key=lambda x: calc(x))\n\n    for cap in capacitys:\n        print(cap)\n\n\n# 算法调用\ngetResult()"
+  },
+  "verified": false
+}

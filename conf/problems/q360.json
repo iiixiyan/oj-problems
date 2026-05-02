@@ -1,0 +1,49 @@
+{
+  "id": "q360",
+  "title": "田忌赛马",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定两个只包含数字的数组a，b，调整数组 a 里面的数字的顺序，使得尽可能多的a[i] > b[i]。\n数组a和b中的数字各不相同。\n输出所有可以达到最优结果的a数组的结果。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入的第一行是数组 a 中的数字，其中只包含数字，每两个数字之间相隔一个空格，a数组大小不超过10。\n输入的第二行是数组 b 中的数字，其中只包含数字，每两个数字之间相隔一个空格，b数组大小不超过10。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出所有可以达到最优结果的 a 数组的数量。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n11 8 20\n10 13 7\n输出\n1",
+      "cases": [
+        {
+          "input": "11 8 20\n10 13 7",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "最优结果只有一个，a = [11, 20, 8]，故输出1\n输入\n11 12 20\n10 13 7\n输出\n2\n\n有两个a数组的排列可以达到最优结果，[12, 20, 11] 和 [11, 20, 12]，故输出2\n输入\n1 2 3\n4 5 6\n输出\n6\n\na无论如何都会全输，故a任意排列都行，输出所有a数组的排列，6种排法。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题数量级不大，可以考虑暴力破解。即求解a数组的所有全排列，然后将a数组的每个全排列和b数组逐个元素进行比较，统计每个全排列中a[i] > b[i]的个数biggerCount。我们保留最大的biggerCount 为 maxBiggerCount。\n最终统计的是a[i] > b[i]的个数为maxBiggerCount的全排列的数量。\n关于全排列的求解，可以参考：\nLeetCode - 46 全排列_全排列 46 力扣-CSDN博客\n本题不需要我们输出具体排列，因此不用定义path记录全排列。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nmaxBiggerCount = 0\nans = 0\n\n\n# 算法入口\ndef dfs(level, used, biggerCount):\n    global maxBiggerCount, ans\n\n    if level >= len(a):\n        if biggerCount > maxBiggerCount:\n            maxBiggerCount = biggerCount\n            ans = 1\n        elif biggerCount == maxBiggerCount:\n            ans += 1\n\n        return\n\n    for i in range(len(a)):\n        if used[i]:\n            continue\n\n        used[i] = True\n        # biggerCount记录当前全排列中a[level] > b[level]的位置的数量, 此时a[level] == a[i]\n        dfs(level + 1, used, biggerCount + (1 if a[i] > b[level] else 0))\n        used[i] = False\n\n\n# 算法调用\ndfs(0, [False] * len(a), 0)\n\nprint(ans)"
+  },
+  "verified": false
+}

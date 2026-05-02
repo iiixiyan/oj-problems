@@ -1,0 +1,56 @@
+{
+  "id": "q085",
+  "title": "称砝码",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "现有n种砝码，重量互不相等，分别为 m1,m2,m3…mn ；\n每种砝码对应的数量为 x1,x2,x3...xn 。现在要用这些砝码去称物体的重量(放在同一侧)，问能称出多少种不同的重量。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "对于每组测试数据：\n第一行：n --- 砝码的种数(范围[1,10])\n第二行：m1 m2 m3 ... mn --- 每种砝码的重量(范围[1,2000])\n第三行：x1 x2 x3 .... xn --- 每种砝码对应的数量(范围[1,10])"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "利用给定的砝码可以称出的不同的重量数"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "数据范围：每组输入数据满足：\n1 ≤ n ≤ 10\n1 ≤ mi ≤ 2000\n1 ≤ xi ≤ 10"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2\n1 2\n2 1\n输出\n5",
+      "cases": [
+        {
+          "input": "2\n1 2\n2 1",
+          "output": "5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "可以表示出0，1，2，3，4五种重量。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用多重背包求解。关于多重背包问题，其实就是01背包的变种问题。\n01背包问题：\n有N种物品，\n每种物品只有一个\n，第 i 个物品的重量为 wi，价值为pi，另外还有一个承重为W的背包，问该背包在不超载的情况下，装入物品的最大价值是多少?\n多重背包问题\n有N种物品，第 i 个物品的重量为 wi，价值为pi，\n数量为ci\n，另外还有一个承重为W的背包，问该背包在不超载的情况下，装入物品的最大价值是多少?\n想求解多重背包问题，需要先弄得01背包问题，最好也了解下01背包的滚动数组优化：\n算法设计 - 01背包问题_01背包算法_伏城之外的博客-CSDN博客\n算法设计 - 01背包问题的状态转移方程优化，以及完全背包问题_01背包问题状态转移方程_伏城之外的博客-CSDN博客\n学会01背包后，多重背包问题的求解就非常简单了，其实我们可以将多重背包问题，转化为01背包问题，怎么转化呢？\n举个例子：你有红富士苹果10个，那么是不是等价于红富士苹果A有1个，红富士苹果B有1个，...，红富士苹果J有1个？\n其实这就是多重背包转化为01背包的方法。即将1种物品N个，转化为N种物品1个。\n关于多重背包的求解有两种解法：\n1、朴素解法\n2、二进制优化解法\n这两种解法具体逻辑请看：\n华为校招机试 - 攻城战（Java & JS & Python）_伏城之外的博客-CSDN博客\n本题中\nN种砝码  →  N种物品\n每种砝码的重量  → 每种物品的重量\n每种砝码的重量  → 每种物品的价值\n每种砝码的数量  → 每种物品的数量\n所有砝码的重量之和  → 背包承重\n本题要求的是：用给的砝码能组合出多少种重量\n而这其实刚好和求解背包问题时，遍历所有可能的背包承重相符，因此本题非常适合当成背包问题求解。\n朴素解法\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nm = list(map(int, input().split()))\nx = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult(n, m, x):\n    m.insert(0, 0)\n    x.insert(0, 0)\n\n    bag = 0\n    for i in range(1, n + 1):\n        bag += m[i] * x[i]\n\n    dp = [False] * (bag + 1)\n    dp[0] = True\n\n    for i in range(1, n + 1):\n        for j in range(bag, m[i] - 1, -1):\n            for k in range(1, x[i] + 1):\n                if j >= m[i] * k:\n                    if dp[j - m[i] * k]:\n                        dp[j] = True\n\n    return len(list(filter(lambda x: x, dp)))\n\n\n# 算法调用\nprint(getResult(n, m, x))"
+  },
+  "verified": false
+}

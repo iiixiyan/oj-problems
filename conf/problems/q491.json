@@ -1,0 +1,71 @@
+{
+  "id": "q491",
+  "title": "攀登者2",
+  "score": 200,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "攀登者喜欢寻找各种地图，并且尝试攀登到最高的山峰。\n地图表示为一维数组，数组的索引代表水平位置，数组的元素代表相对海拔高度。其中数组元素0代表地面。\n例如：[0,1,2,4,3,1,0,0,1,2,3,1,2,1,0]，代表如下图所示的地图，地图中有两个山脉位置分别为 1,2,3,4,5 和 8,9,10,11,12,13，最高峰高度分别为 4,3。最高峰位置分别为3,10。\n一个山脉可能有多座山峰(高度大于相邻位置的高度，或在地图边界且高度大于相邻的高度)。\n登山时会消耗登山者的体力(整数)，\n上山时，消耗相邻高度差两倍的体力\n下山时，消耗相邻高度差一倍的体力\n平地不消耗体力\n登山者体力消耗到零时会有生命危险。\n例如，上图所示的山峰：\n从索引0，走到索引1，高度差为1，需要消耗 2 * 1 = 2 的体力，\n从索引2，走到索引3，高度差为2，需要消耗 2 * 2 = 4 的体力。\n从索引3，走到索引4，高度差为1，需要消耗 1 * 1 = 1 的体力。\n攀登者想要评估一张地图内有多少座山峰可以进行攀登，且可以安全返回到地面，且无生命危险。\n例如上图中的数组，有3个不同的山峰，登上位置在3的山可以从位置0或者位置6开始，从位置0登到山顶需要消耗体力 1 * 2 + 1 * 2 + 2 * 2 = 8，从山顶返回到地面0需要消耗体力 2 * 1 + 1 * 1 + 1 * 1 = 4 的体力，按照登山路线 0 → 3 → 0 需要消耗体力12。攀登者至少需要12以上的体力（大于12）才能安全返回。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为地图一维数组\n第二行输入为攀登者的体力"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "确保可以安全返回地面，且无生命危险的情况下，地图中有多少山峰可以攀登。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n0,1,4,3,1,0,0,1,2,3,1,2,1,0\n13\n输出\n3",
+      "cases": [
+        {
+          "input": "0,1,4,3,1,0,0,1,2,3,1,2,1,0\n13",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "登山者只能登上位置10和12的山峰，7 → 10 → 7，14 → 12 → 14\n输入\n1,4,3\n999\n输出\n0\n\n没有合适的起点和终点"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题考试时为核心代码模式，非ACM模式，即无需自己解析输入数据。\n本题代码实现仍然以ACM模式处理，但是会将输入处理 与 算法逻辑 分开，大家只看算法逻辑即可。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1图示："
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "中用的位置应该是从1开始计数的，换成数组索引的话，如下：\n登山者只能登上位置9和11的山峰，6 → 9 → 6，13 → 11 → 13\n登上索引9山峰的路线：6 → 9 → 6，消耗体力 = 9  < 13\n登上索引11山峰的路线：13 → 11 → 13，消耗体力 = 6 < 13\n另外还有一个索引2的山峰，有两条路线登山，分别为：\n0 → 2 → 0，消耗体力 = 12 < 13\n5 → 2 → 5，消耗体力 = 12 < 13\n也能满足安全登山下山，但是题目\n\n没有给出，而题目输出是给的可攀登山峰数3，即索引位置2，9，11的三座山峰。\n我的"
+    },
+    {
+      "type": "analysis",
+      "title": "解题思路",
+      "content": "如下：\n首先找到正向第一个地面（高度0）位置，然后从此位置开始攀登：\n定义两个变量 upCost，downCost，分别代表上山体力消耗，下山体力消耗。\n初始时都为0\n假设索引 i 执行下一个位置，那么 height[i] - height[i-1] 就是高度差diff：\n如果diff > 0，那么当前处于上坡路程，此时upCost += diff * 2，downCost += diff\n上山时如果遇到上坡，那么相对应的，下山时，这段路程就变成了下坡\n如果diff < 0，那么当前处于下坡路程，此时upCost -= diff，downCost -= diff * 2\n上山时如果遇到下坡，\nPS：为什么上山会遇到下坡路程？可以看下图，如果我想从索引6地面攀登到索引11山峰，那么中间必然要经过更高的索引9山峰，产生下坡路程\n上山时如果遇到下坡，那么相对应的，下山时，这段路程就变成了上坡路。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：上面diff高度差 < 0，因此 upCost += -diff，就变为了 upCost -= diff。downCost同理。\n如果diff == 0，那么当前不消耗体力\n上面 diff = heights[i] - heights[i - 1]，如果 diff < 0 以及 diff == 0时，\n\n位置 i 的山不是山顶。\n而 diff > 0 时，位置 i 是有可能为山顶的，我们只需要检查 heights[i] > heights[i+1]即可，比如\n如果确定位置 i 是山顶，则攀登此山顶的体力消耗（上山+下山）= upCost + downCost\n如果此时 upCost + downCost <= 自身体力（第二行输入），那么位置 i 山顶可攀登。\n另外，我们在不断向后攀登的过程中，可能会重回地面（height[i] == 0），入下图绿色框部分\n那么此时，对于后面的山峰来说，我们更优的攀登起始位置是绿色部分，而不是一开始的地面位置，因此，此时，我们应该将 upCost、downCost 重置为0，相当于从绿色部分重新攀登后面的山。\n以上就是求解思路。但是存在漏洞，比如下图，我们攀登索引11的山峰，如果只正向考虑的话，则最优路径是 6 → 11 → 13\n但是逆向考虑的话，会有更优解\n即路径为 13 → 11 → 13\n因此，我们应该正向、逆向都爬一次，这样才能保证所有山峰都能找到最优路径\n2023.12.08\nupCost 和 downCost 可以进行合并，具体请见代码注释。\n攀登者体力必须要大于 上山、下山体力消耗之和，而不是大于等于。\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nheights = list(map(int, input().split(\",\")))\nstrength = int(input())\n\n\ndef climb(idxs, direction):\n    # 找到第一个地面位置\n    j = 0\n    while j < len(heights) and heights[j] != 0:\n        j += 1\n\n    # 上山体力消耗\n    # upCost = 0\n    # 下山体力消耗\n    # downCost = 0\n\n    # 攀登体力总消耗&#xff08;包括上山,下山&#xff09;\n    cost = 0\n\n    for i in range(j + 1, len(heights)):\n        # 如果遇到了新的地面,则从新的地面位置重新计算攀登消耗的体力\n        if heights[i] == 0:\n            cost = 0\n            # upCost = 0\n            # downCost = 0\n            continue\n\n        # diff记录高度差\n        diff = heights[i] - heights[i - 1]\n\n        if diff > 0:\n            # 如果过程是上坡\n            cost += diff * 3\n            # upCost += diff * 2  # 则上山时,体力消耗 = 高度差 * 2\n            # downCost += diff  # 相反的下山时,体力消耗 = 高度差 * 1\n\n            # 由于 height[i] > heights[i-1],因此如果 height[i] > heights[i+1] 的话,位置 i 就是山顶\n            if i + 1 >= len(heights) or heights[i] > heights[i + 1]:\n                # 计算攀登此山顶的上山下山消耗的体力和\n                if cost < strength:\n                    # if upCost + downCost <= strength:\n                    # 如果不超过自身体力,则可以攀登\n                    if direction:\n                        idxs.add(i)\n                    else:\n                        idxs.add(len(heights) - i - 1)  # 需要注意,逆序heights数组后,我们对于的山峰位置需要反转\n\n        elif diff < 0:\n            # 如果过程是下坡\n            cost -= diff * 3\n            # upCost -= diff  # 则上山时,体力消耗 = 高度差 * 1\n            # downCost -= diff * 2  # 相反的下山时,体力消耗 = 高度差 * 2\n            # heights[i] < heights[i-1],因此位置i不可能是山顶\n\n\n# 算法入口\ndef getResult():\n    # 记录可攀登的山峰索引\n    idxs = set()\n\n    # 正向攀登\n    climb(idxs, True)\n\n    # 逆序攀登\n    heights.reverse()\n    climb(idxs, False)\n\n    return len(idxs)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

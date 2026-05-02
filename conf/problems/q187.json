@@ -1,0 +1,62 @@
+{
+  "id": "q187",
+  "title": "按单词下标区间翻转文章内容",
+  "score": 100,
+  "tags": [
+    "B卷",
+    "数组"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一段英文文章片段，由若干单词组成，单词间以空格间隔，单词下标从0开始。\n请翻转片段中指定区间的单词顺序并返回翻转后的内容。\n例如给定的英文文章片段为\"I am a developer\"，翻转区间为[0,3]，则输出“developer a am I”。\nString reverseWords(String s, int start, int end)"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "使用换行隔开三个参数\n第一个参数为英文文章内容即英文字符串\n第二个参数为待翻转内容起始单词下标\n第三个参数为待翻转内容最后一个单词下标"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "翻转后的英文文章片段所有单词之间以一个半角空格分隔进行输出。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "英文文章内容首尾无空格"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nI am a developer.\n1\n2\n输出\nI a am developer.",
+      "cases": [
+        {
+          "input": "I am a developer.\n1\n2",
+          "output": "I a am developer.",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\nhello world\n-1\n1\n输出\nworld hello\n\n下标小于0时，从第一个单词开始\n输入\nI am a developer\n0\n5\n输出\ndeveloper a am I\n\n下标大于实际单词个数，则按最大下标算\n输入\nI am a developer\n-2\n-1\n输出\nI am a developer\n\n翻转区间无效时，不做翻转"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题主要考察数组常规操作，以及简单的双指针使用。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "startIndex和endIndex的越界处理即可。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns = input()\nstartIndex = int(input())\nendIndex = int(input())\n\n\n# 算法入口\ndef getResult(s, start, end):\n    sArr = s.split()\n\n    start = min(max(0, start), len(sArr) - 1)\n    end = min(max(0, end), len(sArr) - 1)\n\n    if start >= end:\n        return s\n\n    l = start\n    r = end\n\n    while l < r:\n        sArr[l], sArr[r] = sArr[r], sArr[l]\n        l += 1\n        r -= 1\n\n    return \" \".join(sArr)\n\n\n# 调用算法\nprint(getResult(s, startIndex, endIndex))"
+  },
+  "verified": false
+}

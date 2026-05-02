@@ -1,0 +1,51 @@
+{
+  "id": "q116",
+  "title": "垃圾短信识别",
+  "score": 200,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "大众对垃圾短信深恶痛绝，希望能对垃圾短信发送者进行识别，为此，很多软件增加了垃圾短信的识别机制。\n经分析，发现正常用户的短信通常具备交互性，而垃圾短信往往都是大量单向的短信，按照如下规则进行垃圾短信识别：\n本题中，发送者A符合以下条件之一的，则认为A是垃圾短信发送者：\nA发送短信的接收者中，没有发过短信给A的人数L > 5；\nA发送的短信数 – A接收的短信数M > 10；\n如果存在X，A发送给X的短信数 – A接收到X的短信数N > 5；"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行是条目数，接下来几行是具体的条目，每个条目，是一对ID，第一个数字是发送者ID，后面的数字是接收者ID，中间空格隔开，所有的ID都为无符号整型，ID最大值为100；\n同一个条目中，两个ID不会相同（即不会自己给自己发消息）\n最后一行为指定的ID"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出该ID是否为垃圾短信发送者，并且按序列输出 L M 的值（由于 N 值不唯一，不需要输出）；\n输出均为字符串。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n15\n1 2\n1 3\n1 4\n1 5\n1 6\n1 7\n1 8\n1 9\n1 10\n1 11\n1 12\n1 13\n1 14\n14 1\n1 15\n1\n输出\ntrue 13 13",
+      "cases": [
+        {
+          "input": "15\n1 2\n1 3\n1 4\n1 5\n1 6\n1 7\n1 8\n1 9\n1 10\n1 11\n1 12\n1 13\n1 14\n14 1\n1 15\n1",
+          "output": "true 13 13",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "true 表示1是垃圾短信发送者，两个数字，代表发送者1对应的L和M值。\ntrue 13 13中间以\n一个空格\n分割。\n\ntrue是字符串输出。\n输入\n15\n1 2\n1 3\n1 4\n1 5\n1 6\n1 7\n1 8\n1 9\n1 10\n1 11\n1 12\n1 13\n1 14\n14 1\n1 15\n2\n输出\nfalse 0 -1\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "感觉是纯逻辑题，解析请看代码注释。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\narr = [input().split() for i in range(n)]\ntid = input()\n\n\n# 算法入口\ndef getResult(tid, arr):\n    # send记录 tid发送短信给“哪些人”\n    send = []\n    # receive记录  “哪些人”发送短信给tid\n    receive = []\n\n    # sendCount记录 tid发送了“几次”&#xff08;对象属性值&#xff09;短信给某个人&#xff08;对象属性&#xff09;\n    sendCount = {}\n    # receiveCount记录 某人&#xff08;对象属性&#xff09;发送了“几次”&#xff08;对象属性值&#xff09;短信给tid\n    receiveCount = {}\n\n    for sid, rid in arr:\n        if sid == tid:\n            send.append(rid)\n            if sendCount.get(rid) is None:\n                sendCount[rid] = 1\n            else:\n                sendCount[rid] += 1\n\n        if rid == tid:\n            receive.append(sid)\n            if receiveCount.get(sid) is None:\n                receiveCount[sid] = 1\n            else:\n                receiveCount[sid] += 1\n\n    sendSet = set(send)\n    receiveSet = set(receive)\n\n    # connect记录和tid有交互的id\n    connect = list(filter(lambda x: x in receiveSet, list(sendSet)))\n\n    l = len(sendSet) - len(connect)\n    m = len(send) - len(receive)\n\n    isSpammers = l > 5 or m > 10\n\n    # 如果已经通过l和m确定了tid是垃圾短信发送者,那就不需要再确认n了,否则还是需要确认n\n    if not isSpammers:\n        # for id in connect:\n        #     if (sendCount.get(id) or 0) - (receiveCount.get(id) or 0) > 5:\n        # 根据网友指正,第三条规则中,X不一定非要和A存在交互,即存在A发送6条短信给X,但是X没有发送过短信给A,此时也符合第三条规则\n        # 因此,这里id应该遍历自sendSet,而不是connect\n        for id in sendSet:\n            if sendCount.get(id) - (receiveCount.get(id) or 0) > 5:\n                isSpammers = True\n                # 一旦发现x,则可以判断,则确定tid是垃圾短信发送者,可提前结束循环\n                break\n\n    return f\"{str(isSpammers).lower()} {l} {m}\"\n\n\n# 算法调用\nprint(getResult(tid, arr))"
+  },
+  "verified": false
+}

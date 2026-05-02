@@ -1,0 +1,51 @@
+{
+  "id": "q460",
+  "title": "猴子爬山",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一天一只顽猴想去从山脚爬到山顶，途中经过一个有个N个台阶的阶梯，但是这猴子有一个习惯：\n每一次只能跳1步或跳3步，试问猴子通过这个阶梯有多少种不同的跳跃方式？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入只有一个整数N（0<N<=50）此阶梯有多少个台阶。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出有多少种跳跃方式（解决方案数）。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n50\n输出\n122106097",
+      "cases": [
+        {
+          "input": "50",
+          "output": "122106097",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n3\n输出\n2\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "这题是一道经典的分治算法题、以及动态规划基础题。\n这题既可以使用分治递归来自顶向下地求解，也可以使用动态规划递推地自底向上求解。\n但是动态规划的效率更高。\n这题和fibnaci数列很像，递归公式如下：\njump(1) = 1\njump(2) = 1\njump(3) = 2\njump(n) = jump(n-1) + jump(n-3),  n>3\n状态转移方程如下：\ndp[0] = 0\ndp[1] = 1\ndp[2] = 1\ndp[3] = 2\ndp[i] = dp[i-1] + dp[i-3],  i>3\n上面递归公式和状态转移方程的规律发现如下\n台阶数\n跳跃方式\n几种跳跃方式\n1\n1\n1\n2\n11\n1\n3\n111\n3\n2\n4\n1111\n13\n31\n3\n5\n11111\n113\n131\n311\n4\n6\n111111\n1113\n1131\n1311\n3111\n33\n6\n7\n1111111\n11113\n11131\n11311\n13111\n31111\n133\n313\n331\n9\nJava算法源码\n分治递归求解（带缓存优化）"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\n\ncache = [-1] * 51\ncache[0] = 0\ncache[1] = 1\ncache[2] = 1\ncache[3] = 2\n\n\n# 算法入口\ndef recursive(n):\n    if cache[n] != -1:\n        return cache[n]\n\n    cache[n] = recursive(n - 1) + recursive(n - 3)\n    return cache[n]\n\n\n# 调用算法\nprint(recursive(n))"
+  },
+  "verified": false
+}

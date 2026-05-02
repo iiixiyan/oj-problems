@@ -1,0 +1,52 @@
+{
+  "id": "q094",
+  "title": "识图谱新词挖掘",
+  "score": 100,
+  "tags": [
+    "A卷",
+    "图"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小华负责公司知识图谱产品，现在要通过新词挖掘完善知识图谱。\n新词挖掘：给出一个待挖掘问题内容字符串Content和一个词的字符串word，找到content中所有word的新词。\n新词：使用词word的字符排列形成的字符串。\n请帮小华实现新词挖掘，返回发现的新词的数量。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为待挖掘的文本内容content；\n第二行输入为词word；"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "在content中找到的所有word的新词的数量。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "0 ≤ content的长度 ≤ 10000000\n1 ≤ word的长度 ≤ 2000"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\nqweebaewqd\nqwe\n输出\n2",
+      "cases": [
+        {
+          "input": "qweebaewqd\nqwe",
+          "output": "2",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "起始索引等于0的子串是“qwe”，它是word的新词。\n起始索引等于6的子串是“ewq”，它是word的新词。\n输入\nabab\nab\n输出\n3\n\n起始索引等于0的子串是”ab“，它是word的新词。\n起始索引等于1的子串是”ba“，它是word的新词。\n起始索引等于2的子串是”ab“，它是word的新词。\n暴力解法（可得100%通过率）\n本题最简单的解法就是利用定长（word长度）滑动窗口来选择 content中的子串，只要选中的子串和word二者，在字典序排序后是一样的，则可以记为一个挖掘到的新词。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ncontent = input()\nword = input()\n\n\n# 算法入口\ndef getResult(content, word):\n    # 如果content长度小于word,则直接返回0\n    if len(content) < len(word):\n        return 0\n\n    sorted_word = \"\".join(sorted(list(word)))\n\n    ans = 0\n    maxI = len(content) - len(word)\n\n    for i in range(maxI + 1):\n        sorted_subStr = \"\".join(sorted(content[i:i + len(word)]))\n        if sorted_subStr == sorted_word:\n            ans += 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult(content, word))"
+  },
+  "verified": false
+}

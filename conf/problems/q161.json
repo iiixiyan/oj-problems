@@ -1,0 +1,81 @@
+{
+  "id": "q161",
+  "title": "五子棋迷",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "张兵和王武是五子棋迷，工作之余经常切磋棋艺。这不，这会儿又下起来了。走了一会儿，轮张兵了，对着一条线思考起来了，这条线上的棋子分布如下:\n用数组表示: -1 0 1 1 1 0 1 0 1 -1\n棋了分布"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": ":\n-1代表白子，0代表空位，1 代表黑子\n数组长度L，满足 1 < L < 40，L为奇数\n你得帮他写一个程序，算出最有利的出子位置。 最有利定义：\n找到一个空位(0)，用棋子(1/-1)填充该位置，可以使得当前子的最大连续长度变大\n如果存在多个位置，返回最靠近中间的较小的那个坐标\n如果不存在可行位置，直接返回-1\n连续长度不能超过5个(五字棋约束)"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行: 当前出子颜色\n第二行: 当前的棋局状态"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "1个整数，表示出子位置的数组下标"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1\n-1 0 1 1 1 0 1 -1 1\n输出\n5",
+      "cases": [
+        {
+          "input": "1\n-1 0 1 1 1 0 1 -1 1",
+          "output": "5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "当前为黑子 (1)，放置在下标为5的位置，黑子的最大连续长度，可以由3到5\n输入\n-1\n-1 0 1 1 1 0 1 0 1 -1 1\n输出\n1\n\n当前为白子，唯一可以放置的位置下标为1，白子的最大长度，由1变为2\n输入\n1\n0 0 0 0 1 0 0 0 0 1 0\n输出\n5\n\n可行的位置很多，5最接近中间的位置坐标"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以使用双指针解题。\n定义两个指针L，R，我们假设L,R范围就是要求的连棋范围，那么L,R范围内必须要包含一个0，用于落子，且只能有一个0，范围内其余棋子必须是下棋者对应的颜色（第一行输入的颜色）。\n另外，根据"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "：\n连续长度不能超过5个(五字棋约束)\n即L,R范围内需要满足三个条件：\nL,R范围内必须要包含一个0，用于落子，且只能有一个0\n范围内其余棋子必须是下棋者对应的颜色\nL,R范围长度不能超过5\n上面三个条件约束着双指针的运动，下面给出三个"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "的L,R指针运动示意图："
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n通过上面例子，我们可以知道，在什么时机进行连棋的统计，需要统计连棋的落子位置和长度"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2\n上面例子中，如果连棋中断，即遇到不同颜色的棋子，则L,R需要同时移动到该不同颜色棋子的右侧"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "3\n上面例子中，如果落子超标，则我们需要将L指针移动到上一次落子位置的右侧，以此来满足L,R范围内落子数量只有一个\n2023.06.04\n上面逻辑没有考虑到一个点：\n找到一个空位(0)，用棋子(1/-1)填充该位置，可以使得当前子的最大连续长度变大\n即落子后，一定要让当前子的最大连续长度变大，如果落子后，该子的最大连续长度没有变大，那么就代表不是最有利位置\n因此，下面代码追加了一个getInitMaxConstantLen方法，用于获取初始状态时的最大连续长度，后续落子时，需要看新的连续长度是否超过初始最大的，只有超过了，对应落子位置才是一个可能解。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ncolor = int(input())\nnums = list(map(int, input().split()))\n\n\n# 获取初始最大连续长度,即未落子前的最大连续长度\ndef getInitMaxConstantLen():\n    maxLen = 0\n\n    length = 0\n    for num in nums:\n        if num != color:\n            maxLen = max(maxLen, length)\n            length = 0\n        else:\n            length += 1\n\n    return max(maxLen, length)\n\n\n# 算法入口\ndef getResult():\n    # 获取初始的最大连续长度\n    initMaxConstantLen = getInitMaxConstantLen()\n\n    ans = []\n\n    # l~r之间必须且只能包含一个0,即必须落子一次,其余都是color颜色的棋子\n    l = 0\n    r = 0\n\n    # l~r之间包含的0的数量,即落子数量\n    zero = 0\n    # l~r之间0的位置,即落子位置\n    pos = -1\n\n    while r < len(nums):\n        # 如果nums[r]是空位\n        if nums[r] == 0:\n            # 则可以落子,因此落子个数++\n            zero += 1\n\n            # 如果落子数量超过1个了,则此时 l~r-1 范围就是一个连棋(PS:r位置不算在内)\n            if zero > 1:\n                # 如果该连棋长度 (r-1) - l + 1 <= 5&#xff08;PS:五字棋约束&#xff09;,则是一个合法的连棋\n                # 记录 l~r-1 范围的落子位置pos,以及连续长度r-l\n                # 本题要求落子可以使得当前子的最大连续长度变大\n                if initMaxConstantLen < r - l <= 5:\n                    ans.append([pos, r - l])\n\n                # 由于只能落子一次,因此前面的落子需要收回,即更新 l 到上一次落子位置的右边\n                zero -= 1\n                l = pos + 1\n\n            # 更新落子位置\n            pos = r\n            r += 1\n        # 如果nums[r]位置有其他颜色棋子,则连棋中断\n        elif nums[r] != color:\n            # 此时需要检查 l~r-1 范围是否落过子,且是否符合五子棋约束\n            # 若是,则记录 l~r-1 范围的落子位置pos,以及连续长度r-l\n            # 本题要求落子可以使得当前子的最大连续长度变大\n            if zero == 1 and initMaxConstantLen < r - l <= 5:\n                ans.append([pos, r - l])\n\n            # 由于连棋中断了,因此落子位置pos,和落子数量全部重置\n            pos = -1\n            zero = 0\n\n            # l,r全部更新到当前r的右边一个位置\n            r += 1\n            l = r\n        else:\n            r += 1\n\n    # 收尾操作\n    if zero == 1 and initMaxConstantLen < r - l <= 5:\n        ans.append([pos, r - l])\n\n    # 如果没有统计到连棋情,则返回-1\n    if len(ans) == 0:\n        return -1\n\n    mid = len(nums) // 2\n\n    # 如果统计到连棋\n    # 先按照连棋长度降序,如果长度相同,则按照接近中心位置mid的距离升序&#xff08;越近的越优&#xff09;,如果距离中心位置mid相同,则按照落子位置升序&#xff08;越小的越优&#xff09;\n    ans.sort(key=lambda x: (-x[1], abs(x[0] - mid), x[0]))\n\n    # 取最优情况的落子位置\n    return ans[0][0]\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

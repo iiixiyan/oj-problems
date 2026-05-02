@@ -1,0 +1,51 @@
+{
+  "id": "q232",
+  "title": "阿里巴巴找黄金宝箱(I)",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "一贫如洗的樵夫阿里巴巴在去砍柴的路上，无意中发现了强盗集团的藏宝地，藏宝地有编号从0~N的箱子，每个箱子上面贴有一个数字，箱子中可能有一个黄金宝箱。\n黄金宝箱满足排在它之前的所有箱子数字和等于排在它之后的所有箱子数字之和；\n第一个箱子左边部分的数字和定义为0；最后一个箱子右边部分的数字和定义为0.\n请帮阿里巴巴找到黄金宝箱，输出第一个满足条件的黄金宝箱编号，如果不存在黄金宝箱，请返回-1。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "箱子上贴的数字列表，使用逗号分隔，例如1，-1，0\n宝箱的数量不小于1个，不超过10000\n宝箱上贴的数值范围不低于-1000，不超过1000"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "第一个黄金宝箱的编号"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2,5,-1,8,6\n输出\n3",
+      "cases": [
+        {
+          "input": "2,5,-1,8,6",
+          "output": "3",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "下标3之前的数字和为：2 + 5 + -1 = 6\n下标3之后的数字和为：6 = 6\n输入\n8,9\n输出\n-1\n\n不存在符合要求的位置\n输入\n11\n输出\n0\n\n下标0之前的数字和为：0\n下标0之后的数字和为：0"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题可以利用单指针来解决。\n我的\n\n如下：\n首先求出输入的数组arr的所有元素之和sum，然后用一个指针 i 从0开始遍历数组arr，假设指针 i 左边元素之和为leftSum，指针 i 右边元素之和为rightSum。\n那么初始时，即 i = 0时，leftSum = 0， rightSum = sum - arr[0]，如下图：\n如果此时leftSum == rightSum，那么 i = 0就是宝箱位置。\n否则，继续 i++，之后 leftSum += arr[i-1]，rightSum -= arr[i]\n如果 i 走到最后一个元素位置，还没有达成leftSum == rightSum，那么就返回-1。\n本题和\n华为OD机试 - 计算数组中心位置（Java & JS & Python）_伏城之外的博客-CSDN博客\n类似，大家可以再试试这题。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\narr = list(map(int, input().split(\",\")))\n\n\n# 算法入口\ndef getResult():\n    leftSum = 0\n    rightSum = sum(arr) - arr[0]\n\n    if leftSum == rightSum:\n        return 0\n\n    for i in range(1, len(arr)):\n        leftSum += arr[i-1]\n        rightSum -= arr[i]\n        if leftSum == rightSum:\n            return i\n\n    return -1\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

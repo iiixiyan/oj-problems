@@ -1,0 +1,64 @@
+{
+  "id": "q636",
+  "title": "200分-小猫钓鱼纸牌游戏",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "200\n分\n-\n小猫钓鱼纸牌游戏\n(C/C++/Py/Java/Js/Go)\n\n有两名玩家甲和乙，他们玩一种\n“\n小猫钓鱼\n”\n扑克牌游戏。扑克牌为\nA\n、\n2\n、\n3\n、\n…\n、\nJ\n、\nQ\n、\nK\n，不考虑花色，都用\n1~13\n表示。然后给甲、乙两人各发\nn\n张牌，按给定顺序排成队列，这些牌背面朝上、正面朝下放置，队列的第一个元素是背面的第一张牌。\n游戏规则如下：\n出牌与收牌\n初始由甲先出牌，打出的牌正面朝上放在桌面的最底部；然后乙出牌，正面朝上放在甲的牌上面；之后甲乙轮流出牌，直到触发收牌或者任意一方牌出完。\n如果玩家出牌后触发了收牌，则把收到的一摞牌作为整体翻面后，背面朝上、正面朝下放到现有手牌的底部，然后当前收牌的玩家继续出牌。\n收牌规则\n若当前打出的牌点数，与桌面上之前某张牌的点数相同，则触发收牌。收牌范围是这两张相同点数牌之间的所有牌，含这两张。\n若当前打出的牌是\nJ\n，并且此时桌面上已有至少一张牌（不含当前这张），则当前玩家也会触发收牌，收牌范围是桌面上的所有牌。\n若桌面上原本没有牌，则\nJ\n仅作为普通牌放到桌面。\n游戏结束条件\n若某位玩家在自己回合开始时已经没有牌可出，则游戏立刻结束。若此时对方还有余牌，则对方获胜；若对方也无牌，则平局。\n若在模拟过程中，出牌总次数超过上限\n10000\n次仍未结束，则认为进入死循环，判定为平局。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为甲的初始牌队列和乙的初始牌队列。\n甲乙初始手牌数量相等，均为整数\nn\n，且\n1 <= n\n<= 100\n。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "一方获胜时，输出获胜方手中背面朝上最上方的那张牌的数值。\n若平局：\n桌面无牌则输出\n0\n否则输出当前桌面上正面朝上的最上方那张牌的数值"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入\n1,2\n10,12\n输出\n12",
+      "cases": [
+        {
+          "input": "1,2\n10,12",
+          "output": "12",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "甲的牌堆为\n1,2\n乙的牌堆为\n10,12\n出牌顺序：甲出\n1\n，乙出\n10\n，甲出\n2\n，乙出\n12\n，此时甲无牌可出，乙也无余牌，游戏结束，判为平局。\n桌面牌堆为\n1,10,2,12\n，平局输出桌面正面朝上最上方的牌值\n12\n。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2\n输入\n1,3\n1,3\n输出\n1",
+      "cases": [
+        {
+          "input": "1,3\n1,3",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "甲的牌堆为\n1,3\n乙的牌堆为\n1,3\n一种模拟过程如下：\n甲出\n1\n，剩余\n3\n，桌面为\n1\n乙出\n1\n，匹配桌面\n1\n，收走\n1,1\n，桌面变空，乙变为\n3,1,1\n乙出\n3\n，剩余\n1,1\n，桌面为\n3\n甲出\n3\n，匹配桌面\n3\n，收走\n3,3\n，桌面变空，甲变为\n3,3\n甲出\n3\n，剩余\n3\n，桌面为\n3\n乙出\n1\n，剩余\n1\n，桌面为\n3,1\n甲出\n3\n，匹配桌面\n3\n，收走\n3,1,3\n，桌面变空，甲变为\n3,1,3\n甲出\n3\n，剩余\n1,3\n，桌面为\n3\n乙出\n1\n，乙变空，桌面变为\n3,1\n甲出\n1\n，匹配桌面\n1\n，收走\n1,1\n，桌面变为\n3\n，甲变为\n3,1,1\n甲出\n3\n，匹配桌面\n3\n，收走\n3,3\n，桌面变空，甲变成\n1,1,3,3\n甲出\n1\n，变为\n1,3,3\n，桌面为\n1\n乙无牌可出，甲获胜，甲手牌非空，输出背面最上方的牌\n1"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "思路：纯模拟\n用双端队列维护甲乙当前手牌，桌面牌用数组或栈模拟。\n再用一个位置数组\npos[14]\n记录某个点数最近一次在桌面中出现的位置，不存在记为\n-1\n，用于快速判断是否触发收牌。\n每轮出牌时：\n若当前玩家无牌可出，直接根据双方和桌面状态返回结果。\n否则打出队首牌，压到桌面顶部。\n判断是否触发收牌：\n若当前牌是\n11(J)\n且桌面原本非空，则收走桌面全部牌。\n否则若桌面之前已出现过相同点数，则收走从上次出现位置到当前顶部的所有牌。\n收牌后，将这一摞牌整体翻面并放到当前玩家手牌队尾，且当前玩家继续出牌；未收牌则轮到对方。\n若总出牌次数超过\n10000\n，判为平局：\n桌面空，输出\n0\n否则输出桌面最上方牌值。\nC++\n#include<iostream>\n#include<vector>\n#include<string>\n#include <utility>\n#include <sstream>\n#include<algorithm>\n#include<cmath>\n#include<map>\n#include<deque>\nusing namespace std;\n//\n通用 切割函数 函数 将字符串\nstr\n根据\ndelimiter\n进行切割\nvector<int> split(const string&\nstr, const string& delimiter) {\nvector<int>\nresult;\nsize_t start = 0;\nsize_t end =\nstr.find(delimiter);\nwhile (end !=\nstring::npos) {\nresult.push_back(stoi(str.substr(start, end - start)));\nstart = end + delimiter.length();\nend = str.find(delimiter, start);\n}\n//\n添加最后一个部分\nresult.push_back(stoi(str.substr(start)));\nreturn result;\n}\nint fishGame(vector<int>& aCard,\nvector<int> & bCard) {\ndeque<int>\na(aCard.begin(), aCard.end());\ndeque<int>\nb(bCard.begin(), bCard.end());\n//\n牌桌上的牌\nvector<int>\ntableCard;\n// 0\n表示甲出牌\n1\n表示乙出牌\nint current = 0;\n//\n维护牌面值在牌桌上出现的位置\nvector<int>\npos(14, -1);\nfor (int i = 0; i <=\n10000; i++) {\ndeque<int>& currentCard = (current == 0) ? a : b;\ndeque<int>& otherCard = (current == 0) ? b : a;\n//\n当前出牌牌堆为空\n,\n游戏结束\nif (currentCard.empty()) {\n//\n对手有余牌\nif (!otherCard.empty()) {\nreturn otherCard.front();\n} else {\n//\n根据桌面牌堆输出\nreturn tableCard.empty() ? 0 : tableCard.back();\n}\n}\nint val = currentCard.front();\ncurrentCard.pop_front();\nint samePos= pos[val];\nbool tableEmptyFlag = tableCard.empty();\n//\n放置当前牌到牌堆\ntableCard.push_back(val);\npos[val] = tableCard.size() - 1;\n//\n是否能收牌\nbool takeUpFlag = false;\n//\n收牌起始位置\nint takeUpStart = -1;\n//"
+    }
+  ],
+  "solutions": {},
+  "verified": false
+}

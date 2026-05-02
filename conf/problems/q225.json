@@ -1,0 +1,46 @@
+{
+  "id": "q225",
+  "title": "计算最大乘积",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定一个元素类型为小写字符串的数组，请计算两个没有相同字符的元素长度乘积的最大值，\n如果没有符合条件的两个元素，返回0。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入为一个半角逗号分隔的小写字符串的数组，2 <= 数组长度<=100，0 < 字符串长度<= 50。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "两个没有相同字符的元素 长度乘积的\n最大值\n。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\niwdvpbn,hk,iuop,iikd,kadgpf\n输出\n14",
+      "cases": [
+        {
+          "input": "iwdvpbn,hk,iuop,iikd,kadgpf",
+          "output": "14",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "数组中有5个元素。\niwdvpbn与hk无相同的字符，满足条件，iwdvpbn的长度为7，hk的长度为2，乘积为14（7*2）。\niwdvpbn与iuop、iikd、kadgpf均有相同的字符，不满足条件。\niuop与iikd、kadgpf均有相同的字符，不满足条件。\niikd与kadgpf有相同的字符，不满足条件。\n因此，输出为14。\n位运算解法\n具体解析可以看：\nLeetCode - 318 最大单词长度乘积（Java & JS & Py & C）-CSDN博客\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nwords = input().split(\",\")\n\n\n# 算法入口\ndef getResult():\n    ans = 0\n\n    n = len(words)\n\n    bits = [0] * n\n    for i in range(n):\n        for j in range(len(words[i])):\n            bits[i] |= (1 << (ord(words[i][j]) - 97))\n\n    for i in range(n):\n        for j in range(i + 1, n):\n            if (bits[i] & bits[j]) == 0:\n                ans = max(ans, len(words[i]) * len(words[j]))\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

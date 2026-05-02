@@ -1,0 +1,54 @@
+{
+  "id": "q600",
+  "title": "特殊的加密算法",
+  "score": 200,
+  "tags": [
+    "E卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "最新华为OD机试\n\n有一种特殊的\n加密算法\n，明文为一段数字串，经过密码本查找转换，生成另一段密文数字串。\n规则如下：\n明文为一段数字串由 0~9 组成\n密码本为数字 0~9 组成的\n二维数组\n需要按明文串的数字顺序在密码本里找到同样的数字串，密码本里的数字串是由相邻的单元格数字组成，上下和左右是相邻的，"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：对角线不相邻，同一个单元格的数字不能重复使用。\n每一位明文对应密文即为密码本中找到的单元格所在的行和列序号（序号从0开始）组成的两个数宇。\n如明文第 i 位 Data[i] 对应密码本单元格为 Book[x][y]，则明文第 i 位对应的密文为X Y，X和Y之间用空格隔开。\n如果有多条密文，返回字符序最小的密文。\n如果密码本无法匹配，返回\"error\"。\n请你设计这个加密程序。"
+    },
+    {
+      "type": "examples",
+      "title": "示例1",
+      "content": "：\n密码本：\n0 0 2\n1 3 4\n6 6 4\n明文：“3”，密文：“1 1”"
+    },
+    {
+      "type": "examples",
+      "title": "示例2",
+      "content": "：\n密码本：\n0 0 2\n1 3 4\n6 6 4\n明文：“0 3”，密文：“0 1 1 1”"
+    },
+    {
+      "type": "examples",
+      "title": "示例3",
+      "content": "：\n密码本：\n0 0 2 4\n1 3 4 6\n3 4 1 5\n6 6 6 5\n明文：“0 0 2 4”，密文：“0 0 0 1 0 2 0 3” 和 “0 0 0 1 0 2 1 2”，返回字典序最小的\"0 0 0 1 0 2 0 3\"\n明文：“8 2 2 3”，密文：“error”，密码本中无法匹配"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入 1 个正整数 N，代表明文的长度（1 ≤ N ≤ 200）\n第二行输入 N 个明文组成的序列 Data[i]（0 ≤ Data[i] ≤ 9）\n第三行输入 1 个正整数 M，代表密文的长度\n接下来 M 行，每行 M 个数，代表密文矩阵"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出字典序最小密文，如果无法匹配，输出\"error\""
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "1\n输入"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())  # 明文数字个数\ndatas = list(map(int, input().split()))  # 明文\n\nm = int(input())  # 密码本矩阵大小\nsecrets = []  # 密码本\n\n# 记录密码本中元素值等于“明文第一个数字”的所有元素的位置\nstarts = []\n\nfor i in range(m):\n    secrets.append(list(map(int, input().split())))\n    for j in range(m):\n        # 如果密码本(i,j)位置元素指等于明文第一个数字值,则记录(i,j)作为一个出发位置\n        if secrets[i][j] == datas[0]:\n            starts.append((i, j))\n\n# 上,左,右,下偏移量,注意这里的顺序是有影响的,即下一步偏移后产生的密文的字符序必然是&#xff1a;上 < 左 < 右 < 下\noffsets = ((-1, 0), (0, -1), (0, 1), (1, 0))\n\n\ndef dfs(x, y, index, path, used):\n    \"\"\"\n    :param x: 当前位置横坐标\n    :param y: 当前位置纵坐标\n    :param index: datas[index]是将要匹配的明文数字\n    :param path: 路径\n    :param used: 密码本各元素使用情况\n    :return: 是否找到符合要求的路径\n    \"\"\"\n    if index == n:\n        # 已找到明文最后一个数字,则找到符合要求的路径\n        return True\n\n    # 否则,进行上、左、右、下四个方向偏移,注意这里的顺序是有影响的,即下一步偏移后产生的密文的字符序必然是&#xff1a;上 < 左 < 右 < 下\n    for offsetX, offsetY in offsets:\n        # 新位置\n        newX = x + offsetX\n        newY = y + offsetY\n\n        # 新位置越界,或者新位置已使用,或者新位置不是目标值,则跳过\n        if newX < 0 or newX >= m or newY < 0 or newY >= m or used[newX][newY] or secrets[newX][newY] != datas[index]:\n            continue\n\n        # 递归进入新位置\n        path.append(f\"{newX} {newY}\")\n        used[newX][newY] = True\n\n        # 如果当前分支可以找到符合要求的路径,则返回\n        if dfs(newX, newY, index + 1, path, used):\n            return True\n\n        # 否则,回溯\n        used[newX][newY] = False\n        path.pop()\n\n    return False\n\n\n# 算法入口\ndef getResult():\n    # 出发位置(x,y)\n    for x, y in starts:\n        # used[i][j]用于记录密码本(i,j)元素是否已使用\n        used = [[False] * m for _ in range(m)]\n        # 出发点位置元素已使用\n        used[x][y] = True\n\n        # 记录结果路径各节点位置\n        # 出发点位置记录\n        path = [f\"{x} {y}\"]\n\n        # 开始深搜\n        if dfs(x, y, 1, path, used):\n            return \" \".join(path)\n\n    return \"error\"\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,56 @@
+{
+  "id": "q092",
+  "title": "获取最大软件版本号",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "Maven\n版本号定义，<主版本>.<次版本>.<增量版本>-<里程碑版本>，举例3.1.4-beta\n其中，主版本和次版本都是必须的，主版本，次版本，增量版本由多位数字组成，可能包含前导零，里程碑版本由字符串组成。\n<主版本>.<次版本>.<增量版本>：基于\n数字\n比较；\n里程碑版本：基于\n字符串\n比较，采用\n字典序；\n比较版本号时，按从左到右的顺序依次比较。\n基于数字比较， 只需比较\n忽略任何前导零后的整数值\n。\n输入2个版本号，输出\n最大版本号\n。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入2个版本号，换行分割，每个版本的最大长度小于50"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "版本号相同时输出第一个输入版本号"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2.5.1-C\n1.4.2-D\n输出\n2.5.1-C",
+      "cases": [
+        {
+          "input": "2.5.1-C\n1.4.2-D",
+          "output": "2.5.1-C",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n1.05.1\n1.5.01\n输出\n1.05.1\n\n版本号相同，输出第一个版本号\n输入\n1.5\n1.5.0\n输出\n1.5.0\n\n主次相同，存在增量版本大于不存在\n输入\n1.5.1-A\n1.5.1-a\n输出\n1.5.1-a\n\n里程碑版本号，基于字典序比较，a 大于 A"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "简单排序题，考察数组排序\n本题和\n华为机试 - 比较两个版本号的大小_伏城之外的博客-CSDN博客\n类似，做完本题，可以再试试上面这个真题\n2022.12.20 补充\n这题看走眼了。\n题目中说：“主版本和次版本都是必须的”，也就说后面几个版本可能是没有的，因此如下正则表达式：const regExp = /^(\\d+)\\.(\\d+)\\.(\\d+)\\-(.+)$/;\n获取缺失了增量版本和里程碑版本的字符串时，是存在问题的。\n这里更新了下正则\nconst reg = /^(\\d+)(\\.(\\d+))\n(\\.(\\d+))\n?\n(\\-.+)\n?$/;\n在增量版本捕获组后面加了？，以及在里程碑版本后面加了?，表示这两个版本可以没有。\n同时为了直到缺失的增量版本，还是里程碑版本，我们需要将\".\" 和 “-” 加入捕获组中，来帮助我们辨别。\n最终效果如下：\n需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是捕获组的顺序就是正则中括号从左到右的顺序，比如\n字符串操作解法\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ns1 = input()\ns2 = input()\n\n\n# 解析版本号字符串s\ndef getVersion(s):\n    patch = \"\"\n    mile = \"\"\n\n    i = s.find(\"-\")\n\n    # 找到第一个“-”,先把里程碑解析出来,因为里程碑中可能含有\"-\"和\".\",因此必须先处理掉\n    major_minor_patch = \"\"\n    if i != -1:\n        mile = s[i + 1:]\n        major_minor_patch = s[0:i]\n    else:\n        major_minor_patch = s\n\n    # 之后再处理非里程碑部分\n    tmp = major_minor_patch.split(\".\")\n    major = int(tmp[0])\n    minor = int(tmp[1])\n\n    if len(tmp) > 2:\n        patch = int(tmp[2])\n\n    return major, minor, patch, mile\n\n\n# 算法入口\ndef getResult(s1, s2):\n    major1, minor1, patch1, mile1 = getVersion(s1)\n    major2, minor2, patch2, mile2 = getVersion(s2)\n\n    if major1 > major2:\n        return s1\n    elif major1 < major2:\n        return s2\n\n    if minor1 > minor2:\n        return s1\n    elif minor1 < minor2:\n        return s2\n\n    if patch1 != \"\" or patch2 != \"\":\n        if patch2 == \"\":\n            return s1\n        elif patch1 == \"\":\n            return s2\n\n        # 走到此步,说明s1,s2的增量版本都不是空串,此当成数字进行比较\n        if patch1 > patch2:\n            return s1\n        elif patch1 < patch2:\n            return s2\n\n    # s1,s2的里程碑的空串判断,同增量版本\n    if mile2 == \"\":\n        return s1\n    elif mile1 == \"\":\n        return s2\n\n    # 如果s1,s2的里程碑版本都不是空串,则按照字典序比较\n    return s1 if mile1 >= mile2 else s2\n\n\n# 算法调用\nprint(getResult(s1, s2))"
+  },
+  "verified": false
+}

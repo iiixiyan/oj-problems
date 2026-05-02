@@ -1,0 +1,63 @@
+{
+  "id": "q195",
+  "title": "数组拼接",
+  "score": 100,
+  "tags": [
+    "B卷",
+    "数组"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "现在有多组整数数组，需要将它们合并成一个新的数组。\n合并规则，从每个数组里按顺序取出固定长度的内容合并到新的数组中，取完的内容会删除掉，如果该行不足固定长度或者已经为空，则直接取出剩余部分的内容放到新的数组中，继续下一行。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行是每次读取的固定长度，0 < 长度 < 10\n第二行是整数数组的数目，0 < 数目 < 1000\n第3-n行是需要合并的数组，不同的数组用回车换行分隔，数组内部用逗号分隔，最大不超过100个元素。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个新的数组，用逗号分隔。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n2\n2,5,6,7,9,5,7\n1,7,4,3,4\n输出\n2,5,6,1,7,4,7,9,5,3,4,7",
+      "cases": [
+        {
+          "input": "3\n2\n2,5,6,7,9,5,7\n1,7,4,3,4",
+          "output": "2,5,6,1,7,4,7,9,5,3,4,7",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "1、获得长度3和数组数目2\n2、先遍历第一行，获得2,5,6\n3、再遍历第二行，获得1,7,4\n4、再循环回到第一行，获得7,9,5\n5、再遍历第二行，获得3,4\n6、再回到第一行，获得7，按顺序拼接成最终结果\n输入\n4\n3\n1,2,3,4,5,6\n1,2,3\n1,2,3,4\n输出\n1,2,3,4,1,2,3,1,2,3,4,5,6\n\n无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "（C语言解析请直接看代码注释，以下是其他语言解析）\n假设，第一行输入的固定长度是subLen。\n我的\n\n如下：\n首先，定义一个动态数组ans，来记录\n\n。\n然后，将输入的3~n行对应的数组，放到一个链表中。\n每次取出链表的头部，然后删除该头部数组前subLen个元素，并这subLen元素记录按顺序录入ans中：\n如果删除后，该头部数组长度依旧大于0，则将该头部数组重新连接到链表尾部\n如果删除后，该头部数组的长度为0，则不做操作\n直到链表长度为0时，停止。\n此时ans中记录的就是\n\n。\n本题，主要难点在于，如何删除数组（或其他容器）的前subLen个元素，其实就是删除容器中某个范围的所有元素。在下面代码中，我针对不同语言，各附带了一个链接，里面有"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "如何删除对应容器的某个范围的元素的策略。\n2023.08.29\n本题根据考友实际考试反馈，机考系统输入"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "存在如下：\n3\n2\n2,5,6,7,,,9,5,7\n1,7,4,3,,4\nJava算法源码\nList实现高效批量删除指定区域的元素（等效于removeRange) | KaelLi的博客"
+    }
+  ],
+  "solutions": {
+    "Java": "List实现高效批量删除指定区域的元素（等效于removeRange) | KaelLi的博客",
+    "Python": "# 输入获取\nsubLen = int(input())\nn = int(input())\n# 输入用例中的数组存在 4,,6 这种情况,所以这里需要过滤掉空串\nlists = [list(filter(lambda x: x != \"\", input().split(\",\"))) for _ in range(n)]\n\n\n# 算法入口\ndef getResult():\n    ans = []\n\n    while len(lists) > 0:\n        lst = lists.pop(0)\n        tmp = lst[:subLen]\n        del lst[:subLen]\n        ans.extend(tmp)\n        if len(lst) > 0:\n            lists.append(lst)\n\n    return \",\".join(ans)\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

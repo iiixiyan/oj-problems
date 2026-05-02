@@ -1,0 +1,71 @@
+{
+  "id": "q228",
+  "title": "跳房子I",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "跳房子，也叫跳飞机，是一种世界性的儿童游戏。\n游戏参与者需要分多个回合按顺序跳到第1格直到房子的最后一格。\n跳房子的过程中，可以向前跳，也可以向后跳。\n假设房子的总格数是count，小红每回合可能连续跳的步教都放在数组steps中，请问数组中是否有一种步数的组合，可以让小红两个回合跳到量后一格?\n如果有，请输出索引和最小的步数组合。"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：\n数组中的步数可以重复，但数组中的元素不能重复使用。\n提供的数据保证存在满足题目要求的组合，且索引和最小的步数组合是唯一的。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行输入为房子总格数count，它是int整数类型。\n第二行输入为每回合可能连续跳的步数，它是int整数数组类型。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "返回索引和最小的满足要求的步数组合（顺序保持steps中原有顺序）"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "count ≤ 1000\n0 ≤ steps.length ≤ 5000\n-100000000 ≤ steps[i] ≤ 100000000"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n[1,4,5,2,2]\n7\n输出\n[5, 2]",
+      "cases": [
+        {
+          "input": "[1,4,5,2,2]\n7",
+          "output": "[5, 2]",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无\n输入\n[-1,2,4,9,6]\n8\n输出\n[-1, 9]\n\n此样例有多种组合满足两回合跳到最后，譬如：[-1,9]，[2,6]，其中[-1,9]的索引和为0+3=3，[2,6]的索和为1+4=5，所以索引和最小的步数组合[-1,9]"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题其实就是两数之和：\nLeetCode - 1 两数之和_伏城之外的博客-CSDN博客\n的变种题。\n即有一个数组steps，要在其中找到一个二元组，让其和等于count。\n和leetcode两数之和的区别在于，本题最终解二元组可能有多个解，我们需要在这多个解中找到索引和最小的作为最终解，即我们不仅要求二元组元素之和，还要求二元组索引之和。\n本\n\n析可以参考上面链接博客。\n2023.08.24\n新增一个"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "[\n1\n,2,9,9,9,\n1\n,9,9,3,2]\n4\n我们需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "的是，第二个1的索引要大于第一个1的索引，因此后面遇到3时，我们应该让3和第一个1进行匹配，而不是第二个1。\n对应逻辑在：\nJS：41~43行\nJava：39行\nPython：19行\nJS算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "import sys\n\n# 输入获取\nsteps = list(map(int, input()[1:-1].split(\",\")))\ncount = int(input())\n\n\nclass Step:\n    def __init__(self, val, idx):\n        self.val = val\n        self.idx = idx\n\n\n# 算法入口\ndef getResult():\n    n = len(steps)\n\n    newSteps = [Step(steps[i], i) for i in range(n)]\n\n    newSteps.sort(key=lambda x: (x.val, x.idx))\n\n    minStepIdxSum = sys.maxsize\n    ans = \"\"\n\n    for i in range(n):\n        # 剪枝优化\n        if newSteps[i].val > 0 and 0 < count < newSteps[i].val:\n            break\n\n        # 剪枝优化\n        if i > 0 and newSteps[i].val == newSteps[i - 1].val:\n            continue\n\n        l = i + 1\n        r = n - 1\n\n        while l < r:\n            # 剪枝优化,L,R指针指向值的目标和为count - i指针指向的值,而L指针指向的值 必然小于等于 R指针指向的值,\n            # 因此L指针指向的值必然 <= 目标和/2,而R指针指向的值必然 >= 目标和/2\n            threshold = (count - newSteps[i].val) / 2\n            if newSteps[l].val > threshold or newSteps[r].val < threshold:\n                break\n\n            stepValSum = newSteps[i].val + newSteps[l].val + newSteps[r].val\n\n            if stepValSum < count:\n                l += 1\n            elif stepValSum > count:\n                r -= 1\n            else:\n                # 剪枝优化\n                while l < r - 1 and newSteps[r].val == newSteps[r - 1].val:\n                    r -= 1\n\n                stepIdxSum = newSteps[i].idx + newSteps[l].idx + newSteps[r].idx\n                if stepIdxSum < minStepIdxSum:\n                    minStepIdxSum = stepIdxSum\n\n                    arr = [newSteps[i], newSteps[l], newSteps[r]]\n                    arr.sort(key=lambda x: x.idx)\n\n                    ans = \"[\" + \",\".join(map(lambda x: str(x.val), arr)) + \"]\"\n\n                # 剪枝优化\n                while l + 1 < r and newSteps[l].val == newSteps[l + 1].val:\n                    l += 1\n\n                l += 1\n                r -= 1\n\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

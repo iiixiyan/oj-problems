@@ -1,0 +1,56 @@
+{
+  "id": "q076",
+  "title": "机器人",
+  "score": 100,
+  "tags": [
+    "A卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "现有一个机器人，可放置于 M × N 的网格中任意位置，每个网格包含一个非负整数编号，当相邻网格的数字编号差值的绝对值小于等于 1 时，机器人可以在网格间移动。\n问题：\n求机器人可活动的最大范围对应的网格点数目。"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "：\n网格左上角坐标为 (0,0) ,右下角坐标为(m−1,n−1)，机器人只能在相邻网格间上下左右移动"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第 1 行输入为 M 和 N ， M 表示网格的行数 N 表示网格的列数\n之后 M 行表示网格数值，每行 N 个数值（数值大小用 k 表示），\n数值间用单个空格分隔，行首行尾无多余空格。\nM、 N、 k 均为整数，且 1 ≤ M,N ≤ 150, 0 ≤ k ≤ 50"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出 1 行，包含 1 个数字，表示最大活动区域的网格点数目，\n行首行尾无\n多余空格。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n4 4\n1 2 5 2\n2 4 4 5\n3 5 7 1\n4 6 2 4\n输出\n6",
+      "cases": [
+        {
+          "input": "4 4\n1 2 5 2\n2 4 4 5\n3 5 7 1\n4 6 2 4",
+          "output": "6",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "图中绿色区域，相邻网格差值绝对值都小于等于 1 ，且为最大区域，对应网格点数目为 6。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题其实就是求最大的连通分量，相邻网格是否连通的规则如下\n当相邻网格的数字编号差值的绝对值小于等于 1 时\n因此，求解连通分量，我们可以使用并查集。关于并查集的知识，请看：\n华为机试 - 发广播_伏城之外的博客-CSDN博客_服务器广播 华为机试\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 并查集\nclass UnionFindSet:\n    def __init__(self, n):\n        self.fa = [idx for idx in range(n)]\n        self.count = n\n\n    def find(self, x):\n        if x != self.fa[x]:\n            self.fa[x] = self.find(self.fa[x])\n            return self.fa[x]\n        return x\n\n    def union(self, x, y):\n        x_fa = self.find(x)\n        y_fa = self.find(y)\n\n        if x_fa != y_fa:\n            self.fa[y_fa] = x_fa\n            self.count -= 1\n\n\nm, n = map(int, input().split())\n\nmatrix = []\nfor i in range(m):\n    matrix.append(list(map(int, input().split())))\n\nufs = UnionFindSet(m * n)\n\n# 上下左右的偏移量\noffsets = ((-1, 0), (1, 0), (0, -1), (0, 1))\n\nfor i in range(m):\n    for j in range(n):\n        # 注意下面这层for是常量级的,就四次循环,因此,这里的时间复杂度还是O(n*m),即\n        for offsetX, offsetY in offsets:\n            newI = i + offsetX\n            newJ = j + offsetY\n\n            if 0 <= newI < m and 0 <= newJ < n and abs(matrix[i][j] - matrix[newI][newJ]) <= 1:\n                ufs.union(i * n + j, newI * n + newJ)\n\ntotal = m * n\n\n# ufs.count是连通分量的个数,如果只有一个连通分量,那么代表所有的点都可达\nif ufs.count == 1:\n    print(total)\nelse:\n    # count字典用于统计指向同一个祖先下点的个数,即每个连通分量下的点个数\n    count = {}\n\n    # 这个for循环是有必要的,确保每个点都指向祖先\n    for i in range(total):\n        ufs.find(i)\n        fa = ufs.fa[i]\n        count[fa] = count.get(fa, 0) + 1\n\n    # 取最大个数\n    print(max(count.values()))"
+  },
+  "verified": false
+}

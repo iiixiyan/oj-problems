@@ -49,6 +49,8 @@
       "content": "可以看这个博客。\nJavaScript算法源码"
     }
   ],
-  "solutions": {},
+  "solutions": {
+    "Python": "# 并查集\nclass UnionFindSet:\n    def __init__(self, n):\n        self.fa = [idx for idx in range(n)]\n        self.count = n\n\n    def find(self, x):\n        if x != self.fa[x]:\n            self.fa[x] = self.find(self.fa[x])\n            return self.fa[x]\n        return x\n\n    def union(self, x, y):\n        x_fa = self.find(x)\n        y_fa = self.find(y)\n\n        if x_fa != y_fa:\n            self.fa[y_fa] = x_fa\n            self.count -= 1\n\n\nn, m = map(int, input().split())\n\nmatrix = []\nfor i in range(n):\n    matrix.append(list(map(int, input().split())))\n\nufs = UnionFindSet(n * m)\n\n# 八个方向的偏移量\noffsets = ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))\n\nfor i in range(n):\n    for j in range(m):\n        if matrix[i][j] != 1:\n            ufs.count -= 1\n            continue\n\n        for offsetX, offsetY in offsets:\n            newI = i + offsetX\n            newJ = j + offsetY\n\n            if 0 <= newI < n and 0 <= newJ < m and matrix[newI][newJ] == 1:\n                ufs.union(i*m+j, newI*m+newJ)\n\nprint(ufs.count)"
+  },
   "verified": false
 }

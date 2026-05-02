@@ -1,0 +1,32 @@
+{
+  "id": "q317",
+  "title": "N进制减法",
+  "score": 200,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "主管期望你实现一个基于字符串的N进制的减法。\n需要对输入的两个字符串按照给定的N进制进行减法操作，输出正负符号和表示结果的字符串。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入有三个参数：\n第一个参数是整数形式的进制N值，N值范围为大于等于2、小于等于35。\n第二个参数为被减数字符串；\n第三个参数为减数字符串。\n有效的字符包括0-9以及小写字母a-z，字符串有效字符个数最大为100个字符，另外还有结尾的\\0。\n限制：\n输入的被减数和减数，除了单独的0以外，不能是以0开头的字符串。\n如果输入有异常或计算过程中有异常，此时应当输出-1表示错误。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出有2个。\n其一为减法计算的结果，-1表示出错，0表示结果为整数，1表示结果为负数。\n其二为表示结果的字符串。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入"
+    }
+  ],
+  "solutions": {
+    "Python": "import re\n\n# 输入获取\nn, b_sub, sub = input().split()\n\ncovertStr = \"0123456789abcdefghijklmnopqrstuvwxyz\"\n\n\n# 将十进制数num转为base进制数\ndef toBase(num, base):\n    if num < base:\n        return covertStr[num]\n    else:\n        return toBase(num // base, base) + covertStr[num % base]\n\n\ndef isValid(s, n):\n    #  含前导的0只有0值本身合法\n    if s.startswith(\"0\"):\n        return s == \"0\"\n\n    # 被减数,减数只能包含字符0-9,a-z\n    if re.search(\"[^0-9a-z]\", s) is not None:\n        return False\n\n    # 被减数,减数长度最多100\n    if len(s) > 100:\n        return False\n\n    # 被减数,减数的每位不能超过n\n    for c in s:\n        if c.isnumeric() and int(c) >= n:  # 比如2进制数的每一位不能超过2\n            return False\n        elif c.isalpha() and ord(c) - 87 >= n:  # 比如16进制数每一位不能超过f\n            return False\n\n    return True\n\n\n# 算法入口\ndef getResult(n, b_sub, sub):\n    n = int(n)\n    if n < 2 or n > 35:\n        return \"-1\"\n\n    if not isValid(b_sub, n) or not isValid(sub, n):\n        return \"-1\"\n\n    b_sub_val = int(b_sub, n)\n    sub_val = int(sub, n)\n\n    diff = toBase(abs(b_sub_val - sub_val), n)\n    sign = \"0\" if b_sub_val >= sub_val else \"1\"\n\n    return sign + \" \" + str(diff)\n\n\n# 算法调用\nprint(getResult(n, b_sub, sub))"
+  },
+  "verified": false
+}

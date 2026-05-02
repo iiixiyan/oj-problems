@@ -1,0 +1,51 @@
+{
+  "id": "q433",
+  "title": "数字涂色",
+  "score": 100,
+  "tags": [
+    "C卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "疫情过后，希望小学终于又重新开学了，三年二班开学第一天的任务是将后面的黑板报重新制作。\n黑板上已经写上了N个正整数，同学们需要给这每个数分别上一种颜色。\n为了让黑板报既美观又有学习意义，老师要求同种颜色的所有数都可以被这种颜色中最小的那个数整除。\n现在请你帮帮小朋友们，算算最少需要多少种颜色才能给这N个数进行上色。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行有一个正整数N，其中。\n第二行有N个int型数(保证输入数据在[1,100]范围中)，表示黑板上各个正整数的值。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出只有一个整数，为最少需要的颜色种数。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n2 4 6\n输出\n1",
+      "cases": [
+        {
+          "input": "3\n2 4 6",
+          "output": "1",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "所有数都能被2整除\n输入\n4\n2 3 4 9\n输出\n2\n\n2与4涂一种颜色，4能被2整除；3与9涂另一种颜色，9能被3整除。不能4个数涂同一个颜色，因为3与9不能被2整除。所以最少的颜色是两种。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "简单的逻辑题，题目要求：“同种颜色的所有数都可以被这种颜色中最小的那个数整除”。\n因此我们可以直接将输入数列进行升序排序，则数列从左到右，元素依次增大，我们每次取最左边的数arr[i]，然后遍历它后面的所有数arr[j]去除它，若可以整除，则为一种颜色，若不可以整除，则为不同颜色。\n本题难点主要在于，如何标记一个元素已经涂色了，我这里直接定义了一个长度和输入数列arr相同的数组color，color所有元素默认未初始化，一旦arr[j]可以整除arr[i]，则color[j] = true。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\narr = list(map(int, input().split()))\n\n\n# 算法入口\ndef getResult():\n    arr.sort()\n\n    if arr[0] == 1:\n        return 1\n\n    color = [False]*n\n    count = 0\n\n    for i in range(n):\n        if color[i]:\n            continue\n\n        color[i] = True\n        for j in range(i+1, n):\n            if not color[j] and arr[j] % arr[i] == 0:\n                color[j] = True\n\n        count += 1\n\n    return count\n\n\n# 调用算法\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,74 @@
+{
+  "id": "q311",
+  "title": "最大股票收益",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "假设知道某段连续时间内股票价格，计算通过买入卖出可获得的最大收益。\n输入一个大小为 n 的数 price(p1,p2,p3,p4…….pn),pi 是第i天的股票价格。\npi 的格式为股票价格(非负整型)加上货币单位 Y 或者 S,其中 Y 代表人民币,S 代表美元,这里规定 1 美元可以兑换 7 人民币。\nPi 样例 1：123Y 代表 123 元人民币\npi 样例 2：123S 代表 123 元美元,可兑换 861 人民币。\n假设你可以在任何一天买入或者卖出股票,也可以选择放弃交易,请计其在交易周期 n 天内你能获得的最大收(以人民币计算)。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入一个包含交易周期内各天股票价格的字符串，以\n空格\n分隔。不考虑输入异常情况。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一个整型数代表在交易周期 n 天内你能获得的最大收益，n 不能超过 10000"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "：股票价格只会用 Y 人民币或 S 美元进行输入，不考虑其他情况。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n2Y 3S 4S 6Y 8S\n输出\n76",
+      "cases": [
+        {
+          "input": "2Y 3S 4S 6Y 8S",
+          "output": "76",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "无"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题其实少了一句话，那就是，手上只能保留一只股票，不能保留多只股票。\n如果可以保留多只股票，则"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2Y 3S 4S 6Y 8S，我前四个全要，即有四只股票，然后全部以8S价格卖出，那么最大利润为 8S * 4 - (2Y + 3S + 4S + 6Y) = 167，而不是76。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "中的76输出，前提是手上只能保留一只股票。\n即：\n2Y买进，3S卖出，赚19\n3S买进，4S卖出，赚7\n6Y买进，8S卖出，赚50\n共转76\n这是一种贪心思维，即买涨不买跌，这样就稳赚不赔了。如上折线图，只买上升区段，不买下跌区段。\n本题和\nLeetCode - 122 买卖股票的最佳时机 II_伏城之外的博客-CSDN博客\n相同，"
+    },
+    {
+      "type": "analysis",
+      "title": "题解",
+      "content": "请看链接博客"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\ntmp = input().split()\n\n\n# 输入转换\ndef convert(s):\n    num = int(s[:-1])\n    unit = s[-1]\n\n    if unit == 'Y':\n        return num\n    else:\n        return num * 7\n\n\narr = list(map(convert, tmp))\n\n\n# 算法入口\ndef getResult():\n    ans = 0\n    for i in range(1, len(arr)):\n        ans += max(0, arr[i] - arr[i - 1])\n    return ans\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

@@ -1,0 +1,49 @@
+{
+  "id": "q305",
+  "title": "智能成绩表",
+  "score": 100,
+  "tags": [],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "小明来到某学校当老师，需要将学生按考试总分或单科分数进行排名，你能帮帮他吗？"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第 1 行输入两个整数，学生人数 n 和科目数量 m。\n0 < n < 100\n0 < m < 10\n第 2 行输入 m 个科目名称，彼此之间用空格隔开。\n科目名称只由英文字母构成，单个长度不超过10个字符。\n科目的出现顺序和后续输入的学生成绩一一对应。\n不会出现重复的科目名称。\n第 3 行开始的 n 行，每行包含一个学生的姓名和该生 m 个科目的成绩（空格隔开）\n学生不会重名。\n学生姓名只由英文字母构成，长度不超过10个字符。\n成绩是0~100的整数，依次对应第2行种输入的科目。\n第n+2行，输入用作排名的科目名称。若科目不存在，则按总分进行排序。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出一行，按成绩排序后的学生名字，空格隔开。成绩相同的按照学生姓名字典顺序排序。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3 2\nyuwen shuxue\nfangfang 95 90\nxiaohua 88 95\nminmin 100 82\nshuxue\n输出\nxiaohua fangfang minmin",
+      "cases": [
+        {
+          "input": "3 2\nyuwen shuxue\nfangfang 95 90\nxiaohua 88 95\nminmin 100 82\nshuxue",
+          "output": "xiaohua fangfang minmin",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "按shuxue成绩排名，依次是xiaohua、fangfang、minmin\n输入\n3 2\nyuwen shuxue\nfangfang 95 90\nxiaohua 88 95\nminmin 90 95\nzongfen\n输出\nfangfang minmin xiaohua\n\n排序科目不存在，按总分排序，fangfang和minmin总分相同，按姓名的字典顺序，fangfang排在前面"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题是一道排序题。难度在于排序规则是动态的，不是固定的。\n本题要求按照最后一行输入的科目的分数进行排序，如果对应科目不存在，则按照总分进行排序。\n我的\n\n是：\n首先，定义一个排名要素数组rank，分别记录各科成绩以及总分，即该排名要素数组rank的长度为 m + 1。\n第rank[0]~rank[m-1]上，记录的是第二行输入科目顺序对应科目分数。\n第rank[m]上，记录的是所有科目的总分。\n然后，定义一个有效要素索引（即最终用于指定规则的排序要素的索引），比如：\n最后一行输入了shuxue，那么我就去第二行输入：yuwen shuxue，中去找对应出现序号为 1，那么有效要素的索引就是1，最终用于制定排序规则的值就是 rank[1]。\n如果最后一行输入的科目，在第二行中不存在，那么就是按照总分制定排序规则，此时排序要素取 rank[m]。\n如果排序要素值相同（可能是某科成绩，可能是总分），那么就再按照学生姓名的字典序排序。\n更多实现细节请看代码，已添加详细注释。\nJavaScript算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "class Student:\n    def __init__(self, name, rank):\n        self.name = name\n        self.rank = rank\n\n\n# 学生人数, 科目数量\nn, m = map(int, input().split())\n\n# key是科目名称,val是科目出现顺序的序号\nsubject_rankIdx = {}\n\n# 输入的m个科目\nsubjects = input().split()\n\nfor i in range(m):\n    subject_rankIdx[subjects[i]] = i\n\nstudents = []\nfor i in range(n):\n    tmp = input().split()\n\n    # 学生姓名\n    name = tmp[0]\n    # 学生给定科目的分数&#xff08;m个&#xff09;\n    scores = list(map(int, tmp[1:]))\n\n    # 排名要素,0~m-1索引上的是给定科目成绩,m索引上的是总分\n    rank = []\n    rank.extend(scores)\n    rank.append(sum(scores))\n\n    students.append(Student(name, rank))\n\n# 用作排名的科目名称\nsubject = input()\n\n#  用作排名的科目名称的排名要素序号, 如果用作排名的科目名称不存在,则按总分排名,对应序号是m\nrankIdx = subject_rankIdx.get(subject, m)\n\n# 按照排名要素排名,如果排名要素值相同,则按照学生姓名字典序排序\nstudents.sort(key=lambda x: (-x.rank[rankIdx], x.name))\n\nprint(\" \".join(map(lambda x: x.name, students)))"
+  },
+  "verified": false
+}

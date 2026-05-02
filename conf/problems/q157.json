@@ -1,0 +1,96 @@
+{
+  "id": "q157",
+  "title": "VLAN资源池",
+  "score": 100,
+  "tags": [
+    "B卷"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "VLAN是一种对局域网设备进行逻辑划分的技术，为了标识不同的VLAN，引入VLAN ID(1-4094之间的整数)的概念。\n定义一个VLAN ID的资源池(下称VLAN资源池)，资源池中连续的VLAN用开始VLAN-结束VLAN表示，不连续的用单个整数表示，所有的VLAN用英文逗号连接起来。\n现在有一个VLAN资源池，业务需要从资源池中申请一个VLAN，需要你输出从VLAN资源池中移除申请的VLAN后的资源池。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "第一行为字符串格式的VLAN资源池，第二行为业务要申请的VLAN，VLAN的取值范围为[1,4094]之间的整数。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "从输入VLAN资源池中移除申请的VLAN后字符串格式的VLAN资源池，输出要求满足"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "中的格式，并且按照VLAN从小到大升序输出。\n如果申请的VLAN不在原VLAN资源池内，输出原VLAN资源池升序排序后的字符串即可。"
+    },
+    {
+      "type": "note",
+      "title": "备注",
+      "content": "输入VLAN资源池中VLAN的数量取值范围为[2-4094]间的整数，资源池中VLAN不重复且合法([1,4094]之间的整数)，输入是乱序的。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n1-5\n2\n输出\n1,3-5",
+      "cases": [
+        {
+          "input": "1-5\n2",
+          "output": "1,3-5",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "原VLAN资源池中有VLAN 1、2、3、4、5，从资源池中移除2后，剩下VLAN 1、3、4、5，按照"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "格式并升序后的结果为1,3-5。\n输入\n20-21,15,18,30,5-10\n15\n输出\n5-10,18,20-21,30"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "原VLAN资源池中有VLAN 5、6、7、8、9、10、15、18、20、21、30，从资源池中移除15后，资源池中剩下的VLAN为 5、6、7、8、9、10、18、20、21、30，按照"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "格式并升序后的结果为5-10,18,20-21,30。\n输入\n5,1-3\n10\n输出\n1-3,5"
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "原VLAN资源池中有VLAN 1、2、3，5，申请的VLAN 10不在原资源池中，将原资源池按照"
+    },
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "格式并按升序排序后输出的结果为1-3,5。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "本题主要考察逻辑分析能力，以及一些边际情况的处理。比如1-2删除1，或者1-3删除3等。\n我的\n\n如下：\n将输入的第一行转化为一个二维数组，比如"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "2第一行输入可以转化为：\n[ [20,21], [15], [18], [30], [5,10] ]\n之后，将这个二维数组，按照元素的第0个索引的值进行升序排序，得到如下\n[ [5,10], [15], [18], [20,21], [30] ]\n然后从左到右遍历各个区间，看要删除的数remove（第二行输入的数）是否在区间[from, to]内，如果在则删除，删除时需要"
+    },
+    {
+      "type": "note",
+      "title": "注意",
+      "content": "：\n如果要删除的数，是区间左边界，则区间变为[remove+1, to]\n如果要删除的数，是区间右边界，则区间变为[from, remove-1]\n如果要删除的数，在区间内，则区间变为[from, remove-1]，和[remove+1, to]\n需要\n\n的是，如果区间的左右边界相同，比如[3,3]，此时应该将区间变为[3]\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nvlanArr = list(map(lambda x: list(map(int, x.split(\"-\"))), input().split(\",\")))\nremove = int(input())\n\n\ndef generateRange(start, end):\n    if start < end:\n        return [start, end]\n    else:\n        return [start]\n\n\n# 算法入口\ndef getResult():\n    vlanArr.sort(key=lambda x: x[0])\n\n    for i in range(len(vlanArr)):\n        vlan = vlanArr[i]\n\n        start = vlan[0]\n        if len(vlan) > 1:\n            end = vlan[1]\n\n            if remove < start or remove > end:\n                continue\n\n            vlanArr.pop(i)\n\n            if remove == start:\n                vlanArr.insert(i, generateRange(remove + 1, end))\n            elif remove == end:\n                vlanArr.insert(i, generateRange(start, remove - 1))\n            else:\n                vlanArr.insert(i, generateRange(remove + 1, end))\n                vlanArr.insert(i, generateRange(start, remove - 1))\n\n            break\n        elif start == remove:\n            vlanArr.pop(i)\n            break\n\n    return \",\".join(list(map(lambda x: \"-\".join(map(str, x)), vlanArr)))\n\n\n# 算法调用\nprint(getResult())"
+  },
+  "verified": false
+}

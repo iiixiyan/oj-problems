@@ -1,0 +1,52 @@
+{
+  "id": "q464",
+  "title": "第k个排列",
+  "score": 100,
+  "tags": [
+    "C卷",
+    "数学"
+  ],
+  "sections": [
+    {
+      "type": "description",
+      "title": "题目描述",
+      "content": "给定参数n，从1到n会有n个整数：1,2,3,…,n,这n个数字共有n!种排列。\n按大小顺序升序列出所有排列的情况，并一一标记，\n当n=3时,所有排列如下:\n“123” “132” “213” “231” “312” “321”\n给定n和k，返回第k个排列。"
+    },
+    {
+      "type": "input_spec",
+      "title": "输入描述",
+      "content": "输入两行，第一行为n，第二行为k，\n给定n的范围是[1,9],给定k的范围是[1,n!]。"
+    },
+    {
+      "type": "output_spec",
+      "title": "输出描述",
+      "content": "输出排在第k位置的数字。"
+    },
+    {
+      "type": "examples",
+      "title": "用例",
+      "content": "输入\n3\n3\n输出\n213",
+      "cases": [
+        {
+          "input": "3\n3",
+          "output": "213",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "title": "说明",
+      "content": "3的排列有123,132,213…,那么第三位置就是213\n输入\n2\n2\n输出\n21\n\n2的排列有12,21，那么第二位置的为21。"
+    },
+    {
+      "type": "analysis",
+      "title": "题目解析",
+      "content": "通过上面n=3的全排列可以分析，以1开头、以2开头、以3开头的排列个数各有两个，因为固定开头为1的，则其排列情况就是n=2的排列情况，即有两个23、32。\n因此以1开头的排列个数有 2!个，以2，3开头的排列个数求解同理。\n因此我们要求n=3的第k个排列，完全可以推断出第k个排列的开头数字是几。\n比如n=3的第1个和第2个排列的开头数字prefix就是1，第3、4个排列的开头数字prefix就是2，第5、6个排列的开头数字prefix就是3。\n推导一下，可得公式：Math.ceil(\nk / (n-1)!\n)\n但是这里我不想根据k、n来直接推导出排列的开头数字prefix，因为这个逻辑不适用于后面的递归，我们会将组成排列的数字按大小升序存入一个数组 arr中，比如n=3的排列元素为 arr = [1,2,3]，此时我们要求n=3的第k个排列的开头数字，公式为：\narr [\nMath.floor(\n(k-1) / (n-1)!\n)\n]\n知道了第k个排列的开头数字prefix后，我们就可以缩小排列的查找范围，比如n=3，k=3的排列查找就可以在以下范围中查找：\n213\n231\n而此时k=3值就不适用了，因为k=3是相对于下面情况的\n123\n132\n213\n231\n312\n321\n我们需要将k值转换为1，转换公式如下：\nnewK = k % (n-1)!\n但是这个公式不普适，比如n=3,k=4时，经过上面公式转换newK就变为0，而实际上newK应该为2,因此我们需要附加判断\nnewK === 0 ? (n-1)! : newK\n此时就完成了大问题\nn=3, k=3, arr=[1,2,3]\n的简化，简化为了\nn=2, k=1 ,arr=[1,3] 且 prefix=2\n因此我们可以使用递归来解决此题，而当k=1时，表示当前arr=[1,3]的排列就是需要的排列，因此最终要找的排列就是 prefix + arr.join('') = 213。\n因此 k =1就是递归的出口条件。\nJava算法源码"
+    }
+  ],
+  "solutions": {
+    "Python": "# 输入获取\nn = int(input())\nk = int(input())\narr = [i + 1 for i in range(n)]\n\nfact = [0] * (n + 1)\nfact[1] = 1\nfor i in range(2, n + 1):\n    fact[i] = fact[i - 1] * i\n\n\n# 算法入口\ndef getResult(n, k, arr):\n    if n == 1:\n        return \"1\"\n\n    f = fact[n - 1]\n    prefix = arr[(k - 1) // f]\n    k %= f\n    k = f if k == 0 else k\n\n    arr = list(filter(lambda x: x != prefix, arr))\n\n    if k == 1:\n        return str(prefix) + \"\".join(map(str, arr))\n    else:\n        return str(prefix) + getResult(n - 1, k, arr)\n\n\n# 算法调用\nprint(getResult(n, k, arr))"
+  },
+  "verified": false
+}
